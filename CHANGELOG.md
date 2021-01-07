@@ -1,3 +1,10 @@
+## [2.15.8](https://github.com/informatievlaanderen/streetname-registry/compare/v2.15.7...v2.15.8) (2021-01-07)
+
+
+### Bug Fixes
+
+* speed up cache status ([ef0e4db](https://github.com/informatievlaanderen/streetname-registry/commit/ef0e4db95d1cdbb6603abda35943836335610c40))
+
 ## [2.15.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.15.6...v2.15.7) (2021-01-07)
 
 
