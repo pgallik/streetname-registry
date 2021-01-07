@@ -7,7 +7,7 @@ namespace StreetNameRegistry.StreetName.Events
     using NodaTime;
 
     [EventName("StreetNamePersistentLocalIdentifierWasAssigned")]
-    [EventDescription("De straatnaam kreeg een OSLO-conforme, persistente identificator toegekend.")]
+    [EventDescription("De straatnaam kreeg een persistente lokale identificator toegekend.")]
     public class StreetNamePersistentLocalIdWasAssigned : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
