@@ -1,3 +1,10 @@
+## [2.15.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.15.6...v2.15.7) (2021-01-07)
+
+
+### Bug Fixes
+
+* update deps ([7acf78e](https://github.com/informatievlaanderen/streetname-registry/commit/7acf78e550f8e895473096eda764cee9917b6d38))
+
 ## [2.15.6](https://github.com/informatievlaanderen/streetname-registry/compare/v2.15.5...v2.15.6) (2020-12-28)
 
 
