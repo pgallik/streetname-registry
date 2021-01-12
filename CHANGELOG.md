@@ -1,3 +1,10 @@
+# [2.16.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.15.8...v2.16.0) (2021-01-12)
+
+
+### Features
+
+* add syndication status to projector api ([5d681f5](https://github.com/informatievlaanderen/streetname-registry/commit/5d681f5799a3663cc7632bb1b1de010b0d2dc65d))
+
 ## [2.15.8](https://github.com/informatievlaanderen/streetname-registry/compare/v2.15.7...v2.15.8) (2021-01-07)
 
 
