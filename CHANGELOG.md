@@ -1,3 +1,10 @@
+## [2.16.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.16.0...v2.16.1) (2021-01-19)
+
+
+### Bug Fixes
+
+* xml date serialization sync projection ([3e2b28e](https://github.com/informatievlaanderen/streetname-registry/commit/3e2b28eafc07e46263c40e7b97babaf752efdadd))
+
 # [2.16.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.15.8...v2.16.0) (2021-01-12)
 
 
