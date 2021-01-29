@@ -1,3 +1,10 @@
+## [2.16.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.16.1...v2.16.2) (2021-01-29)
+
+
+### Bug Fixes
+
+* remove sync alternate links ([5982eb7](https://github.com/informatievlaanderen/streetname-registry/commit/5982eb7eaf1eaa25c675c20eecbd8648b58656f7))
+
 ## [2.16.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.16.0...v2.16.1) (2021-01-19)
 
 
