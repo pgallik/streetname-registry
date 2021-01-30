@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.16.2...v2.17.0) (2021-01-30)
+
+
+### Features
+
+* add sync tag on events ([89d8f3e](https://github.com/informatievlaanderen/streetname-registry/commit/89d8f3e09fef5af44efd7532c753a6f3dc1b502d))
+
 ## [2.16.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.16.1...v2.16.2) (2021-01-29)
 
 
