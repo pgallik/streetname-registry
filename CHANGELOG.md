@@ -1,3 +1,10 @@
+## [2.17.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.1...v2.17.2) (2021-02-11)
+
+
+### Bug Fixes
+
+* update api with use of problemdetailshelper GRAR-1814 ([d0e549f](https://github.com/informatievlaanderen/streetname-registry/commit/d0e549f6f707caba1f2e819c764360a8a44758ab))
+
 ## [2.17.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.0...v2.17.1) (2021-02-02)
 
 
