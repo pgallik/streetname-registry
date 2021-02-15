@@ -1,3 +1,10 @@
+## [2.17.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.2...v2.17.3) (2021-02-15)
+
+
+### Bug Fixes
+
+* register problem details helper for projector GRAR-1814 ([1dac227](https://github.com/informatievlaanderen/streetname-registry/commit/1dac227c8373885aaec6988f53b66eea390bb221))
+
 ## [2.17.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.1...v2.17.2) (2021-02-11)
 
 
