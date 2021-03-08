@@ -1,3 +1,10 @@
+## [2.17.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.3...v2.17.4) (2021-03-08)
+
+
+### Bug Fixes
+
+* remove streetname versions GRAR-1876 ([df2ea71](https://github.com/informatievlaanderen/streetname-registry/commit/df2ea71a701be229759d76b89902f8e12f4dccfb))
+
 ## [2.17.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.2...v2.17.3) (2021-02-15)
 
 
