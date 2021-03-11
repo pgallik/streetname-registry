@@ -1,3 +1,15 @@
+# [2.18.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.4...v2.18.0) (2021-03-11)
+
+
+### Bug Fixes
+
+* update projector dependency GRAR-1876 ([bd26a3d](https://github.com/informatievlaanderen/streetname-registry/commit/bd26a3dd808cfbd666154cc15ced38fb8828a59e))
+
+
+### Features
+
+* add projection attributes GRAR-1876 ([2d30d48](https://github.com/informatievlaanderen/streetname-registry/commit/2d30d48eba607e5efe29ff44e44f92ff28129286))
+
 ## [2.17.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.3...v2.17.4) (2021-03-08)
 
 
