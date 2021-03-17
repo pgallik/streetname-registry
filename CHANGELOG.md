@@ -1,3 +1,10 @@
+## [2.18.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.18.0...v2.18.1) (2021-03-17)
+
+
+### Bug Fixes
+
+* change tags language events GRAR-1898 ([ecadbe5](https://github.com/informatievlaanderen/streetname-registry/commit/ecadbe5c4966766062d529cb170eebe465f2341d))
+
 # [2.18.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.17.4...v2.18.0) (2021-03-11)
 
 
