@@ -13,7 +13,7 @@ namespace StreetNameRegistry.StreetName.Events
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }
 
-        [EventPropertyDescription("Secundaire officiële taal (voluit, EN) van de straatnaam.")]
+        [EventPropertyDescription("Secundaire officiële taal van de straatnaam. Mogelijkheden: Dutch, French of German.")]
         public Language SecondaryLanguage { get; }
 
         [EventPropertyDescription("Metadata bij het event.")]
