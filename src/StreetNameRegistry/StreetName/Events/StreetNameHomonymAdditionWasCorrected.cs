@@ -16,7 +16,7 @@ namespace StreetNameRegistry.StreetName.Events
         [EventPropertyDescription("Homoniemtoevoeging aan de straatnaam.")]
         public string HomonymAddition { get; }
 
-        [EventPropertyDescription("Taal (voluit, EN) waarin de officiële straatnaam staat.")]
+        [EventPropertyDescription("Taal waarin de officiële straatnaam staat. Mogelijkheden: Dutch, French of German.")]
         public Language? Language { get; }
 
         [EventPropertyDescription("Metadata bij het event.")]
