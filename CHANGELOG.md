@@ -1,3 +1,10 @@
+## [2.18.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.18.1...v2.18.2) (2021-03-22)
+
+
+### Bug Fixes
+
+* remove ridingwolf, collaboration ended ([efe6fe3](https://github.com/informatievlaanderen/streetname-registry/commit/efe6fe337ef56c4d86ae2fd98eba61b561ddb333))
+
 ## [2.18.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.18.0...v2.18.1) (2021-03-17)
 
 
