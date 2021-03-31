@@ -1,3 +1,15 @@
+# [2.19.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.18.2...v2.19.0) (2021-03-31)
+
+
+### Bug Fixes
+
+* update docs projections ([7c2f5e2](https://github.com/informatievlaanderen/streetname-registry/commit/7c2f5e227fb0c07f800b11e50d50c7ec3de04a05))
+
+
+### Features
+
+* bump projector & projection handling ([fe9736a](https://github.com/informatievlaanderen/streetname-registry/commit/fe9736a1fdb4808382e0245772fb2ca22b0257f3))
+
 ## [2.18.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.18.1...v2.18.2) (2021-03-22)
 
 
