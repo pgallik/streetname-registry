@@ -1,3 +1,10 @@
+## [2.19.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.19.0...v2.19.1) (2021-04-26)
+
+
+### Bug Fixes
+
+* rename cache status endpoint in projector ([367fddb](https://github.com/informatievlaanderen/streetname-registry/commit/367fddb8ca95b063a201f833b579cd0b6eeea7c9))
+
 # [2.19.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.18.2...v2.19.0) (2021-03-31)
 
 
