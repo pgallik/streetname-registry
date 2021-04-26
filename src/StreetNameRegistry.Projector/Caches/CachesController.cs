@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Projector.Caches
             return Ok(new[]
             {
                new {
-                   name = "LastChangedList",
+                   name = "Cache detail straatnamen",
                    numberOfRecordsToProcess = numberOfRecords
                }
            });
