@@ -1,3 +1,10 @@
+# [2.20.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.19.1...v2.20.0) (2021-04-28)
+
+
+### Features
+
+* add status filter on legacy list ([ad1563b](https://github.com/informatievlaanderen/streetname-registry/commit/ad1563bccbd4df234cde6e47fcef27052f32fab7))
+
 ## [2.19.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.19.0...v2.19.1) (2021-04-26)
 
 
