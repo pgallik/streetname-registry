@@ -1,3 +1,10 @@
+# [2.21.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.20.0...v2.21.0) (2021-05-04)
+
+
+### Features
+
+* bump packages ([a1ec84c](https://github.com/informatievlaanderen/streetname-registry/commit/a1ec84c1981e0ce2143acfe9ae4d6adc2bdca312))
+
 # [2.20.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.19.1...v2.20.0) (2021-04-28)
 
 
