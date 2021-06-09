@@ -1,3 +1,10 @@
+## [2.21.5](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.4...v2.21.5) (2021-06-09)
+
+
+### Bug Fixes
+
+* add streetnamesearch fields, migration ([9ce1064](https://github.com/informatievlaanderen/streetname-registry/commit/9ce1064bb100c3d55cd95ce74b90a34073a9321e))
+
 ## [2.21.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.3...v2.21.4) (2021-06-09)
 
 
