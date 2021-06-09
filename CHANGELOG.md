@@ -1,3 +1,10 @@
+## [2.21.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.3...v2.21.4) (2021-06-09)
+
+
+### Bug Fixes
+
+* add nis code filter ([97314f0](https://github.com/informatievlaanderen/streetname-registry/commit/97314f0010e489cf7188c04e75164e88ecee80a6))
+
 ## [2.21.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.2...v2.21.3) (2021-05-31)
 
 
