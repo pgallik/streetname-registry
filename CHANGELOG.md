@@ -1,3 +1,10 @@
+## [2.21.6](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.5...v2.21.6) (2021-06-11)
+
+
+### Bug Fixes
+
+* fix niscode filter ([4f4550a](https://github.com/informatievlaanderen/streetname-registry/commit/4f4550a0f311ea406aef64aeb224028f74edd6a4))
+
 ## [2.21.5](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.4...v2.21.5) (2021-06-09)
 
 
