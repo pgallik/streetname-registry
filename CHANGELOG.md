@@ -1,3 +1,10 @@
+## [2.21.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.6...v2.21.7) (2021-06-17)
+
+
+### Bug Fixes
+
+* update nuget package ([3d79968](https://github.com/informatievlaanderen/streetname-registry/commit/3d7996856567d7c34a2c6425616c724d43750bd6))
+
 ## [2.21.6](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.5...v2.21.6) (2021-06-11)
 
 
