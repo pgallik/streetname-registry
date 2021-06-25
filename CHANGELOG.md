@@ -1,3 +1,10 @@
+## [2.21.9](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.8...v2.21.9) (2021-06-25)
+
+
+### Bug Fixes
+
+* update aws DistributedMutex package ([7966039](https://github.com/informatievlaanderen/streetname-registry/commit/7966039efa956f6058092b5565d29d4710c7e0ac))
+
 ## [2.21.8](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.7...v2.21.8) (2021-06-25)
 
 
