@@ -1,3 +1,10 @@
+## [2.21.8](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.7...v2.21.8) (2021-06-25)
+
+
+### Bug Fixes
+
+* add unique constraint to persistentlocalid ([bf5d7f8](https://github.com/informatievlaanderen/streetname-registry/commit/bf5d7f85d73a4f6584af18f843e78538d767053c))
+
 ## [2.21.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.6...v2.21.7) (2021-06-17)
 
 
