@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.Extract.Extracts
 {
+    using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.Api.Extract;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
@@ -9,15 +10,25 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using Projections.Syndication;
     using System.Linq;
 
+
     public class StreetNameRegistryExtractBuilder
     {
-        public static ExtractFile CreateStreetNameFile(ExtractContext context, SyndicationContext syndicationContext)
+        public static IEnumerable<ExtractFile> CreateStreetNameFiles(ExtractContext context, SyndicationContext syndicationContext)
         {
             var extractItems = context
                 .StreetNameExtract
                 .AsNoTracking()
                 .Where(x => x.Complete)
                 .OrderBy(x => x.StreetNamePersistentLocalId);
+
+            var streetNameProjectionState = context
+                .ProjectionStates
+                .AsNoTracking()
+                .Single(m => m.Name == typeof(StreetNameExtractProjections).FullName);
+            var extractMetadata = new Dictionary<string,string>
+            {
+                { ExtractMetadataKeys.LatestEventId, streetNameProjectionState.Position.ToString()}
+            };
 
             var cachedMunicipalities = syndicationContext.MunicipalityLatestItems.AsNoTracking().ToList();
 
@@ -60,12 +71,16 @@ namespace StreetNameRegistry.Api.Extract.Extracts
                 return item.ToBytes(DbfFileWriter<StreetNameDbaseRecord>.Encoding);
             }
 
-            return ExtractBuilder.CreateDbfFile<StreetNameExtractItem, StreetNameDbaseRecord>(
+            yield return ExtractBuilder.CreateDbfFile<StreetNameExtractItem, StreetNameDbaseRecord>(
                 ExtractController.ZipName,
                 new StreetNameDbaseSchema(),
                 extractItems,
                 extractItems.Count,
                 TransformRecord);
+
+            yield return ExtractBuilder.CreateMetadataDbfFile(
+                ExtractController.ZipName,
+                extractMetadata);
         }
     }
 }

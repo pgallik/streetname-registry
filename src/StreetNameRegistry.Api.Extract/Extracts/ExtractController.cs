@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Api.Extract.Extracts
             [FromServices] ExtractContext context,
             [FromServices] SyndicationContext syndicationContext,
             CancellationToken cancellationToken = default) =>
-            new ExtractArchive($"{ZipName}-{DateTime.Now:yyyy-MM-dd}") { StreetNameRegistryExtractBuilder.CreateStreetNameFile(context, syndicationContext) }
+            new IsolationExtractArchive ($"{ZipName}-{DateTime.Now:yyyy-MM-dd}", context) { StreetNameRegistryExtractBuilder.CreateStreetNameFiles(context, syndicationContext) }
                 .CreateFileCallbackResult(cancellationToken);
     }
 }
