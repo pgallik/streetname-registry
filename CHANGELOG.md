@@ -1,3 +1,10 @@
+# [2.22.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.9...v2.22.0) (2021-08-25)
+
+
+### Features
+
+* add metadata file with latest event id to street name extract GRAR-2060 ([6d8d62c](https://github.com/informatievlaanderen/streetname-registry/commit/6d8d62c019d7bb7b094cbe8903e31f0d335dabc4))
+
 ## [2.21.9](https://github.com/informatievlaanderen/streetname-registry/compare/v2.21.8...v2.21.9) (2021-06-25)
 
 
