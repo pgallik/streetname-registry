@@ -167,7 +167,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 ProblemTypeUri = "urn:be.vlaanderen.basisregisters.api:streetname:gone",
                 HttpStatus = StatusCodes.Status410Gone,
                 Title = ProblemDetails.DefaultTitle,
-                Detail = "Straatnaam verwijderd.",
+                Detail = "Verwijderde straatnaam.",
                 ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(_httpContextAccessor.HttpContext)
             };
     }
