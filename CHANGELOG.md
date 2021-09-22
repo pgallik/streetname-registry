@@ -1,3 +1,10 @@
+## [2.22.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.3...v2.22.4) (2021-09-22)
+
+
+### Bug Fixes
+
+* gawr-611 fix exception detail ([49b97ad](https://github.com/informatievlaanderen/streetname-registry/commit/49b97ad3b69df3dc4e3901034d272f9988752185))
+
 ## [2.22.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.2...v2.22.3) (2021-09-22)
 
 
