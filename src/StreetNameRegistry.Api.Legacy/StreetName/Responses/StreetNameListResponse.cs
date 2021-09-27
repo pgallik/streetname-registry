@@ -106,7 +106,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             var streetNameSamples = new List<StreetNameListItemResponse>
                 {
                     new StreetNameListItemResponse(
-                        rnd.Next(10000, 150000),
+                        1000,
                         _responseOptions.Naamruimte,
                         _responseOptions.DetailUrl,
                         new GeografischeNaam("Kerkstraat", Taal.NL),
@@ -115,7 +115,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                         DateTimeOffset.Now.LocalDateTime),
 
                     new StreetNameListItemResponse(
-                        rnd.Next(10000, 150000),
+                        1001,
                         _responseOptions.Naamruimte,
                         _responseOptions.DetailUrl,
                         new GeografischeNaam("Wetstraat", Taal.NL),
