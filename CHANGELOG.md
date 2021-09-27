@@ -1,3 +1,10 @@
+## [2.22.5](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.4...v2.22.5) (2021-09-27)
+
+
+### Bug Fixes
+
+* gawr-618 voorbeeld straatnaam id sorteren ([7b16cb3](https://github.com/informatievlaanderen/streetname-registry/commit/7b16cb3949c8494f46fd7be4b10923258944636e))
+
 ## [2.22.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.3...v2.22.4) (2021-09-22)
 
 
