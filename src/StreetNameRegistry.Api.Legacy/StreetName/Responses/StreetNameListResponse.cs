@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Newtonsoft.Json;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
@@ -112,7 +113,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                         new GeografischeNaam("Kerkstraat", Taal.NL),
                         null,
                         StraatnaamStatus.InGebruik,
-                        DateTimeOffset.Now.LocalDateTime),
+                        DateTimeOffset.Now.ToExampleOffset()),
 
                     new StreetNameListItemResponse(
                         1001,
@@ -121,7 +122,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                         new GeografischeNaam("Wetstraat", Taal.NL),
                         new GeografischeNaam("BR", Taal.NL),
                         StraatnaamStatus.Voorgesteld,
-                        DateTimeOffset.Now.LocalDateTime)
+                        DateTimeOffset.Now.ToExampleOffset())
                 };
 
             return new StreetNameListResponse

@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName.Requests
 {
     using System;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Bosa;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
@@ -28,13 +29,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Requests
                 StraatnaamCode = new ZoekIdentifier
                 {
                     ObjectId = "2",
-                    VersieId = DateTimeOffset.Now
+                    VersieId = DateTimeOffset.Now.ToExampleOffset()
                 },
                 StraatnaamStatus = StraatnaamStatus.InGebruik,
                 GemeenteCode = new ZoekIdentifier
                 {
                     ObjectId = "230",
-                    VersieId = DateTimeOffset.Now
+                    VersieId = DateTimeOffset.Now.ToExampleOffset()
                 }
             };
     }

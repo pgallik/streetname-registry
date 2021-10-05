@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using System.Linq;
     using System.Runtime.Serialization;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
@@ -119,7 +120,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
                 rnd.Next(10000, 15000),
                 StraatnaamStatus.InGebruik,
                 gemeente,
-                DateTimeOffset.Now,
+                DateTimeOffset.Now.ToExampleOffset(),
                 "Baliestraat");
         }
     }
