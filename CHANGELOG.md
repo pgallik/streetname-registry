@@ -1,3 +1,11 @@
+## [2.22.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.6...v2.22.7) (2021-10-05)
+
+
+### Bug Fixes
+
+* grawr-615 versionid offset +2 ([07ad035](https://github.com/informatievlaanderen/streetname-registry/commit/07ad03599bb7cc76a1f1091b580751057feb9661))
+* updated paket files ([c36df86](https://github.com/informatievlaanderen/streetname-registry/commit/c36df867fd076e339cddef32e0b87a7455118dad))
+
 ## [2.22.6](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.5...v2.22.6) (2021-10-01)
 
 
