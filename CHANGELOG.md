@@ -1,3 +1,10 @@
+## [2.22.9](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.8...v2.22.9) (2021-10-06)
+
+
+### Bug Fixes
+
+* gawr-626 change doc language ([688e93c](https://github.com/informatievlaanderen/streetname-registry/commit/688e93cff76d2d32d293e1f16db4ff15df8c306d))
+
 ## [2.22.8](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.7...v2.22.8) (2021-10-06)
 
 
