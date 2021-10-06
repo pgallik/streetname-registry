@@ -54,14 +54,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         public Uri Detail { get; set; }
 
         /// <summary>
-        /// De straatnaam in het Nederlands.
+        /// De straatnaam in de eerste officiële taal van de gemeente.
         /// </summary>
         [DataMember(Name = "Straatnaam", Order = 3)]
         [JsonProperty(Required = Required.DisallowNull)]
         public Straatnaam Straatnaam { get; set; }
 
         /// <summary>
-        /// De homoniemtoevoeging in het Nederlands.
+        /// De homoniemtoevoeging in de eerste officiële taal van de gemeente.
         /// </summary>
         [DataMember(Name = "HomoniemToevoeging", Order = 4, EmitDefaultValue = false)]
         [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
