@@ -1,3 +1,10 @@
+# [2.23.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.9...v2.23.0) (2021-10-13)
+
+
+### Features
+
+* add backoffice api + propose endpoint GAWR-2064 ([6fc4c4b](https://github.com/informatievlaanderen/streetname-registry/commit/6fc4c4b971ca9b7a422e79f4e223a2fbaf414b49))
+
 ## [2.22.9](https://github.com/informatievlaanderen/streetname-registry/compare/v2.22.8...v2.22.9) (2021-10-06)
 
 
