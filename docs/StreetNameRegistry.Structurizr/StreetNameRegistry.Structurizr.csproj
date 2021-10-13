@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <DisableImplicitFrameworkReferences>False</DisableImplicitFrameworkReferences>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

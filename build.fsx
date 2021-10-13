@@ -38,6 +38,7 @@ Target.create "Restore_Solution" (fun _ -> restore "StreetNameRegistry")
 Target.create "Build_Solution" (fun _ ->
   setVersions "SolutionInfo.cs"
   buildSource "StreetNameRegistry.Projector"
+  buildSource "StreetNameRegistry.Api.BackOffice"
   buildSource "StreetNameRegistry.Api.Legacy"
   buildSource "StreetNameRegistry.Api.Extract"
   buildSource "StreetNameRegistry.Api.CrabImport"
@@ -57,6 +58,7 @@ Target.create "Test_Solution" (fun _ ->
 Target.create "Publish_Solution" (fun _ ->
   [
     "StreetNameRegistry.Projector"
+    "StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.Legacy"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
@@ -69,6 +71,7 @@ Target.create "Publish_Solution" (fun _ ->
 Target.create "Pack_Solution" (fun _ ->
   [
     "StreetNameRegistry.Projector"
+    "StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.Legacy"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
@@ -76,6 +79,9 @@ Target.create "Pack_Solution" (fun _ ->
 
 Target.create "Containerize_Projector" (fun _ -> containerize "StreetNameRegistry.Projector" "projector")
 Target.create "PushContainer_Projector" (fun _ -> push "projector")
+
+Target.create "Containerize_ApiBackOffice" (fun _ -> containerize "StreetNameRegistry.Api.BackOffice" "api-backoffice")
+Target.create "PushContainer_ApiBackOffice" (fun _ -> push "api-backoffice")
 
 Target.create "Containerize_ApiLegacy" (fun _ -> containerize "StreetNameRegistry.Api.Legacy" "api-legacy")
 Target.create "PushContainer_ApiLegacy" (fun _ -> push "api-legacy")
@@ -119,6 +125,7 @@ Target.create "Push" ignore
 
 "Pack"
   ==> "Containerize_Projector"
+  ==> "Containerize_ApiBackOffice"
   ==> "Containerize_ApiLegacy"
   ==> "Containerize_ApiExtract"
   ==> "Containerize_ApiCrabImport"
@@ -129,6 +136,7 @@ Target.create "Push" ignore
 "Containerize"
   ==> "DockerLogin"
   ==> "PushContainer_Projector"
+  ==> "PushContainer_ApiBackOffice"
   ==> "PushContainer_ApiLegacy"
   ==> "PushContainer_ApiExtract"
   ==> "PushContainer_ApiCrabImport"
