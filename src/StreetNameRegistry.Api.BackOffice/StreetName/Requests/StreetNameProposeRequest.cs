@@ -10,14 +10,14 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
     public class StreetNameProposeRequest
     {
         /// <summary>
-        /// PURI met NIS-code van de gemeente die de straatnaam toekent.
+        /// De unieke en persistente identificator van de gemeente die de straatnaam toekent.
         /// </summary>
         [DataMember(Name = "GemeenteId", Order = 1)]
         [JsonProperty(Required = Required.DisallowNull)]
         public string GemeenteId { get; set; }
 
         /// <summary>
-        /// Eén of twee taalstrings bestaande uit een straatnaam en de taal waarin deze wordt voorgesteld.
+        /// De naam van de straat in elke officiële taal en faciliteitentaal van de gemeente.
         /// </summary>
         [DataMember(Name = "Straatnamen", Order = 2)]
         [JsonProperty(Required = Required.DisallowNull)]
