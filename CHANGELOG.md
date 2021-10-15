@@ -1,3 +1,10 @@
+## [2.24.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.0...v2.24.1) (2021-10-15)
+
+
+### Bug Fixes
+
+* make properties required ([f28f669](https://github.com/informatievlaanderen/streetname-registry/commit/f28f669848021d864361c93110e3ab3db6082d9e))
+
 # [2.24.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.23.1...v2.24.0) (2021-10-15)
 
 
