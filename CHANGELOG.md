@@ -1,3 +1,15 @@
+# [2.24.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.23.1...v2.24.0) (2021-10-15)
+
+
+### Bug Fixes
+
+* docs on propose streetname ([8006132](https://github.com/informatievlaanderen/streetname-registry/commit/80061322dcf1dd77f0ee56fa232477e41bf7c2b0))
+
+
+### Features
+
+* add backoffice, update buildscript, gh pipeline, add first intern api endpoint ([5ed8a9f](https://github.com/informatievlaanderen/streetname-registry/commit/5ed8a9fbcb4a04a410c7b1dd68c1d5c60686012f))
+
 ## [2.23.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.23.0...v2.23.1) (2021-10-14)
 
 
