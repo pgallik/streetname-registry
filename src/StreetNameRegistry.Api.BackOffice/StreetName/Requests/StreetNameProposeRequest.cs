@@ -13,14 +13,14 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         /// De unieke en persistente identificator van de gemeente die de straatnaam toekent.
         /// </summary>
         [DataMember(Name = "GemeenteId", Order = 1)]
-        [JsonProperty(Required = Required.DisallowNull)]
+        [JsonProperty(Required = Required.Always)]
         public string GemeenteId { get; set; }
 
         /// <summary>
         /// De naam van de straat in elke officiële taal en faciliteitentaal van de gemeente.
         /// </summary>
         [DataMember(Name = "Straatnamen", Order = 2)]
-        [JsonProperty(Required = Required.DisallowNull)]
+        [JsonProperty(Required = Required.Always)]
         public Dictionary<Taal, string> Straatnamen { get; set; }
     }
 
