@@ -1,3 +1,10 @@
+## [2.24.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.1...v2.24.2) (2021-10-18)
+
+
+### Bug Fixes
+
+* add etag to response header ([e1c135b](https://github.com/informatievlaanderen/streetname-registry/commit/e1c135b6038e161c4bffff4537f7efd01021adf1))
+
 ## [2.24.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.0...v2.24.1) (2021-10-15)
 
 
