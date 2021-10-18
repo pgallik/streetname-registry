@@ -11,15 +11,21 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 
         public override async Task ExecuteResultAsync(ActionContext context)
         {
-            await Task.Run(() => ExecuteResult(context)).ConfigureAwait(false);
+            AddEtag(context);
+            await base.ExecuteResultAsync(context);
         }
 
         public override void ExecuteResult(ActionContext context)
         {
+            AddEtag(context);
             base.ExecuteResult(context);
+        }
 
+        private void AddEtag(ActionContext context)
+        {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
+
 
             if (context.HttpContext.Response.Headers.Keys.Contains(HeaderNames.ETag))
                 context.HttpContext.Response.Headers[HeaderNames.ETag] = _etag;
@@ -27,7 +33,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                 context.HttpContext.Response.Headers.Add(HeaderNames.ETag, _etag);
         }
 
-        public CreatedWithETagResult(Uri uri, object? value, string etag) : base(uri, value) => _etag = etag;
+        public CreatedWithETagResult(Uri location, string etag) : base(location, null)
+        {
+            _etag = etag;
+        }
 
     }
 }

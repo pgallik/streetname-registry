@@ -40,7 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             [FromBody] StreetNameProposeRequest streetNameProposeRequest)
         {
 
-            return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), null, "123");
+            return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), "123");
         }
     }
 }
