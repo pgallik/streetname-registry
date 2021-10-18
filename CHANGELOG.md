@@ -1,3 +1,10 @@
+## [2.24.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.2...v2.24.3) (2021-10-18)
+
+
+### Bug Fixes
+
+* etag ([ee6287e](https://github.com/informatievlaanderen/streetname-registry/commit/ee6287e9a5092b150f61d030d237c039e4049afe))
+
 ## [2.24.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.1...v2.24.2) (2021-10-18)
 
 
