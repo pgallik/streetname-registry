@@ -3,7 +3,9 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using System;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Infrastructure;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
@@ -28,15 +30,17 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string", "De url van de voorgestelde straatnaam.", "")]
+        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string",
+            "De url van de voorgestelde straatnaam.", "")]
         [SwaggerRequestExample(typeof(StreetNameProposeRequest), typeof(StreetNameProposeRequestExamples))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<ActionResult> Propose(
+        public async Task<IActionResult> Propose(
             [FromServices] IOptions<ResponseOptions> options,
             [FromBody] StreetNameProposeRequest streetNameProposeRequest)
         {
-            return Created(new Uri(string.Format(options.Value.DetailUrl, "1")), null);
+
+            return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), null, "123");
         }
     }
 }
