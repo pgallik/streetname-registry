@@ -6,6 +6,14 @@ namespace StreetNameRegistry.StreetName
 
     public class Names : List<StreetNameName>
     {
+        public Names()
+        {
+        }
+
+        public Names(IEnumerable<StreetNameName> streetNameNames): base(streetNameNames)
+        {
+        }
+
         public bool HasMatch(Language? language, string name)
             => this.Any(x => x.Language == language && x.Name == name);
 

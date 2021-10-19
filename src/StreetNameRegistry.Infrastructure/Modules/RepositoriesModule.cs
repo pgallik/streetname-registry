@@ -12,6 +12,10 @@ namespace StreetNameRegistry.Infrastructure.Modules
             containerBuilder
                 .RegisterType<StreetNames>()
                 .As<IStreetNames>();
+
+            containerBuilder
+                .RegisterType<Municipalities>()
+                .As<IMunicipalities>();
         }
     }
 }

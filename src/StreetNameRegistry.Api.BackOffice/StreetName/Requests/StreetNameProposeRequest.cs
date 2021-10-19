@@ -1,9 +1,14 @@
 namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Convertors;
     using Newtonsoft.Json;
+    using StreetNameRegistry.StreetName;
+    using StreetNameRegistry.StreetName.Commands;
     using Swashbuckle.AspNetCore.Filters;
 
     [DataContract(Name = "VoorstelStraatnaam", Namespace = "")]
@@ -22,6 +27,17 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         [DataMember(Name = "Straatnamen", Order = 2)]
         [JsonProperty(Required = Required.Always)]
         public Dictionary<Taal, string> Straatnamen { get; set; }
+
+
+        /// <summary>
+        /// Map to ProposeStreetName command
+        /// </summary>
+        /// <returns>ProposeStreetName.</returns>
+        public ProposeStreetName ToCommand(MunicipalityId municipalityId, ProvenanceData provenanceData)
+        {
+            var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, x.Key.ToLanguage())));
+            return new ProposeStreetName(municipalityId, names, provenanceData);
+        }
     }
 
     public class StreetNameProposeRequestExamples : IExamplesProvider<StreetNameProposeRequest>

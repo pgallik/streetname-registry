@@ -14,111 +14,22 @@ namespace StreetNameRegistry.StreetName
     public sealed class StreetNameCommandHandlerModule : CommandHandlerModule
     {
         public StreetNameCommandHandlerModule(
-            Func<IStreetNames> getStreetNames,
+            Func<IMunicipalities> getMunicipalities,
             Func<ConcurrentUnitOfWork> getUnitOfWork,
             Func<IStreamStore> getStreamStore,
             EventMapping eventMapping,
             EventSerializer eventSerializer,
             StreetNameProvenanceFactory provenanceFactory)
         {
-            For<ImportStreetNameFromCrab>()
+            For<ProposeStreetName>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
-                .Handle(async (message, ct) => { await ImportStreetNameFromCrab(getStreetNames, message, ct); });
-
-            For<ImportStreetNameStatusFromCrab>()
-                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
-                .AddProvenance(getUnitOfWork, provenanceFactory)
-                .Handle(async (message, ct) => { await ImportStreetNameStatusFromCrab(getStreetNames, message, ct); });
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.ProposeStreetName(message.Command.StreetNameNames);
+                });
         }
 
-        public async Task ImportStreetNameFromCrab(
-            Func<IStreetNames> getStreetNames,
-            CommandMessage<ImportStreetNameFromCrab> message,
-            CancellationToken ct)
-        {
-            var streetNames = getStreetNames();
-
-            var streetNameId = StreetNameId.CreateFor(message.Command.StreetNameId);
-            var municipalityId = MunicipalityId.CreateFor(message.Command.MunicipalityId);
-
-            var streetName =
-                await GetOrRegisterStreetName(
-                    streetNames,
-                    streetNameId,
-                    municipalityId,
-                    message.Command.NisCode,
-                    ct);
-
-            ImportFromCrab(streetName.Value, message.Command);
-        }
-
-        public async Task ImportStreetNameStatusFromCrab(
-            Func<IStreetNames> getStreetNames,
-            CommandMessage<ImportStreetNameStatusFromCrab> message,
-            CancellationToken ct)
-        {
-            var streetNames = getStreetNames();
-
-            var streetNameId = StreetNameId.CreateFor(message.Command.StreetNameId);
-
-            var streetName = await streetNames.GetAsync(streetNameId, ct);
-
-            ImportStatusFromCrab(streetName, message.Command);
-        }
-
-        private static void ImportFromCrab(StreetName streetName, ImportStreetNameFromCrab command)
-        {
-            streetName.ImportFromCrab(
-                command.StreetNameId,
-                command.MunicipalityId,
-                command.PrimaryStreetName,
-                command.SecondaryStreetName,
-                command.PrimaryTransStreetName,
-                command.SecondaryTransStreetName,
-                command.PrimaryLanguage,
-                command.SecondaryLanguage,
-                command.LifeTime,
-                command.Timestamp,
-                command.Operator,
-                command.Modification,
-                command.Organisation);
-        }
-
-        private static void ImportStatusFromCrab(StreetName streetName, ImportStreetNameStatusFromCrab command)
-        {
-            streetName.ImportStatusFromCrab(
-                command.StreetNameStatusId,
-                command.StreetNameId,
-                command.StreetNameStatus,
-                command.LifeTime,
-                command.Timestamp,
-                command.Operator,
-                command.Modification,
-                command.Organisation);
-        }
-
-        private static async Task<Optional<StreetName>> GetOrRegisterStreetName(
-            IStreetNames streetNames,
-            StreetNameId streetNameId,
-            MunicipalityId municipalityId,
-            NisCode nisCode,
-            CancellationToken ct)
-        {
-            var streetName = await streetNames.GetOptionalAsync(streetNameId, ct);
-
-            if (streetName.HasValue)
-                return streetName;
-
-            streetName = new Optional<StreetName>(
-                StreetName.Register(
-                    new StreetNameId(streetNameId),
-                    new MunicipalityId(municipalityId),
-                    nisCode));
-
-            streetNames.Add(streetNameId, streetName.Value);
-
-            return streetName;
-        }
     }
 }

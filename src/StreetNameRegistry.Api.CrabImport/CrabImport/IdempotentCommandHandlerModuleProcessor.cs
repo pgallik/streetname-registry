@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
     public class IdempotentCommandHandlerModuleProcessor : IIdempotentCommandHandlerModuleProcessor
     {
         private readonly ConcurrentUnitOfWork _concurrentUnitOfWork;
-        private readonly StreetNameCommandHandlerModule _streetNameCommandHandlerModule;
+        private readonly CrabStreetNameCommandHandlerModule _crabStreetNameCommandHandlerModule;
         private readonly Func<IHasCrabProvenance, StreetName, Provenance> _provenanceFactory;
         private readonly Func<IStreetNames> _getStreetNames;
 
@@ -26,13 +26,13 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
             Func<IStreamStore> getStreamStore,
             EventMapping eventMapping,
             EventSerializer eventSerializer,
-            StreetNameProvenanceFactory provenanceFactory)
+            CrabStreetNameProvenanceFactory provenanceFactory)
         {
             _getStreetNames = getStreetNames;
             _concurrentUnitOfWork = concurrentUnitOfWork;
             _provenanceFactory = provenanceFactory.CreateFrom;
 
-            _streetNameCommandHandlerModule = new StreetNameCommandHandlerModule(
+            _crabStreetNameCommandHandlerModule = new CrabStreetNameCommandHandlerModule(
                 getStreetNames,
                 () => concurrentUnitOfWork,
                 getStreamStore,
@@ -51,13 +51,13 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
             {
                 case ImportStreetNameFromCrab command:
                     var commandImportStreetName = new CommandMessage<ImportStreetNameFromCrab>(command.CreateCommandId(), command, metadata);
-                    await _streetNameCommandHandlerModule.ImportStreetNameFromCrab(_getStreetNames, commandImportStreetName, cancellationToken);
+                    await _crabStreetNameCommandHandlerModule.ImportStreetNameFromCrab(_getStreetNames, commandImportStreetName, cancellationToken);
                     AddProvenancePipe.AddProvenance(() => _concurrentUnitOfWork, commandImportStreetName, _provenanceFactory, currentPosition);
                     return commandImportStreetName;
 
                 case ImportStreetNameStatusFromCrab command:
                     var commandImportStreetNameStatus = new CommandMessage<ImportStreetNameStatusFromCrab>(command.CreateCommandId(), command, metadata);
-                    await _streetNameCommandHandlerModule.ImportStreetNameStatusFromCrab(_getStreetNames, commandImportStreetNameStatus, cancellationToken);
+                    await _crabStreetNameCommandHandlerModule.ImportStreetNameStatusFromCrab(_getStreetNames, commandImportStreetNameStatus, cancellationToken);
                     AddProvenancePipe.AddProvenance(() => _concurrentUnitOfWork, commandImportStreetNameStatus, _provenanceFactory, currentPosition);
                     return commandImportStreetNameStatus;
 
