@@ -1,3 +1,10 @@
+# [2.25.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.3...v2.25.0) (2021-10-19)
+
+
+### Features
+
+* GAWR-1179 handle command ([1759364](https://github.com/informatievlaanderen/streetname-registry/commit/17593646a3ad63711b09d3cad96e3926f9ba58a3))
+
 ## [2.24.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.2...v2.24.3) (2021-10-18)
 
 
