@@ -60,15 +60,14 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             try
             {
                 //TODO real data please
-                var fakeProvenanceData = new ProvenanceData(
-                    new Provenance(
+                var fakeProvenanceData = new Provenance(
                         DateTime.UtcNow.ToInstant(),
                         Application.StreetNameRegistry,
                         new Reason(""),
                         new Operator(""),
                         Modification.Insert,
                         Organisation.DigitaalVlaanderen
-                    ));
+                    );
 
 
                 var identifier = streetNameProposeRequest.GemeenteId

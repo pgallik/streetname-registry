@@ -1,11 +1,8 @@
 namespace StreetNameRegistry.StreetName
 {
     using System;
-    using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.Crab;
     using Events;
-    using Events.Crab;
 
     public partial class Municipality : AggregateRootEntity
     {
@@ -18,22 +15,10 @@ namespace StreetNameRegistry.StreetName
         //     return streetName;
         // }
 
-        public void ProposeStreetName(Names commandStreetNameNames)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
-    public partial class Municipality
-    {
-        // private Municipality()
-        // {
-        //     Register<MunicipalityWasRegistered>(When);
-        // }
-        //
-        // private void When(MunicipalityWasRegistered @event)
-        // {
-        //
-        // }
+        public void ProposeStreetName(Names streetNameNames, IPersistentLocalIdGenerator persistentLocalIdGenerator)
+        {
+            ApplyChange(new StreetNameWasProposedV2(_municipalityId,streetNameNames, persistentLocalIdGenerator.GenerateNextPersistentLocalId()));
+        }
     }
 }

@@ -18,7 +18,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using System;
     using System.Linq;
     using System.Reflection;
+    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.CrabImport;
     using Microsoft.OpenApi.Models;
+    using SqlStreamStore;
 
     /// <summary>Represents the startup process for the application.</summary>
     public class Startup
@@ -114,9 +117,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
             IApiVersionDescriptionProvider apiVersionProvider,
             ApiDataDogToggle datadogToggle,
             ApiDebugDataDogToggle debugDataDogToggle,
+            MsSqlStreamStore streamStore,
             HealthCheckService healthCheckService)
         {
-            StartupHelpers.CheckDatabases(healthCheckService, DatabaseTag).GetAwaiter().GetResult();
+            StartupHelpers.EnsureSqlStreamStoreSchema<Startup>(streamStore, loggerFactory);
 
             app
                 .UseDataDog<Startup>(new DataDogOptions
@@ -171,6 +175,14 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                         AfterMiddleware = x => x.UseMiddleware<AddNoCacheHeadersMiddleware>(),
                     }
                 });
+
+            app.UseIdempotencyDatabaseMigrations();
+
+            MigrationsHelper.Run(
+                _configuration.GetConnectionString("Sequences"),
+                serviceProvider.GetService<ILoggerFactory>());
+
+            StartupHelpers.CheckDatabases(healthCheckService, DatabaseTag).GetAwaiter().GetResult();
         }
 
         private static string GetApiLeadingText(ApiVersionDescription description)

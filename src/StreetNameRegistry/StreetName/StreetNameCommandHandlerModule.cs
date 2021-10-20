@@ -1,8 +1,6 @@
 namespace StreetNameRegistry.StreetName
 {
     using System;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.SqlStreamStore;
@@ -19,6 +17,7 @@ namespace StreetNameRegistry.StreetName
             Func<IStreamStore> getStreamStore,
             EventMapping eventMapping,
             EventSerializer eventSerializer,
+            IPersistentLocalIdGenerator persistentLocalIdGenerator,
             StreetNameProvenanceFactory provenanceFactory)
         {
             For<ProposeStreetName>()
@@ -27,9 +26,8 @@ namespace StreetNameRegistry.StreetName
                 .Handle(async (message, ct) =>
                 {
                     var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
-                    municipality.ProposeStreetName(message.Command.StreetNameNames);
+                    municipality.ProposeStreetName(message.Command.StreetNameNames, persistentLocalIdGenerator);
                 });
         }
-
     }
 }

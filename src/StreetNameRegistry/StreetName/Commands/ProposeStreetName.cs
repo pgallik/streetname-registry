@@ -6,17 +6,22 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    public class ProposeStreetName : IHasProvenance
+    //todo move to library
+    public interface IHasCommandProvenance
+    {
+        Provenance Provenance { get; }
+    }
+    public class ProposeStreetName : IHasCommandProvenance
     {
         private static readonly Guid Namespace = new Guid("55378fee-18e5-4e26-abd0-36692639a146");
         public MunicipalityId MunicipalityId { get; }
-        public ProvenanceData Provenance { get; }
+        public Provenance Provenance { get; }
         public Names StreetNameNames { get; }
 
         public ProposeStreetName(
             MunicipalityId municipalityId,
             Names streetNameNames,
-            ProvenanceData provenance
+            Provenance provenance
             )
         {
             MunicipalityId = municipalityId;

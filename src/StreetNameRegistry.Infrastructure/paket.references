@@ -8,5 +8,12 @@ Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac
 
 Be.Vlaanderen.Basisregisters.DataDog.Tracing.SqlStreamStore
 
+Microsoft.Extensions.Configuration.EnvironmentVariables
+Microsoft.Extensions.Configuration.FileExtensions
+Microsoft.Extensions.Configuration.Json
+
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.SqlServer
+
 SourceLink.Embed.AllSourceFiles
 SourceLink.Copy.PdbFiles
