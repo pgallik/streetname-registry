@@ -1,3 +1,10 @@
+# [2.26.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.25.0...v2.26.0) (2021-10-20)
+
+
+### Features
+
+* add event + save to db ([e48792d](https://github.com/informatievlaanderen/streetname-registry/commit/e48792d96ecc550113ecd8d33632040665860c5e))
+
 # [2.25.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.24.3...v2.25.0) (2021-10-19)
 
 
