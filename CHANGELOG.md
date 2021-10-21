@@ -1,3 +1,10 @@
+## [2.26.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.26.0...v2.26.1) (2021-10-21)
+
+
+### Bug Fixes
+
+* gawr-2202 add api documentation ([1ac30e4](https://github.com/informatievlaanderen/streetname-registry/commit/1ac30e4ee381d13cb040f813a67b624415e975fb))
+
 # [2.26.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.25.0...v2.26.0) (2021-10-20)
 
 
