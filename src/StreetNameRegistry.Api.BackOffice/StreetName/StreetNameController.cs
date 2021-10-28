@@ -59,6 +59,9 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         {
             try
             {
+
+                //TODO REMOVE WHEN IMPLEMENTED
+                return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), "1");
                 //TODO real data please
                 var fakeProvenanceData = new Provenance(
                         DateTime.UtcNow.ToInstant(),
