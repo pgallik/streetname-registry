@@ -1,3 +1,10 @@
+## [2.26.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.26.3...v2.26.4) (2021-10-28)
+
+
+### Bug Fixes
+
+* fake call ([5dba6c7](https://github.com/informatievlaanderen/streetname-registry/commit/5dba6c71edfaf2dacec516f8e1f93ecbd176ef5d))
+
 ## [2.26.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.26.2...v2.26.3) (2021-10-27)
 
 
