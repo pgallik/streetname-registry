@@ -1,3 +1,10 @@
+# [2.27.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.26.4...v2.27.0) (2021-11-08)
+
+
+### Features
+
+* add municipality commands/events GAWR-1161 ([cdf2fdb](https://github.com/informatievlaanderen/streetname-registry/commit/cdf2fdb12e9096fb202bcb772b9e6c30390184a4))
+
 ## [2.26.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.26.3...v2.26.4) (2021-10-28)
 
 
