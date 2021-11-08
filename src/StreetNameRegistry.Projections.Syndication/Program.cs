@@ -8,7 +8,6 @@ namespace StreetNameRegistry.Projections.Syndication
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
-    using Autofac.Features.OwnedInstances;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -59,7 +58,7 @@ namespace StreetNameRegistry.Projections.Syndication
                         {
                             await MigrationsHelper.RunAsync(
                                 configuration.GetConnectionString("SyndicationProjectionsAdmin"),
-                                container.GetService<ILoggerFactory>(),
+                                container.GetService<ILoggerFactory>()!,
                                 ct);
 
                             await container
@@ -74,7 +73,7 @@ namespace StreetNameRegistry.Projections.Syndication
                         }
                     },
                     DistributedLockOptions.LoadFromConfiguration(configuration) ?? DistributedLockOptions.Defaults,
-                    container.GetService<ILogger<Program>>());
+                    container.GetService<ILogger<Program>>()!);
             }
             catch (Exception e)
             {
@@ -100,8 +99,8 @@ namespace StreetNameRegistry.Projections.Syndication
                 configuration.GetValue<int>("SyndicationFeeds:MunicipalityPollingInMilliseconds"),
                 true,
                 true,
-                container.GetService<ILogger<Program>>(),
-                container.GetService<IRegistryAtomFeedReader>(),
+                container.GetService<ILogger<Program>>()!,
+                container.GetService<IRegistryAtomFeedReader>()!,
                 new MunicipalitySyndiciationProjections(),
                 new MunicipalityLatestProjections());
         }

@@ -6,15 +6,18 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
 
     [EventTags(EventTag.For.Sync)]
-    [EventName("MunicipalityWasImported")]
-    [EventDescription("De gemeente werd geimporteerd.")]
-    public class MunicipalityWasImported : IHasMunicipalityId, IHasProvenance, ISetProvenance
+    [EventName("MunicipalityNisCodeWasChanged")]
+    [EventDescription("De NisCode van de gemeente werd gewijzigd.")]
+    public class MunicipalityNisCodeWasChanged: IHasMunicipalityId, IHasProvenance, ISetProvenance
     {
+        [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid MunicipalityId { get; }
         public string NisCode { get; }
+
+        [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
-        public MunicipalityWasImported(
+        public MunicipalityNisCodeWasChanged(
             MunicipalityId municipalityId,
             NisCode nisCode)
         {
@@ -23,7 +26,7 @@ namespace StreetNameRegistry.StreetName.Events
         }
 
         [JsonConstructor]
-        private MunicipalityWasImported(
+        private MunicipalityNisCodeWasChanged(
             Guid municipalityId,
             string nisCode,
             ProvenanceData provenance)

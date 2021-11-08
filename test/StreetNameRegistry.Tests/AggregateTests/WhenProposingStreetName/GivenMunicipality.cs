@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
             var command = Fixture.Create<ProposeStreetName>()
                 .WithMunicipalityId(_municipalityId)
                 .WithRandomStreetName(Fixture);
-            
+
             Assert(new Scenario()
                 .Given(_municipalityId,
                     Fixture.Create<MunicipalityWasImported>())
@@ -42,7 +42,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
         }
     }
 
-    public static class ImportTerrainObjectFromCrabExtensions
+    public static class ProposeStreetNameExtensions
     {
         public static ProposeStreetName WithMunicipalityId(this ProposeStreetName command, MunicipalityId municipalityId)
         {

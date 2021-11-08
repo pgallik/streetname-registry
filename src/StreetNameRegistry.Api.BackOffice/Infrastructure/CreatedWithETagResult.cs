@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 
     public class CreatedWithETagResult : CreatedResult
     {
-        private readonly string _etag;
+        public string ETag { get; }
 
         public override async Task ExecuteResultAsync(ActionContext context)
         {
@@ -28,14 +28,14 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 
 
             if (context.HttpContext.Response.Headers.Keys.Contains(HeaderNames.ETag))
-                context.HttpContext.Response.Headers[HeaderNames.ETag] = _etag;
+                context.HttpContext.Response.Headers[HeaderNames.ETag] = ETag;
             else
-                context.HttpContext.Response.Headers.Add(HeaderNames.ETag, _etag);
+                context.HttpContext.Response.Headers.Add(HeaderNames.ETag, ETag);
         }
 
-        public CreatedWithETagResult(Uri location, string etag) : base(location, null)
+        public CreatedWithETagResult(Uri location, string eTag) : base(location, null)
         {
-            _etag = etag;
+            ETag = eTag;
         }
 
     }

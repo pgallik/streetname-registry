@@ -72,7 +72,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                         Organisation.DigitaalVlaanderen
                     );
 
-
                 var identifier = streetNameProposeRequest.GemeenteId
                     .AsIdentifier()
                     .Map(IdentifierMappings.MunicipalityNisCode);

@@ -18,7 +18,6 @@ namespace StreetNameRegistry.StreetName.Events
 
         public int PersistentLocalId { get; }
 
-        
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
@@ -35,9 +34,12 @@ namespace StreetNameRegistry.StreetName.Events
             List<StreetNameName> streetNameNames,
             int persistentLocalId,
             ProvenanceData provenance
-            ) :
+        ) :
             this(
-                new MunicipalityId(municipalityId), new Names(streetNameNames), new PersistentLocalId(persistentLocalId)) => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
+                new MunicipalityId(municipalityId),
+                new Names(streetNameNames),
+                new PersistentLocalId(persistentLocalId))
+        => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         void ISetProvenance.SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
     }

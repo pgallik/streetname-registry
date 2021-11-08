@@ -6,30 +6,25 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
 
     [EventTags(EventTag.For.Sync)]
-    [EventName("MunicipalityWasImported")]
-    [EventDescription("De gemeente werd geimporteerd.")]
-    public class MunicipalityWasImported : IHasMunicipalityId, IHasProvenance, ISetProvenance
+    [EventName("MunicipalityWasRetired")]
+    [EventDescription("De gemeente werd gehistoreerd.")]
+    public class MunicipalityWasRetired: IHasMunicipalityId, IHasProvenance, ISetProvenance
     {
         public Guid MunicipalityId { get; }
-        public string NisCode { get; }
         public ProvenanceData Provenance { get; private set; }
 
-        public MunicipalityWasImported(
-            MunicipalityId municipalityId,
-            NisCode nisCode)
+        public MunicipalityWasRetired(
+            MunicipalityId municipalityId)
         {
             MunicipalityId = municipalityId;
-            NisCode = nisCode;
         }
 
         [JsonConstructor]
-        private MunicipalityWasImported(
+        private MunicipalityWasRetired(
             Guid municipalityId,
-            string nisCode,
             ProvenanceData provenance)
             : this(
-                new MunicipalityId(municipalityId),
-                new NisCode(nisCode))
+                new MunicipalityId(municipalityId))
             => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         void ISetProvenance.SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);

@@ -1,6 +1,5 @@
 namespace StreetNameRegistry
 {
-    using System;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using StreetName;
@@ -25,6 +24,11 @@ namespace StreetNameRegistry
             containerBuilder
                 .RegisterType<StreetNameCommandHandlerModule>()
                 .Named<CommandHandlerModule>(typeof(StreetNameCommandHandlerModule).FullName)
+                .As<CommandHandlerModule>();
+
+            containerBuilder
+                .RegisterType<MunicipalityCommandHandlerModule>()
+                .Named<CommandHandlerModule>(typeof(MunicipalityCommandHandlerModule).FullName)
                 .As<CommandHandlerModule>();
         }
     }

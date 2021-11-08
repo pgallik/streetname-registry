@@ -6,33 +6,22 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    //todo move to library
-    public interface IHasCommandProvenance
+    public class SetMunicipalityToCurrent: IHasCommandProvenance
     {
-        public Provenance Provenance { get; }
-        Guid CreateCommandId();
-    }
-    
-    public class ProposeStreetName : IHasCommandProvenance
-    {
-        private static readonly Guid Namespace = new Guid("55378fee-18e5-4e26-abd0-36692639a146");
+        private static readonly Guid Namespace = new Guid("cd43a1d9-b843-499c-8e36-59aea02a1d42");
         public MunicipalityId MunicipalityId { get; }
         public Provenance Provenance { get; }
-        public Names StreetNameNames { get; }
 
-        public ProposeStreetName(
+        public SetMunicipalityToCurrent(
             MunicipalityId municipalityId,
-            Names streetNameNames,
-            Provenance provenance
-            )
+            Provenance provenance)
         {
             MunicipalityId = municipalityId;
-            StreetNameNames = streetNameNames;
             Provenance = provenance;
         }
 
         public Guid CreateCommandId()
-            => Deterministic.Create(Namespace, $"ProposeStreetName-{ToString()}");
+            => Deterministic.Create(Namespace, $"SetMunicipalityToCurrent-{ToString()}");
 
         public override string? ToString()
             => ToStringBuilder.ToString(IdentityFields());
@@ -40,7 +29,6 @@ namespace StreetNameRegistry.StreetName.Commands
         private IEnumerable<object> IdentityFields()
         {
             yield return MunicipalityId;
-            yield return StreetNameNames;
             yield return Provenance;
         }
     }
