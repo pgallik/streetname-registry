@@ -1,3 +1,10 @@
+## [2.27.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.27.0...v2.27.1) (2021-11-09)
+
+
+### Bug Fixes
+
+* include PersistentLocalId in ProposeStreetName command ([0c4fddc](https://github.com/informatievlaanderen/streetname-registry/commit/0c4fddcac92d00473093effec0406f05f9e83f93))
+
 # [2.27.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.26.4...v2.27.0) (2021-11-08)
 
 
