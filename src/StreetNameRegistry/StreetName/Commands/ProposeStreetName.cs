@@ -19,16 +19,19 @@ namespace StreetNameRegistry.StreetName.Commands
         public MunicipalityId MunicipalityId { get; }
         public Provenance Provenance { get; }
         public Names StreetNameNames { get; }
+        public PersistentLocalId PersistentLocalId { get; }
 
         public ProposeStreetName(
             MunicipalityId municipalityId,
             Names streetNameNames,
+            PersistentLocalId persistentLocalId,
             Provenance provenance
             )
         {
             MunicipalityId = municipalityId;
             StreetNameNames = streetNameNames;
             Provenance = provenance;
+            PersistentLocalId = persistentLocalId;
         }
 
         public Guid CreateCommandId()
@@ -40,8 +43,14 @@ namespace StreetNameRegistry.StreetName.Commands
         private IEnumerable<object> IdentityFields()
         {
             yield return MunicipalityId;
-            yield return StreetNameNames;
             yield return Provenance;
+            yield return PersistentLocalId;
+            yield return Provenance.Timestamp;
+
+            foreach (var streetNameName in StreetNameNames)
+            {
+                yield return streetNameName;
+            }
         }
     }
 }

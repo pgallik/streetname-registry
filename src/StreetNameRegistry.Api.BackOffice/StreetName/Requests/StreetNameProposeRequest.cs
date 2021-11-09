@@ -33,10 +33,10 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         /// Map to ProposeStreetName command
         /// </summary>
         /// <returns>ProposeStreetName.</returns>
-        public ProposeStreetName ToCommand(MunicipalityId municipalityId, Provenance provenance)
+        public ProposeStreetName ToCommand(MunicipalityId municipalityId, Provenance provenance, PersistentLocalId persistentLocalId)
         {
             var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, x.Key.ToLanguage())));
-            return new ProposeStreetName(municipalityId, names, provenance);
+            return new ProposeStreetName(municipalityId, names, persistentLocalId, provenance);
         }
     }
 

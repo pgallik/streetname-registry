@@ -20,6 +20,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Microsoft.EntityFrameworkCore;
     using NodaTime.Extensions;
     using Projections.Syndication;
+    using StreetNameRegistry.StreetName;
     using Swashbuckle.AspNetCore.Filters;
 
     [ApiVersion("1.0")]
@@ -36,6 +37,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         /// <param name="options"></param>
         /// <param name="idempotencyContext"></param>
         /// <param name="syndicationContext"></param>
+        /// <param name="persistentLocalIdGenerator"></param>
         /// <param name="streetNameProposeRequest"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="201">Als de straatnaam voorgesteld is.</response>
@@ -54,14 +56,14 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             [FromServices] IOptions<ResponseOptions> options,
             [FromServices] IdempotencyContext idempotencyContext,
             [FromServices] SyndicationContext syndicationContext,
+            [FromServices] IPersistentLocalIdGenerator persistentLocalIdGenerator,
             [FromBody] StreetNameProposeRequest streetNameProposeRequest,
             CancellationToken cancellationToken = default)
         {
             try
             {
-
                 //TODO REMOVE WHEN IMPLEMENTED
-                return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), "1");
+                //return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), "1");
                 //TODO real data please
                 var fakeProvenanceData = new Provenance(
                         DateTime.UtcNow.ToInstant(),
@@ -81,11 +83,11 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                     .SingleOrDefaultAsync(i =>
                             i.NisCode == identifier.Value, cancellationToken);
 
-                var cmd = streetNameProposeRequest.ToCommand(new MunicipalityId(municipality.MunicipalityId), fakeProvenanceData);
+                var persistentLocalId = persistentLocalIdGenerator.GenerateNextPersistentLocalId();
+                var cmd = streetNameProposeRequest.ToCommand(new MunicipalityId(municipality.MunicipalityId), fakeProvenanceData, persistentLocalId);
                 var position = await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd , cancellationToken);
 
-                //TODO create oslo id
-                return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), position.ToString(CultureInfo.InvariantCulture));
+                return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, persistentLocalId)), position.ToString(CultureInfo.InvariantCulture));
             }
             catch (IdempotencyException)
             {

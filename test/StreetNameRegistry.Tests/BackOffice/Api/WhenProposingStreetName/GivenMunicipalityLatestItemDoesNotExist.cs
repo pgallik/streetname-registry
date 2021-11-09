@@ -10,9 +10,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using global::AutoFixture;
     using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
+using Moq;
     using StreetName.Commands;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
+    using StreetNameRegistry.StreetName;
     using Testing;
     using Xunit.Abstractions;
 
@@ -35,6 +37,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         //[Fact]
         public async Task ThenResultIsNotFound()
         {
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+
             //Arrange
             var importMunicipality = new ImportMunicipality(
                 new MunicipalityId(Guid.NewGuid()),
@@ -54,7 +58,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            var result = await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, body);
+            var result = await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, mockPersistentLocalIdGenerator.Object, body);
             result.Should().BeOfType<NotFoundResult>();
 
         }

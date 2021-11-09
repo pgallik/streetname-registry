@@ -15,9 +15,9 @@ namespace StreetNameRegistry.StreetName
             return municipality;
         }
 
-        public void ProposeStreetName(Names streetNameNames, IPersistentLocalIdGenerator persistentLocalIdGenerator)
+        public void ProposeStreetName(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
-            ApplyChange(new StreetNameWasProposedV2(_municipalityId,streetNameNames, persistentLocalIdGenerator.GenerateNextPersistentLocalId()));
+            ApplyChange(new StreetNameWasProposedV2(_municipalityId,streetNameNames, persistentLocalId));
         }
 
         public void ChangeNisCode(NisCode nisCode)

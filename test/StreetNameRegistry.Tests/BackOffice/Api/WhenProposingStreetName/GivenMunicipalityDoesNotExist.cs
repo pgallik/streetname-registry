@@ -9,6 +9,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using FluentAssertions;
     using global::AutoFixture;
     using Infrastructure;
+    using Moq;
+    using StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using Testing;
@@ -35,6 +37,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         {
             //Arrange
             var municipalityLatestItem = _syndicationContext.AddMunicipalityLatestItemFixture();
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            mockPersistentLocalIdGenerator
+                .Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(new PersistentLocalId(5));
             
             var body = new StreetNameProposeRequest()
             {
@@ -47,7 +53,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act =  async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, body);
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, mockPersistentLocalIdGenerator.Object, body);
 
             //Assert
             act.Should().Throw<AggregateNotFoundException>();

@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .When(command)
                 .Then(new []
                 {
-                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId,command.StreetNameNames,new PersistentLocalId(1)))
+                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId,command.StreetNameNames, command.PersistentLocalId))
                 }));
 
         }
@@ -46,11 +46,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
     {
         public static ProposeStreetName WithMunicipalityId(this ProposeStreetName command, MunicipalityId municipalityId)
         {
-            return new ProposeStreetName(municipalityId, command.StreetNameNames,command.Provenance);
+            return new ProposeStreetName(municipalityId, command.StreetNameNames, command.PersistentLocalId, command.Provenance);
         }
+
         public static ProposeStreetName WithRandomStreetName(this ProposeStreetName command, Fixture fixture)
         {
-            return new ProposeStreetName(command.MunicipalityId, new Names(new List<StreetNameName>{fixture.Create<StreetNameName>()}),command.Provenance);
+            return new ProposeStreetName(command.MunicipalityId, new Names(new List<StreetNameName>{fixture.Create<StreetNameName>()}), command.PersistentLocalId, command.Provenance);
         }
     }
 }

@@ -9,10 +9,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using FluentAssertions;
     using global::AutoFixture;
     using Infrastructure;
+using Moq;
     using StreetName.Commands;
     using StreetNameRegistry.Api.BackOffice.Infrastructure;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
+    using StreetNameRegistry.StreetName;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -35,8 +37,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         [Fact]
         public async Task ThenTheStreetNameIsProposed()
         {
+            const int expectedLocation = 5;
+
             //Arrange
             var municipalityLatestItem = _syndicationContext.AddMunicipalityLatestItemFixture();
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            mockPersistentLocalIdGenerator
+                .Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(new PersistentLocalId(expectedLocation));
 
             var importMunicipality = new ImportMunicipality(
                 new MunicipalityId(municipalityLatestItem.MunicipalityId),
@@ -55,11 +63,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            var result = (CreatedWithETagResult)await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext , body);
+            var result = (CreatedWithETagResult)await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, mockPersistentLocalIdGenerator.Object, body);
 
             //Assert
             var expectedPosition = 1;
-            result.Location.Should().Be("https://www.registry.com/streetname/voorgesteld/1");
+            result.Location.Should().Be($"https://www.registry.com/streetname/voorgesteld/{expectedLocation}");
             result.ETag.Should().Be(expectedPosition.ToString());
         }
     }
