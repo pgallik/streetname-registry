@@ -1,3 +1,10 @@
+## [2.28.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.28.0...v2.28.1) (2021-11-16)
+
+
+### Bug Fixes
+
+* correct projections + tests ([ff3b298](https://github.com/informatievlaanderen/streetname-registry/commit/ff3b29818b80e80cc12e90875ffc5fdcf3e8c838))
+
 # [2.28.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.27.1...v2.28.0) (2021-11-16)
 
 
