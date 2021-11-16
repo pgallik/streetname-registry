@@ -1,3 +1,10 @@
+# [2.28.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.27.1...v2.28.0) (2021-11-16)
+
+
+### Features
+
+* add projections for new events ([b85a339](https://github.com/informatievlaanderen/streetname-registry/commit/b85a3391bbf5e1303224ee7b8365b183fb45c084))
+
 ## [2.27.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.27.0...v2.27.1) (2021-11-09)
 
 
