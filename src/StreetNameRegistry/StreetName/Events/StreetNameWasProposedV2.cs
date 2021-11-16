@@ -14,6 +14,8 @@ namespace StreetNameRegistry.StreetName.Events
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid MunicipalityId { get; }
 
+        public string NisCode { get; }
+
         public List<StreetNameName> StreetNameNames { get; }
 
         public int PersistentLocalId { get; }
@@ -21,9 +23,10 @@ namespace StreetNameRegistry.StreetName.Events
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
-        public StreetNameWasProposedV2(MunicipalityId municipalityId, Names streetNameNames, PersistentLocalId persistentLocalId)
+        public StreetNameWasProposedV2(MunicipalityId municipalityId, NisCode nisCode, Names streetNameNames, PersistentLocalId persistentLocalId)
         {
             MunicipalityId = municipalityId;
+            NisCode = nisCode;
             StreetNameNames = streetNameNames;
             PersistentLocalId = persistentLocalId;
         }
@@ -31,12 +34,14 @@ namespace StreetNameRegistry.StreetName.Events
         [JsonConstructor]
         private StreetNameWasProposedV2(
             Guid municipalityId,
+            string nisCode,
             List<StreetNameName> streetNameNames,
             int persistentLocalId,
             ProvenanceData provenance
         ) :
             this(
                 new MunicipalityId(municipalityId),
+                new NisCode(nisCode),
                 new Names(streetNameNames),
                 new PersistentLocalId(persistentLocalId))
         => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());

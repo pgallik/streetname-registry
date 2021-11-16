@@ -18,6 +18,8 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure
     using System;
     using System.Linq;
     using System.Reflection;
+    using FeatureToggles;
+    using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
 
     /// <summary>Represents the startup process for the application.</summary>
@@ -96,7 +98,10 @@ namespace StreetNameRegistry.Api.Legacy.Infrastructure
                         }
                     }
                 })
-                .Configure<ResponseOptions>(_configuration);
+                .Configure<ResponseOptions>(_configuration)
+                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
+                .AddSingleton(c =>
+                    new UseProjectionsV2Toggle(c.GetService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));

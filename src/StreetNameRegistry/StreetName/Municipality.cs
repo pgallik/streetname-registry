@@ -17,7 +17,7 @@ namespace StreetNameRegistry.StreetName
 
         public void ProposeStreetName(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
-            ApplyChange(new StreetNameWasProposedV2(_municipalityId,streetNameNames, persistentLocalId));
+            ApplyChange(new StreetNameWasProposedV2(_municipalityId, _nisCode, streetNameNames, persistentLocalId));
         }
 
         public void ChangeNisCode(NisCode nisCode)

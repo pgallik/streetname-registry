@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public bool ContainsEvent { get; }
         public bool ContainsObject { get; }
 
+        public Guid? MunicipalityId { get; }
         public Guid? StreetNameId { get; }
         public long Position { get; }
         public string ChangeType { get; }
@@ -40,6 +41,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         public string EventDataAsXml { get; }
 
         public StreetNameSyndicationQueryResult(
+            Guid? municipalityId,
             Guid? streetNameId,
             long position,
             int? persistentLocalId,
@@ -53,7 +55,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         {
             ContainsEvent = false;
             ContainsObject = false;
-
+            MunicipalityId = municipalityId;
             StreetNameId = streetNameId;
             Position = position;
             PersistentLocalId = persistentLocalId;
@@ -67,6 +69,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         }
 
         public StreetNameSyndicationQueryResult(
+            Guid? municipalityId,
             Guid? streetNameId,
             long position,
             int? persistentLocalId,
@@ -78,7 +81,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             Organisation? organisation,
             string reason,
             string eventDataAsXml)
-            : this(streetNameId,
+            : this(
+                municipalityId,
+                streetNameId,
                 position,
                 persistentLocalId,
                 nisCode,
@@ -94,6 +99,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         }
 
         public StreetNameSyndicationQueryResult(
+            Guid? municipalityId,
             Guid? streetNameId,
             long position,
             int? persistentLocalId,
@@ -114,6 +120,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             Organisation? organisation,
             string reason)
             : this(
+                municipalityId,
                 streetNameId,
                 position,
                 persistentLocalId,
@@ -139,6 +146,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
         }
 
         public StreetNameSyndicationQueryResult(
+            Guid? municipalityId,
             Guid? streetNameId,
             long position,
             int? persistentLocalId,
@@ -160,6 +168,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             string reason,
             string eventDataAsXml)
             : this(
+                municipalityId,
                 streetNameId,
                 position,
                 persistentLocalId,
@@ -209,6 +218,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             {
                 if (_embedEvent && _embedObject)
                     return x => new StreetNameSyndicationQueryResult(
+                        x.MunicipalityId,
                         x.StreetNameId,
                         x.Position,
                         x.PersistentLocalId,
@@ -232,6 +242,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
                 if (_embedEvent)
                     return x => new StreetNameSyndicationQueryResult(
+                        x.MunicipalityId,
                         x.StreetNameId,
                         x.Position,
                         x.PersistentLocalId,
@@ -246,6 +257,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 
                 if (_embedObject)
                     return x => new StreetNameSyndicationQueryResult(
+                        x.MunicipalityId,
                         x.StreetNameId,
                         x.Position,
                         x.PersistentLocalId,
@@ -267,6 +279,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                         x.Reason);
 
                 return x => new StreetNameSyndicationQueryResult(
+                    x.MunicipalityId,
                     x.StreetNameId,
                     x.Position,
                     x.PersistentLocalId,

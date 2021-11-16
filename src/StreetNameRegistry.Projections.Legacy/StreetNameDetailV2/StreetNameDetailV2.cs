@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
+namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 {
     using System;
     using Infrastructure;
@@ -6,15 +6,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using NodaTime;
+    using StreetNameDetail;
 
-    public class StreetNameDetail : IStreetNameDetail
+    public class StreetNameDetailV2 : IStreetNameDetail
     {
         public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 
-        public int? PersistentLocalId { get; set; }
-        public Guid StreetNameId { get; set; }
-
-        public string? NisCode { get; set; }
+        public int PersistentLocalId { get; set; }
+        public Guid MunicipalityId { get; set; }
+        public string NisCode { get; set; }
 
         public string? NameDutch { get; set; }
         public string? NameFrench { get; set; }
@@ -40,22 +40,24 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
         }
     }
 
-    public class StreetNameDetailConfiguration : IEntityTypeConfiguration<StreetNameDetail>
+    public class StreetNameDetailV2Configuration : IEntityTypeConfiguration<StreetNameDetailV2>
     {
-        internal const string TableName = "StreetNameDetails";
+        internal const string TableName = "StreetNameDetailsV2";
 
-        public void Configure(EntityTypeBuilder<StreetNameDetail> builder)
+        public void Configure(EntityTypeBuilder<StreetNameDetailV2> builder)
         {
             builder.ToTable(TableName, Schema.Legacy)
-                .HasKey(x => x.StreetNameId)
-                .IsClustered(false);
+                .HasKey(x => x.PersistentLocalId)
+                .IsClustered();
 
-            builder.Property(x => x.PersistentLocalId);
+            builder.Property(x => x.PersistentLocalId)
+                .ValueGeneratedNever();
 
-            builder.Property(StreetNameDetail.VersionTimestampBackingPropertyName)
+            builder.Property(StreetNameDetailV2.VersionTimestampBackingPropertyName)
                 .HasColumnName("VersionTimestamp");
 
             builder.Ignore(x => x.VersionTimestamp);
+            builder.Property(x => x.MunicipalityId);
             builder.Property(x => x.NisCode);
 
             builder.Property(x => x.NameDutch);
@@ -74,15 +76,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetail
 
             builder.Property(x => x.Removed);
 
-            builder.HasIndex(p => p.PersistentLocalId)
-                .IsUnique()
-                .HasFilter($"([{nameof(StreetNameDetail.PersistentLocalId)}] IS NOT NULL)")
-                .HasDatabaseName($"IX_StreetNameDetails_PersistentLocalId_1");;
-
-            builder.HasIndex(p => p.PersistentLocalId)
-                .IsClustered();
-
             builder.HasIndex(x => x.Removed);
+            builder.HasIndex(x => x.MunicipalityId);
         }
     }
 }

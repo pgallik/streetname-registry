@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Projections.Extract
         public override string ProjectionStateSchema => Schema.Extract;
 
         public DbSet<StreetNameExtractItem> StreetNameExtract { get; set; }
+        public DbSet<StreetNameExtractItemV2> StreetNameExtractV2 { get; set; }
 
         // This needs to be here to please EF
         public ExtractContext() { }

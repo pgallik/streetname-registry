@@ -34,6 +34,11 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using System.Xml;
     using Be.Vlaanderen.Basisregisters.Api.Search;
     using Infrastructure;
+    using Infrastructure.FeatureToggles;
+    using Projections.Legacy.Interfaces;
+    using Projections.Legacy.StreetNameDetail;
+    using Projections.Legacy.StreetNameDetailV2;
+    using Projections.Legacy.StreetNameListV2;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
     [ApiVersion("1.0")]
@@ -42,6 +47,13 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     [ApiExplorerSettings(GroupName = "Straatnamen")]
     public class StreetNameController : ApiController
     {
+        private UseProjectionsV2Toggle _useProjectionsV2Toggle;
+
+        public StreetNameController(UseProjectionsV2Toggle useProjectionsV2Toggle)
+        {
+            _useProjectionsV2Toggle = useProjectionsV2Toggle;
+        }
+
         /// <summary>
         /// Vraag een straatnaam op.
         /// </summary>
@@ -69,7 +81,22 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             [FromServices] IOptions<ResponseOptions> responseOptions,
             [FromRoute] int persistentLocalId,
             CancellationToken cancellationToken = default)
-            => Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions).FilterAsync(persistentLocalId, cancellationToken));
+        {
+            if (_useProjectionsV2Toggle.FeatureEnabled)
+            {
+                return Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
+                    .FilterAsync<StreetNameDetailV2>(
+                        i => i.PersistentLocalId,
+                        i => i.PersistentLocalId == persistentLocalId
+                        , cancellationToken));
+            }
+
+            return Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
+                .FilterAsync<StreetNameDetail>(
+                    i => i.PersistentLocalId,
+                    i => i.PersistentLocalId == persistentLocalId
+                    , cancellationToken));
+        }
 
         /// <summary>
         /// Vraag een lijst met straatnamen op.
@@ -97,8 +124,34 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var sorting = Request.ExtractSortingRequest();
             var pagination = Request.ExtractPaginationRequest();
 
-            var pagedStreetNames = new StreetNameListQuery(legacyContext, syndicationContext)
-                .Fetch(filtering, sorting, pagination);
+            if (_useProjectionsV2Toggle.FeatureEnabled)
+            {
+                var pagedStreetNamesV2 =
+                    new StreetNameListQuery<StreetNameListItemV2>(legacyContext, syndicationContext)
+                        .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination);
+
+                Response.AddPagedQueryResultHeaders(pagedStreetNamesV2);
+
+                return Ok(
+                    new StreetNameListResponse
+                    {
+                        Straatnamen = await pagedStreetNamesV2
+                            .Items
+                            .Select(m => new StreetNameListItemResponse(
+                                m.PersistentLocalId,
+                                responseOptions.Value.Naamruimte,
+                                responseOptions.Value.DetailUrl,
+                                GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
+                                GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
+                                m.Status.ConvertFromStreetNameStatus(),
+                                m.VersionTimestamp.ToBelgianDateTimeOffset()))
+                            .ToListAsync(cancellationToken),
+                        Volgende = BuildNextUri(pagedStreetNamesV2.PaginationInfo, responseOptions.Value.VolgendeUrl)
+                    });
+            }
+
+            var pagedStreetNames = new StreetNameListQuery<StreetNameListItem>(legacyContext, syndicationContext)
+                .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination);
 
             Response.AddPagedQueryResultHeaders(pagedStreetNames);
 
@@ -142,12 +195,24 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             var sorting = Request.ExtractSortingRequest();
             var pagination = new NoPaginationRequest();
 
+            if (_useProjectionsV2Toggle.FeatureEnabled)
+            {
+                return Ok(
+                    new TotaalAantalResponse
+                    {
+                        Aantal = await new StreetNameListQuery<StreetNameListItemV2>(context, syndicationContext)
+                            .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination)
+                            .Items
+                            .CountAsync(cancellationToken)
+                    });
+            }
+
             return Ok(
                 new TotaalAantalResponse
                 {
                     Aantal = filtering.ShouldFilter
-                        ? await new StreetNameListQuery(context, syndicationContext)
-                            .Fetch(filtering, sorting, pagination)
+                        ? await new StreetNameListQuery<StreetNameListItem>(context, syndicationContext)
+                            .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination)
                             .Items
                             .CountAsync(cancellationToken)
                         : Convert.ToInt32(context
@@ -156,7 +221,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                             .Count)
                 });
         }
-        
+
         /// <summary>
         /// Vraag een lijst met wijzigingen van straatnamen op.
         /// </summary>
@@ -195,9 +260,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
 
             var pagedStreetNames =
                 new StreetNameSyndicationQuery(
-                    context,
-                    filtering.Filter?.Embed)
-                .Fetch(filtering, sorting, pagination);
+                        context,
+                        filtering.Filter?.Embed)
+                    .Fetch(filtering, sorting, pagination);
 
             return new ContentResult
             {
@@ -235,6 +300,19 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 return Ok(new StreetNameBosaResponse());
 
             var filter = new StreetNameNameFilter(request);
+
+            if (_useProjectionsV2Toggle.FeatureEnabled)
+            {
+                var streetNameBosaResponseV2 = await
+                    new StreetNameBosaQueryV2(
+                            legacyContext,
+                            syndicationContext,
+                            responseOptions)
+                        .FilterAsync(filter, cancellationToken);
+
+                return Ok(streetNameBosaResponseV2);
+            }
+
             var streetNameBosaResponse = await
                 new StreetNameBosaQuery(
                         legacyContext,
@@ -245,7 +323,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             return Ok(streetNameBosaResponse);
         }
 
-        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)
+        private static GeografischeNaam GetGeografischeNaamByTaal(IStreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -275,7 +353,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             }
         }
 
-        private static GeografischeNaam GetHomoniemToevoegingByTaal(StreetNameListItem item, Language? taal)
+        private static GeografischeNaam GetHomoniemToevoegingByTaal(IStreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -313,9 +391,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         {
             var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
-            using (var xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings { Async = true, Indent = true, Encoding = sw.Encoding }))
+            using (var xmlWriter = XmlWriter.Create(sw,
+                new XmlWriterSettings {Async = true, Indent = true, Encoding = sw.Encoding}))
             {
-                var formatter = new AtomFormatter(null, xmlWriter.Settings) { UseCDATA = true };
+                var formatter = new AtomFormatter(null, xmlWriter.Settings) {UseCDATA = true};
                 var writer = new AtomFeedWriter(xmlWriter, null, formatter);
                 var syndicationConfiguration = configuration.GetSection("Syndication");
                 var atomFeedConfig = AtomFeedConfigurationBuilder.CreateFrom(syndicationConfiguration, lastFeedUpdate);
@@ -326,14 +405,16 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
 
                 var nextFrom = streetNames.Any()
                     ? streetNames.Max(s => s.Position) + 1
-                    : (long?)null;
+                    : (long?) null;
 
-                var nextUri = BuildNextSyncUri(pagedStreetNames.PaginationInfo.Limit, nextFrom, syndicationConfiguration["NextUri"]);
+                var nextUri = BuildNextSyncUri(pagedStreetNames.PaginationInfo.Limit, nextFrom,
+                    syndicationConfiguration["NextUri"]);
                 if (nextUri != null)
                     await writer.Write(new SyndicationLink(nextUri, GrArAtomLinkTypes.Next));
 
                 foreach (var streetName in streetNames)
-                    await writer.WriteStreetName(responseOptions, formatter, syndicationConfiguration["Category"], streetName);
+                    await writer.WriteStreetName(responseOptions, formatter, syndicationConfiguration["Category"],
+                        streetName);
 
                 xmlWriter.Flush();
             }

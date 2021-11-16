@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 {
+    using System;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
@@ -16,8 +17,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Responses;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using Projections.Legacy.Interfaces;
 
     public class StreetNameDetailQuery
     {
@@ -35,12 +38,12 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             _responseOptions = responseOptionsProvider.Value;
         }
 
-        public async Task<StreetNameResponse> FilterAsync(int persistentLocalId, CancellationToken ct = default)
+        public async Task<StreetNameResponse> FilterAsync<T>(Expression<Func<T, object>> property, Expression<Func<T, bool>> filter, CancellationToken ct = default) where T : class, IStreetNameDetail, new()
         {
             var streetName = await _legacyContext
-                .StreetNameDetail
+                .Get<T>()
                 .AsNoTracking()
-                .SingleOrDefaultAsync(item => item.PersistentLocalId == persistentLocalId, ct);
+                .SingleOrDefaultAsync(filter, ct);
 
             if (streetName == null)
                 throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
@@ -48,23 +51,20 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             if (streetName.Removed)
                 throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
 
-            var municipality = await _syndicationContext
-                .MunicipalityLatestItems
-                .AsNoTracking()
-                .OrderByDescending(m => m.Position)
-                .FirstOrDefaultAsync(m => m.NisCode == streetName.NisCode, ct);
+            var gemeente = await GetStraatnaamDetailGemeente(streetName.NisCode, ct);
 
-            var municipalityDefaultName = GetDefaultMunicipalityName(municipality);
-            var gemeente = new StraatnaamDetailGemeente
-            {
-                ObjectId = streetName.NisCode,
-                Detail = string.Format(_responseOptions.GemeenteDetailUrl, streetName.NisCode),
-                Gemeentenaam = new Gemeentenaam(new GeografischeNaam(municipalityDefaultName.Value, municipalityDefaultName.Key))
-            };
+            // it's magiiiicccc!!!!
+            // get property of obj with reflection
+            var persistentLocalId = (int?)streetName.GetType().GetProperties()
+                .FirstOrDefault(i => i.Name == GetMemberName(property))?
+                .GetValue(streetName, null);
+
+            if (persistentLocalId == null)
+                throw new InvalidOperationException("persistentLocalId cannot be null");
 
             return new StreetNameResponse(
                 _responseOptions.Naamruimte,
-                streetName.PersistentLocalId.Value,
+                persistentLocalId.Value,
                 streetName.Status.ConvertFromStreetNameStatus(),
                 gemeente,
                 streetName.VersionTimestamp.ToBelgianDateTimeOffset(),
@@ -76,6 +76,24 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                 streetName.HomonymAdditionFrench,
                 streetName.HomonymAdditionGerman,
                 streetName.HomonymAdditionEnglish);
+        }
+
+        private async Task<StraatnaamDetailGemeente> GetStraatnaamDetailGemeente(string nisCode, CancellationToken ct)
+        {
+            var municipality = await _syndicationContext
+                .MunicipalityLatestItems
+                .AsNoTracking()
+                .OrderByDescending(m => m.Position)
+                .FirstOrDefaultAsync(m => m.NisCode == nisCode, ct);
+
+            var municipalityDefaultName = GetDefaultMunicipalityName(municipality);
+            var gemeente = new StraatnaamDetailGemeente
+            {
+                ObjectId = nisCode,
+                Detail = string.Format(_responseOptions.GemeenteDetailUrl, nisCode),
+                Gemeentenaam = new Gemeentenaam(new GeografischeNaam(municipalityDefaultName.Value, municipalityDefaultName.Key))
+            };
+            return gemeente;
         }
 
         private static KeyValuePair<Taal, string> GetDefaultMunicipalityName(MunicipalityLatestItem municipality)
@@ -92,6 +110,19 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     return new KeyValuePair<Taal, string>(Taal.DE, municipality.NameGerman);
                 case Taal.EN:
                     return new KeyValuePair<Taal, string>(Taal.EN, municipality.NameEnglish);
+            }
+        }
+
+        private string GetMemberName<T>(Expression<T> expression)
+        {
+            switch (expression.Body)
+            {
+                case MemberExpression m:
+                    return m.Member.Name;
+                case UnaryExpression u when u.Operand is MemberExpression m:
+                    return m.Member.Name;
+                default:
+                    throw new NotImplementedException(expression.GetType().ToString());
             }
         }
     }

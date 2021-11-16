@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -24,6 +25,28 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             if (streetNameSyndicationItem == null)
                 throw DatabaseItemNotFound(streetNameId);
 
+            await CreateNewSyndicationItem(context, message, applyEventInfoOn, streetNameSyndicationItem, ct);
+        }
+
+        public static async Task CreateNewStreetNameSyndicationItem<T>(
+            this LegacyContext context,
+            int persistentLocalId,
+            Envelope<T> message,
+            Action<StreetNameSyndicationItem> applyEventInfoOn,
+            CancellationToken ct) where T : IHasProvenance
+        {
+            var streetNameSyndicationItem = await context.LatestPosition(persistentLocalId, ct);
+
+            if (streetNameSyndicationItem == null)
+                throw DatabaseItemNotFound(persistentLocalId);
+
+            await CreateNewSyndicationItem(context, message, applyEventInfoOn, streetNameSyndicationItem, ct);
+        }
+
+        private static async Task CreateNewSyndicationItem<T>(LegacyContext context, Envelope<T> message,
+            Action<StreetNameSyndicationItem> applyEventInfoOn, StreetNameSyndicationItem? streetNameSyndicationItem,
+            CancellationToken ct) where T : IHasProvenance
+        {
             var provenance = message.Message.Provenance;
 
             var newStreetNameSyndicationItem = streetNameSyndicationItem.CloneAndApplyEventInfo(
@@ -56,6 +79,22 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                    .OrderByDescending(x => x.Position)
                    .FirstOrDefaultAsync(ct);
 
+        public static async Task<StreetNameSyndicationItem> LatestPosition(
+            this LegacyContext context,
+            int persistentLocalId,
+            CancellationToken ct)
+            => context
+                   .StreetNameSyndication
+                   .Local
+                   .Where(x => x.PersistentLocalId == persistentLocalId)
+                   .OrderByDescending(x => x.Position)
+                   .FirstOrDefault()
+               ?? await context
+                   .StreetNameSyndication
+                   .Where(x => x.PersistentLocalId == persistentLocalId)
+                   .OrderByDescending(x => x.Position)
+                   .FirstOrDefaultAsync(ct);
+
         public static void ApplyProvenance(
             this StreetNameSyndicationItem item,
             ProvenanceData provenance)
@@ -70,7 +109,13 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         public static void SetEventData<T>(this StreetNameSyndicationItem syndicationItem, T message, string eventName)
             => syndicationItem.EventDataAsXml = message.ToXml(eventName).ToString(SaveOptions.DisableFormatting);
 
-        private static ProjectionItemNotFoundException<StreetNameSyndicationProjections> DatabaseItemNotFound(Guid streetNameId)
+        private static ProjectionItemNotFoundException<StreetNameSyndicationProjections> DatabaseItemNotFound(
+            Guid streetNameId)
             => new ProjectionItemNotFoundException<StreetNameSyndicationProjections>(streetNameId.ToString("D"));
+
+        private static ProjectionItemNotFoundException<StreetNameSyndicationProjections> DatabaseItemNotFound(
+            int persistentLocalId)
+            => new ProjectionItemNotFoundException<StreetNameSyndicationProjections>(
+                persistentLocalId.ToString(CultureInfo.InvariantCulture));
     }
 }

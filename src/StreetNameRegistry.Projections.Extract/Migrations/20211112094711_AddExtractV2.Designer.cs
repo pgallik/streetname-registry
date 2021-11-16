@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Projections.Extract;
 
 namespace StreetNameRegistry.Projections.Extract.Migrations
 {
     [DbContext(typeof(ExtractContext))]
-    partial class ExtractContextModelSnapshot : ModelSnapshot
+    [Migration("20211112094711_AddExtractV2")]
+    partial class AddExtractV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,6 +124,9 @@ namespace StreetNameRegistry.Projections.Extract.Migrations
                     b.Property<string>("HomonymGerman")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("HomonymUnknown")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NameDutch")
                         .HasColumnType("nvarchar(max)");
 
@@ -134,6 +139,9 @@ namespace StreetNameRegistry.Projections.Extract.Migrations
                     b.Property<string>("NameGerman")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NameUnknown")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("MunicipalityId", "StreetNamePersistentLocalId")
                         .IsClustered(false);
 
@@ -141,6 +149,25 @@ namespace StreetNameRegistry.Projections.Extract.Migrations
                         .IsClustered();
 
                     b.ToTable("StreetNameV2", "StreetNameRegistryExtract");
+                });
+
+            modelBuilder.Entity("StreetNameRegistry.Projections.Extract.StreetNameExtract.StreetNameExtractMunicipalityItem", b =>
+                {
+                    b.Property<Guid>("MunicipalityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NisCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MunicipalityId")
+                        .IsClustered(false);
+
+                    b.ToTable("StreetName_Municipalities", "StreetNameRegistryExtract");
                 });
 #pragma warning restore 612, 618
         }

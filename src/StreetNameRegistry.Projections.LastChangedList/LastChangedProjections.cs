@@ -18,6 +18,8 @@ namespace StreetNameRegistry.Projections.LastChangedList
         public LastChangedProjections()
             : base (SupportedAcceptTypes)
         {
+            #region Legacy Events
+
             When<Envelope<StreetNamePersistentLocalIdWasAssigned>>(async (context, message, ct) =>
             {
                 var attachedRecords = await GetLastChangedRecordsAndUpdatePosition(message.Message.StreetNameId.ToString(), message.Position, context, ct);
@@ -140,6 +142,13 @@ namespace StreetNameRegistry.Projections.LastChangedList
 
             When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
             When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+
+            #endregion
+
+            When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
+            {
+                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+            });
         }
 
         private static void DoNothing() { }

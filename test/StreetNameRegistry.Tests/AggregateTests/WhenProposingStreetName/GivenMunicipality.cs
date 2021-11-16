@@ -30,13 +30,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithMunicipalityId(_municipalityId)
                 .WithRandomStreetName(Fixture);
 
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             Assert(new Scenario()
-                .Given(_municipalityId,
-                    Fixture.Create<MunicipalityWasImported>())
+                .Given(_municipalityId,municipalityWasImported)
                 .When(command)
                 .Then(new []
                 {
-                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId,command.StreetNameNames, command.PersistentLocalId))
+                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode) ,command.StreetNameNames, command.PersistentLocalId))
                 }));
 
         }

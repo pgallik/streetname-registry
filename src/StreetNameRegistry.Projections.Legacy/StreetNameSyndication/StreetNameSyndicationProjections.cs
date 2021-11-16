@@ -1,10 +1,12 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 {
     using System;
+    using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetName.Events;
     using StreetName.Events.Crab;
+    using StreetNameName = StreetNameRegistry.StreetNameName;
 
     [ConnectedProjectionName("Feed endpoint straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen feed voorziet.")]
@@ -12,6 +14,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     {
         public StreetNameSyndicationProjections()
         {
+            #region Legacy Events
+
             When<Envelope<StreetNameWasRegistered>>(async (context, message, ct) =>
             {
                 var streetNameSyndicationItem = new StreetNameSyndicationItem
@@ -224,6 +228,30 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
             When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
             When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+
+            #endregion
+
+            When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
+            {
+                var streetNameSyndicationItem = new StreetNameSyndicationItem
+                {
+                    Position = message.Position,
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    NisCode = message.Message.NisCode,
+                    RecordCreatedAt = message.Message.Provenance.Timestamp,
+                    LastChangedOn = message.Message.Provenance.Timestamp,
+                    ChangeType = message.EventName,
+                    SyndicationItemCreatedAt = DateTimeOffset.UtcNow
+                };
+                UpdateNameByLanguage(streetNameSyndicationItem, message.Message.StreetNameNames);
+                streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
+                streetNameSyndicationItem.SetEventData(message.Message, message.EventName);
+
+                await context
+                    .StreetNameSyndication
+                    .AddAsync(streetNameSyndicationItem, ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, string name, Language? language)
@@ -242,6 +270,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 case Language.English:
                     streetNameSyndicationItem.NameEnglish = name;
                     break;
+            }
+        }
+
+        private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, List<StreetNameName> streetNameNames)
+        {
+            foreach (var streetNameName in streetNameNames)
+            {
+                UpdateNameByLanguage(streetNameSyndicationItem, streetNameName.Name, streetNameName.Language);
             }
         }
 

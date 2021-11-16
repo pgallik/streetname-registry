@@ -12,7 +12,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     {
         public long Position { get; set; }
 
-        public Guid StreetNameId { get; set; }
+        public Guid? MunicipalityId { get; set; }
+        public Guid? StreetNameId { get; set; }
         public int? PersistentLocalId { get; set; }
         public string? NisCode { get; set; }
         public string? ChangeType { get; set; }
@@ -69,6 +70,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 NisCode = NisCode,
 
                 PersistentLocalId = PersistentLocalId,
+                MunicipalityId = MunicipalityId,
 
                 NameDutch = NameDutch,
                 NameEnglish = NameEnglish,
@@ -113,7 +115,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             b.Property(x => x.Position).ValueGeneratedNever();
             b.HasIndex(x => x.Position).IsColumnStore($"CI_{TableName}_Position");
 
-            b.Property(x => x.StreetNameId).IsRequired();
+            b.Property(x => x.StreetNameId);
+            b.Property(x => x.MunicipalityId);
             b.Property(x => x.NisCode);
             b.Property(x => x.ChangeType);
 
@@ -145,6 +148,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             b.Ignore(x => x.LastChangedOn);
 
             b.HasIndex(x => x.StreetNameId);
+            b.HasIndex(x => x.PersistentLocalId);
         }
     }
 }
