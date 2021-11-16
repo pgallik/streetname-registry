@@ -23,7 +23,11 @@ namespace StreetNameRegistry.StreetName.Events
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
-        public StreetNameWasProposedV2(MunicipalityId municipalityId, NisCode nisCode, Names streetNameNames, PersistentLocalId persistentLocalId)
+        public StreetNameWasProposedV2(
+            MunicipalityId municipalityId,
+            NisCode nisCode,
+            Names streetNameNames,
+            PersistentLocalId persistentLocalId)
         {
             MunicipalityId = municipalityId;
             NisCode = nisCode;

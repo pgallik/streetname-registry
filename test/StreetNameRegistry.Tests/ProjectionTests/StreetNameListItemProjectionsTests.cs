@@ -24,7 +24,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var id = Arrange(Produce.Guid());
             var provenance = Arrange(Generate.Provenance);
 
-            await Given()
+            await GivenEvents()
                 .Project(Generate.StreetNameWasRegistered
                     .Select(e => e.WithId(id)
                             .WithProvenance(provenance)))
@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var provenance = Arrange(Generate.Provenance);
             var language = Language.Dutch;
 
-            await Given(Generate.EventsFor.StreetName(id))
+            await GivenEvents(Generate.EventsFor.StreetName(id))
                 .Project(Generate.StreetNameNameWasNamed
                     .Select(e => e.WithId(id)
                         .WithName(name)
@@ -61,7 +61,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var provenance = Arrange(Generate.Provenance);
             var language = Language.Dutch;
 
-            await Given(Generate.EventsFor.StreetName(id, nameDutch))
+            await GivenEvents(Generate.EventsFor.StreetName(id, nameDutch))
                 .Project(Generate.StreetNameNameWasCleared
                     .Select(e => e.WithId(id)
                         .WithLanguage(language)
@@ -80,7 +80,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var id = Arrange(Produce.Guid());
             var persistentLocalId = Arrange(Produce.Integer(10000, 15000));
 
-            await Given(Generate.EventsFor.StreetName(id))
+            await GivenEvents(Generate.EventsFor.StreetName(id))
                 .Project(Generate.StreetNamePersistentLocalIdWasAssigned
                     .Select(e => e.WithId(id)
                     .WithPersistentLocalId(persistentLocalId)))
@@ -99,7 +99,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
             try
             {
-                await Given()
+                await GivenEvents()
                     .Project(Generate.StreetNamePersistentLocalIdWasAssigned.Select(e => e.WithId(id)))
                     .Then(async ct =>
                     {

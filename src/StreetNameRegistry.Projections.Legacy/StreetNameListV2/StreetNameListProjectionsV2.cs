@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
 {
     using System.Collections.Generic;
-    using System.Threading;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
@@ -29,9 +29,12 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     NisCode = message.Message.NisCode,
                     VersionTimestamp = message.Message.Provenance.Timestamp,
                     Removed = false,
-                    PrimaryLanguage = municipality.PrimaryLanguage
+                    PrimaryLanguage = municipality.PrimaryLanguage,
+                    Status = StreetNameStatus.Proposed
                 };
+
                 UpdateNameByLanguage(streetNameListItemV2, message.Message.StreetNameNames);
+
                 await context
                     .StreetNameListV2
                     .AddAsync(streetNameListItemV2, ct);
@@ -39,7 +42,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
 
             When<Envelope<MunicipalityWasImported>>(async (context, message, ct) =>
             {
-                var streetNameListMunicipality = new StreetNameListMunicipality()
+                var streetNameListMunicipality = new StreetNameListMunicipality
                 {
                     MunicipalityId = message.Message.MunicipalityId,
                     NisCode = message.Message.NisCode
@@ -48,6 +51,24 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                 await context
                     .StreetNameListMunicipality
                     .AddAsync(streetNameListMunicipality, ct);
+            });
+
+            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
+            {
+                var municipality =
+                    await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId,
+                        cancellationToken: ct);
+
+                municipality.NisCode = message.Message.NisCode;
+
+                var streetNames = context
+                    .StreetNameListV2
+                    .Local
+                    .Where(s => s.MunicipalityId == message.Message.MunicipalityId)
+                    .Union(context.StreetNameListV2.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
+
+                foreach (var streetName in streetNames)
+                    streetName.NisCode = message.Message.NisCode;
             });
         }
 

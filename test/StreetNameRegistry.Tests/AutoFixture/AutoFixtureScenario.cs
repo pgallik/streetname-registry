@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
         }
 
         /// <summary>
-        /// Given an event of type TEvent occurred
+        /// GivenEvents an event of type TEvent occurred
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="identifier">The aggregate identifier the events is to be associated with.</param>
@@ -57,10 +57,10 @@ namespace StreetNameRegistry.Tests.AutoFixture
         }
         public interface IEventGeneratingScenarioInitialStateBuilder : IScenarioInitialStateBuilder
         {
-            //IEventGeneratingScenarioGivenStateBuilder Given<TEvent>(Func<IPostprocessComposer<TEvent>, IPostprocessComposer<TEvent>> customize = null);
+            //IEventGeneratingScenarioGivenStateBuilder GivenEvents<TEvent>(Func<IPostprocessComposer<TEvent>, IPostprocessComposer<TEvent>> customize = null);
 
             /// <summary>
-            /// Given an event of type TEvent occurred
+            /// GivenEvents an event of type TEvent occurred
             /// </summary>
             /// <typeparam name="TEvent"></typeparam>
             /// <param name="identifier">The aggregate identifier the events is to be associated with.</param>
@@ -69,7 +69,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             IEventGeneratingScenarioGivenStateBuilder Given<TEvent>(string identifier, Func<TEvent, TEvent> customize = null);
 
             /// <summary>
-            /// Given an already tested scenario. The Givens and Thens of the specified scenario will be added to the Givens of this scenario
+            /// GivenEvents an already tested scenario. The Givens and Thens of the specified scenario will be added to the Givens of this scenario
             /// </summary>
             /// <param name="givenScenario">A scenario that passes (this is important to not create an invalid given state)</param>
             /// <returns></returns>
@@ -79,10 +79,10 @@ namespace StreetNameRegistry.Tests.AutoFixture
 
         public interface IEventGeneratingScenarioGivenStateBuilder : IScenarioGivenStateBuilder
         {
-            //IEventGeneratingScenarioGivenStateBuilder Given<TEvent>(Func<IPostprocessComposer<TEvent>, IPostprocessComposer<TEvent>> customize = null);
+            //IEventGeneratingScenarioGivenStateBuilder GivenEvents<TEvent>(Func<IPostprocessComposer<TEvent>, IPostprocessComposer<TEvent>> customize = null);
 
             /// <summary>
-            /// Given an event of type TEvent occurred
+            /// GivenEvents an event of type TEvent occurred
             /// </summary>
             /// <typeparam name="TEvent"></typeparam>
             /// <param name="identifier">The aggregate identifier the events is to be associated with.</param>
@@ -91,7 +91,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             IEventGeneratingScenarioGivenStateBuilder Given<TEvent>(string identifier, Func<TEvent, TEvent> customize = null);
 
             /// <summary>
-            /// Given an already tested scenario. The Givens and Thens of the specified scenario will be added to the Givens of this scenario
+            /// GivenEvents an already tested scenario. The Givens and Thens of the specified scenario will be added to the Givens of this scenario
             /// </summary>
             /// <param name="givenScenario">A scenario that passes (this is important to not create an invalid given state)</param>
             /// <returns></returns>

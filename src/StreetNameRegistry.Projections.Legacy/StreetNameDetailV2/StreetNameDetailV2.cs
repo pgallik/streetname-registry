@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using NodaTime;
-    using StreetNameDetail;
 
     public class StreetNameDetailV2 : IStreetNameDetail
     {
@@ -28,7 +27,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
         public StreetNameStatus? Status { get; set; }
 
-        public bool Complete { get; set; }
         public bool Removed { get; set; }
 
         private DateTimeOffset VersionTimestampAsDateTimeOffset { get; set; }
@@ -71,9 +69,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
             builder.Property(x => x.HomonymAdditionEnglish);
 
             builder.Property(x => x.Status);
-
-            builder.Property(x => x.Complete);
-
+            
             builder.Property(x => x.Removed);
 
             builder.HasIndex(x => x.Removed);

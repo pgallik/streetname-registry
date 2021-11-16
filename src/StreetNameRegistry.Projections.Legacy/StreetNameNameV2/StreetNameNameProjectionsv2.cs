@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
@@ -24,12 +25,27 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                     NisCode = message.Message.NisCode,
                     VersionTimestamp = message.Message.Provenance.Timestamp,
                     IsFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode),
+                    Status = StreetNameStatus.Proposed,
                     Removed = false
                 };
+
                 UpdateNameByLanguage(streetNameNameV2, message.Message.StreetNameNames);
+
                 await context
                     .StreetNameNamesV2
                     .AddAsync(streetNameNameV2, ct);
+            });
+
+            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
+            {
+                var streetNames = context
+                    .StreetNameNamesV2
+                    .Local
+                    .Where(s => s.MunicipalityId == message.Message.MunicipalityId)
+                    .Union(context.StreetNameNamesV2.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
+
+                foreach (var streetName in streetNames)
+                    streetName.NisCode = message.Message.NisCode;
             });
         }
 

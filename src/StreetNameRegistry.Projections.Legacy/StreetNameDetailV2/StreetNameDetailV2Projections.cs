@@ -22,8 +22,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     PersistentLocalId = message.Message.PersistentLocalId,
                     NisCode = message.Message.NisCode,
                     VersionTimestamp = message.Message.Provenance.Timestamp,
-                    Complete = false,
-                    Removed = false
+                    Removed = false,
+                    Status = StreetNameStatus.Proposed
                 };
                 UpdateNameByLanguage(streetNameDetailV2, message.Message.StreetNameNames);
                 await context

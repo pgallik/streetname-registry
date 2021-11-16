@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var id = Arrange(Produce.Guid());
             var provenance = Arrange(Generate.Provenance);
 
-            await Given(Generate.EventsFor.StreetName(id))
+            await GivenEvents(Generate.EventsFor.StreetName(id))
                 .Project(Generate.StreetNameBecameComplete
                     .Select(e => e.WithId(id).WithProvenance(provenance)))
                 .Then(async ct => {
@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var id = Arrange(Produce.Guid());
             var provenance = Arrange(Generate.Provenance);
 
-            await Given(Generate.EventsFor.StreetName(id))
+            await GivenEvents(Generate.EventsFor.StreetName(id))
                 .Project(Generate.StreetNameWasRemoved
                     .Select(e => e.WithId(id).WithProvenance(provenance)))
                 .Then(async ct =>
@@ -53,7 +53,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var id = Arrange(Produce.Guid());
             var provenance = Arrange(Generate.Provenance);
 
-            await Given(Generate.EventsFor.StreetName(id))
+            await GivenEvents(Generate.EventsFor.StreetName(id))
                 .Project(Generate.StreetNameWasRetired
                     .Select(e => e.WithId(id).WithProvenance(provenance)))
                 .Then(async ct =>
@@ -70,7 +70,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var id = Arrange(Produce.Guid());
             var persistentLocalId = Arrange(Produce.Integer(10000, 15000));
 
-            await Given(Generate.EventsFor.StreetName(id))
+            await GivenEvents(Generate.EventsFor.StreetName(id))
                 .Project(Generate.StreetNamePersistentLocalIdWasAssigned
                     .Select(e => e.WithId(id)
                         .WithPersistentLocalId(persistentLocalId)))

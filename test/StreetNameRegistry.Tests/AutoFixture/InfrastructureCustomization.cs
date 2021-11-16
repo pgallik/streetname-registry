@@ -52,8 +52,27 @@ namespace StreetNameRegistry.Tests.AutoFixture
         public void Customize(IFixture fixture)
         {
             fixture.Customizations.Add(new LocalDateGenerator());
+            fixture.Customizations.Add(new InstantGenerator());
             fixture.Customizations.Add(new LocalTimeGenerator());
             fixture.Customizations.Add(new LocalDateTimeGenerator());
+        }
+
+        public class InstantGenerator : ISpecimenBuilder
+        {
+            public object Create(object request, ISpecimenContext context)
+            {
+                if (context == null)
+                {
+                    throw new ArgumentNullException(nameof(context));
+                }
+
+                if (!typeof(Instant).Equals(request))
+                {
+                    return new NoSpecimen();
+                }
+
+                return Instant.FromDateTimeOffset(context.Create<DateTimeOffset>());
+            }
         }
 
         public class LocalDateGenerator : ISpecimenBuilder

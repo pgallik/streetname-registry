@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetName.Events;
@@ -251,6 +252,22 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context
                     .StreetNameSyndication
                     .AddAsync(streetNameSyndicationItem, ct);
+            });
+
+            When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
+            {
+                var streetNames = context
+                    .StreetNameSyndication
+                    .Local
+                    .Where(s => s.MunicipalityId == message.Message.MunicipalityId)
+                    .Union(context.StreetNameSyndication.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
+
+                foreach (var streetNameSyndicationItem in streetNames)
+                {
+                    streetNameSyndicationItem.NisCode = message.Message.NisCode;
+                    streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
+                    streetNameSyndicationItem.SetEventData(message.Message, message.EventName);
+                }
             });
         }
 

@@ -202,7 +202,7 @@ namespace StreetNameRegistry.Tests.AggregateTests
         [Fact]
         public void AppliesCorrectStatusChangedWhenOlderStatusWasCorrected()
         {
-            //1: Given set status
+            //1: GivenEvents set status
             //2: => import with new status newer lifetime
             //3: => import with status from step 1, with same begin, but different end
 
@@ -229,7 +229,7 @@ namespace StreetNameRegistry.Tests.AggregateTests
         [Fact]
         public void AppliesCorrectStatusChangedWhenOlderStatusWasInserted()
         {
-            //1: Given set status
+            //1: GivenEvents set status
             //2: => import with new status older lifetime
             //3: => import with status from step 1, with same begin, but different end
 
@@ -256,7 +256,7 @@ namespace StreetNameRegistry.Tests.AggregateTests
         [Fact]
         public void AppliesStatusChangedWhenStatusWasInsertedAfterAnotherWasRemoved()
         {
-            //1: Given set status
+            //1: GivenEvents set status
             //2: => delete status from step 1
             //3: => import new status with same lifetime
             //
@@ -290,7 +290,7 @@ namespace StreetNameRegistry.Tests.AggregateTests
         [Fact]
         public void NoChangesWhenStatusWasDeletedOfAnNonCurrentStatus()
         {
-            //1: Given set status
+            //1: GivenEvents set status
             //2: => import new status (new id)
             //3: => import with status from step 1 with modification delete
             var register = Arrange(Generate.StreetNameWasRegistered);

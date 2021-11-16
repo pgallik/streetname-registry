@@ -23,6 +23,13 @@ namespace StreetNameRegistry.Tests.Testing
         private readonly Random _random;
         private readonly Action<string> _logAction;
 
+        public ConnectedProjectionScenarioWrapper(ConnectedProjectionScenario<TContext> inner, Func<TContext> contextFactory, Action<string> logAction)
+        {
+            _inner = inner;
+            _contextFactory = contextFactory;
+            _logAction = logAction;
+        }
+
         public ConnectedProjectionScenarioWrapper(ConnectedProjectionScenario<TContext> inner, Func<TContext> contextFactory, Random random, Action<string> logAction)
         {
             _inner = inner;
@@ -52,6 +59,7 @@ namespace StreetNameRegistry.Tests.Testing
             }
         }
 
+        //DO NOT MOVE TO LIB
         public ConnectedProjectionScenarioWrapper<TContext> Project<T>(IGenerator<T> eventGenerator)
         {
             var @event = eventGenerator.Generate(_random);
@@ -78,7 +86,7 @@ namespace StreetNameRegistry.Tests.Testing
         }
     }
 
-    public abstract class ProjectionTest<TContext, TProjection> : TestBase
+    public abstract class ProjectionTest<TContext, TProjection> : TestBase //DO NOT MOVE INHERITANCE TO LIB
         where TProjection : ConnectedProjection<TContext>, new() where TContext : DbContext
     {
         public ConnectedProjectionScenario<TContext> When
@@ -95,10 +103,11 @@ namespace StreetNameRegistry.Tests.Testing
         {
         }
 
-        public ConnectedProjectionScenarioWrapper<TContext> Given(IGenerator<IEnumerable<object>> eventsGenerator)
+        //DO NOT MOVE TO LIB
+        public ConnectedProjectionScenarioWrapper<TContext> GivenEvents(IGenerator<IEnumerable<object>> eventsGenerator)
         {
             var events = Arrange(eventsGenerator).ToList();
-            LogArrange($"Given events:\r\n{events.ToLoggableString(Formatting.Indented)}");
+            LogArrange($"GivenEvents events:\r\n{events.ToLoggableString(Formatting.Indented)}");
             var envelopes = events
             .Select(e => new Envelope(e, new ConcurrentDictionary<string, object>()).ToGenericEnvelope());
             return new ConnectedProjectionScenarioWrapper<TContext>(
@@ -107,7 +116,8 @@ namespace StreetNameRegistry.Tests.Testing
                 Random, LogAct);
         }
 
-        public ConnectedProjectionScenarioWrapper<TContext> Given(params IGenerator<object>[] eventGenerators)
+        //DO NOT MOVE TO LIB
+        public ConnectedProjectionScenarioWrapper<TContext> GivenEvents(params IGenerator<object>[] eventGenerators)
         {
             var envelopes = eventGenerators
                 .Select(Arrange)
@@ -118,7 +128,8 @@ namespace StreetNameRegistry.Tests.Testing
                 Random, LogAct);
         }
 
-        public ConnectedProjectionScenarioWrapper<TContext> GivenEvents(params object[] events)
+        //MOVE TO LIB
+        public ConnectedProjectionScenarioWrapper<TContext> Given(params object[] events)
         {
             return new ConnectedProjectionScenarioWrapper<TContext>(
                 When.Given(events.Select(e => new Envelope(e, new ConcurrentDictionary<string, object>()).ToGenericEnvelope())),
@@ -126,7 +137,8 @@ namespace StreetNameRegistry.Tests.Testing
                 Random, LogAct);
         }
 
-        public TContext CreateContext()
+        //Move to lib
+        protected TContext CreateContext()
         {
             var options = new DbContextOptionsBuilder<TContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())

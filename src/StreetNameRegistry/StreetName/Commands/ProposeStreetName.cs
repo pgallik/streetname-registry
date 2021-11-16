@@ -25,8 +25,7 @@ namespace StreetNameRegistry.StreetName.Commands
             MunicipalityId municipalityId,
             Names streetNameNames,
             PersistentLocalId persistentLocalId,
-            Provenance provenance
-            )
+            Provenance provenance)
         {
             MunicipalityId = municipalityId;
             StreetNameNames = streetNameNames;
