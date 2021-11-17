@@ -5,21 +5,17 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System.Threading.Tasks;
     using AutoFixture;
     using FluentAssertions;
-    using Microsoft.EntityFrameworkCore;
-    using Projections.Legacy;
-    using Testing;
-    using Xunit.Abstractions;
     using global::AutoFixture;
     using Projections.Legacy.StreetNameListV2;
     using StreetName;
     using StreetName.Events;
     using Xunit;
 
-    public class StreetNameListItemProjectionsV2Tests : ProjectionTest<LegacyContext, StreetNameListProjectionsV2>
+    public class StreetNameListItemProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameListProjectionsV2>
     {
         private readonly Fixture? _fixture;
 
-        public StreetNameListItemProjectionsV2Tests(ITestOutputHelper output) : base(output)
+        public StreetNameListItemProjectionsV2Tests()
         {
             _fixture = new Fixture();
             _fixture.Customize(new InfrastructureCustomization());
@@ -31,7 +27,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         {
             var municipalityWasImported = _fixture.Create<MunicipalityWasImported>();
 
-            await Given(municipalityWasImported)
+            await Sut
+                .Given(municipalityWasImported)
                 .Then(async ct =>
                 {
                     var expectedMunicipality = (await ct.FindAsync<StreetNameListMunicipality>(municipalityWasImported.MunicipalityId));
@@ -47,7 +44,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
 
-            await Given(
+            await Sut
+                .Given(
                     _fixture.Create<MunicipalityWasImported>(),
                     streetNameWasProposedV2)
                 .Then(async ct =>
@@ -77,7 +75,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var municipalityWasImported = _fixture.Create<MunicipalityWasImported>();
             var municipalityNisCodeWasChanged = _fixture.Create<MunicipalityNisCodeWasChanged>();
 
-            await Given(
+            await Sut
+                .Given(
                     municipalityWasImported,
                     streetNameWasProposedV2,
                     streetNameWasProposedV2_2,
@@ -101,11 +100,6 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         private string DetermineExpectedNameForLanguage(IEnumerable<StreetNameName> streetNameNames, Language language)
         {
             return streetNameNames.SingleOrDefault(x => x.Language == language)?.Name;
-        }
-
-        protected override LegacyContext CreateContext(DbContextOptions<LegacyContext> options)
-        {
-            return new LegacyContext(options);
         }
     }
 }

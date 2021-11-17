@@ -10,11 +10,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using global::AutoFixture;
     using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
-using Moq;
+    using Moq;
     using StreetName.Commands;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
-    using StreetNameRegistry.StreetName;
+    using StreetName;
     using Testing;
     using Xunit.Abstractions;
 

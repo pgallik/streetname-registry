@@ -5,21 +5,17 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System.Threading.Tasks;
     using AutoFixture;
     using FluentAssertions;
-    using Microsoft.EntityFrameworkCore;
-    using Projections.Legacy;
-    using Testing;
-    using Xunit.Abstractions;
     using global::AutoFixture;
     using Projections.Legacy.StreetNameNameV2;
     using StreetName;
     using StreetName.Events;
     using Xunit;
 
-    public class StreetNameNameProjectionsV2Tests : ProjectionTest<LegacyContext, StreetNameNameProjectionsV2>
+    public class StreetNameNameProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameNameProjectionsV2>
     {
         private readonly Fixture? _fixture;
 
-        public StreetNameNameProjectionsV2Tests(ITestOutputHelper output) : base(output)
+        public StreetNameNameProjectionsV2Tests()
         {
             _fixture = new Fixture();
             _fixture.Customize(new InfrastructureCustomization());
@@ -32,7 +28,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
 
-            await Given(streetNameWasProposedV2)
+            await Sut
+                .Given(streetNameWasProposedV2)
                 .Then(async ct =>
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId));
@@ -58,14 +55,15 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             var streetNameWasProposedV2_2 = _fixture.Create<StreetNameWasProposedV2>();
             var municipalityNisCodeWasChanged = _fixture.Create<MunicipalityNisCodeWasChanged>();
 
-            await Given(
+            await Sut
+                .Given(
                     streetNameWasProposedV2,
                     streetNameWasProposedV2_2,
                     municipalityNisCodeWasChanged)
                 .Then(async ct =>
                 {
-                   var expectedStreetNames = ct.StreetNameNamesV2.Where(x =>
-                        x.MunicipalityId == municipalityNisCodeWasChanged.MunicipalityId);
+                    var expectedStreetNames = ct.StreetNameNamesV2.Where(x =>
+                         x.MunicipalityId == municipalityNisCodeWasChanged.MunicipalityId);
 
                     expectedStreetNames.Select(x => x.NisCode)
                         .Distinct()
@@ -77,11 +75,6 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         private string DetermineExpectedNameForLanguage(IEnumerable<StreetNameName> streetNameNames, Language language)
         {
             return streetNameNames.SingleOrDefault(x => x.Language == language)?.Name;
-        }
-
-        protected override LegacyContext CreateContext(DbContextOptions<LegacyContext> options)
-        {
-            return new LegacyContext(options);
         }
     }
 }

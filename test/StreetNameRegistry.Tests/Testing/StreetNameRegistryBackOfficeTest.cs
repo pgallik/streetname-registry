@@ -15,12 +15,13 @@ namespace StreetNameRegistry.Tests.Testing
 
     public class StreetNameRegistryBackOfficeTest : StreetNameRegistryTest
     {
+        internal const string DetailUrl = "https://www.registry.com/streetname/voorgesteld/{0}";
         protected IOptions<ResponseOptions> ResponseOptions { get; }
 
         public StreetNameRegistryBackOfficeTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             ResponseOptions = Options.Create<ResponseOptions>(Fixture.Create<ResponseOptions>());
-            ResponseOptions.Value.DetailUrl = "https://www.registry.com/streetname/voorgesteld/{0}";
+            ResponseOptions.Value.DetailUrl = DetailUrl;
         }
 
         public void DispatchArrangeCommand<T> (T command) where T : IHasCommandProvenance

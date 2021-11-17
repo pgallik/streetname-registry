@@ -9,12 +9,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using FluentAssertions;
     using global::AutoFixture;
     using Infrastructure;
-using Moq;
+    using Moq;
     using StreetName.Commands;
     using StreetNameRegistry.Api.BackOffice.Infrastructure;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
-    using StreetNameRegistry.StreetName;
+    using StreetName;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -67,7 +67,7 @@ using Moq;
 
             //Assert
             var expectedPosition = 1;
-            result.Location.Should().Be($"https://www.registry.com/streetname/voorgesteld/{expectedLocation}");
+            result.Location.Should().Be(string.Format(DetailUrl, expectedLocation));
             result.ETag.Should().Be(expectedPosition.ToString());
         }
     }

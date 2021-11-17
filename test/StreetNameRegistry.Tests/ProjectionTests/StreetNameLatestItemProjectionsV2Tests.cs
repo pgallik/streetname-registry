@@ -6,20 +6,16 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using AutoFixture;
     using FluentAssertions;
     using global::AutoFixture;
-    using Microsoft.EntityFrameworkCore;
-    using Projections.Legacy;
     using Projections.Legacy.StreetNameDetailV2;
     using StreetName;
     using StreetName.Events;
-    using Testing;
     using Xunit;
-    using Xunit.Abstractions;
 
-    public class StreetNameLatestItemProjectionsV2Tests : ProjectionTest<LegacyContext, StreetNameDetailProjectionsV2>
+    public class StreetNameLatestItemProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameDetailProjectionsV2>
     {
         private readonly Fixture? _fixture;
 
-        public StreetNameLatestItemProjectionsV2Tests(ITestOutputHelper output) : base(output)
+        public StreetNameLatestItemProjectionsV2Tests()
         {
             _fixture = new Fixture();
             _fixture.Customize(new InfrastructureCustomization());
@@ -31,7 +27,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
 
-            await Given(streetNameWasProposedV2)
+            await Sut
+                .Given(streetNameWasProposedV2)
                 .Then(async ct =>
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameDetailV2>(streetNameWasProposedV2.PersistentLocalId));
@@ -52,11 +49,6 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         private string DetermineExpectedNameForLanguage(IEnumerable<StreetNameName> streetNameNames, Language language)
         {
             return streetNameNames.SingleOrDefault(x => x.Language == language)?.Name;
-        }
-
-        protected override LegacyContext CreateContext(DbContextOptions<LegacyContext> options)
-        {
-            return new LegacyContext(options);
         }
     }
 }
