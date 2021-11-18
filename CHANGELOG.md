@@ -1,3 +1,10 @@
+## [2.28.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.28.1...v2.28.2) (2021-11-18)
+
+
+### Bug Fixes
+
+* update docs backoffice GAWR-2349 ([188b667](https://github.com/informatievlaanderen/streetname-registry/commit/188b66771c95fc06efe562c3f9f7de8a53c1ed27))
+
 ## [2.28.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.28.0...v2.28.1) (2021-11-16)
 
 
