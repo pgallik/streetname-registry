@@ -22,12 +22,11 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         public string GemeenteId { get; set; }
 
         /// <summary>
-        /// De naam van de straat in elke officiële taal en faciliteitentaal van de gemeente.
+        /// De straatnaam in elke officiële taal en faciliteitentaal van de gemeente.
         /// </summary>
         [DataMember(Name = "Straatnamen", Order = 2)]
         [JsonProperty(Required = Required.Always)]
         public Dictionary<Taal, string> Straatnamen { get; set; }
-
 
         /// <summary>
         /// Map to ProposeStreetName command
