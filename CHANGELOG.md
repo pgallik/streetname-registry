@@ -1,3 +1,15 @@
+# [2.29.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.28.2...v2.29.0) (2021-11-22)
+
+
+### Bug Fixes
+
+* correct migrations concerning existing indexes ([588a686](https://github.com/informatievlaanderen/streetname-registry/commit/588a686981938329b7b3a771d22f07066ff914a3))
+
+
+### Features
+
+* add position to ETag GAWR-2358 ([a1f4994](https://github.com/informatievlaanderen/streetname-registry/commit/a1f4994efbf81f27c58b60d16cb59a9e67f65745))
+
 ## [2.28.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.28.1...v2.28.2) (2021-11-18)
 
 
