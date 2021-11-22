@@ -1,10 +1,10 @@
 namespace StreetNameRegistry.Api.BackOffice.StreetName
 {
     using System;
-    using System.Globalization;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string", "De url van de voorgestelde straatnaam.", "")]
+        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string", "De url van de voorgestelde straatnaam.")]
         [SwaggerRequestExample(typeof(StreetNameProposeRequest), typeof(StreetNameProposeRequestExamples))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
@@ -63,7 +63,8 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             try
             {
                 //TODO REMOVE WHEN IMPLEMENTED
-                //return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), "1");
+                return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), "1");
+
                 //TODO real data please
                 var fakeProvenanceData = new Provenance(
                         DateTime.UtcNow.ToInstant(),
@@ -86,8 +87,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                 var persistentLocalId = persistentLocalIdGenerator.GenerateNextPersistentLocalId();
                 var cmd = streetNameProposeRequest.ToCommand(new MunicipalityId(municipality.MunicipalityId), fakeProvenanceData, persistentLocalId);
                 var position = await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd , cancellationToken);
-
-                return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, persistentLocalId)), position.ToString(CultureInfo.InvariantCulture));
+                return new CreatedWithLastObservedPositionAsETagResult(new Uri(string.Format(options.Value.DetailUrl, persistentLocalId)), position.ToString(), Application.StreetNameRegistry.ToString());
             }
             catch (IdempotencyException)
             {
