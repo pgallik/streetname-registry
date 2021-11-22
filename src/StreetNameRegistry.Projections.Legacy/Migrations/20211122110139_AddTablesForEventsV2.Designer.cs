@@ -10,8 +10,8 @@ using StreetNameRegistry.Projections.Legacy;
 namespace StreetNameRegistry.Projections.Legacy.Migrations
 {
     [DbContext(typeof(LegacyContext))]
-    [Migration("20211116123708_RemoveCompleteFromDetailV2")]
-    partial class RemoveCompleteFromDetailV2
+    [Migration("20211122110139_AddTablesForEventsV2")]
+    partial class AddTablesForEventsV2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -100,7 +100,7 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_StreetNameDetails_PersistentLocalId_1")
                         .HasFilter("([PersistentLocalId] IS NOT NULL)")
-                        .IsClustered();
+                        .IsClustered(false);
 
                     b.HasIndex("Removed");
 
@@ -244,7 +244,7 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_StreetNameList_PersistentLocalId_1")
                         .HasFilter("([PersistentLocalId] IS NOT NULL)")
-                        .IsClustered();
+                        .IsClustered(false);
 
                     b.HasIndex("Status");
 

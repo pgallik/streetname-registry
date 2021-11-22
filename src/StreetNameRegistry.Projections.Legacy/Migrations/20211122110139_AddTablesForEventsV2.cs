@@ -7,16 +7,6 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_StreetNameList_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameList");
-
-            migrationBuilder.DropIndex(
-                name: "IX_StreetNameDetails_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameDetails");
-
             migrationBuilder.AlterColumn<Guid>(
                 name: "StreetNameId",
                 schema: "StreetNameRegistryLegacy",
@@ -50,7 +40,6 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                     HomonymAdditionGerman = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HomonymAdditionEnglish = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: true),
-                    Complete = table.Column<bool>(type: "bit", nullable: false),
                     Removed = table.Column<bool>(type: "bit", nullable: false),
                     VersionTimestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
@@ -138,24 +127,6 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                 schema: "StreetNameRegistryLegacy",
                 table: "StreetNameSyndication",
                 column: "PersistentLocalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StreetNameList_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameList",
-                column: "PersistentLocalId",
-                unique: true,
-                filter: "([PersistentLocalId] IS NOT NULL)")
-                .Annotation("SqlServer:Clustered", true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StreetNameDetails_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameDetails",
-                column: "PersistentLocalId",
-                unique: true,
-                filter: "([PersistentLocalId] IS NOT NULL)")
-                .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetNameDetailsV2_MunicipalityId",
@@ -319,16 +290,6 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                 schema: "StreetNameRegistryLegacy",
                 table: "StreetNameSyndication");
 
-            migrationBuilder.DropIndex(
-                name: "IX_StreetNameList_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameList");
-
-            migrationBuilder.DropIndex(
-                name: "IX_StreetNameDetails_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameDetails");
-
             migrationBuilder.DropColumn(
                 name: "MunicipalityId",
                 schema: "StreetNameRegistryLegacy",
@@ -344,24 +305,6 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier",
                 oldNullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StreetNameList_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameList",
-                column: "PersistentLocalId",
-                unique: true,
-                filter: "([PersistentLocalId] IS NOT NULL)")
-                .Annotation("SqlServer:Clustered", false);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StreetNameDetails_PersistentLocalId_1",
-                schema: "StreetNameRegistryLegacy",
-                table: "StreetNameDetails",
-                column: "PersistentLocalId",
-                unique: true,
-                filter: "([PersistentLocalId] IS NOT NULL)")
-                .Annotation("SqlServer:Clustered", false);
         }
     }
 }

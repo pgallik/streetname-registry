@@ -98,7 +98,7 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_StreetNameDetails_PersistentLocalId_1")
                         .HasFilter("([PersistentLocalId] IS NOT NULL)")
-                        .IsClustered();
+                        .IsClustered(false);
 
                     b.HasIndex("Removed");
 
@@ -242,7 +242,7 @@ namespace StreetNameRegistry.Projections.Legacy.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_StreetNameList_PersistentLocalId_1")
                         .HasFilter("([PersistentLocalId] IS NOT NULL)")
-                        .IsClustered();
+                        .IsClustered(false);
 
                     b.HasIndex("Status");
 
