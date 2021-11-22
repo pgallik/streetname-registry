@@ -1,3 +1,10 @@
+## [2.29.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.29.0...v2.29.1) (2021-11-22)
+
+
+### Bug Fixes
+
+* don't run V2 of extract! ([0188666](https://github.com/informatievlaanderen/streetname-registry/commit/0188666f48b1882bc3264a332932718f61ebb74d))
+
 # [2.29.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.28.2...v2.29.0) (2021-11-22)
 
 
