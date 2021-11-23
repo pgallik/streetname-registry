@@ -1,3 +1,10 @@
+# [2.30.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.29.1...v2.30.0) (2021-11-23)
+
+
+### Features
+
+* create Api.Oslo project ([33e978a](https://github.com/informatievlaanderen/streetname-registry/commit/33e978a9ebebe4faebff0cdca5a8444ee36bceef))
+
 ## [2.29.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.29.0...v2.29.1) (2021-11-22)
 
 
