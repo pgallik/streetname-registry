@@ -40,6 +40,7 @@ Target.create "Build_Solution" (fun _ ->
   buildSource "StreetNameRegistry.Projector"
   buildSource "StreetNameRegistry.Api.BackOffice"
   buildSource "StreetNameRegistry.Api.Legacy"
+  buildSource "StreetNameRegistry.Api.Oslo"
   buildSource "StreetNameRegistry.Api.Extract"
   buildSource "StreetNameRegistry.Api.CrabImport"
   buildSource "StreetNameRegistry.Projections.Legacy"
@@ -60,6 +61,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Projector"
     "StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.Legacy"
+    "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
     "StreetNameRegistry.Projections.Legacy"
@@ -73,6 +75,7 @@ Target.create "Pack_Solution" (fun _ ->
     "StreetNameRegistry.Projector"
     "StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.Legacy"
+    "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
   ] |> List.iter pack)
@@ -85,6 +88,9 @@ Target.create "PushContainer_ApiBackOffice" (fun _ -> push "api-backoffice")
 
 Target.create "Containerize_ApiLegacy" (fun _ -> containerize "StreetNameRegistry.Api.Legacy" "api-legacy")
 Target.create "PushContainer_ApiLegacy" (fun _ -> push "api-legacy")
+
+Target.create "Containerize_ApiOslo" (fun _ -> containerize "StreetNameRegistry.Api.Oslo" "api-oslo")
+Target.create "PushContainer_ApiOslo" (fun _ -> push "api-oslo")
 
 Target.create "Containerize_ApiExtract" (fun _ -> containerize "StreetNameRegistry.Api.Extract" "api-extract")
 Target.create "PushContainer_ApiExtract" (fun _ -> push "api-extract")
@@ -127,6 +133,7 @@ Target.create "Push" ignore
   ==> "Containerize_Projector"
   ==> "Containerize_ApiBackOffice"
   ==> "Containerize_ApiLegacy"
+  ==> "Containerize_ApiOslo"
   ==> "Containerize_ApiExtract"
   ==> "Containerize_ApiCrabImport"
   ==> "Containerize_ProjectionsSyndication"
@@ -138,6 +145,7 @@ Target.create "Push" ignore
   ==> "PushContainer_Projector"
   ==> "PushContainer_ApiBackOffice"
   ==> "PushContainer_ApiLegacy"
+  ==> "PushContainer_ApiOslo"
   ==> "PushContainer_ApiExtract"
   ==> "PushContainer_ApiCrabImport"
   ==> "PushContainer_ProjectionsSyndication"

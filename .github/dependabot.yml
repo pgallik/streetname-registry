@@ -27,6 +27,16 @@ updates:
     interval: daily
 
 - package-ecosystem: docker
+  directory: "/src/StreetNameRegistry.Api.Oslo"
+  schedule:
+    interval: daily
+
+- package-ecosystem: docker
+  directory: "/src/StreetNameRegistry.Api.BackOffice"
+  schedule:
+    interval: daily
+
+- package-ecosystem: docker
   directory: "/src/StreetNameRegistry.Projections.Syndication"
   schedule:
     interval: daily
