@@ -1,3 +1,10 @@
+# [2.31.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.30.0...v2.31.0) (2021-11-24)
+
+
+### Features
+
+* add context + type to oslo responses GAWR-666 ([065f8a0](https://github.com/informatievlaanderen/streetname-registry/commit/065f8a0d08c7474b4445827503f65f6b9ae8e225))
+
 # [2.30.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.29.1...v2.30.0) (2021-11-23)
 
 
