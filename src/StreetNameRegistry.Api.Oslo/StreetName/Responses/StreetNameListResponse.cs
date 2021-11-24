@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Be.Vlaanderen.Basisregisters.Api.JsonConverters;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
@@ -15,15 +16,61 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     public class StreetNameListResponse
     {
         /// <summary>
+        /// De linked-data context van straatnamen.
+        /// </summary>
+        [DataMember(Name = "@context", Order = 0)]
+        [JsonProperty(Required = Required.DisallowNull)]
+        [JsonConverter(typeof(PlainStringJsonConverter))]
+        public object Context => @"[
+     {""@base"": ""https://data.vlaanderen.be/id/concept/"" ,   
+      ""identificator"": ""@nest"",
+      ""id"": ""@id"",
+      ""versieId"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/generiek#versieIdentificator"",
+        ""@type"": ""http://www.w3.org/2001/XMLSchema#string""
+      },            
+      ""versieId"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/generiek#versieIdentificator"",
+        ""@type"": ""http://www.w3.org/2001/XMLSchema#string""
+      }, 
+      ""straatnaamStatus"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/adres#Straatnaam.status"",
+        ""@type"": ""@id"",
+        ""@context"": {
+          ""@base"": ""https://data.vlaanderen.be/id/concept/straatnaamstatus/""
+        }
+      },
+      ""straatnaam"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/adres#heeftStraatnaam"",
+        ""@type"": ""@id"",
+        ""@context"": {
+          ""@base"": ""https://data.vlaanderen.be/id/straatnaam/"",
+          ""objectId"": ""@id"",
+          ""straatnaam"": ""@nest"",
+          ""geografischeNaam"": {
+            ""@id"": ""http://www.w3.org/2000/01/rdf-schema#label"",
+            ""@context"": {
+              ""spelling"": ""@value"",
+              ""taal"": ""@language""
+            }
+          }
+        }
+      },     
+      ""detail"": ""http://www.iana.org/assignments/relation/self"",
+       ""straatnamen"": ""@graph""
+   }                       
+  ]";
+
+        /// <summary>
         /// De verzameling van straatnamen.
         /// </summary>
         [DataMember(Name = "Straatnamen", Order = 1)]
         [JsonProperty(Required = Required.DisallowNull)]
         public List<StreetNameListItemResponse> Straatnamen { get; set; }
 
-        /// <summary>
-        /// Het totaal aantal gemeenten die overeenkomen met de vraag.
-        /// </summary>
+        ///// <summary>
+        ///// Het totaal aantal gemeenten die overeenkomen met de vraag.
+        ///// </summary>
         //[DataMember(Name = "TotaalAantal", Order = 2)]
         //[JsonProperty(Required = Required.DisallowNull)]
         //public long TotaalAantal { get; set; }
@@ -39,6 +86,13 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     [DataContract(Name = "StraatnaamCollectieItem", Namespace = "")]
     public class StreetNameListItemResponse
     {
+        /// <summary>
+        /// Het linked-data type van de straatnaam.
+        /// </summary>
+        [DataMember(Name = "@type", Order = 0)]
+        [JsonProperty(Required = Required.DisallowNull)]
+        public string Type => "Straatnaam";
+
         /// <summary>
         /// De identificator van de straatnaam.
         /// </summary>
@@ -79,7 +133,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
             string naamruimte,
             string detail,
             GeografischeNaam geografischeNaam,
-            GeografischeNaam homoniemToevoeging,
+            GeografischeNaam? homoniemToevoeging,
             StraatnaamStatus status,
             DateTimeOffset? version)
         {
@@ -104,8 +158,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
 
         public StreetNameListResponse GetExamples()
         {
-            var rnd = new Random();
-
             var streetNameSamples = new List<StreetNameListItemResponse>
                 {
                     new StreetNameListItemResponse(

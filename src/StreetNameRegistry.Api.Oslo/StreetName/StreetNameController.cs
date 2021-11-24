@@ -57,6 +57,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// <response code="410">Als de straatnaam verwijderd is.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
         [HttpGet("{persistentLocalId}")]
+        [Produces(AcceptTypes.JsonLd)]
         [ProducesResponseType(typeof(StreetNameResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status410Gone)]
@@ -83,7 +84,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
 
             return Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
                 .FilterAsync<StreetNameDetail>(
-                    i => i.PersistentLocalId ?? -1,
+                    i => i.PersistentLocalId,
                     i => i.PersistentLocalId == persistentLocalId
                     , cancellationToken));
         }
@@ -99,6 +100,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// <response code="200">Als de opvraging van een lijst met straatnamen gelukt is.</response>
         /// <response code="500">Als er een interne fout is opgetreden.</response>
         [HttpGet]
+        [Produces(AcceptTypes.JsonLd)]
         [ProducesResponseType(typeof(StreetNameListResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameListResponseExamples))]
@@ -244,7 +246,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
             }
         }
 
-        private static GeografischeNaam GetHomoniemToevoegingByTaal(IStreetNameListItem item, Language? taal)
+        private static GeografischeNaam? GetHomoniemToevoegingByTaal(IStreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -270,9 +272,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                         Taal.EN);
 
                 default:
-                    return new GeografischeNaam(
-                        item.HomonymAdditionDutch ?? string.Empty,
-                        Taal.NL);
+                    return null;
             }
         }
 

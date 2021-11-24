@@ -15,42 +15,104 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Filters;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
+    using Be.Vlaanderen.Basisregisters.Api.JsonConverters;
 
     [DataContract(Name = "StraatnaamDetail", Namespace = "")]
     public class StreetNameResponse
     {
         /// <summary>
+        /// De linked-data context van straatnaam.
+        /// </summary>
+        [DataMember(Name = "@context", Order = 0)]
+        [JsonProperty(Required = Required.DisallowNull)]
+        [JsonConverter(typeof(PlainStringJsonConverter))]
+        public object Context => @"[
+    { ""@base"": ""https://data.vlaanderen.be/id/concept/"" ,  
+      ""identificator"": ""@nest"",
+      ""id"": ""@id"",
+      ""versieId"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/generiek#versieIdentificator"",
+        ""@type"": ""http://www.w3.org/2001/XMLSchema#string""
+      },
+      ""gemeente"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/adres#heeftGemeentenaam"",
+        ""@type"": ""@id"",
+        ""@context"": {
+          ""@base"": ""https://data.vlaanderen.be/id/gemeentenaam/"",
+          ""objectId"": ""@id"",
+          ""gemeentenaam"": ""@nest"",
+          ""geografischeNaam"": {
+            ""@id"": ""http://www.w3.org/2000/01/rdf-schema#label"",
+            ""@context"": {
+              ""spelling"": ""@value"",
+              ""taal"": ""@language""
+            }
+          }
+        }
+      },
+      ""straatnamen"": {
+        ""@id"": ""http://www.w3.org/2000/01/rdf-schema#label"",
+        ""@context"": {
+          ""spelling"": ""@value"",
+          ""taal"": ""@language""
+        }
+      },
+      ""homoniemToevoegingen"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/adres#homoniemToevoeging"",
+         ""@context"": {
+          ""spelling"": ""@value"",
+          ""taal"": ""@language""
+         }
+      },
+      ""straatnaamStatus"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/adres#Straatnaam.status"",
+        ""@type"": ""@id"",
+        ""@context"": {
+          ""@base"": ""https://data.vlaanderen.be/id/concept/straatnaamstatus/""
+        }
+      }
+    }
+  ]";
+
+        /// <summary>
+        /// Het linked-data type van de straatnaam.
+        /// </summary>
+        [DataMember(Name = "@type", Order = 1)]
+        [JsonProperty(Required = Required.DisallowNull)]
+        public string Type => "Straatnaam";
+
+        /// <summary>
         /// De identificator van de straatnaam.
         /// </summary>
-        [DataMember(Name = "Identificator", Order = 1)]
+        [DataMember(Name = "Identificator", Order = 2)]
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamIdentificator Identificator { get; set; }
 
         /// <summary>
         /// De gemeente aan dewelke de straatnaam is toegewezen.
         /// </summary>
-        [DataMember(Name = "Gemeente", Order = 2)]
+        [DataMember(Name = "Gemeente", Order = 3)]
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamDetailGemeente Gemeente { get; set; }
 
         /// <summary>
         /// De straatnaam in verschillende talen.
         /// </summary>
-        [DataMember(Name = "Straatnamen", Order = 3)]
+        [DataMember(Name = "Straatnamen", Order = 4)]
         [JsonProperty(Required = Required.DisallowNull)]
         public List<GeografischeNaam> Straatnamen { get; set; }
 
         /// <summary>
         /// De homoniem-toevoegingen aan de straatnaam in verschillende talen.
         /// </summary>
-        [DataMember(Name = "HomoniemToevoegingen", Order = 4)]
+        [DataMember(Name = "HomoniemToevoegingen", Order = 5)]
         [JsonProperty(Required = Required.DisallowNull)]
         public List<GeografischeNaam> HomoniemToevoegingen { get; set; }
 
         /// <summary>
         /// De huidige fase in de levensloop van een straatnaam.
         /// </summary>
-        [DataMember(Name = "StraatnaamStatus", Order = 5)]
+        [DataMember(Name = "StraatnaamStatus", Order = 6)]
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamStatus StraatnaamStatus { get; set; }
 
