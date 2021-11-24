@@ -1,3 +1,10 @@
+## [2.31.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.1...v2.31.2) (2021-11-24)
+
+
+### Bug Fixes
+
+* rename oslo contracts ([f11b647](https://github.com/informatievlaanderen/streetname-registry/commit/f11b647af9c68b32eb93b25dad741ac914573d0a))
+
 ## [2.31.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.0...v2.31.1) (2021-11-24)
 
 
