@@ -22,13 +22,13 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Projections.Syndication.Municipality;
     using Responses;
 
-    public class StreetNameDetailQuery
+    public class StreetNameDetailOsloQuery
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
         private readonly ResponseOptions _responseOptions;
 
-        public StreetNameDetailQuery(
+        public StreetNameDetailOsloQuery(
             LegacyContext legacyContext,
             SyndicationContext syndicationContext,
             IOptions<ResponseOptions> responseOptionsProvider)
@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
             _responseOptions = responseOptionsProvider.Value;
         }
 
-        public async Task<StreetNameResponse> FilterAsync<T>(Expression<Func<T, object>> property, Expression<Func<T, bool>> filter, CancellationToken ct = default) where T : class, IStreetNameDetail, new()
+        public async Task<StreetNameOsloResponse> FilterAsync<T>(Expression<Func<T, object>> property, Expression<Func<T, bool>> filter, CancellationToken ct = default) where T : class, IStreetNameDetail, new()
         {
             var streetName = await _legacyContext
                 .Get<T>()
@@ -68,7 +68,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
                 throw new InvalidOperationException("persistentLocalId cannot be null");
             }
 
-            return new StreetNameResponse(
+            return new StreetNameOsloResponse(
                 _responseOptions.Naamruimte,
                 persistentLocalId.Value,
                 streetName.Status.ConvertFromStreetNameStatus(),

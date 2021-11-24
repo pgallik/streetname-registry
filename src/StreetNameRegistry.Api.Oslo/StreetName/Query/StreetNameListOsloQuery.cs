@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
     using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
 
-    public class StreetNameListQuery<T> : Query<T, StreetNameFilter>
+    public class StreetNameListOsloQuery<T> : Query<T, StreetNameFilter>
         where T : class, IStreetNameListItem
     {
         private readonly LegacyContext _legacyContext;
@@ -24,7 +24,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 
         protected override ISorting Sorting => new StreetNameSorting();
 
-        public StreetNameListQuery(LegacyContext legacyContext, SyndicationContext syndicationContext)
+        public StreetNameListOsloQuery(LegacyContext legacyContext, SyndicationContext syndicationContext)
         {
             _legacyContext = legacyContext;
             _syndicationContext = syndicationContext;

@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     using Swashbuckle.AspNetCore.Filters;
 
     [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
-    public class StreetNameListResponse
+    public class StreetNameListOsloResponse
     {
         /// <summary>
         /// De linked-data context van straatnamen.
@@ -66,7 +66,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         /// </summary>
         [DataMember(Name = "Straatnamen", Order = 1)]
         [JsonProperty(Required = Required.DisallowNull)]
-        public List<StreetNameListItemResponse> Straatnamen { get; set; }
+        public List<StreetNameListOsloItemResponse> Straatnamen { get; set; }
 
         ///// <summary>
         ///// Het totaal aantal gemeenten die overeenkomen met de vraag.
@@ -84,7 +84,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     }
 
     [DataContract(Name = "StraatnaamCollectieItem", Namespace = "")]
-    public class StreetNameListItemResponse
+    public class StreetNameListOsloItemResponse
     {
         /// <summary>
         /// Het linked-data type van de straatnaam.
@@ -128,7 +128,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamStatus StraatnaamStatus { get; set; }
 
-        public StreetNameListItemResponse(
+        public StreetNameListOsloItemResponse(
             int? id,
             string naamruimte,
             string detail,
@@ -149,18 +149,18 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         }
     }
 
-    public class StreetNameListResponseExamples : IExamplesProvider<StreetNameListResponse>
+    public class StreetNameListResponseExamples : IExamplesProvider<StreetNameListOsloResponse>
     {
         private readonly ResponseOptions _responseOptions;
 
         public StreetNameListResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
          => _responseOptions = responseOptionsProvider.Value;
 
-        public StreetNameListResponse GetExamples()
+        public StreetNameListOsloResponse GetExamples()
         {
-            var streetNameSamples = new List<StreetNameListItemResponse>
+            var streetNameSamples = new List<StreetNameListOsloItemResponse>
                 {
-                    new StreetNameListItemResponse(
+                    new StreetNameListOsloItemResponse(
                         1000,
                         _responseOptions.Naamruimte,
                         _responseOptions.DetailUrl,
@@ -169,7 +169,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
                         StraatnaamStatus.InGebruik,
                         DateTimeOffset.Now.ToExampleOffset()),
 
-                    new StreetNameListItemResponse(
+                    new StreetNameListOsloItemResponse(
                         1001,
                         _responseOptions.Naamruimte,
                         _responseOptions.DetailUrl,
@@ -179,7 +179,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
                         DateTimeOffset.Now.ToExampleOffset())
                 };
 
-            return new StreetNameListResponse
+            return new StreetNameListOsloResponse
             {
                 Straatnamen = streetNameSamples,
                 Volgende = new Uri(string.Format(_responseOptions.VolgendeUrl, 2, 10))

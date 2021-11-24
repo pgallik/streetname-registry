@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     using Be.Vlaanderen.Basisregisters.Api.JsonConverters;
 
     [DataContract(Name = "StraatnaamDetail", Namespace = "")]
-    public class StreetNameResponse
+    public class StreetNameOsloResponse
     {
         /// <summary>
         /// De linked-data context van straatnaam.
@@ -116,7 +116,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         [JsonProperty(Required = Required.DisallowNull)]
         public StraatnaamStatus StraatnaamStatus { get; set; }
 
-        public StreetNameResponse(
+        public StreetNameOsloResponse(
             string naamruimte,
             int persistentLocalId,
             StraatnaamStatus status,
@@ -159,14 +159,14 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         }
     }
 
-    public class StreetNameResponseExamples : IExamplesProvider<StreetNameResponse>
+    public class StreetNameResponseExamples : IExamplesProvider<StreetNameOsloResponse>
     {
         private readonly ResponseOptions _responseOptions;
 
         public StreetNameResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
             => _responseOptions = responseOptionsProvider.Value;
 
-        public StreetNameResponse GetExamples()
+        public StreetNameOsloResponse GetExamples()
         {
             var gemeente = new StraatnaamDetailGemeente
             {
@@ -177,7 +177,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
 
             var rnd = new Random();
 
-            return new StreetNameResponse(
+            return new StreetNameOsloResponse(
                 _responseOptions.Naamruimte,
                 rnd.Next(10000, 15000),
                 StraatnaamStatus.InGebruik,

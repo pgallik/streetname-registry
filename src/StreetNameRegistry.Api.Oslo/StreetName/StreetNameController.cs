@@ -58,7 +58,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// <response code="500">Als er een interne fout is opgetreden.</response>
         [HttpGet("{persistentLocalId}")]
         [Produces(AcceptTypes.JsonLd)]
-        [ProducesResponseType(typeof(StreetNameResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StreetNameOsloResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status410Gone)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -75,14 +75,14 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         {
             if (_useProjectionsV2Toggle.FeatureEnabled)
             {
-                return Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
+                return Ok(await new StreetNameDetailOsloQuery(legacyContext, syndicationContext, responseOptions)
                     .FilterAsync<StreetNameDetailV2>(
                         i => i.PersistentLocalId,
                         i => i.PersistentLocalId == persistentLocalId
                         , cancellationToken));
             }
 
-            return Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
+            return Ok(await new StreetNameDetailOsloQuery(legacyContext, syndicationContext, responseOptions)
                 .FilterAsync<StreetNameDetail>(
                     i => i.PersistentLocalId,
                     i => i.PersistentLocalId == persistentLocalId
@@ -101,7 +101,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         /// <response code="500">Als er een interne fout is opgetreden.</response>
         [HttpGet]
         [Produces(AcceptTypes.JsonLd)]
-        [ProducesResponseType(typeof(StreetNameListResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StreetNameListOsloResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameListResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
@@ -119,17 +119,17 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
             if (_useProjectionsV2Toggle.FeatureEnabled)
             {
                 var pagedStreetNamesV2 =
-                    new StreetNameListQuery<StreetNameListItemV2>(legacyContext, syndicationContext)
+                    new StreetNameListOsloQuery<StreetNameListItemV2>(legacyContext, syndicationContext)
                         .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination);
 
                 Response.AddPagedQueryResultHeaders(pagedStreetNamesV2);
 
                 return Ok(
-                    new StreetNameListResponse
+                    new StreetNameListOsloResponse
                     {
                         Straatnamen = await pagedStreetNamesV2
                             .Items
-                            .Select(m => new StreetNameListItemResponse(
+                            .Select(m => new StreetNameListOsloItemResponse(
                                 m.PersistentLocalId,
                                 responseOptions.Value.Naamruimte,
                                 responseOptions.Value.DetailUrl,
@@ -142,17 +142,17 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                     });
             }
 
-            var pagedStreetNames = new StreetNameListQuery<StreetNameListItem>(legacyContext, syndicationContext)
+            var pagedStreetNames = new StreetNameListOsloQuery<StreetNameListItem>(legacyContext, syndicationContext)
                 .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination);
 
             Response.AddPagedQueryResultHeaders(pagedStreetNames);
 
             return Ok(
-                new StreetNameListResponse
+                new StreetNameListOsloResponse
                 {
                     Straatnamen = await pagedStreetNames
                         .Items
-                        .Select(m => new StreetNameListItemResponse(
+                        .Select(m => new StreetNameListOsloItemResponse(
                             m.PersistentLocalId,
                             responseOptions.Value.Naamruimte,
                             responseOptions.Value.DetailUrl,
@@ -192,7 +192,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                 return Ok(
                     new TotaalAantalResponse
                     {
-                        Aantal = await new StreetNameListQuery<StreetNameListItemV2>(context, syndicationContext)
+                        Aantal = await new StreetNameListOsloQuery<StreetNameListItemV2>(context, syndicationContext)
                             .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination)
                             .Items
                             .CountAsync(cancellationToken)
@@ -203,7 +203,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                 new TotaalAantalResponse
                 {
                     Aantal = filtering.ShouldFilter
-                        ? await new StreetNameListQuery<StreetNameListItem>(context, syndicationContext)
+                        ? await new StreetNameListOsloQuery<StreetNameListItem>(context, syndicationContext)
                             .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination)
                             .Items
                             .CountAsync(cancellationToken)
