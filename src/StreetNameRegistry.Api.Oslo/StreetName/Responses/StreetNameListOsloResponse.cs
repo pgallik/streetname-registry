@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Filters;
 
-    [DataContract(Name = "StraatnaamCollectie", Namespace = "")]
+    [DataContract(Name = "StraatnaamCollectieOslo", Namespace = "")]
     public class StreetNameListOsloResponse
     {
         /// <summary>

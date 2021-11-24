@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
     using Be.Vlaanderen.Basisregisters.Api.JsonConverters;
 
-    [DataContract(Name = "StraatnaamDetail", Namespace = "")]
+    [DataContract(Name = "StraatnaamDetailOslo", Namespace = "")]
     public class StreetNameOsloResponse
     {
         /// <summary>
