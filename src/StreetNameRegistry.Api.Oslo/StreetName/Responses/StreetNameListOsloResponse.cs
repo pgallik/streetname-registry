@@ -149,11 +149,11 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         }
     }
 
-    public class StreetNameListResponseExamples : IExamplesProvider<StreetNameListOsloResponse>
+    public class StreetNameListOsloResponseExamples : IExamplesProvider<StreetNameListOsloResponse>
     {
         private readonly ResponseOptions _responseOptions;
 
-        public StreetNameListResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
+        public StreetNameListOsloResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
          => _responseOptions = responseOptionsProvider.Value;
 
         public StreetNameListOsloResponse GetExamples()

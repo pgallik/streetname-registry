@@ -62,7 +62,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status410Gone)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameResponseExamples))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameOsloResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(StreetNameNotFoundResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status410Gone, typeof(StreetNameGoneResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
@@ -103,7 +103,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
         [Produces(AcceptTypes.JsonLd)]
         [ProducesResponseType(typeof(StreetNameListOsloResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameListResponseExamples))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StreetNameListOsloResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public async Task<IActionResult> List(
             [FromServices] SyndicationContext syndicationContext,
