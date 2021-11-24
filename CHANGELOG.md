@@ -1,3 +1,10 @@
+## [2.31.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.2...v2.31.3) (2021-11-24)
+
+
+### Bug Fixes
+
+* rename oslo example classes ([9daa1ea](https://github.com/informatievlaanderen/streetname-registry/commit/9daa1eaf4247b737878b68ac3fc3e587dc08d42f))
+
 ## [2.31.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.1...v2.31.2) (2021-11-24)
 
 
