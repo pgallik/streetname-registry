@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Legacy = "__EFMigrationsHistoryLegacy";
         public const string Extract = "__EFMigrationsHistoryExtract";
         public const string Syndication = "__EFMigrationsHistorySyndication";
+        public const string RedisDataMigration = "__EFMigrationsHistoryDataMigration";
         public const string Sequence = "__EFMigrationsHistorySequence";
     }
 }

@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Projections.LastChangedList
 {
+    using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
@@ -10,13 +11,10 @@ namespace StreetNameRegistry.Projections.LastChangedList
     [ConnectedProjectionDescription("Projectie die markeert voor hoeveel straatnamen de gecachte data nog geüpdated moeten worden.")]
     public class LastChangedProjections : LastChangedListConnectedProjection
     {
-        protected override string CacheKeyFormat => "legacy/streetname:{{0}}.{1}";
-        protected override string UriFormat => "/v1/straatnamen/{{0}}";
-
-        private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.Json, AcceptType.Xml };
+        private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.Json, AcceptType.Xml, AcceptType.JsonLd };
 
         public LastChangedProjections()
-            : base (SupportedAcceptTypes)
+            : base(SupportedAcceptTypes)
         {
             #region Legacy Events
 
@@ -149,6 +147,29 @@ namespace StreetNameRegistry.Projections.LastChangedList
             {
                 await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
             });
+        }
+
+        protected override string BuildCacheKey(AcceptType acceptType, string identifier)
+        {
+            var shortenedAcceptType = acceptType.ToString().ToLowerInvariant();
+            return acceptType switch
+            {
+                AcceptType.Json => string.Format("legacy/streetname:{{0}}.{1}", identifier, shortenedAcceptType),
+                AcceptType.Xml => string.Format("legacy/streetname:{{0}}.{1}", identifier, shortenedAcceptType),
+                AcceptType.JsonLd => string.Format("oslo/streetname:{{0}}.{1}", identifier, shortenedAcceptType),
+                _ => throw new NotImplementedException($"Cannot build CacheKey for type {typeof(AcceptType)}")
+            };
+        }
+
+        protected override string BuildUri(AcceptType acceptType, string identifier)
+        {
+            return acceptType switch
+            {
+                AcceptType.Json => string.Format("/v1/straatnamen/{{0}}", identifier),
+                AcceptType.Xml => string.Format("/v1/straatnamen/{{0}}", identifier),
+                AcceptType.JsonLd => string.Format("/v2/straatnamen/{{0}}", identifier),
+                _ => throw new NotImplementedException($"Cannot build Uri for type {typeof(AcceptType)}")
+            };
         }
 
         private static void DoNothing() { }
