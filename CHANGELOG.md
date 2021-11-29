@@ -1,3 +1,10 @@
+# [2.32.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.4...v2.32.0) (2021-11-29)
+
+
+### Features
+
+* add oslo to lastchangedlist projection + migrate data ([6d73fa6](https://github.com/informatievlaanderen/streetname-registry/commit/6d73fa60c5292381a0c9e9a048bc821894458040))
+
 ## [2.31.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.3...v2.31.4) (2021-11-29)
 
 
