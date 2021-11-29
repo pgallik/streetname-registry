@@ -1,3 +1,10 @@
+## [2.31.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.3...v2.31.4) (2021-11-29)
+
+
+### Bug Fixes
+
+* use problemjson middleware ([3f961f0](https://github.com/informatievlaanderen/streetname-registry/commit/3f961f06dcfb89dd8cb9b42b430bf08919c462ce))
+
 ## [2.31.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.2...v2.31.3) (2021-11-24)
 
 
