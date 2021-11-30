@@ -1,3 +1,10 @@
+## [2.32.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.0...v2.32.1) (2021-11-30)
+
+
+### Bug Fixes
+
+* GAWR-666 bump problemjson header package ([201cf75](https://github.com/informatievlaanderen/streetname-registry/commit/201cf75da75fe61924ac8edb07652288c15fcac2))
+
 # [2.32.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.31.4...v2.32.0) (2021-11-29)
 
 
