@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        services: ${{ secrets.Services }}
+        services: ${{ secrets.SERVICES }}
     steps:
     #- name: Deploy
     #  env:
@@ -22,7 +22,7 @@ jobs:
     #    STATUS_URL: ${{ secrets.VBR_AWS_BUILD_STATUS_API }}/${{matrix.services}}
     #  uses: informatievlaanderen/awscurl-polling-action@main
     #  with:
-    #      environment: ${{ secrets.Environment_Name }}
+    #      environment: ${{ secrets.ENVIRONMENT_NAME }}
     #      version: ${{ github.event.inputs.version }}
     #      status-url: $STATUS_URL
     #      deploy-url: $BUILD_URL
@@ -39,5 +39,5 @@ jobs:
     - run: 'echo secrets'
       shell: bash
       env:
-        SERVICES: ${{ secrets.Services }}
-        ENVIRONMENT_NAME: ${{ secrets.Environment_Name }}
+        SERVICES: ${{ secrets.SERVICES }}
+        ENVIRONMENT_NAME: ${{ secrets.ENVIRONMENT_NAME }}
