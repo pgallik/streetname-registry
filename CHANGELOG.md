@@ -1,3 +1,10 @@
+## [2.32.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.1...v2.32.2) (2021-12-01)
+
+
+### Bug Fixes
+
+* bump problemjson again ([af9386b](https://github.com/informatievlaanderen/streetname-registry/commit/af9386bbd0039a27d7b7fecb4fa8e487d36a4c1e))
+
 ## [2.32.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.0...v2.32.1) (2021-11-30)
 
 
