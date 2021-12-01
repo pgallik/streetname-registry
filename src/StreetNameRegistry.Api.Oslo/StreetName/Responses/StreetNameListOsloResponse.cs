@@ -154,7 +154,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         private readonly ResponseOptions _responseOptions;
 
         public StreetNameListOsloResponseExamples(IOptions<ResponseOptions> responseOptionsProvider)
-         => _responseOptions = responseOptionsProvider.Value;
+            => _responseOptions = responseOptionsProvider.Value;
 
         public StreetNameListOsloResponse GetExamples()
         {
