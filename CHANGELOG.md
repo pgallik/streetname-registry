@@ -1,3 +1,10 @@
+## [2.32.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.2...v2.32.3) (2021-12-01)
+
+
+### Bug Fixes
+
+* trigger build by correcting ident ([77464b8](https://github.com/informatievlaanderen/streetname-registry/commit/77464b89c3959fb2676de000168590e23e29e46b))
+
 ## [2.32.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.1...v2.32.2) (2021-12-01)
 
 
