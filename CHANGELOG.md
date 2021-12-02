@@ -1,3 +1,10 @@
+## [2.32.5](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.4...v2.32.5) (2021-12-02)
+
+
+### Bug Fixes
+
+* add produce jsonld to totaal aantal ([a470bd7](https://github.com/informatievlaanderen/streetname-registry/commit/a470bd70a9855d7457fef0e6d0bc81337e86e7ff))
+
 ## [2.32.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.3...v2.32.4) (2021-12-01)
 
 
