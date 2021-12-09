@@ -27,18 +27,29 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         [JsonProperty(Required = Required.DisallowNull)]
         [JsonConverter(typeof(PlainStringJsonConverter))]
         public object Context => @"[
-    { ""@base"": ""https://data.vlaanderen.be/id/concept/"" ,  
+    {
+      ""@base"": ""https://basisregisters.vlaanderen.be/ns/adres"",
+      ""@vocab"": ""#"",
       ""identificator"": ""@nest"",
       ""id"": ""@id"",
       ""versieId"": {
         ""@id"": ""https://data.vlaanderen.be/ns/generiek#versieIdentificator"",
         ""@type"": ""http://www.w3.org/2001/XMLSchema#string""
       },
+      ""naamruimte"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/generiek#naamruimte"",
+        ""@type"": ""http://www.w3.org/2001/XMLSchema#string""
+      },
+      ""objectId"": {
+        ""@id"": ""https://data.vlaanderen.be/ns/generiek#lokaleIdentificator"",
+        ""@type"": ""http://www.w3.org/2001/XMLSchema#string""
+      },
+      ""Straatnaam"": ""https://data.vlaanderen.be/ns/adres#Straatnaam"",
       ""gemeente"": {
-        ""@id"": ""https://data.vlaanderen.be/ns/adres#heeftGemeentenaam"",
+        ""@id"": ""http://www.w3.org/ns/prov#wasAttributedTo"",
         ""@type"": ""@id"",
         ""@context"": {
-          ""@base"": ""https://data.vlaanderen.be/id/gemeentenaam/"",
+          ""@base"": ""https://data.vlaanderen.be/id/gemeente/"",
           ""objectId"": ""@id"",
           ""gemeentenaam"": ""@nest"",
           ""geografischeNaam"": {
@@ -59,10 +70,10 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
       },
       ""homoniemToevoegingen"": {
         ""@id"": ""https://data.vlaanderen.be/ns/adres#homoniemToevoeging"",
-         ""@context"": {
+        ""@context"": {
           ""spelling"": ""@value"",
           ""taal"": ""@language""
-         }
+        }
       },
       ""straatnaamStatus"": {
         ""@id"": ""https://data.vlaanderen.be/ns/adres#Straatnaam.status"",
