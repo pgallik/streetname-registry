@@ -10,6 +10,7 @@ on:
     #    required: true
 
 env:
+  OMG: 'ZOMG'
   SERVICES: ${{ secrets.SERVICES }}
   ENVIRONMENT_NAME: ${{ secrets.ENVIRONMENT_NAME }}
 
@@ -40,7 +41,7 @@ jobs:
     #    echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
     #    echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
     #    echo ${{ steps.awscurl-polling-action.outputs.final-message }}
-    - run: 'echo services: ${{ env.SERVICES }}, envname: ${{ env.ENVIRONMENT_NAME }}'
+    - run: 'echo omg: ${{ env.OMG }}, services: ${{ env.SERVICES }}, envname: ${{ env.ENVIRONMENT_NAME }}'
       shell: bash
       env:
         SERVICES: ${{ secrets.SERVICES }}
