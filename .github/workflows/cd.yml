@@ -8,8 +8,6 @@ on:
       version:
         description: 'Version'
         required: true
-      environment_name: ${{ secrets.ENVIRONMENT_NAME }}
-      services: ${{ secrets.SERVICES }}
 
 jobs:
   deployment:
@@ -38,7 +36,7 @@ jobs:
     #    echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
     #    echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
     #    echo ${{ steps.awscurl-polling-action.outputs.final-message }}
-    - run: 'echo services: ${{ github.event.inputs.services }}, envname: ${{ github.event.inputs.environment_name }}'
+    - run: 'echo services: $SERVICES, envname: $ENVIRONMENT_NAME'
       shell: bash
       env:
         SERVICES: ${{ secrets.SERVICES }}
