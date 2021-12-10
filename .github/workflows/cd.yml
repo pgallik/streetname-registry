@@ -21,6 +21,11 @@ jobs:
       matrix:
         services: ['services']
     steps:
+    - name: Do it
+      with:
+        super_secret: ${{ secrets.ENVIRONMENT_NAME }}
+      run: 'echo super_secret: ${{ INPUT_SUPER_SECRET }}'
+      shell: bash
     #- name: Deploy
     #  env:
     #    BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
