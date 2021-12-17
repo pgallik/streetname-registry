@@ -1,3 +1,10 @@
+## [2.32.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.6...v2.32.7) (2021-12-17)
+
+
+### Bug Fixes
+
+* use async startup of projections to fix hanging migrations ([e1b8f7c](https://github.com/informatievlaanderen/streetname-registry/commit/e1b8f7ceaab045c9e081a0f21ed669399883aad2))
+
 ## [2.32.6](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.5...v2.32.6) (2021-12-10)
 
 
