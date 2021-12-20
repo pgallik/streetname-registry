@@ -23,8 +23,8 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using StreetNameRegistry.StreetName;
     using Swashbuckle.AspNetCore.Filters;
 
-    [ApiVersion("1.0")]
-    [AdvertiseApiVersions("1.0")]
+    [ApiVersion("2.0")]
+    [AdvertiseApiVersions("2.0")]
     [ApiRoute("straatnamen")]
     [ApiExplorerSettings(GroupName = "Straatnamen")]
     public class StreetNameController : ApiBusController
