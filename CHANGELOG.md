@@ -1,3 +1,10 @@
+## [2.32.8](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.7...v2.32.8) (2021-12-20)
+
+
+### Bug Fixes
+
+* bump version in backoffice to 2.0 ([77af2fe](https://github.com/informatievlaanderen/streetname-registry/commit/77af2fe3dea2f95eb5739f662dfd2b96fb254f0b))
+
 ## [2.32.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.6...v2.32.7) (2021-12-17)
 
 
