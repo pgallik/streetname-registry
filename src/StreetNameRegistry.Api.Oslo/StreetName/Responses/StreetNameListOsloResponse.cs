@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     public class StreetNameListOsloResponse
     {
         /// <summary>
-        /// De linked-data context van straatnamen.
+        /// De linked-data context van straatnaam.
         /// </summary>
         [DataMember(Name = "@context", Order = 0)]
         [JsonProperty(Required = Required.DisallowNull)]
@@ -30,17 +30,10 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         [JsonProperty(Required = Required.DisallowNull)]
         public List<StreetNameListOsloItemResponse> Straatnamen { get; set; }
 
-        ///// <summary>
-        ///// Het totaal aantal gemeenten die overeenkomen met de vraag.
-        ///// </summary>
-        //[DataMember(Name = "TotaalAantal", Order = 2)]
-        //[JsonProperty(Required = Required.DisallowNull)]
-        //public long TotaalAantal { get; set; }
-
         /// <summary>
         /// De URL voor het ophalen van de volgende verzameling.
         /// </summary>
-        [DataMember(Name = "Volgende", Order = 3, EmitDefaultValue = false)]
+        [DataMember(Name = "Volgende", Order = 2, EmitDefaultValue = false)]
         [JsonProperty(Required = Required.Default, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Uri? Volgende { get; set; }
     }
