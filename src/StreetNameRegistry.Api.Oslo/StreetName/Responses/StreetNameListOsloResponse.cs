@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     public class StreetNameListOsloResponse
     {
         /// <summary>
-        /// De linked-data context van straatnaam.
+        /// De linked-data context van de straatnaam.
         /// </summary>
         [DataMember(Name = "@context", Order = 0)]
         [JsonProperty(Required = Required.DisallowNull)]
