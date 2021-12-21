@@ -1,3 +1,10 @@
+## [2.32.10](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.9...v2.32.10) (2021-12-21)
+
+
+### Bug Fixes
+
+* gawr-2502 docs ([9af3e50](https://github.com/informatievlaanderen/streetname-registry/commit/9af3e50e0385021bdbc07a9072d929b4ed0fbf5b))
+
 ## [2.32.9](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.8...v2.32.9) (2021-12-21)
 
 
