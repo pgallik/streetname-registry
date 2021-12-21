@@ -1,3 +1,10 @@
+## [2.32.9](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.8...v2.32.9) (2021-12-21)
+
+
+### Bug Fixes
+
+* replaced contextobject in responses with perma link ([e72c688](https://github.com/informatievlaanderen/streetname-registry/commit/e72c688a7b754ac31413ee8e73cefbf480113e46))
+
 ## [2.32.8](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.7...v2.32.8) (2021-12-20)
 
 
