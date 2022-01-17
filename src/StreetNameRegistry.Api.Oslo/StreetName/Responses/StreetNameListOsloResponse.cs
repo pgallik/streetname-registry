@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         [DataMember(Name = "@context", Order = 0)]
         [JsonProperty(Required = Required.DisallowNull)]
         [JsonConverter(typeof(PlainStringJsonConverter))]
-        public object Context => "[\"https://raw.githubusercontent.com/Informatievlaanderen/OSLOthema-gebouwEnAdres/d44fbba69aeb9f02d10d4e372449c404f3ebd06c/site-skeleton/adressenregister/context/straatnamen_list.jsonld\"]";
+        public object Context { get; set; }
 
         /// <summary>
         /// De verzameling van straatnamen.
@@ -137,7 +137,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
             return new StreetNameListOsloResponse
             {
                 Straatnamen = streetNameSamples,
-                Volgende = new Uri(string.Format(_responseOptions.VolgendeUrl, 2, 10))
+                Volgende = new Uri(string.Format(_responseOptions.VolgendeUrl, 2, 10)),
+                Context = _responseOptions.ContextUrlList
             };
         }
     }

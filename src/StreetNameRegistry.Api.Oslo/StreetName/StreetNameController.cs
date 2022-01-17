@@ -138,7 +138,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                                 m.Status.ConvertFromStreetNameStatus(),
                                 m.VersionTimestamp.ToBelgianDateTimeOffset()))
                             .ToListAsync(cancellationToken),
-                        Volgende = BuildNextUri(pagedStreetNamesV2.PaginationInfo, responseOptions.Value.VolgendeUrl)
+                        Volgende = BuildNextUri(pagedStreetNamesV2.PaginationInfo, responseOptions.Value.VolgendeUrl),
+                        Context = responseOptions.Value.ContextUrlList
                     });
             }
 
@@ -161,7 +162,8 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                             m.Status.ConvertFromStreetNameStatus(),
                             m.VersionTimestamp.ToBelgianDateTimeOffset()))
                         .ToListAsync(cancellationToken),
-                    Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl)
+                    Volgende = BuildNextUri(pagedStreetNames.PaginationInfo, responseOptions.Value.VolgendeUrl),
+                    Context = responseOptions.Value.ContextUrlList
                 });
         }
 

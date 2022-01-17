@@ -26,7 +26,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         [DataMember(Name = "@context", Order = 0)]
         [JsonProperty(Required = Required.DisallowNull)]
         [JsonConverter(typeof(PlainStringJsonConverter))]
-        public object Context => "[\"https://raw.githubusercontent.com/Informatievlaanderen/OSLOthema-gebouwEnAdres/d44fbba69aeb9f02d10d4e372449c404f3ebd06c/site-skeleton/adressenregister/context/straatnamen_detail.jsonld\"]";
+        public object Context { get; }
 
         /// <summary>
         /// Het linked-data type van de straatnaam.
@@ -72,6 +72,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
 
         public StreetNameOsloResponse(
             string naamruimte,
+            string contextUrlDetail,
             int persistentLocalId,
             StraatnaamStatus status,
             StraatnaamDetailGemeente gemeente,
@@ -133,6 +134,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
 
             return new StreetNameOsloResponse(
                 _responseOptions.Naamruimte,
+                _responseOptions.ContextUrlDetail,
                 rnd.Next(10000, 15000),
                 StraatnaamStatus.InGebruik,
                 gemeente,
