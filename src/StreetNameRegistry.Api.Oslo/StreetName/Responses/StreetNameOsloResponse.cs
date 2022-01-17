@@ -86,6 +86,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
             string homonymAdditionGerman = "",
             string homonymAdditionEnglish = "")
         {
+            Context = contextUrlDetail;
             Identificator = new StraatnaamIdentificator(naamruimte, persistentLocalId.ToString(), version);
             StraatnaamStatus = status;
             Gemeente = gemeente;
