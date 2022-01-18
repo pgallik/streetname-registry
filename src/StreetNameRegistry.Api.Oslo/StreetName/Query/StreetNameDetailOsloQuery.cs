@@ -70,6 +70,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Query
 
             return new StreetNameOsloResponse(
                 _responseOptions.Naamruimte,
+                _responseOptions.ContextUrlDetail,
                 persistentLocalId.Value,
                 streetName.Status.ConvertFromStreetNameStatus(),
                 gemeente,
