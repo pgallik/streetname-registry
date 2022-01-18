@@ -1,3 +1,11 @@
+## [2.32.12](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.11...v2.32.12) (2022-01-18)
+
+
+### Bug Fixes
+
+* build ([aea0de1](https://github.com/informatievlaanderen/streetname-registry/commit/aea0de11fe257bce51bf99b2e88044754e2cc4f5))
+* change oslo context & type ([e6fefda](https://github.com/informatievlaanderen/streetname-registry/commit/e6fefdaa835596c32527713f4bd5754aeccb747b))
+
 ## [2.32.11](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.10...v2.32.11) (2021-12-21)
 
 
