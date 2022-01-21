@@ -1,3 +1,10 @@
+## [2.32.13](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.12...v2.32.13) (2022-01-21)
+
+
+### Bug Fixes
+
+* correctly resume projections asnyc ([78b5f84](https://github.com/informatievlaanderen/streetname-registry/commit/78b5f84d1fa68408659cbad2771f64188d84d337))
+
 ## [2.32.12](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.11...v2.32.12) (2022-01-18)
 
 
