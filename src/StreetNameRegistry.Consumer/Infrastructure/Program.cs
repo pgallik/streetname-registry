@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -55,14 +56,13 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                         try
                         {
                             var bootstrapServers = configuration["Kafka:BootstrapServers"];
-                            var schemaRegistryUrl = configuration["Kafka:SchemaRegistryUrl"];
-                            var kafkaOptions = new KafkaOptions(bootstrapServers, schemaRegistryUrl);
+                            var kafkaOptions = new KafkaOptions(bootstrapServers, EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
                             var topic = $"{configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();
                             var consumer = new Consumer(actualContainer, kafkaOptions, topic);
-                            await consumer.Start();
+                            await consumer.Start(ct);
                         }
                         catch (Exception e)
                         {
