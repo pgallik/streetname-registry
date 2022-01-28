@@ -1,3 +1,10 @@
+## [2.33.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.33.0...v2.33.1) (2022-01-28)
+
+
+### Bug Fixes
+
+* update message handling ([054fa09](https://github.com/informatievlaanderen/streetname-registry/commit/054fa092986c363bcce432e87eb64b9c103460ba))
+
 # [2.33.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.13...v2.33.0) (2022-01-28)
 
 
