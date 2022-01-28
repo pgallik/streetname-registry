@@ -1,3 +1,10 @@
+# [2.33.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.13...v2.33.0) (2022-01-28)
+
+
+### Features
+
+* consuming messages without commandhandling ([575c838](https://github.com/informatievlaanderen/streetname-registry/commit/575c83860ca3cc8d1589b74dedef5b2ddede9312))
+
 ## [2.32.13](https://github.com/informatievlaanderen/streetname-registry/compare/v2.32.12...v2.32.13) (2022-01-21)
 
 
