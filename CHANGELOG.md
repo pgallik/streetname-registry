@@ -1,3 +1,10 @@
+# [2.34.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.33.1...v2.34.0) (2022-02-01)
+
+
+### Features
+
+* add Kafka commands ([a7006a4](https://github.com/informatievlaanderen/streetname-registry/commit/a7006a4a0d8afd3965824e7873235021a4ff198a))
+
 ## [2.33.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.33.0...v2.33.1) (2022-01-28)
 
 
