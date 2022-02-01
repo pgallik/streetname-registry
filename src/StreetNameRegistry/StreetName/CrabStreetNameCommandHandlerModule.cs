@@ -7,8 +7,8 @@ namespace StreetNameRegistry.StreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.EventHandling;
-    using Commands;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Commands;
     using SqlStreamStore;
 
     public sealed class CrabStreetNameCommandHandlerModule : CommandHandlerModule

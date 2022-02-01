@@ -10,6 +10,9 @@ namespace StreetNameRegistry
         public static MunicipalityId CreateFor(CrabMunicipalityId crabMunicipalityId)
             => new MunicipalityId(crabMunicipalityId.CreateDeterministicId());
 
+        public static MunicipalityId CreateFor(string municipalityId)
+            => new MunicipalityId(Guid.Parse(municipalityId));
+
         public MunicipalityId([JsonProperty("value")] Guid municipalityId) : base(municipalityId) { }
     }
 }

@@ -6,8 +6,9 @@ namespace StreetNameRegistry.StreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Commands;
+    using Commands.Municipality;
     using SqlStreamStore;
+using StreetNameRegistry.StreetName.Events;
 
     public sealed class MunicipalityCommandHandlerModule : CommandHandlerModule
     {
@@ -40,7 +41,7 @@ namespace StreetNameRegistry.StreetName
                 .Handle(async (message, ct) =>
                 {
                     var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
-                    municipality.ChangeNisCode(message.Command.NisCode);
+                    municipality.DefineOrChangeNisCode(message.Command.NisCode);
                 });
 
             For<SetMunicipalityToCurrent>()
@@ -59,6 +60,105 @@ namespace StreetNameRegistry.StreetName
                 {
                     var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
                     municipality.Retire();
+                });
+
+            For<DefineMunicipalityNisCode>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.DefineOrChangeNisCode(message.Command.NisCode);
+                });
+
+            For<CorrectMunicipalityNisCode>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.DefineOrChangeNisCode(message.Command.NisCode);
+                });
+
+            For<NameMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.NameMunicipality(message.Command.Name);
+                });
+
+            For<CorrectMunicipalityName>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.NameMunicipality(message.Command.Name);
+                });
+
+            For<CorrectToClearedMunicipalityName>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.NameMunicipality(new MunicipalityName(string.Empty, message.Command.Language));
+                });
+
+            For<AddOfficialLanguageToMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.AddOfficialLanguage(message.Command.Language);
+                });
+
+            For<RemoveOfficialLanguageFromMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.RemoveOfficialLanguage(message.Command.Language);
+                });
+
+            For<AddFacilityLanguageToMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.AddFacilityLanguage(message.Command.Language);
+                });
+
+            For<RemoveFacilityLanguageFromMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.RemoveFacilityLanguage(message.Command.Language);
+                });
+
+            For<CorrectToCurrentMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.CorrectToCurrent();
+                });
+
+            For<CorrectToRetiredMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.CorrectToRetired();
                 });
         }
     }

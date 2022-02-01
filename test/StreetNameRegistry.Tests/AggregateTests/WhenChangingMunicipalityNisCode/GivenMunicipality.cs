@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
     using StreetName.Commands;
+    using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
     using Xunit;

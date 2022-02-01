@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetName;
+    using StreetName.Commands.Municipality;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

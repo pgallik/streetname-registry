@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("MunicipalityBecameCurrent")]
     [EventDescription("De gemeente werd in gebruik genomen.")]
-    public class MunicipalityBecameCurrent: IHasMunicipalityId, IHasProvenance, ISetProvenance
+    public class MunicipalityBecameCurrent : IHasMunicipalityId, IHasProvenance, ISetProvenance
     {
         public Guid MunicipalityId { get; }
         public ProvenanceData Provenance { get; private set; }

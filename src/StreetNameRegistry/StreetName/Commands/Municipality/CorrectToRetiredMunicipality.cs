@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.StreetName.Commands
+namespace StreetNameRegistry.StreetName.Commands.Municipality
 {
     using System;
     using System.Collections.Generic;
@@ -6,33 +6,31 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    public class ChangeMunicipalityNisCode: IHasCommandProvenance
+    public class CorrectToRetiredMunicipality : IHasCommandProvenance
     {
-        private static readonly Guid Namespace = new Guid("7a754298-762b-4612-a080-b5b10baf19dd");
+        private static readonly Guid Namespace = new Guid("d208bb3f-8737-4fd0-a6d3-ca46063d8579");
+
         public MunicipalityId MunicipalityId { get; }
-        public NisCode NisCode { get; }
+        public RetirementDate RetirementDate { get; }
         public Provenance Provenance { get; }
 
-        public ChangeMunicipalityNisCode(
-            MunicipalityId municipalityId,
-            NisCode nisCode,
-            Provenance provenance)
+        public CorrectToRetiredMunicipality(MunicipalityId municipalityId, RetirementDate retirementDate, Provenance provenance)
         {
             MunicipalityId = municipalityId;
-            NisCode = nisCode;
+            RetirementDate = retirementDate;
             Provenance = provenance;
         }
 
         public Guid CreateCommandId()
-            => Deterministic.Create(Namespace, $"ChangeMunicipalityNisCode-{ToString()}");
-
+            => Deterministic.Create(Namespace, $"{nameof(CorrectToRetiredMunicipality)}-{ToString()}");
+        
         public override string? ToString()
             => ToStringBuilder.ToString(IdentityFields());
 
         private IEnumerable<object> IdentityFields()
         {
             yield return MunicipalityId;
-            yield return NisCode;
+            yield return RetirementDate;
             yield return Provenance;
         }
     }

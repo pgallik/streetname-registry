@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.StreetName.Commands
+namespace StreetNameRegistry.StreetName.Commands.Municipality
 {
     using System;
     using System.Collections.Generic;
@@ -6,33 +6,31 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    public class ImportMunicipality: IHasCommandProvenance
+    public class RemoveOfficialLanguageFromMunicipality : IHasCommandProvenance
     {
-        private static readonly Guid Namespace = new Guid("c9b33779-73d8-49cf-9db7-d737bdbf3087");
+        private static readonly Guid Namespace = new Guid("4e2a6dff-1f00-4d6a-a4ec-69a01bf3c2b9");
+
         public MunicipalityId MunicipalityId { get; }
-        public NisCode NisCode { get; }
+        public Language Language { get; }
         public Provenance Provenance { get; }
 
-        public ImportMunicipality(
-            MunicipalityId municipalityId,
-            NisCode nisCode,
-            Provenance provenance)
+        public RemoveOfficialLanguageFromMunicipality(MunicipalityId municipalityId, Language language, Provenance provenance)
         {
             MunicipalityId = municipalityId;
-            NisCode = nisCode;
+            Language = language;
             Provenance = provenance;
         }
 
         public Guid CreateCommandId()
-            => Deterministic.Create(Namespace, $"ImportMunicipality-{ToString()}");
-
+            => Deterministic.Create(Namespace, $"{nameof(RemoveOfficialLanguageFromMunicipality)}-{ToString()}");
+        
         public override string? ToString()
             => ToStringBuilder.ToString(IdentityFields());
 
         private IEnumerable<object> IdentityFields()
         {
             yield return MunicipalityId;
-            yield return NisCode;
+            yield return Language;
             yield return Provenance;
         }
     }
