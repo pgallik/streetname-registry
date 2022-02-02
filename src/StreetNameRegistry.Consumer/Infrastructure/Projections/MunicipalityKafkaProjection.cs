@@ -28,7 +28,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     new NisCode(message.NisCode),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityNisCodeWasDefined>(async (commandHandler, message, ct) =>
@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     new NisCode(message.NisCode),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityNisCodeWasCorrected>(async (commandHandler, message, ct) =>
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     new NisCode(message.NisCode),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityWasNamed>(async (commandHandler, message, ct) =>
@@ -58,7 +58,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     new MunicipalityName(message.Name, Enum.Parse<Language>(message.Language)),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityNameWasCorrected>(async (commandHandler, message, ct) =>
@@ -68,7 +68,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     new MunicipalityName(message.Name, Enum.Parse<Language>(message.Language)),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityNameWasCorrectedToCleared>(async (commandHandler, message, ct) =>
@@ -78,7 +78,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     Enum.Parse<Language>(message.Language),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityOfficialLanguageWasAdded>(async (commandHandler, message, ct) =>
@@ -88,7 +88,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     Enum.Parse<Language>(message.Language),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityOfficialLanguageWasRemoved>(async (commandHandler, message, ct) =>
@@ -98,7 +98,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     Enum.Parse<Language>(message.Language),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityFacilityLanguageWasAdded>(async (commandHandler, message, ct) =>
@@ -108,7 +108,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     Enum.Parse<Language>(message.Language),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityFacilitiesLanguageWasRemoved>(async (commandHandler, message, ct) =>
@@ -118,7 +118,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     Enum.Parse<Language>(message.Language),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityBecameCurrent>(async (commandHandler, message, ct) =>
@@ -127,7 +127,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     MunicipalityId.CreateFor(message.MunicipalityId),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityWasCorrectedToCurrent>(async (commandHandler, message, ct) =>
@@ -136,7 +136,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     MunicipalityId.CreateFor(message.MunicipalityId),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityWasRetired>(async (commandHandler, message, ct) =>
@@ -145,7 +145,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     MunicipalityId.CreateFor(message.MunicipalityId),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
 
             When<MunicipalityWasCorrectedToRetired>(async (commandHandler, message, ct) =>
@@ -155,7 +155,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
                     new RetirementDate(InstantPattern.General.Parse(message.RetirementDate).GetValueOrThrow()),
                     FromProvenance(message.Provenance));
 
-                await commandHandler.Handle(command);
+                await commandHandler.Handle(command, ct);
             });
         }
     }

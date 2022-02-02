@@ -41,12 +41,12 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{Environment.MachineName.ToLowerInvariant()}.json", optional: true, reloadOnChange: false)
                 .AddEnvironmentVariables()
-                .AddCommandLine(args ?? new string[0])
+                .AddCommandLine(args)
                 .Build();
 
             var container = ConfigureServices(configuration);
 
-            Log.Information("Starting StreetNameRegistry.Projections.Syndication");
+            Log.Information("Starting StreetNameRegistry.Consumer");
 
             try
             {
@@ -61,7 +61,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                             var topic = $"{configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();
-                            var consumer = new Consumer(actualContainer, kafkaOptions, topic);
+                            var consumer = new Consumer(actualContainer, container.GetRequiredService<ILoggerFactory>(), kafkaOptions, topic);
                             await consumer.Start(ct);
                         }
                         catch (Exception e)
@@ -70,7 +70,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                             throw;
                         }
                     },
-                    DistributedLockOptions.LoadFromConfiguration(configuration) ?? DistributedLockOptions.Defaults,
+                    DistributedLockOptions.LoadFromConfiguration(configuration),
                     container.GetService<ILogger<Program>>()!);
             }
             catch (Exception e)
@@ -92,6 +92,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
             var services = new ServiceCollection();
             var builder = new ContainerBuilder();
 
+            builder.RegisterModule(new ApiModule(configuration, services));
             builder.RegisterModule(new LoggingModule(configuration, services));
 
             builder.Populate(services);
