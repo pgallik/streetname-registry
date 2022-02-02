@@ -1,3 +1,10 @@
+## [2.34.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.34.0...v2.34.1) (2022-02-02)
+
+
+### Bug Fixes
+
+* import municipality ([5f0e7ad](https://github.com/informatievlaanderen/streetname-registry/commit/5f0e7ad87ce4d5daaf9dd3b96d226ebf13ebe262))
+
 # [2.34.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.33.1...v2.34.0) (2022-02-01)
 
 
