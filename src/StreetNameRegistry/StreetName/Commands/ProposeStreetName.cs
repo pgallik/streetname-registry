@@ -6,7 +6,7 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    //todo move to library
+    //TODO: move to library
     public interface IHasCommandProvenance
     {
         public Provenance Provenance { get; }

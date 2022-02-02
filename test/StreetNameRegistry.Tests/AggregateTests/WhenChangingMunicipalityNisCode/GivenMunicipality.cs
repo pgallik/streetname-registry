@@ -1,11 +1,9 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCode
 {
-    using System;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
-    using StreetName.Commands;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;

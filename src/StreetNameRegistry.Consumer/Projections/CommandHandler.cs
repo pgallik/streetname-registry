@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Consumer.Infrastructure.Projections
+namespace StreetNameRegistry.Consumer.Projections
 {
     using System.Threading;
     using System.Threading.Tasks;

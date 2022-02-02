@@ -11,8 +11,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Projections.Legacy;
-    using Projections.Syndication;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
 
@@ -38,9 +36,6 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 
             containerBuilder
                 .RegisterModule(new DataDogModule(_configuration));
-
-            containerBuilder
-                .RegisterModule(new SyndicationModule(_configuration, _services, _loggerFactory));
 
             containerBuilder
                 .RegisterType<ProblemDetailsHelper>()

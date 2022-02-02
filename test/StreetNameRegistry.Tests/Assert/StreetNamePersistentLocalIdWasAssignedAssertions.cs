@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Tests.Assert
 {
-    using System;
     using FluentAssertions;
     using NodaTime;
     using StreetName.Events;

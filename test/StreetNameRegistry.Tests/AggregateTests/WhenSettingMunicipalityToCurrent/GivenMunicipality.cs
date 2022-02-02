@@ -4,7 +4,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenSettingMunicipalityToCurre
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
-    using StreetName.Commands;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;

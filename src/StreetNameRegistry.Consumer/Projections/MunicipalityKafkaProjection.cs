@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Consumer.Infrastructure.Projections
+namespace StreetNameRegistry.Consumer.Projections
 {
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
     using NodaTime.Text;
     using StreetName.Commands.Municipality;
     using Contracts = Be.Vlaanderen.Basisregisters.GrAr.Contracts.Common;
+    using Provenance = Be.Vlaanderen.Basisregisters.GrAr.Provenance.Provenance;
 
     public class MunicipalityKafkaProjection : ConnectedProjection<CommandHandler>
     {
@@ -23,8 +24,9 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
         {
             When<MunicipalityWasRegistered>(async (commandHandler, message, ct) =>
             {
+                var municipalityId = MunicipalityId.CreateFor(message.MunicipalityId);
                 var command = new ImportMunicipality(
-                    MunicipalityId.CreateFor(message.MunicipalityId),
+                    municipalityId,
                     new NisCode(message.NisCode),
                     FromProvenance(message.Provenance));
 
@@ -33,8 +35,9 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
 
             When<MunicipalityNisCodeWasDefined>(async (commandHandler, message, ct) =>
             {
+                var municipalityId = MunicipalityId.CreateFor(message.MunicipalityId);
                 var command = new DefineMunicipalityNisCode(
-                    MunicipalityId.CreateFor(message.MunicipalityId),
+                    municipalityId,
                     new NisCode(message.NisCode),
                     FromProvenance(message.Provenance));
 
@@ -43,8 +46,9 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Projections
 
             When<MunicipalityNisCodeWasCorrected>(async (commandHandler, message, ct) =>
             {
+                var municipalityId = MunicipalityId.CreateFor(message.MunicipalityId);
                 var command = new CorrectMunicipalityNisCode(
-                    MunicipalityId.CreateFor(message.MunicipalityId),
+                    municipalityId,
                     new NisCode(message.NisCode),
                     FromProvenance(message.Provenance));
 

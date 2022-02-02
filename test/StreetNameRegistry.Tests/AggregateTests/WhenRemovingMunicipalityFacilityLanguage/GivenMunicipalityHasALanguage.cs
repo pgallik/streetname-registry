@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacilityLanguage
 {
-    using System;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
@@ -33,16 +32,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
             Fixture.Register(() => language);
             var commandLanguageRemoved = Fixture.Create<RemoveFacilityLanguageFromMunicipality>();
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
-                {
-                    Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityFacilityLanguageWasAdded>()
-                })
+                .Given(_municipalityId, Fixture.Create<MunicipalityWasImported>(), Fixture.Create<MunicipalityFacilityLanguageWasAdded>())
                 .When(commandLanguageRemoved)
-                .Then(new[]
-                {
-                    new Fact(_municipalityId, new MunicipalityFacilityLanguageWasRemoved(_municipalityId, language))
-                }));
+                .Then(new Fact(_municipalityId, new MunicipalityFacilityLanguageWasRemoved(_municipalityId, language))));
         }
 
         [Theory]
@@ -55,12 +47,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
             Fixture.Register(() => language);
             var commandLanguageRemoved = Fixture.Create<RemoveFacilityLanguageFromMunicipality>();
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
-                {
-                    Fixture.Create<MunicipalityWasImported>(),
-                    Fixture.Create<MunicipalityFacilityLanguageWasAdded>(),
-                    Fixture.Create<MunicipalityFacilityLanguageWasRemoved>()
-                })
+                .Given(_municipalityId, Fixture.Create<MunicipalityWasImported>(), Fixture.Create<MunicipalityFacilityLanguageWasAdded>(), Fixture.Create<MunicipalityFacilityLanguageWasRemoved>())
                 .When(commandLanguageRemoved)
                 .ThenNone());
         }
@@ -72,17 +59,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
             var commandAddedEnglish = Fixture.Create<AddFacilityLanguageToMunicipality>().WithLanguage(Language.English);
             var commandAddedDutch = Fixture.Create<AddFacilityLanguageToMunicipality>().WithLanguage(Language.Dutch);
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
-                {
-                    Fixture.Create<MunicipalityWasImported>(),
-                    commandAddedEnglish.ToEvent(),
-                    commandAddedDutch.ToEvent()
-                })
+                .Given(_municipalityId, Fixture.Create<MunicipalityWasImported>(), commandAddedEnglish.ToEvent(), commandAddedDutch.ToEvent())
                 .When(commandLanguageRemoved)
-                .Then(new[]
-                {
-                    new Fact(_municipalityId, new MunicipalityFacilityLanguageWasRemoved(_municipalityId, Language.English))
-                }));
+                .Then(new Fact(_municipalityId, new MunicipalityFacilityLanguageWasRemoved(_municipalityId, Language.English))));
         }
     }
 

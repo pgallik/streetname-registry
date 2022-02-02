@@ -10,8 +10,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using global::AutoFixture;
     using Infrastructure;
     using Moq;
-    using StreetName.Commands;
-    using StreetNameRegistry.Api.BackOffice.Infrastructure;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetName;
@@ -19,12 +17,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
+using Be.Vlaanderen.Basisregisters.Api.ETag;
 
     public class GivenMunicipalityExists : StreetNameRegistryBackOfficeTest
     {
         private readonly Fixture _fixture;
         private readonly StreetNameController _controller;
-        private readonly TestSyndicationContext _syndicationContext;
+        private readonly TestConsumerContext _consumerContext;
         private readonly IdempotencyContext _idempotencyContext;
 
         public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -32,7 +31,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             _fixture = new Fixture();
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
-            _syndicationContext = new FakeSyndicationContextFactory().CreateDbContext(Array.Empty<string>());
+            _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
         }
 
         [Fact]
@@ -41,7 +40,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             const int expectedLocation = 5;
 
             //Arrange
-            var municipalityLatestItem = _syndicationContext.AddMunicipalityLatestItemFixture();
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
@@ -64,14 +63,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            var result = (CreatedWithETagResult)await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, mockPersistentLocalIdGenerator.Object, body);
+            var result = (CreatedWithLastObservedPositionAsETagResult)await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, body);
 
             //Assert
             var expectedPosition = 1;
-            result.Location.Should().Be(string.Format(DetailUrl, 1));
-            //TODO: Correct when implementation is done
-            //result.Location.Should().Be(string.Format(DetailUrl, expectedLocation));
-            result.ETag.Should().Be(expectedPosition.ToString());
+            result.Location.Should().Be(string.Format(DetailUrl, expectedLocation));
+            result.LastObservedPositionAsETag.Should().Be(expectedPosition.ToString());
         }
     }
 }

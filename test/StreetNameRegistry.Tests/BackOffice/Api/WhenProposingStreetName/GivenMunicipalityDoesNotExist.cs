@@ -14,13 +14,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using Testing;
+    using Xunit;
     using Xunit.Abstractions;
 
     public class GivenMunicipalityDoesNotExist : StreetNameRegistryBackOfficeTest
     {
         private readonly Fixture _fixture;
         private readonly StreetNameController _controller;
-        private readonly TestSyndicationContext _syndicationContext;
+        private readonly TestConsumerContext _consumerContext;
         private readonly IdempotencyContext _idempotencyContext;
 
         public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -28,15 +29,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             _fixture = new Fixture();
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
-            _syndicationContext = new FakeSyndicationContextFactory().CreateDbContext(Array.Empty<string>());
+            _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
         }
 
-        //TODO: uncomment when implementation is done
-        //[Fact]
-        public async Task ThenAggregateIsNotFound()
+        [Fact]
+        public void ThenAggregateIsNotFound()
         {
             //Arrange
-            var municipalityLatestItem = _syndicationContext.AddMunicipalityLatestItemFixture();
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
@@ -53,7 +53,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, mockPersistentLocalIdGenerator.Object, body);
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, body);
 
             //Assert
             act.Should().Throw<AggregateNotFoundException>();

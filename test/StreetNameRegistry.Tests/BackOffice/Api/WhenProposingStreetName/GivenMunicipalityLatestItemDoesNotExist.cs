@@ -11,19 +11,19 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
-    using StreetName.Commands;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetName;
     using StreetName.Commands.Municipality;
     using Testing;
+    using Xunit;
     using Xunit.Abstractions;
 
     public class GivenMunicipalityLatestItemDoesNotExist : StreetNameRegistryBackOfficeTest
     {
         private readonly Fixture _fixture;
         private readonly StreetNameController _controller;
-        private readonly TestSyndicationContext _syndicationContext;
+        private readonly TestConsumerContext _consumerContext;
         private readonly IdempotencyContext _idempotencyContext;
 
         public GivenMunicipalityLatestItemDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -31,11 +31,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             _fixture = new Fixture();
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
-            _syndicationContext = new FakeSyndicationContextFactory().CreateDbContext(Array.Empty<string>());
+            _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
         }
 
-        //TODO: change with validation story
-        //[Fact]
+        [Fact]
         public async Task ThenResultIsNotFound()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
@@ -46,7 +45,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 new NisCode("123"),
                 _fixture.Create<Provenance>());
             DispatchArrangeCommand(importMunicipality);
-
 
             var body = new StreetNameProposeRequest()
             {
@@ -59,9 +57,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            var result = await _controller.Propose(ResponseOptions, _idempotencyContext, _syndicationContext, mockPersistentLocalIdGenerator.Object, body);
+            var result = await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, body);
             result.Should().BeOfType<NotFoundResult>();
-
         }
     }
 }

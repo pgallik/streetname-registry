@@ -8,7 +8,6 @@ namespace StreetNameRegistry.StreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Commands.Municipality;
     using SqlStreamStore;
-using StreetNameRegistry.StreetName.Events;
 
     public sealed class MunicipalityCommandHandlerModule : CommandHandlerModule
     {
@@ -28,7 +27,9 @@ using StreetNameRegistry.StreetName.Events;
                     var municipality = await getMunicipalities().GetOptionalAsync(message.Command.MunicipalityId, ct);
 
                     if (municipality.HasValue)
+                    {
                         throw new AggregateSourceException($"Municipality with id {message.Command.MunicipalityId} already exists");
+                    }
 
                     var newMunicipality = Municipality.Register(message.Command.MunicipalityId, message.Command.NisCode);
 

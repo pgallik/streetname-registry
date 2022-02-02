@@ -1,11 +1,9 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
 {
-    using System;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
-    using StreetName.Commands;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -33,10 +31,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
                 .Given(_municipalityId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
-                .Then(new[]
-                {
-                    new Fact(_municipalityId, new MunicipalityWasRetired(command.MunicipalityId))
-                }));
+                .Then(new Fact(_municipalityId, new MunicipalityWasRetired(command.MunicipalityId))));
         }
 
         [Fact]

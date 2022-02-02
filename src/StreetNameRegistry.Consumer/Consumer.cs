@@ -5,8 +5,8 @@ namespace StreetNameRegistry.Consumer
     using Autofac;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
-    using Infrastructure.Projections;
     using Microsoft.Extensions.Logging;
+    using Projections;
 
     public class Consumer
     {
@@ -28,7 +28,7 @@ namespace StreetNameRegistry.Consumer
             var commandHandler = new CommandHandler(_container, _loggerFactory.CreateLogger<CommandHandler>());
             var projector = new ConnectedProjector<CommandHandler>(Resolve.WhenEqualToHandlerMessageType(new MunicipalityKafkaProjection().Handlers));
 
-            var consumerGroupId = $"{nameof(StreetNameRegistry)}.{nameof(Consumer)}.{_topic}_2";
+            var consumerGroupId = $"{nameof(StreetNameRegistry)}.{nameof(Consumer)}.{_topic}";
             var result = await KafkaConsumer.Consume(
                 _options,
                 consumerGroupId,

@@ -10,8 +10,8 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Consumer;
     using Convertors;
-    using Infrastructure;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
@@ -19,7 +19,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Infrastructure.Options;
     using Microsoft.EntityFrameworkCore;
     using NodaTime.Extensions;
-    using Projections.Syndication;
     using StreetNameRegistry.StreetName;
     using Swashbuckle.AspNetCore.Filters;
 
@@ -29,14 +28,14 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     [ApiExplorerSettings(GroupName = "Straatnamen")]
     public class StreetNameController : ApiBusController
     {
-        public StreetNameController(ICommandHandlerResolver bus) : base(bus) {}
+        public StreetNameController(ICommandHandlerResolver bus) : base(bus) { }
 
         /// <summary>
         /// Stel een straatnaam voor.
         /// </summary>
         /// <param name="options"></param>
         /// <param name="idempotencyContext"></param>
-        /// <param name="syndicationContext"></param>
+        /// <param name="consumerContext"></param>
         /// <param name="persistentLocalIdGenerator"></param>
         /// <param name="streetNameProposeRequest"></param>
         /// <param name="cancellationToken"></param>
@@ -55,38 +54,38 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         public async Task<IActionResult> Propose(
             [FromServices] IOptions<ResponseOptions> options,
             [FromServices] IdempotencyContext idempotencyContext,
-            [FromServices] SyndicationContext syndicationContext,
+            [FromServices] ConsumerContext consumerContext,
             [FromServices] IPersistentLocalIdGenerator persistentLocalIdGenerator,
             [FromBody] StreetNameProposeRequest streetNameProposeRequest,
             CancellationToken cancellationToken = default)
         {
             try
             {
-                //TODO REMOVE WHEN IMPLEMENTED
-                return new CreatedWithETagResult(new Uri(string.Format(options.Value.DetailUrl, "1")), "1");
-
-                //TODO real data please
                 var fakeProvenanceData = new Provenance(
                         DateTime.UtcNow.ToInstant(),
                         Application.StreetNameRegistry,
-                        new Reason(""),
-                        new Operator(""),
+                        new Reason(""), // TODO: TBD
+                        new Operator(""), // TODO: from claims
                         Modification.Insert,
-                        Organisation.DigitaalVlaanderen
+                        Organisation.DigitaalVlaanderen // TODO: from claims
                     );
 
                 var identifier = streetNameProposeRequest.GemeenteId
                     .AsIdentifier()
                     .Map(IdentifierMappings.MunicipalityNisCode);
 
-                var municipality = await syndicationContext.MunicipalityLatestItems
+                var municipality = await consumerContext.MunicipalityConsumerItems
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(i =>
-                            i.NisCode == identifier.Value, cancellationToken);
+                    .SingleOrDefaultAsync(item =>
+                            item.NisCode == identifier.Value, cancellationToken);
+                if (municipality == null)
+                {
+                    return NotFound();
+                }
 
                 var persistentLocalId = persistentLocalIdGenerator.GenerateNextPersistentLocalId();
                 var cmd = streetNameProposeRequest.ToCommand(new MunicipalityId(municipality.MunicipalityId), fakeProvenanceData, persistentLocalId);
-                var position = await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd , cancellationToken);
+                var position = await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd, cancellationToken);
                 return new CreatedWithLastObservedPositionAsETagResult(new Uri(string.Format(options.Value.DetailUrl, persistentLocalId)), position.ToString(), Application.StreetNameRegistry.ToString());
             }
             catch (IdempotencyException)

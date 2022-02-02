@@ -9,10 +9,13 @@ namespace StreetNameRegistry.Consumer.Infrastructure
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple;
+using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Modules;
+    using Projections;
     using Serilog;
 
     public class Program
@@ -55,14 +58,23 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                     {
                         try
                         {
+                            var loggerFactory = container.GetRequiredService<ILoggerFactory>();
+                            await MigrationsHelper.RunAsync(configuration.GetConnectionString("ConsumerAdmin"), loggerFactory, ct);
+
                             var bootstrapServers = configuration["Kafka:BootstrapServers"];
                             var kafkaOptions = new KafkaOptions(bootstrapServers, EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
                             var topic = $"{configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();
-                            var consumer = new Consumer(actualContainer, container.GetRequiredService<ILoggerFactory>(), kafkaOptions, topic);
-                            await consumer.Start(ct);
+
+                            var projectionsManager = actualContainer.Resolve<IConnectedProjectionsManager>();
+                            var projectionsTask = projectionsManager.Start(ct);
+
+                            var consumer = new Consumer(actualContainer, loggerFactory, kafkaOptions, topic);
+                            var consumerTask = consumer.Start(ct);
+
+                            await Task.WhenAll(projectionsTask, consumerTask);
                         }
                         catch (Exception e)
                         {
@@ -92,8 +104,16 @@ namespace StreetNameRegistry.Consumer.Infrastructure
             var services = new ServiceCollection();
             var builder = new ContainerBuilder();
 
-            builder.RegisterModule(new ApiModule(configuration, services));
             builder.RegisterModule(new LoggingModule(configuration, services));
+
+            var tempProvider = services.BuildServiceProvider();
+            var loggerFactory = tempProvider.GetRequiredService<ILoggerFactory>();
+
+            builder.RegisterModule(new ApiModule(configuration, services, loggerFactory));
+
+            builder.RegisterModule(new ConsumerModule(configuration, services, loggerFactory));
+
+            builder.RegisterModule(new ProjectorModule(configuration));
 
             builder.Populate(services);
 

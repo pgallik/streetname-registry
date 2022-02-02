@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Legacy = "StreetNameRegistryLegacy";
         public const string Syndication = "StreetNameRegistrySyndication";
         public const string Sequence = "StreetNameRegistrySequence";
+        public const string Consumer = "StreetNameRegistryConsumer";
     }
 
     public class MigrationTables
@@ -17,5 +18,6 @@ namespace StreetNameRegistry.Infrastructure
         public const string Syndication = "__EFMigrationsHistorySyndication";
         public const string RedisDataMigration = "__EFMigrationsHistoryDataMigration";
         public const string Sequence = "__EFMigrationsHistorySequence";
+        public const string Consumer = "__EFMigrationsHistoryConsumer";
     }
 }
