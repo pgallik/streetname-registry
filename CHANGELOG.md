@@ -1,3 +1,17 @@
+# [2.35.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.34.1...v2.35.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* fix build ([65c9f37](https://github.com/informatievlaanderen/streetname-registry/commit/65c9f37dd4d92d362568ae0a1b7d299d29c65498))
+* modify Consumer paket.template ([dbaf823](https://github.com/informatievlaanderen/streetname-registry/commit/dbaf8234a8ff959affa1480f0a42555be4985ee1))
+* modify Consumer paket.template yet again ([62e8482](https://github.com/informatievlaanderen/streetname-registry/commit/62e84821551aa167152eb5d8af6032f17e466e97))
+
+
+### Features
+
+* propose streetname ([10478ee](https://github.com/informatievlaanderen/streetname-registry/commit/10478eea838b3fc196576308e025f9a0da0d12ce))
+
 ## [2.34.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.34.0...v2.34.1) (2022-02-02)
 
 
