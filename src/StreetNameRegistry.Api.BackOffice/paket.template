@@ -26,9 +26,6 @@ files
 
   StreetNameRegistry.Projections.Legacy.dll => lib\net5.0
   StreetNameRegistry.Projections.Legacy.pdb => lib\net5.0
-
-  StreetNameRegistry.Projections.Syndication.dll => lib\net5.0
-  StreetNameRegistry.Projections.Syndication.pdb => lib\net5.0
   
   StreetNameRegistry.dll => lib\net5.0
   StreetNameRegistry.pdb => lib\net5.0

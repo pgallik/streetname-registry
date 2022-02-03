@@ -43,6 +43,7 @@ Target.create "Build_Solution" (fun _ ->
   buildSource "StreetNameRegistry.Api.Oslo"
   buildSource "StreetNameRegistry.Api.Extract"
   buildSource "StreetNameRegistry.Api.CrabImport"
+  buildSource "StreetNameRegistry.Consumer"
   buildSource "StreetNameRegistry.Projections.Legacy"
   buildSource "StreetNameRegistry.Projections.Extract"
   buildSource "StreetNameRegistry.Projections.LastChangedList"
@@ -64,6 +65,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
+    "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Projections.Legacy"
     "StreetNameRegistry.Projections.Extract"
     "StreetNameRegistry.Projections.LastChangedList"
@@ -78,6 +80,7 @@ Target.create "Pack_Solution" (fun _ ->
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
+    "StreetNameRegistry.Consumer"
   ] |> List.iter pack)
 
 Target.create "Containerize_Projector" (fun _ -> containerize "StreetNameRegistry.Projector" "projector")
@@ -97,6 +100,9 @@ Target.create "PushContainer_ApiExtract" (fun _ -> push "api-extract")
 
 Target.create "Containerize_ApiCrabImport" (fun _ -> containerize "StreetNameRegistry.Api.CrabImport" "api-crab-import")
 Target.create "PushContainer_ApiCrabImport" (fun _ -> push "api-crab-import")
+
+Target.create "Containerize_Consumer" (fun _ -> containerize "StreetNameRegistry.Consumer" "consumer")
+Target.create "PushContainer_Consumer" (fun _ -> push "consumer")
 
 Target.create "Containerize_ProjectionsSyndication" (fun _ -> containerize "StreetNameRegistry.Projections.Syndication" "projections-syndication")
 Target.create "PushContainer_ProjectionsSyndication" (fun _ -> push "projections-syndication")
@@ -136,6 +142,7 @@ Target.create "Push" ignore
   ==> "Containerize_ApiOslo"
   ==> "Containerize_ApiExtract"
   ==> "Containerize_ApiCrabImport"
+  ==> "Containerize_Consumer"
   ==> "Containerize_ProjectionsSyndication"
   ==> "Containerize"
 // Possibly add more projects to containerize here
@@ -148,6 +155,7 @@ Target.create "Push" ignore
   ==> "PushContainer_ApiOslo"
   ==> "PushContainer_ApiExtract"
   ==> "PushContainer_ApiCrabImport"
+  ==> "PushContainer_Consumer"
   ==> "PushContainer_ProjectionsSyndication"
   ==> "Push"
 // Possibly add more projects to push here
