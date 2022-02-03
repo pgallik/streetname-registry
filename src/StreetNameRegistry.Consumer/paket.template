@@ -33,5 +33,3 @@ dependencies
 files
   StreetNameRegistry.Consumer.dll => lib\net5.0
   StreetNameRegistry.Consumer.pdb => lib\net5.0
-  StreetNameRegistry.Consumer.xml => lib\net5.0
-  StreetNameRegistry.Consumer.xml => content
