@@ -16,13 +16,22 @@ description StreetName Registry Projector API.
 
 dependencies
   framework: net5.0
-    Be.Vlaanderen.Basisregisters.Api >= LOCKEDVERSION
-    Be.Vlaanderen.Basisregisters.EventHandling.Autofac >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.Aws.DistributedMutex >= LOCKEDVERSION
     Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.DataDog.Tracing.SqlStreamStore >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.EntityFrameworkCore.EntityTypeConfiguration >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.EventHandling.Autofac >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.GrAr.Contracts >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner >= LOCKEDVERSION
+    Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac >= LOCKEDVERSION
     Be.Vlaanderen.Basisregisters.Projector >= LOCKEDVERSION
 
+
 files
-  StreetNameRegistry.Projector.dll => lib\net5.0
-  StreetNameRegistry.Projector.pdb => lib\net5.0
-  StreetNameRegistry.Projector.xml => lib\net5.0
-  StreetNameRegistry.Projector.xml => content
+  StreetNameRegistry.Consumer.dll => lib\net5.0
+  StreetNameRegistry.Consumer.pdb => lib\net5.0
+  StreetNameRegistry.Consumer.xml => lib\net5.0
+  StreetNameRegistry.Consumer.xml => content
