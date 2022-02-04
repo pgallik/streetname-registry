@@ -9,13 +9,12 @@ namespace StreetNameRegistry.Consumer.Infrastructure
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple;
-using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Modules;
-    using Projections;
     using Serilog;
 
     public class Program
@@ -65,13 +64,15 @@ using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
                             var kafkaOptions = new KafkaOptions(bootstrapServers, EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
                             var topic = $"{configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
+                            var consumerGroupSuffix = $"{configuration["MunicipalityTopic"]}" ?? "";
+                            var consumerOptions = new ConsumerOptions(topic, consumerGroupSuffix);
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();
 
                             var projectionsManager = actualContainer.Resolve<IConnectedProjectionsManager>();
                             var projectionsTask = projectionsManager.Start(ct);
 
-                            var consumer = new Consumer(actualContainer, loggerFactory, kafkaOptions, topic);
+                            var consumer = new Consumer(actualContainer, loggerFactory, kafkaOptions, consumerOptions);
                             var consumerTask = consumer.Start(ct);
 
                             await Task.WhenAll(projectionsTask, consumerTask);
@@ -91,7 +92,7 @@ using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
                 Log.CloseAndFlush();
 
                 // Allow some time for flushing before shutdown.
-                Task.Delay(1000, default).GetAwaiter().GetResult();
+                await Task.Delay(1000, default);
                 throw;
             }
 

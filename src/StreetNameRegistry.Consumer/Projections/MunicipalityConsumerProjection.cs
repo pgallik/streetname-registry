@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Consumer.Projections
 {
+    using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Municipality;
@@ -21,6 +22,10 @@ namespace StreetNameRegistry.Consumer.Projections
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var item = await context.FindAsync<MunicipalityConsumerItem>(new object[] { message.Message.MunicipalityId }, ct);
+                if (item == null)
+                {
+                    throw new InvalidOperationException($"MunicipalityConsumerItem with id {message.Message.MunicipalityId} could not be found.");
+                }
                 item.NisCode = message.Message.NisCode;
             });
         }

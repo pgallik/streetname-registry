@@ -14,14 +14,14 @@ namespace StreetNameRegistry.Consumer.Infrastructure
 
     public static class MigrationsHelper
     {
-        public static async Task RunAsync(
+        public static Task RunAsync(
             string connectionString,
-            ILoggerFactory loggerFactory = null,
+            ILoggerFactory loggerFactory,
             CancellationToken cancellationToken = default)
         {
             var logger = loggerFactory?.CreateLogger<MigrationsLogger>();
 
-            await Policy
+            return Policy
                 .Handle<SqlException>()
                 .WaitAndRetryAsync(
                     5,
@@ -51,10 +51,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                         sqlServerOptions.MigrationsHistoryTable(MigrationTables.Consumer, Schema.Consumer);
                     });
 
-            if (loggerFactory != null)
-            {
-                migratorOptions = migratorOptions.UseLoggerFactory(loggerFactory);
-            }
+            migratorOptions = migratorOptions.UseLoggerFactory(loggerFactory);
 
             await using var migrator = new ConsumerContext(migratorOptions.Options);
             await migrator.Database.MigrateAsync(cancellationToken);

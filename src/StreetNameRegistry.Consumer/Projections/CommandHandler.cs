@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Consumer.Projections
             _logger = logger;
         }
 
-        public async Task Handle<T>(T command, CancellationToken cancellationToken)
+        public virtual async Task Handle<T>(T command, CancellationToken cancellationToken)
             where T : class, IHasCommandProvenance
         {
             _logger.LogDebug($"Handling {command.GetType().FullName}");

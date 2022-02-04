@@ -27,6 +27,7 @@ namespace StreetNameRegistry.Tests.Testing
         {
             _inner = inner;
             _contextFactory = contextFactory;
+            _random = new Random();
             _logAction = logAction;
         }
 
@@ -42,20 +43,21 @@ namespace StreetNameRegistry.Tests.Testing
         {
             var test = CreateTest(assertions);
 
-            using (var context = _contextFactory())
+            await using var context = _contextFactory();
+            context.Database.EnsureCreated();
+
+            foreach (var message in test.Messages)
             {
-                context.Database.EnsureCreated();
+                await new ConnectedProjector<TContext>(test.Resolver)
+                    .ProjectAsync(context, message);
 
-                foreach (var message in test.Messages)
-                {
-                    await new ConnectedProjector<TContext>(test.Resolver)
-                        .ProjectAsync(context, message);
+                await context.SaveChangesAsync();
+            }
 
-                    await context.SaveChangesAsync();
-                }
-
-                var result = await test.Verification(context, CancellationToken.None);
-                if (result.Failed) throw new AssertionFailedException(result.Message);
+            var result = await test.Verification(context, CancellationToken.None);
+            if (result.Failed)
+            {
+                throw new AssertionFailedException(result.Message);
             }
         }
 
@@ -64,7 +66,7 @@ namespace StreetNameRegistry.Tests.Testing
         {
             var @event = eventGenerator.Generate(_random);
             _logAction($"Projecting event\r\n{@event.ToLoggableString(Formatting.Indented)}");
-            _inner = _inner.Given(new Envelope<T>(new Envelope(@event, new ConcurrentDictionary<string, object>())));
+            _inner = _inner.Given(new Envelope<T>(new Envelope(@event!, new ConcurrentDictionary<string, object>())));
 
             return this;
         }

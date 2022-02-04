@@ -13,14 +13,14 @@ namespace StreetNameRegistry.Consumer
         private readonly ILifetimeScope _container;
         private readonly ILoggerFactory _loggerFactory;
         private readonly KafkaOptions _options;
-        private readonly string _topic;
+        private readonly ConsumerOptions _consumerOptions;
 
-        public Consumer(ILifetimeScope container, ILoggerFactory loggerFactory, KafkaOptions options, string topic)
+        public Consumer(ILifetimeScope container, ILoggerFactory loggerFactory, KafkaOptions options, ConsumerOptions consumerOptions)
         {
             _container = container;
             _loggerFactory = loggerFactory;
             _options = options;
-            _topic = topic;
+            _consumerOptions = consumerOptions;
         }
 
         public async Task Start(CancellationToken cancellationToken = default)
@@ -28,11 +28,11 @@ namespace StreetNameRegistry.Consumer
             var commandHandler = new CommandHandler(_container, _loggerFactory.CreateLogger<CommandHandler>());
             var projector = new ConnectedProjector<CommandHandler>(Resolve.WhenEqualToHandlerMessageType(new MunicipalityKafkaProjection().Handlers));
 
-            var consumerGroupId = $"{nameof(StreetNameRegistry)}.{nameof(Consumer)}.{_topic}";
+            var consumerGroupId = $"{nameof(StreetNameRegistry)}.{nameof(Consumer)}.{_consumerOptions.Topic}{_consumerOptions.ConsumerGroupSuffix}";
             var result = await KafkaConsumer.Consume(
                 _options,
                 consumerGroupId,
-                _topic,
+                _consumerOptions.Topic,
                 async message =>
                 {
                     await projector.ProjectAsync(commandHandler, message, cancellationToken);
@@ -42,7 +42,7 @@ namespace StreetNameRegistry.Consumer
             if (!result.IsSuccess)
             {
                 var logger = _loggerFactory.CreateLogger<Consumer>();
-                logger.LogCritical($"Consumer group {consumerGroupId} could not consume from topic {_topic}");
+                logger.LogCritical($"Consumer group {consumerGroupId} could not consume from topic {_consumerOptions.Topic}");
             }
         }
     }
