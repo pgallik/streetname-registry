@@ -1,8 +1,10 @@
 namespace StreetNameRegistry.Api.BackOffice.StreetName
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
@@ -12,6 +14,8 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Consumer;
     using Convertors;
+    using FluentValidation;
+    using FluentValidation.Results;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
@@ -38,6 +42,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         /// <param name="consumerContext"></param>
         /// <param name="persistentLocalIdGenerator"></param>
         /// <param name="streetNameProposeRequest"></param>
+        /// <param name="validator"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="201">Als de straatnaam voorgesteld is.</response>
         /// <response code="202">Als de straatnaam reeds voorgesteld is.</response>
@@ -57,27 +62,33 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             [FromServices] ConsumerContext consumerContext,
             [FromServices] IPersistentLocalIdGenerator persistentLocalIdGenerator,
             [FromBody] StreetNameProposeRequest streetNameProposeRequest,
+            [FromServices] IValidator<StreetNameProposeRequest> validator,
             CancellationToken cancellationToken = default)
         {
+            await validator.ValidateAndThrowAsync(streetNameProposeRequest, cancellationToken);
+
             try
             {
                 var fakeProvenanceData = new Provenance(
-                        DateTime.UtcNow.ToInstant(),
-                        Application.StreetNameRegistry,
-                        new Reason(""), // TODO: TBD
-                        new Operator(""), // TODO: from claims
-                        Modification.Insert,
-                        Organisation.DigitaalVlaanderen // TODO: from claims
-                    );
+                    DateTime.UtcNow.ToInstant(),
+                    Application.StreetNameRegistry,
+                    new Reason(""), // TODO: TBD
+                    new Operator(""), // TODO: from claims
+                    Modification.Insert,
+                    Organisation.DigitaalVlaanderen // TODO: from claims
+                );
 
                 var identifier = streetNameProposeRequest.GemeenteId
                     .AsIdentifier()
                     .Map(IdentifierMappings.MunicipalityNisCode);
 
+                //TODO: remove
+                throw new PersistentLocalIdAssignmentException("da gaat niet!");
+
                 var municipality = await consumerContext.MunicipalityConsumerItems
                     .AsNoTracking()
                     .SingleOrDefaultAsync(item =>
-                            item.NisCode == identifier.Value, cancellationToken);
+                        item.NisCode == identifier.Value, cancellationToken);
                 if (municipality == null)
                 {
                     return NotFound();
@@ -91,6 +102,18 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             catch (IdempotencyException)
             {
                 return Accepted();
+            }
+            catch (DomainException exception)
+            {
+                throw exception switch
+                {
+                    //TODO: get specific exceptions
+                    PersistentLocalIdAssignmentException _ => new ValidationException(new List<ValidationFailure>
+                    {
+                        new ValidationFailure(nameof(streetNameProposeRequest.GemeenteId), "gemeenteId niet goed")
+                    }),
+                    _ => new ValidationException(exception.Message)
+                };
             }
         }
     }

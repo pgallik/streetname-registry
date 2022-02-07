@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
+    using Consumer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -56,6 +57,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             containerBuilder.RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory));
 
             containerBuilder.RegisterModule(new CommandHandlingModule(_configuration));
+            containerBuilder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
 
             containerBuilder.Populate(_services);
         }

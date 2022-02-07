@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Convertors;
+    using FluentValidation;
     using Newtonsoft.Json;
     using StreetNameRegistry.StreetName;
     using StreetNameRegistry.StreetName.Commands;
@@ -37,6 +38,24 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
             var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, x.Key.ToLanguage())));
             return new ProposeStreetName(municipalityId, names, persistentLocalId, provenance);
         }
+    }
+
+    public class StreetNameProposeRequestValidator : AbstractValidator<StreetNameProposeRequest>
+    {
+        public StreetNameProposeRequestValidator()
+        {
+            RuleForEach(x => x.Straatnamen)
+                .Must(NotBeAnEmptyName)
+                .WithMessage((_, streetName) => $"The streetname in '{streetName.Key.ToString().ToLowerInvariant()}' can not be empty."); ;
+
+            RuleForEach(x => x.Straatnamen)
+                .Must(HaveANameLength)
+                .WithMessage((_, streetName) => $"The max length of a streetname in '{streetName.Key.ToString().ToLowerInvariant()}' is 60 characters. You currently have {streetName.Value.Length} characters.");
+        }
+
+        private static bool NotBeAnEmptyName(KeyValuePair<Taal, string> streetName) => !string.IsNullOrWhiteSpace(streetName.Value);
+
+        private static bool HaveANameLength(KeyValuePair<Taal, string> streetName) => streetName.Value.Length <= 60;
     }
 
     public class StreetNameProposeRequestExamples : IExamplesProvider<StreetNameProposeRequest>
