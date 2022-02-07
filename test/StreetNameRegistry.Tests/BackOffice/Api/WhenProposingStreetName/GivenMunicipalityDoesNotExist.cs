@@ -53,7 +53,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, body);
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
 
             //Assert
             act.Should().Throw<AggregateNotFoundException>();

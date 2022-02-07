@@ -49,13 +49,13 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
                 .WithMessage((_, streetName) => $"The streetname in '{streetName.Key.ToString().ToLowerInvariant()}' can not be empty."); ;
 
             RuleForEach(x => x.Straatnamen)
-                .Must(HaveANameLength)
+                .Must(HaveAnAcceptedNameLength)
                 .WithMessage((_, streetName) => $"The max length of a streetname in '{streetName.Key.ToString().ToLowerInvariant()}' is 60 characters. You currently have {streetName.Value.Length} characters.");
         }
 
         private static bool NotBeAnEmptyName(KeyValuePair<Taal, string> streetName) => !string.IsNullOrWhiteSpace(streetName.Value);
 
-        private static bool HaveANameLength(KeyValuePair<Taal, string> streetName) => streetName.Value.Length <= 60;
+        private static bool HaveAnAcceptedNameLength(KeyValuePair<Taal, string> streetName) => streetName.Value.Length <= 60;
     }
 
     public class StreetNameProposeRequestExamples : IExamplesProvider<StreetNameProposeRequest>

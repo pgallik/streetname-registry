@@ -57,7 +57,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            var result = await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, body);
+            var result = await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
             result.Should().BeOfType<NotFoundResult>();
         }
     }

@@ -61,8 +61,8 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             [FromServices] IdempotencyContext idempotencyContext,
             [FromServices] ConsumerContext consumerContext,
             [FromServices] IPersistentLocalIdGenerator persistentLocalIdGenerator,
-            [FromBody] StreetNameProposeRequest streetNameProposeRequest,
             [FromServices] IValidator<StreetNameProposeRequest> validator,
+            [FromBody] StreetNameProposeRequest streetNameProposeRequest,
             CancellationToken cancellationToken = default)
         {
             await validator.ValidateAndThrowAsync(streetNameProposeRequest, cancellationToken);
@@ -83,7 +83,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                     .Map(IdentifierMappings.MunicipalityNisCode);
 
                 //TODO: remove
-                throw new PersistentLocalIdAssignmentException("da gaat niet!");
+                //throw new PersistentLocalIdAssignmentException("da gaat niet!");
 
                 var municipality = await consumerContext.MunicipalityConsumerItems
                     .AsNoTracking()
