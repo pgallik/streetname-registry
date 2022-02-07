@@ -59,7 +59,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
             this RetireMunicipality command,
             MunicipalityId municipalityId)
         {
-            return new RetireMunicipality(municipalityId, command.Provenance);
+            return new RetireMunicipality(municipalityId, new RetirementDate(command.RetirementDate), command.Provenance);
         }
     }
 }

@@ -140,6 +140,7 @@ namespace StreetNameRegistry.Consumer.Projections
                 var msg = (MunicipalityWasRetired)message;
                 return new RetireMunicipality(
                     MunicipalityId.CreateFor(msg.MunicipalityId),
+                    new RetirementDate(InstantPattern.General.Parse(msg.RetirementDate).GetValueOrThrow()),
                     FromProvenance(msg.Provenance));
             }
 
