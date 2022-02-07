@@ -1,3 +1,10 @@
+## [2.35.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.35.1...v2.35.2) (2022-02-07)
+
+
+### Bug Fixes
+
+* add retirementdate to retire command ([ffc15ee](https://github.com/informatievlaanderen/streetname-registry/commit/ffc15ee32f2829e2ea25d0827b5d4164fa883e8b))
+
 ## [2.35.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.35.0...v2.35.1) (2022-02-04)
 
 # [2.35.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.34.1...v2.35.0) (2022-02-03)
