@@ -11,6 +11,7 @@ namespace StreetNameRegistry.Tests.Generate
     using NodaTime;
     using Projections.Syndication;
 
+    [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
     public static class Generate
     {
         public static Generator<StreetNameId> StreetNameId =

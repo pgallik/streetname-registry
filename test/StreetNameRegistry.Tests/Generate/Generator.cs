@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Tests.Generate
 {
     using System;
 
+    [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
     public interface IGenerator<out T>
     {
         IGenerator<T1> Select<T1>(Func<T, T1> f);
@@ -9,6 +10,7 @@ namespace StreetNameRegistry.Tests.Generate
         T Generate(Random random);
     }
 
+    [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
     public class Generator<T>:IGenerator<T>
     {
         private readonly Func<Random, T> _generate;

@@ -1,23 +1,28 @@
 namespace StreetNameRegistry.Tests.ProjectionTests
 {
+    using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Testing;
     using Consumer;
     using Microsoft.EntityFrameworkCore;
-    using Testing;
-    using Xunit.Abstractions;
 
-    public class StreetNameConsumerProjectionTest<TProjection> : ProjectionTest<ConsumerContext, TProjection>
+    public class StreetNameConsumerProjectionTest<TProjection>
         where TProjection : ConnectedProjection<ConsumerContext>, new()
     {
         protected ConnectedProjectionTest<ConsumerContext, TProjection> Sut { get; }
 
-        public StreetNameConsumerProjectionTest(ITestOutputHelper output)
-            : base(output)
+        public StreetNameConsumerProjectionTest()
         {
             Sut = new ConnectedProjectionTest<ConsumerContext, TProjection>(CreateContext);
         }
 
-        protected override ConsumerContext CreateContext(DbContextOptions<ConsumerContext> options) => new ConsumerContext(options);
+        protected virtual ConsumerContext CreateContext()
+        {
+            var options = new DbContextOptionsBuilder<ConsumerContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            return new ConsumerContext(options);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.Generate
     using System.Collections.Generic;
     using NodaTime;
 
+    [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
     public static class Produce
     {
         // Use this flag to investigate possible problems with multiple execution of IEnumerable (for example, IQueryables being executed multiple times)

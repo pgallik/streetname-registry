@@ -3,16 +3,16 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Consumer.Projections;
     using Generate;
+    using global::AutoFixture;
     using Moq;
     using NodaTime;
-    using NodaTime.Text;
     using Projections.Legacy.StreetNameDetail;
     using StreetName.Commands;
     using Testing;
@@ -28,14 +28,22 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
         private class MunicipalityEventsGenerator : IEnumerable<object[]>
         {
+            private readonly Fixture? _fixture;
+
+            public MunicipalityEventsGenerator()
+            {
+                _fixture = new Fixture();
+                _fixture.Customize(new InfrastructureCustomization());
+                _fixture.Customize(new WithFixedMunicipalityId());
+            }
+
             public IEnumerator<object[]> GetEnumerator()
             {
-                var random = new Random();
-                var id = Produce.Guid().Generate(random).ToString("D");
-                var nisCode = Produce.NumericString(5).Generate(random);
-                var name = Produce.AlphaNumericString(10).Generate(random);
+                var id = _fixture.Create<MunicipalityId>().ToString();
+                var nisCode = _fixture.Create<NisCode>();
+                var name = _fixture.Create<string>();
                 var language = Language.Dutch.ToString();
-                var retirementDate = Produce.LocalDateTime().Generate(random).PlusYears(50).ToString(InstantPattern.General.PatternText, CultureInfo.InvariantCulture);
+                var retirementDate = _fixture.Create<Instant>().ToString();
                 var provenance = new Provenance(
                     Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
                     Application.StreetNameRegistry.ToString(),
@@ -64,9 +72,8 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 };
                 return result.GetEnumerator();
             }
-
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-}
+        }
 
         [Theory]
         [ClassData(typeof(MunicipalityEventsGenerator))]

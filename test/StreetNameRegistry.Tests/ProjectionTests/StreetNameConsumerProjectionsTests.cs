@@ -1,48 +1,55 @@
 namespace StreetNameRegistry.Tests.ProjectionTests
 {
     using System.Threading.Tasks;
+    using AutoFixture;
     using Consumer.Municipality;
     using Consumer.Projections;
     using FluentAssertions;
-    using Generate;
+    using global::AutoFixture;
+    using StreetName.Events;
     using Xunit;
-    using Xunit.Abstractions;
 
     public class StreetNameConsumerProjectionsTests : StreetNameConsumerProjectionTest<MunicipalityConsumerProjection>
     {
-        public StreetNameConsumerProjectionsTests(ITestOutputHelper output)
-            : base(output)
-        { }
+        private readonly Fixture _fixture;
+
+        public StreetNameConsumerProjectionsTests()
+        {
+            _fixture = new Fixture();
+            _fixture.Customize(new InfrastructureCustomization());
+            _fixture.Customize(new WithFixedMunicipalityId());
+        }
 
         [Fact]
-        public Task MunicipalityWasImportedAddsMunicipality()
+        public async Task MunicipalityWasImportedAddsMunicipality()
         {
-            var id = Arrange(Produce.Guid());
-            var nisCode = Arrange(Produce.NumericString(5));
+            var municipalityWasImported = _fixture.Create<MunicipalityWasImported>();
 
-            return GivenEvents(Generate.EventsFor.ImportedMunicipalities(id, nisCode))
-                .Project(Generate.MunicipalityWasImported)
+            await Sut
+                .Given(municipalityWasImported)
                 .Then(async ct =>
                 {
-                    var entity = await ct.FindAsync<MunicipalityConsumerItem>(id);
-                    entity.Should().NotBeNull();
+                    var expectedMunicipality = await ct.FindAsync<MunicipalityConsumerItem>(municipalityWasImported.MunicipalityId);
+                    expectedMunicipality.Should().NotBeNull();
+                    expectedMunicipality.MunicipalityId.Should().Be(municipalityWasImported.MunicipalityId);
+                    expectedMunicipality.NisCode.Should().Be(municipalityWasImported.NisCode);
                 });
         }
 
         [Fact]
-        public Task MunicipalityNisCodeWasChangedSetsNisCode()
+        public async Task MunicipalityNisCodeWasChangedSetsNisCode()
         {
-            var id = Arrange(Produce.Guid());
-            var nisCode = Arrange(Produce.NumericString(5));
+            var municipalityWasImported = _fixture.Create<MunicipalityWasImported>();
+            var municipalityNisCodeWasChanged = _fixture.Create<MunicipalityNisCodeWasChanged>();
 
-            return GivenEvents(Generate.EventsFor.ChangedMunicipalityNisCodes(id, nisCode))
-                .Project(Generate.MunicipalityNisCodeWasChanged
-                    .Select(e => e.WithIdAndNisCode(id, nisCode)))
+            await Sut
+                .Given(municipalityWasImported, municipalityNisCodeWasChanged)
                 .Then(async ct =>
                 {
-                    var entity = await ct.FindAsync<MunicipalityConsumerItem>(id);
-                    entity.Should().NotBeNull();
-                    entity.NisCode.Should().Be(nisCode);
+                    var expectedMunicipality = await ct.FindAsync<MunicipalityConsumerItem>(municipalityWasImported.MunicipalityId);
+                    expectedMunicipality.Should().NotBeNull();
+                    expectedMunicipality.MunicipalityId.Should().Be(municipalityWasImported.MunicipalityId);
+                    expectedMunicipality.NisCode.Should().Be(municipalityNisCodeWasChanged.NisCode);
                 });
         }
     }
