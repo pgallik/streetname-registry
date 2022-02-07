@@ -279,6 +279,8 @@ namespace StreetNameRegistry.Tests.Generate
                 {
                     var events = new List<IGenerator<object>>
                     {
+                        MunicipalityWasImported
+                            .Select(e => e.WithIdAndNisCode(municipalityId, nisCode)),
                         MunicipalityNisCodeWasChanged
                             .Select(e =>
                                 e.WithIdAndNisCode(municipalityId, nisCode))

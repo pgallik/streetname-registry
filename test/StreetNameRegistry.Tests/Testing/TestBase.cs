@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.Testing
     using Generate;
     using Xunit.Abstractions;
 
+    [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
     public abstract class TestBase
     {
         private readonly TestScope _scope;

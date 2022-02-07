@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
@@ -11,6 +12,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Generate;
     using Moq;
     using NodaTime;
+    using NodaTime.Text;
     using Projections.Legacy.StreetNameDetail;
     using StreetName.Commands;
     using Testing;
@@ -33,7 +35,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 var nisCode = Produce.NumericString(5).Generate(random);
                 var name = Produce.AlphaNumericString(10).Generate(random);
                 var language = Language.Dutch.ToString();
-                var retirementDate = Produce.Date().Generate(random).AddYears(50).ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz");
+                var retirementDate = Produce.LocalDateTime().Generate(random).PlusYears(50).ToString(InstantPattern.General.PatternText, CultureInfo.InvariantCulture);
                 var provenance = new Provenance(
                     Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
                     Application.StreetNameRegistry.ToString(),
@@ -58,7 +60,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     new object[] { new MunicipalityBecameCurrent(id, provenance) },
                     new object[] { new MunicipalityWasCorrectedToCurrent(id, provenance) },
                     new object[] { new MunicipalityWasRetired(id, retirementDate, provenance) },
-                    //new object[] { new MunicipalityWasCorrectedToRetired(id, retirementDate, provenance) } // test fails on date format
+                    new object[] { new MunicipalityWasCorrectedToRetired(id, retirementDate, provenance) } // test fails on date format
                 };
                 return result.GetEnumerator();
             }

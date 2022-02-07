@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 });
         }
 
-        [Fact(Skip = "Why does this fail?")]
+        [Fact]
         public Task MunicipalityNisCodeWasChangedSetsNisCode()
         {
             var id = Arrange(Produce.Guid());
