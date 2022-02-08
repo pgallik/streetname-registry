@@ -1,3 +1,10 @@
+# [2.36.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.35.2...v2.36.0) (2022-02-08)
+
+
+### Features
+
+* add validator for propose streetname GAWR-1162 + GAWR-2686 ([1ccd100](https://github.com/informatievlaanderen/streetname-registry/commit/1ccd1008ea1f334f2d4fe7fd2a45bc8158fbb69c))
+
 ## [2.35.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.35.1...v2.35.2) (2022-02-07)
 
 
