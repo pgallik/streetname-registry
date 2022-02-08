@@ -1,3 +1,10 @@
+# [2.38.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.37.0...v2.38.0) (2022-02-08)
+
+
+### Features
+
+* add validation 6 ([8f1af92](https://github.com/informatievlaanderen/streetname-registry/commit/8f1af924a787b2dedfbb79ee82d9beb6e3ccafc9))
+
 # [2.37.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.36.0...v2.37.0) (2022-02-08)
 
 
