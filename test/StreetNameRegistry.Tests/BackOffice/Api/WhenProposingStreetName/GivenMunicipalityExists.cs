@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using StreetName.Commands.Municipality;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
+    using StreetNameRegistry.Api.BackOffice.Validators;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -67,7 +68,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             //Act
             var result = (CreatedWithLastObservedPositionAsETagResult)await _controller.Propose(ResponseOptions,
                 _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object,
-                new StreetNameProposeRequestValidator(), body);
+                new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
             var expectedPosition = 1;
@@ -76,7 +77,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public async Task WithStraatnamenIsNull_ThenBadRequestIsExpected()
+        public Task WhenStraatnamenIsNull_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -94,14 +95,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             //Act
             Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            await act.Should().ThrowAsync<ValidationException>();
+            return act.Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
-        public async Task WithOneOfStraatnamenIsNull_ThenBadRequestIsExpected()
+        public Task WhenOneOfStraatnamenIsNull_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -120,14 +121,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             //Act
             Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            await act.Should().ThrowAsync<ValidationException>();
+            return act.Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
-        public async Task WithOneOfStraatnamenHasExceededMaxLength_ThenBadRequestIsExpected()
+        public Task WhenOneOfStraatnamenHasExceededMaxLength_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -146,10 +147,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             //Act
             Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            await act.Should().ThrowAsync<ValidationException>();
+            return act.Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]

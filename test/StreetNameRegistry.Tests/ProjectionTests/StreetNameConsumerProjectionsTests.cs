@@ -21,15 +21,15 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
-        public async Task MunicipalityWasImportedAddsMunicipality()
+        public Task MunicipalityWasImportedAddsMunicipality()
         {
             var municipalityWasImported = _fixture.Create<MunicipalityWasImported>();
 
-            await Sut
+            return Sut
                 .Given(municipalityWasImported)
                 .Then(async ct =>
                 {
-                    var expectedMunicipality = await ct.FindAsync<MunicipalityConsumerItem>(municipalityWasImported.MunicipalityId);
+                    var expectedMunicipality = await ct.MunicipalityConsumerItems.FindAsync(municipalityWasImported.MunicipalityId);
                     expectedMunicipality.Should().NotBeNull();
                     expectedMunicipality.MunicipalityId.Should().Be(municipalityWasImported.MunicipalityId);
                     expectedMunicipality.NisCode.Should().Be(municipalityWasImported.NisCode);
@@ -37,16 +37,16 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
-        public async Task MunicipalityNisCodeWasChangedSetsNisCode()
+        public Task MunicipalityNisCodeWasChangedSetsNisCode()
         {
             var municipalityWasImported = _fixture.Create<MunicipalityWasImported>();
             var municipalityNisCodeWasChanged = _fixture.Create<MunicipalityNisCodeWasChanged>();
 
-            await Sut
+            return Sut
                 .Given(municipalityWasImported, municipalityNisCodeWasChanged)
                 .Then(async ct =>
                 {
-                    var expectedMunicipality = await ct.FindAsync<MunicipalityConsumerItem>(municipalityWasImported.MunicipalityId);
+                    var expectedMunicipality = await ct.MunicipalityConsumerItems.FindAsync(municipalityWasImported.MunicipalityId);
                     expectedMunicipality.Should().NotBeNull();
                     expectedMunicipality.MunicipalityId.Should().Be(municipalityWasImported.MunicipalityId);
                     expectedMunicipality.NisCode.Should().Be(municipalityNisCodeWasChanged.NisCode);

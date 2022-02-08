@@ -1,9 +1,9 @@
 namespace StreetNameRegistry.Consumer.Municipality
 {
+    using System;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Microsoft.EntityFrameworkCore;
     using StreetNameRegistry.Infrastructure;
-    using System;
 
     public class MunicipalityConsumerItem
     {

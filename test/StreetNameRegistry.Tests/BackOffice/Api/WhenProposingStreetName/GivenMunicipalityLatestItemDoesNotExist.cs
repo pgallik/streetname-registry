@@ -7,14 +7,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
+    using FluentValidation;
     using global::AutoFixture;
     using Infrastructure;
-    using Microsoft.AspNetCore.Mvc;
     using Moq;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetName;
     using StreetName.Commands.Municipality;
+    using StreetNameRegistry.Api.BackOffice.Validators;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -35,7 +36,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public async Task ThenResultIsNotFound()
+        public void ThenResultIsNotFound()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
 
@@ -48,7 +49,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var body = new StreetNameProposeRequest()
             {
-                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{123}",
+                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{importMunicipality.NisCode}",
                 Straatnamen = new Dictionary<Taal, string>()
                 {
                     {Taal.NL, "Rodekruisstraat"},
@@ -57,8 +58,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            var result = await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
-            result.Should().BeOfType<NotFoundResult>();
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+
+            // Assert
+            act.Should().ThrowAsync<ValidationException>()
+                .Result.Where(ex => ex.Message.Contains($"The municipality '{body.GemeenteId}' is not known in the Municipality registry."));
         }
     }
 }

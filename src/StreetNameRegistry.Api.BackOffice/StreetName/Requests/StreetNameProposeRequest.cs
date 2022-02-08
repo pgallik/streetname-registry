@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Convertors;
-    using FluentValidation;
     using Newtonsoft.Json;
     using StreetNameRegistry.StreetName;
     using StreetNameRegistry.StreetName.Commands;
@@ -40,32 +39,14 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         }
     }
 
-    public class StreetNameProposeRequestValidator : AbstractValidator<StreetNameProposeRequest>
-    {
-        public StreetNameProposeRequestValidator()
-        {
-            RuleForEach(x => x.Straatnamen)
-                .Must(NotBeAnEmptyName)
-                .WithMessage((_, streetName) => $"The streetname in '{streetName.Key.ToString().ToLowerInvariant()}' can not be empty."); ;
-
-            RuleForEach(x => x.Straatnamen)
-                .Must(HaveAnAcceptedNameLength)
-                .WithMessage((_, streetName) => $"The max length of a streetname in '{streetName.Key.ToString().ToLowerInvariant()}' is 60 characters. You currently have {streetName.Value.Length} characters.");
-        }
-
-        private static bool NotBeAnEmptyName(KeyValuePair<Taal, string> streetName) => !string.IsNullOrWhiteSpace(streetName.Value);
-
-        private static bool HaveAnAcceptedNameLength(KeyValuePair<Taal, string> streetName) => streetName.Value.Length <= 60;
-    }
-
     public class StreetNameProposeRequestExamples : IExamplesProvider<StreetNameProposeRequest>
     {
         public StreetNameProposeRequest GetExamples()
         {
-            return new StreetNameProposeRequest()
+            return new StreetNameProposeRequest
             {
                 GemeenteId = "https://data.vlaanderen.be/id/gemeente/45041",
-                Straatnamen = new Dictionary<Taal, string>()
+                Straatnamen = new Dictionary<Taal, string>
                 {
                     {Taal.NL, "Rodekruisstraat"},
                     {Taal.FR, "Rue de la Croix-Rouge"}

@@ -24,7 +24,11 @@ namespace StreetNameRegistry.Consumer
     public class ConsumerContextFactory : RunnerDbContextMigrationFactory<ConsumerContext>
     {
         public ConsumerContextFactory()
-            : base("ConsumerAdmin", new MigrationHistoryConfiguration
+            : this("ConsumerAdmin")
+        { }
+
+        public ConsumerContextFactory(string connectionStringName)
+            : base(connectionStringName, new MigrationHistoryConfiguration
             {
                 Schema = Schema.Consumer,
                 Table = MigrationTables.Consumer
@@ -32,5 +36,7 @@ namespace StreetNameRegistry.Consumer
         { }
 
         protected override ConsumerContext CreateContext(DbContextOptions<ConsumerContext> migrationContextOptions) => new ConsumerContext(migrationContextOptions);
+
+        public ConsumerContext Create(DbContextOptions<ConsumerContext> options) => CreateContext(options);
     }
 }
