@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 {
-    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
@@ -32,26 +31,80 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             Assert(new Scenario()
-                .Given(_municipalityId,municipalityWasImported)
+                .Given(_municipalityId, municipalityWasImported)
                 .When(command)
-                .Then(new []
+                .Then(new[]
                 {
-                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode) ,command.StreetNameNames, command.PersistentLocalId))
+                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
                 }));
 
         }
-    }
 
-    public static class ProposeStreetNameExtensions
-    {
-        public static ProposeStreetName WithMunicipalityId(this ProposeStreetName command, MunicipalityId municipalityId)
+        [Fact]
+        public void WithExistingStreetName_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
         {
-            return new ProposeStreetName(municipalityId, command.StreetNameNames, command.PersistentLocalId, command.Provenance);
+            var streetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { streetNameName });
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId);
+
+            Assert(new Scenario()
+                .Given(_municipalityId,
+                    municipalityWasImported,
+                    streetNameWasProposed)
+                .When(command)
+                .Throws(new StreetNameNameAlreadyExistsException(streetNameName.Name)));
         }
 
-        public static ProposeStreetName WithRandomStreetName(this ProposeStreetName command, Fixture fixture)
+        [Fact]
+        public void WithOneExistingStreetNameAndOneNew_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
         {
-            return new ProposeStreetName(command.MunicipalityId, new Names(new List<StreetNameName>{fixture.Create<StreetNameName>()}), command.PersistentLocalId, command.Provenance);
+            var existingStreetNameName = Fixture.Create<StreetNameName>();
+            var newStreetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { existingStreetNameName });
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names { existingStreetNameName, newStreetNameName });
+
+            Assert(new Scenario()
+                .Given(_municipalityId,
+                    municipalityWasImported,
+                    streetNameWasProposed)
+                .When(command)
+                .Throws(new StreetNameNameAlreadyExistsException(existingStreetNameName.Name)));
+        }
+
+        [Fact]
+        public void WithNoConflictingStreetNames_ThenStreetNameWasProposed()
+        {
+            var existingStreetNameName = Fixture.Create<StreetNameName>();
+            var newStreetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { existingStreetNameName });
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameNames(new Names { newStreetNameName });
+
+            Assert(new Scenario()
+                .Given(_municipalityId,
+                    municipalityWasImported,
+                    streetNameWasProposed)
+                .When(command)
+                .Then(new[]
+                {
+                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
+                }));
         }
     }
 }

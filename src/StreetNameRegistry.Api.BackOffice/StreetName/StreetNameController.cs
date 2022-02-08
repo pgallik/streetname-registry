@@ -107,12 +107,11 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             {
                 throw exception switch
                 {
-                    //TODO: get specific exceptions
-                    PersistentLocalIdAssignmentException _ => new ValidationException(new List<ValidationFailure>
+                    StreetNameNameAlreadyExistsException nameExists => new ValidationException(new List<ValidationFailure>
                     {
-                        new ValidationFailure(nameof(streetNameProposeRequest.GemeenteId), "gemeenteId niet goed")
+                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), $"Streetname '{nameExists.Name}' already exists within the municipality.")
                     }),
-                    _ => new ValidationException(exception.Message)
+                    _ => new ValidationException(new List<ValidationFailure> { new ValidationFailure(string.Empty, exception.Message) })
                 };
             }
         }

@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Infrastructure;
     using Moq;
     using StreetName;
+    using StreetName.Commands;
     using StreetName.Commands.Municipality;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
@@ -75,7 +76,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public async Task WhenStraatnamenIsNull_ThenBadRequestIsExpected()
+        public async Task WithStraatnamenIsNull_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -100,7 +101,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public async Task WhenOneOfStraatnamenIsNull_ThenBadRequestIsExpected()
+        public async Task WithOneOfStraatnamenIsNull_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -126,7 +127,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public async Task WhenOneOfStraatnamenHasExceededMaxLength_ThenBadRequestIsExpected()
+        public async Task WithOneOfStraatnamenHasExceededMaxLength_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -139,6 +140,51 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 Straatnamen = new Dictionary<Taal, string>
                 {
                     { Taal.NL, "Boulevard Louis Edelhart Lodewijk van Groothertogdom Luxemburg" },
+                    { Taal.EN, "abc" }
+                }
+            };
+
+            //Act
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
+
+            //Assert
+            await act.Should().ThrowAsync<ValidationException>();
+        }
+
+        [Fact]
+        public async Task WithOneOfStraatnamenAlreadyExists_ThenBadRequestIsExpected()
+        {
+            //Arrange
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            var persistentLocalId = new PersistentLocalId(1);
+            mockPersistentLocalIdGenerator
+                .Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(persistentLocalId);
+
+            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
+
+            var importMunicipality = new ImportMunicipality(
+                municipalityId,
+                new NisCode(municipalityLatestItem.NisCode),
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(importMunicipality);
+
+            var streetNameName = new StreetNameName("teststraat", Language.Dutch);
+            var proposeStreetName = new ProposeStreetName(
+                municipalityId,
+                new Names { streetNameName },
+                persistentLocalId,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(proposeStreetName);
+
+            var body = new StreetNameProposeRequest
+            {
+                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
+                Straatnamen = new Dictionary<Taal, string>
+                {
+                    { Taal.NL, streetNameName.Name },
                     { Taal.EN, "abc" }
                 }
             };

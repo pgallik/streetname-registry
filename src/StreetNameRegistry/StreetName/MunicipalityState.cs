@@ -6,7 +6,7 @@ namespace StreetNameRegistry.StreetName
     public partial class Municipality
     {
         private MunicipalityId _municipalityId;
-        private Names _streetNameNames;
+        private Names _streetNameNames = new();
         private NisCode _nisCode;
         private readonly List<Language> _officialLanguages = new();
         private readonly List<Language> _facilityLanguages = new();
@@ -91,6 +91,5 @@ namespace StreetNameRegistry.StreetName
         {
             _streetNameNames = new Names(@event.StreetNameNames);
         }
-
     }
 }

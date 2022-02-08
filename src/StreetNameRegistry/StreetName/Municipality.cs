@@ -1,7 +1,6 @@
 namespace StreetNameRegistry.StreetName
 {
     using System;
-    using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Events;
 
@@ -18,6 +17,14 @@ namespace StreetNameRegistry.StreetName
 
         public void ProposeStreetName(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
+            foreach (var streetNameName in streetNameNames)
+            {
+                if (_streetNameNames.HasMatch(streetNameName.Language, streetNameName.Name))
+                {
+                    throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
+                }
+            }
+
             ApplyChange(new StreetNameWasProposedV2(_municipalityId, _nisCode, streetNameNames, persistentLocalId));
         }
 
