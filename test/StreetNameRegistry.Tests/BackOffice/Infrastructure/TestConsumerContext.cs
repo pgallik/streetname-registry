@@ -27,7 +27,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
 
     public class FakeConsumerContextFactory : IDesignTimeDbContextFactory<TestConsumerContext>
     {
-        public TestConsumerContext CreateDbContext(string[] args)
+        public TestConsumerContext CreateDbContext(params string[] args)
         {
             var builder = new DbContextOptionsBuilder<ConsumerContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
             return new TestConsumerContext(builder.Options);

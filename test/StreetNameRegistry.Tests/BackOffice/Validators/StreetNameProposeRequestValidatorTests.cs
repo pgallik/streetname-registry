@@ -2,9 +2,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
 {
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Consumer;
     using FluentValidation.TestHelper;
-    using Microsoft.EntityFrameworkCore;
+    using Infrastructure;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetNameRegistry.Api.BackOffice.Validators;
     using Xunit;
@@ -15,11 +14,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
 
         public StreetNameProposeRequestValidatorTests()
         {
-            var factory = new ConsumerContextFactory("ConsumerAdmin");
-            var options = new DbContextOptionsBuilder<ConsumerContext>()
-                .UseInMemoryDatabase(nameof(StreetNameProposeRequestValidatorTests))
-                .Options;
-            var consumerContext = factory.Create(options);
+            var consumerContext = new FakeConsumerContextFactory().CreateDbContext();
             _validator = new StreetNameProposeRequestValidator(consumerContext);
         }
 

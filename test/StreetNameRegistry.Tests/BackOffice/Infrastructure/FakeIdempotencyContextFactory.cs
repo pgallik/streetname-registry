@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
+namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
 {
     using System;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
@@ -7,7 +7,7 @@
 
     public class FakeIdempotencyContextFactory : IDesignTimeDbContextFactory<IdempotencyContext>
     {
-        public IdempotencyContext CreateDbContext(string[] args)
+        public IdempotencyContext CreateDbContext(params string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<IdempotencyContext>();
             var tableInfo = new IdempotencyTableInfo("dbo");

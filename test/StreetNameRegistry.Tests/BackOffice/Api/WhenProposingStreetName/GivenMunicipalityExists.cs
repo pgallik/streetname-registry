@@ -192,7 +192,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             //Act
             Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(), body);
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
             await act.Should().ThrowAsync<ValidationException>();
