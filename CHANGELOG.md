@@ -1,3 +1,10 @@
+# [2.37.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.36.0...v2.37.0) (2022-02-08)
+
+
+### Features
+
+* add validation gawr-2687 duplicate streetname ([25eff5b](https://github.com/informatievlaanderen/streetname-registry/commit/25eff5ba2c71d995663327553d766f3afc3e0535))
+
 # [2.36.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.35.2...v2.36.0) (2022-02-08)
 
 
