@@ -1,6 +1,7 @@
 namespace StreetNameRegistry
 {
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Exceptions;
     using Newtonsoft.Json;
 
     public class NisCode : StringValueObject<NisCode>

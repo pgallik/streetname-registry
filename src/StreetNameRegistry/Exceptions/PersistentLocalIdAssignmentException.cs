@@ -1,4 +1,4 @@
-namespace StreetNameRegistry
+namespace StreetNameRegistry.Exceptions
 {
     using System;
 

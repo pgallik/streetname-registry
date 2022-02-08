@@ -14,6 +14,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Consumer;
     using Convertors;
+    using Exceptions;
     using FluentValidation;
     using FluentValidation.Results;
     using Microsoft.AspNetCore.Http;
@@ -111,6 +112,12 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                     {
                         new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), $"Streetname '{nameExists.Name}' already exists within the municipality.")
                     }),
+
+                    MunicipalityWasRetiredException municipalityWasRetired => new ValidationException(new List<ValidationFailure>
+                    {
+                        new ValidationFailure(nameof(streetNameProposeRequest.GemeenteId), "This municipality was retired.")
+                    }),
+
                     _ => new ValidationException(new List<ValidationFailure> { new ValidationFailure(string.Empty, exception.Message) })
                 };
             }

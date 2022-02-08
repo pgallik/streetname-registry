@@ -3,6 +3,7 @@ namespace StreetNameRegistry.StreetName
     using System;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Events;
+    using Exceptions;
 
     public partial class Municipality : AggregateRootEntity
     {
@@ -17,6 +18,9 @@ namespace StreetNameRegistry.StreetName
 
         public void ProposeStreetName(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
+            if (MunicipalityStatus == MunicipalityStatus.Retired)
+                throw new MunicipalityWasRetiredException($"Municipality with id '{_municipalityId}' was retired");
+
             foreach (var streetNameName in streetNameNames)
             {
                 if (_streetNameNames.HasMatch(streetNameName.Language, streetNameName.Name))

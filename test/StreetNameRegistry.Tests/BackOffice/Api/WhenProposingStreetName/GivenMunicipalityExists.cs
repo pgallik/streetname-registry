@@ -77,7 +77,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public Task WhenStraatnamenIsNull_ThenBadRequestIsExpected()
+        public void WhenStraatnamenIsNull_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -98,11 +98,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            return act.Should().ThrowAsync<ValidationException>();
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x => x.Message.Contains("The streetname in 'nl' can not be empty."));
         }
 
         [Fact]
-        public Task WhenOneOfStraatnamenIsNull_ThenBadRequestIsExpected()
+        public void WhenOneOfStraatnamenIsNull_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
@@ -124,23 +128,28 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            return act.Should().ThrowAsync<ValidationException>();
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x => x.Message.Contains("The streetname in 'nl' can not be empty."));
         }
 
         [Fact]
-        public Task WhenOneOfStraatnamenHasExceededMaxLength_ThenBadRequestIsExpected()
+        public void WhenOneOfStraatnamenHasExceededMaxLength_ThenBadRequestIsExpected()
         {
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
                 .Returns(new PersistentLocalId(1));
 
+            var name = "Boulevard Louis Edelhart Lodewijk van Groothertogdom Luxemburg";
             var body = new StreetNameProposeRequest
             {
                 GemeenteId = "https://data.vlaanderen.be/id/gemeente/11001",
                 Straatnamen = new Dictionary<Taal, string>
                 {
-                    { Taal.NL, "Boulevard Louis Edelhart Lodewijk van Groothertogdom Luxemburg" },
+                    { Taal.NL, name },
                     { Taal.EN, "abc" }
                 }
             };
@@ -150,7 +159,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            return act.Should().ThrowAsync<ValidationException>();
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x => x.Message.Contains($"The max length of a streetname in 'nl' is 60 characters. You currently have {name.Length} characters."));
         }
 
         [Fact]
@@ -195,7 +208,57 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            await act.Should().ThrowAsync<ValidationException>();
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x=> x.Message.Contains("Streetname 'teststraat' already exists within the municipality."));
+        }
+
+        [Fact]
+        public async Task WithMunicipalityRetired_ThenBadRequestIsExpected()
+        {
+            //Arrange
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            mockPersistentLocalIdGenerator
+                .Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(new PersistentLocalId(1));
+
+            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
+
+            var importMunicipality = new ImportMunicipality(
+                municipalityId,
+                new NisCode(municipalityLatestItem.NisCode),
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(importMunicipality);
+
+            var retireMunicipality = new RetireMunicipality(
+                municipalityId,
+                Fixture.Create<RetirementDate>(),
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(retireMunicipality);
+
+            var body = new StreetNameProposeRequest
+            {
+                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
+                Straatnamen = new Dictionary<Taal, string>
+                {
+                    { Taal.NL, "teststraat" },
+                    { Taal.EN, "abc" }
+                }
+            };
+
+            //Act
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x => x.Message.Contains("This municipality was retired."));
         }
     }
 }

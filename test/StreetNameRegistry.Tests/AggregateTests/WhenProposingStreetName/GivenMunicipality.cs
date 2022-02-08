@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using Exceptions;
     using global::AutoFixture;
     using StreetName;
     using StreetName.Commands;
@@ -105,6 +106,24 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 {
                     new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
                 }));
+        }
+
+        [Fact]
+        public void WithMunicipalityRetired_ThenMunicipalityWasRetiredExceptionWasThrown()
+        {
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityWasRetired = Fixture.Create<MunicipalityWasRetired>();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId)
+                .WithRandomStreetName(Fixture);
+
+            Assert(new Scenario()
+                .Given(_municipalityId,
+                    municipalityWasImported,
+                    municipalityWasRetired)
+                .When(command)
+                .Throws(new MunicipalityWasRetiredException($"Municipality with id '{_municipalityId}' was retired")));
         }
     }
 }
