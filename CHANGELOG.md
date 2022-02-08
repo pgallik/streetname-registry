@@ -1,3 +1,10 @@
+# [2.39.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.38.0...v2.39.0) (2022-02-08)
+
+
+### Features
+
+* add validation gawr-2691 municipality retired ([71929b7](https://github.com/informatievlaanderen/streetname-registry/commit/71929b7a3be1ee3ebf8a8bb2f84d67516c2a4021))
+
 # [2.38.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.37.0...v2.38.0) (2022-02-08)
 
 
