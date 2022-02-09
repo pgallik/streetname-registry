@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Tests.BackOffice.Validators
 {
+    using System;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentValidation.TestHelper;
@@ -10,12 +11,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
 
     public class StreetNameProposeRequestValidatorTests
     {
+        private readonly TestConsumerContext _consumerContext;
         private readonly StreetNameProposeRequestValidator _validator;
 
         public StreetNameProposeRequestValidatorTests()
         {
-            var consumerContext = new FakeConsumerContextFactory().CreateDbContext();
-            _validator = new StreetNameProposeRequestValidator(consumerContext);
+            _consumerContext = new FakeConsumerContextFactory().CreateDbContext();
+            _validator = new StreetNameProposeRequestValidator(_consumerContext);
         }
 
         [Fact]
@@ -103,6 +105,25 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
                 .WithErrorMessage($"The municipality '{gemeenteId}' is not known in the Municipality registry.");
+        }
+
+        [Fact]
+        public void GivenNonFlemishNisCode_ThenReturnsExpectedMessage()
+        {
+            var gemeenteId = Guid.NewGuid();
+
+            var item = _consumerContext.AddMunicipalityLatestItemFixtureWithMunicipalityIdAndNisCode(gemeenteId, "55001");
+            var result = _validator.TestValidate(new StreetNameProposeRequest
+            {
+                GemeenteId = item.MunicipalityId.ToString("D"),
+                Straatnamen = new Dictionary<Taal, string>
+                {
+                    { Taal.NL, "Sint-Niklaasstraat" }
+                }
+            });
+
+            result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
+                .WithErrorMessage($"The municipality '{gemeenteId}' is not a Flemish municipality.");
         }
     }
 }

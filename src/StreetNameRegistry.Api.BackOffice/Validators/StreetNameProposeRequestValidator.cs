@@ -12,6 +12,10 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
                 .SetAsyncValidator(new StreetNameExistingNisCodeValidator(consumerContext))
                 .WithMessage(request => $"The municipality '{request.GemeenteId}' is not known in the Municipality registry.");
 
+            RuleFor(x => x.GemeenteId)
+                .SetAsyncValidator(new StreetNameFlemishRegionValidator(consumerContext))
+                .WithMessage(request => $"The municipality '{request.GemeenteId}' is not a Flemish municipality.");
+
             RuleForEach(x => x.Straatnamen)
                 .SetValidator(new StreetNameNotEmptyValidator())
                 .WithMessage((_, streetName) => $"The streetname in '{streetName.Key.ToString().ToLowerInvariant()}' can not be empty.");

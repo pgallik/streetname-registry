@@ -23,6 +23,25 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
             SaveChanges();
             return municipalityLatestItem;
         }
+
+        public MunicipalityConsumerItem AddMunicipalityLatestItemFixtureWithNisCode(string nisCode)
+        {
+            var municipalityLatestItem = new Fixture().Create<MunicipalityConsumerItem>();
+            municipalityLatestItem.NisCode = nisCode;
+            MunicipalityConsumerItems.Add(municipalityLatestItem);
+            SaveChanges();
+            return municipalityLatestItem;
+        }
+
+        public MunicipalityConsumerItem AddMunicipalityLatestItemFixtureWithMunicipalityIdAndNisCode(Guid municipalityId, string nisCode)
+        {
+            var municipalityLatestItem = new Fixture().Create<MunicipalityConsumerItem>();
+            municipalityLatestItem.MunicipalityId = municipalityId;
+            municipalityLatestItem.NisCode = nisCode;
+            MunicipalityConsumerItems.Add(municipalityLatestItem);
+            SaveChanges();
+            return municipalityLatestItem;
+        }
     }
 
     public class FakeConsumerContextFactory : IDesignTimeDbContextFactory<TestConsumerContext>

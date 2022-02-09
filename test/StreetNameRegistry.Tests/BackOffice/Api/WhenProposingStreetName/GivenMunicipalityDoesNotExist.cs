@@ -37,16 +37,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         public void ThenAggregateIsNotFound()
         {
             //Arrange
-            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
                 .Returns(new PersistentLocalId(5));
             
-            var body = new StreetNameProposeRequest()
+            var body = new StreetNameProposeRequest
             {
                 GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
-                Straatnamen = new Dictionary<Taal, string>()
+                Straatnamen = new Dictionary<Taal, string>
                 {
                     {Taal.NL, "Rodekruisstraat"},
                     {Taal.FR, "Rue de la Croix-Rouge"}

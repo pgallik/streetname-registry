@@ -43,7 +43,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             const int expectedLocation = 5;
 
             //Arrange
-            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
@@ -51,7 +51,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var importMunicipality = new ImportMunicipality(
                 new MunicipalityId(municipalityLatestItem.MunicipalityId),
-                new NisCode(municipalityLatestItem.NisCode),
+                new NisCode("23002"),
                 _fixture.Create<Provenance>());
             DispatchArrangeCommand(importMunicipality);
 
@@ -167,10 +167,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public async Task WithOneOfStraatnamenAlreadyExists_ThenBadRequestIsExpected()
+        public void WithOneOfStraatnamenAlreadyExists_ThenBadRequestIsExpected()
         {
             //Arrange
-            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             var persistentLocalId = new PersistentLocalId(1);
             mockPersistentLocalIdGenerator
@@ -216,10 +216,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public async Task WithMunicipalityRetired_ThenBadRequestIsExpected()
+        public void WithMunicipalityRetired_ThenBadRequestIsExpected()
         {
             //Arrange
-            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
@@ -229,7 +229,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var importMunicipality = new ImportMunicipality(
                 municipalityId,
-                new NisCode(municipalityLatestItem.NisCode),
+                new NisCode("23002"),
                 _fixture.Create<Provenance>());
             DispatchArrangeCommand(importMunicipality);
 
