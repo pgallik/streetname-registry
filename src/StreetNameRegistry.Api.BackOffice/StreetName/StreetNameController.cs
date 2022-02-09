@@ -117,7 +117,12 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
 
                     StreetNameNameLanguageNotSupportedException _ => new ValidationException(new List<ValidationFailure>
                     {
-                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), "Straatnamen can only be in the official or facility language of the municipality.")
+                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), "'Straatnamen' can only be in the official or facility language of the municipality.")
+                    }),
+
+                    StreetNameMissingLanguageException _ => new ValidationException(new List<ValidationFailure>
+                    {
+                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), "'Straatnamen' is missing an official or facility language.")
                     }),
 
                     _ => new ValidationException(new List<ValidationFailure> { new ValidationFailure(string.Empty, exception.Message) })

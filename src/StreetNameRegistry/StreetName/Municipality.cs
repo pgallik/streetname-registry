@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.StreetName
 {
     using System;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Events;
     using Exceptions;
@@ -33,6 +34,14 @@ namespace StreetNameRegistry.StreetName
                 {
                     throw new StreetNameNameLanguageNotSupportedException(
                         $"The language '{streetNameName.Language.Value}' is not an official or facility language of municipality '{_municipalityId}'.");
+                }
+            }
+
+            foreach (var language in _officialLanguages.Concat(_facilityLanguages))
+            {
+                if (!streetNameNames.HasLanguage(language))
+                {
+                    throw new StreetNameMissingLanguageException($"The language '{language}' is missing.");
                 }
             }
 

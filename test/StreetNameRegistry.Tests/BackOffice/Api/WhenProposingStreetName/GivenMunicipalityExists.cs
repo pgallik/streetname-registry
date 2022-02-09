@@ -231,7 +231,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x=> x.Message.Contains("Streetname 'teststraat' already exists within the municipality."));
+                .Where(x => x.Message.Contains("Streetname 'teststraat' already exists within the municipality."));
         }
 
         [Fact]
@@ -284,7 +284,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         public async Task WithNotSupportedLanguage_ThenBadRequestIsExpected()
         {
             //Arrange
-            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
             var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
@@ -303,8 +303,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
                 Straatnamen = new Dictionary<Taal, string>
                 {
-                    { Taal.NL, "teststraat" },
-                    { Taal.EN, "abc" }
+                    { Taal.NL, "teststraat" }
                 }
             };
 
@@ -317,7 +316,58 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("Straatnamen can only be in the official or facility language of the municipality."));
+                .Where(x => x.Message.Contains("'Straatnamen' can only be in the official or facility language of the municipality."));
+        }
+
+        [Fact]
+        public async Task WithAMissingLanguage_ThenBadRequestIsExpected()
+        {
+            //Arrange
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            mockPersistentLocalIdGenerator
+                .Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(new PersistentLocalId(1));
+
+            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
+
+            var importMunicipality = new ImportMunicipality(
+                municipalityId,
+                new NisCode(municipalityLatestItem.NisCode),
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(importMunicipality);
+
+            var addOfficialLanguage = new AddOfficialLanguageToMunicipality(
+                municipalityId,
+                Language.German,
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(addOfficialLanguage);
+
+            var addFacilityLanguageToMunicipality = new AddFacilityLanguageToMunicipality(
+                municipalityId,
+                Language.English,
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(addFacilityLanguageToMunicipality);
+
+            var body = new StreetNameProposeRequest
+            {
+                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
+                Straatnamen = new Dictionary<Taal, string>
+                {
+                    { Taal.EN, "test" }
+                }
+            };
+
+            //Act
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x => x.Message.Contains("'Straatnamen' is missing an official or facility language."));
         }
     }
 }
