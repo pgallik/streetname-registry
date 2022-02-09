@@ -49,11 +49,24 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Setup(x => x.GenerateNextPersistentLocalId())
                 .Returns(new PersistentLocalId(expectedLocation));
 
+            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
             var importMunicipality = new ImportMunicipality(
-                new MunicipalityId(municipalityLatestItem.MunicipalityId),
+                municipalityId,
                 new NisCode("23002"),
                 _fixture.Create<Provenance>());
             DispatchArrangeCommand(importMunicipality);
+
+            var addOfficialLanguageDutch = new AddOfficialLanguageToMunicipality(
+                municipalityId,
+                Language.Dutch,
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(addOfficialLanguageDutch);
+
+            var addOfficialLanguageFrench = new AddOfficialLanguageToMunicipality(
+                municipalityId,
+                Language.French,
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(addOfficialLanguageFrench);
 
             var body = new StreetNameProposeRequest
             {
@@ -71,7 +84,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 new StreetNameProposeRequestValidator(_consumerContext), body);
 
             //Assert
-            var expectedPosition = 1;
+            var expectedPosition = 3;
             result.Location.Should().Be(string.Format(DetailUrl, expectedLocation));
             result.LastObservedPositionAsETag.Should().Be(expectedPosition.ToString());
         }
@@ -185,6 +198,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 _fixture.Create<Provenance>());
             DispatchArrangeCommand(importMunicipality);
 
+            var addOfficialLanguage = new AddOfficialLanguageToMunicipality(
+                municipalityId,
+                Language.Dutch,
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(addOfficialLanguage);
+
             var streetNameName = new StreetNameName("teststraat", Language.Dutch);
             var proposeStreetName = new ProposeStreetName(
                 municipalityId,
@@ -259,6 +278,46 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .ThrowAsync<ValidationException>()
                 .Result
                 .Where(x => x.Message.Contains("This municipality was retired."));
+        }
+
+        [Fact]
+        public async Task WithNotSupportedLanguage_ThenBadRequestIsExpected()
+        {
+            //Arrange
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixture();
+            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
+            mockPersistentLocalIdGenerator
+                .Setup(x => x.GenerateNextPersistentLocalId())
+                .Returns(new PersistentLocalId(1));
+
+            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
+
+            var importMunicipality = new ImportMunicipality(
+                municipalityId,
+                new NisCode(municipalityLatestItem.NisCode),
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(importMunicipality);
+
+            var body = new StreetNameProposeRequest
+            {
+                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
+                Straatnamen = new Dictionary<Taal, string>
+                {
+                    { Taal.NL, "teststraat" },
+                    { Taal.EN, "abc" }
+                }
+            };
+
+            //Act
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x => x.Message.Contains("Straatnamen can only be in the official or facility language of the municipality."));
         }
     }
 }

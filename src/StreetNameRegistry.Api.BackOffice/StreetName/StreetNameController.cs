@@ -83,16 +83,13 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                     .AsIdentifier()
                     .Map(IdentifierMappings.MunicipalityNisCode);
 
-                //TODO: remove
-                //throw new PersistentLocalIdAssignmentException("da gaat niet!");
-
                 var municipality = await consumerContext.MunicipalityConsumerItems
                     .AsNoTracking()
                     .SingleOrDefaultAsync(item =>
                         item.NisCode == identifier.Value, cancellationToken);
                 if (municipality == null)
                 {
-                    return NotFound();
+                    throw new InvalidOperationException();
                 }
 
                 var persistentLocalId = persistentLocalIdGenerator.GenerateNextPersistentLocalId();
@@ -116,6 +113,11 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                     MunicipalityWasRetiredException municipalityWasRetired => new ValidationException(new List<ValidationFailure>
                     {
                         new ValidationFailure(nameof(streetNameProposeRequest.GemeenteId), "This municipality was retired.")
+                    }),
+
+                    StreetNameNameLanguageNotSupportedException _ => new ValidationException(new List<ValidationFailure>
+                    {
+                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), "Straatnamen can only be in the official or facility language of the municipality.")
                     }),
 
                     _ => new ValidationException(new List<ValidationFailure> { new ValidationFailure(string.Empty, exception.Message) })

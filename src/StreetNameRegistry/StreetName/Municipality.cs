@@ -27,6 +27,13 @@ namespace StreetNameRegistry.StreetName
                 {
                     throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
                 }
+
+                if (!_officialLanguages.Contains(streetNameName.Language!.Value)
+                    && !_facilityLanguages.Contains(streetNameName.Language!.Value))
+                {
+                    throw new StreetNameNameLanguageNotSupportedException(
+                        $"The language '{streetNameName.Language.Value}' is not an official or facility language of municipality '{_municipalityId}'.");
+                }
             }
 
             ApplyChange(new StreetNameWasProposedV2(_municipalityId, _nisCode, streetNameNames, persistentLocalId));
