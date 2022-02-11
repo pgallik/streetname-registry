@@ -1,8 +1,12 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Configuration;
     using Microsoft.AspNetCore.Builder;
@@ -11,16 +15,11 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.OpenApi.Models;
     using Modules;
     using Options;
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Be.Vlaanderen.Basisregisters.GrAr.Import.Processing.CrabImport;
-    using Microsoft.OpenApi.Models;
     using SqlStreamStore;
 
     /// <summary>Represents the startup process for the application.</summary>
@@ -97,7 +96,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
                                     tags: new[] { DatabaseTag, "sql", "sqlserver" });
                         }
-                    }
+                    },
+                    EnableJsonErrorActionFilter = true
                 })
                 .Configure<ResponseOptions>(_configuration);
 
