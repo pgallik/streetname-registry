@@ -26,7 +26,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         /// </summary>
         [DataMember(Name = "Straatnamen", Order = 2)]
         [JsonProperty(Required = Required.Always)]
-        public IEnumerable<KeyValuePair<Taal, string>> Straatnamen { get; set; }
+        public Dictionary<Taal, string> Straatnamen { get; set; }
 
         /// <summary>
         /// Map to ProposeStreetName command
