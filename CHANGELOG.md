@@ -1,3 +1,10 @@
+# [2.42.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.41.0...v2.42.0) (2022-02-11)
+
+
+### Features
+
+* add validation 4d, enable json error action filter ([d0bf6f2](https://github.com/informatievlaanderen/streetname-registry/commit/d0bf6f2be8b458640465afff079e213d1da3f428))
+
 # [2.41.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.40.0...v2.41.0) (2022-02-09)
 
 
