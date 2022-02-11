@@ -1,8 +1,7 @@
 namespace StreetNameRegistry.Api.BackOffice.Convertors
 {
-    using System;
-    using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using System;
 
     public static class TaalMapper
     {
