@@ -12,6 +12,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Be.Vlaanderen.Basisregisters.Shaperon;
+    using Microsoft.Data.SqlClient;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Legacy.StreetNameDetail;
     using StreetNameRegistry.Projections.Legacy.StreetNameList;
     using StreetNameRegistry.Projections.Legacy.StreetNameName;
+    using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Legacy.StreetNameSyndication;
 
     public class ApiModule : Module
@@ -71,6 +73,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             RegisterExtractProjections(builder);
             RegisterLastChangedProjections(builder);
             RegisterLegacyProjections(builder);
+            RegisterWfsProjections(builder);
         }
 
         private void RegisterExtractProjections(ContainerBuilder builder)
@@ -128,6 +131,29 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameListProjections, LegacyContext>(ConnectedProjectionSettings.Default)
                 .RegisterProjections<StreetNameNameProjections, LegacyContext>(ConnectedProjectionSettings.Default)
                 .RegisterProjections<StreetNameSyndicationProjections, LegacyContext>(ConnectedProjectionSettings.Default);
+        }
+
+        private void RegisterWfsProjections(ContainerBuilder builder)
+        {
+            builder
+                .RegisterModule(
+                    new WfsModule(
+                        _configuration,
+                        _services,
+                        _loggerFactory));
+
+            var wfsProjectionSettings = ConnectedProjectionSettings
+                .Configure(settings =>
+                    settings.ConfigureLinearBackoff<SqlException>(_configuration, "Wfs"));
+
+            builder
+                .RegisterProjectionMigrator<WfsContextMigrationFactory>(
+                    _configuration,
+                    _loggerFactory)
+
+                .RegisterProjections<StreetNameRegistry.Projections.Wfs.StreetName.StreetNameHelperProjections, WfsContext>(() =>
+                        new StreetNameRegistry.Projections.Wfs.StreetName.StreetNameHelperProjections(),
+                    wfsProjectionSettings);
         }
     }
 }

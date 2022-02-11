@@ -23,6 +23,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Projector;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using StreetNameRegistry.Projections.Wfs;
     using Microsoft.OpenApi.Models;
 
     /// <summary>Represents the startup process for the application.</summary>
@@ -110,6 +111,10 @@ namespace StreetNameRegistry.Projector.Infrastructure
 
                             health.AddDbContextCheck<LastChangedListContext>(
                                 $"dbcontext-{nameof(LastChangedListContext).ToLowerInvariant()}",
+                                tags: new[] {DatabaseTag, "sql", "sqlserver"});
+
+                            health.AddDbContextCheck<WfsContext>(
+                                $"dbcontext-{nameof(WfsContext).ToLowerInvariant()}",
                                 tags: new[] {DatabaseTag, "sql", "sqlserver"});
                         }
                     }
