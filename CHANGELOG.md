@@ -1,3 +1,10 @@
+# [2.43.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.42.0...v2.43.0) (2022-02-11)
+
+
+### Features
+
+* create WFS projection helper GAWR-2241 ([5430cb6](https://github.com/informatievlaanderen/streetname-registry/commit/5430cb6be5f1d78b097648792da6389e1375c32c))
+
 # [2.42.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.41.0...v2.42.0) (2022-02-11)
 
 
