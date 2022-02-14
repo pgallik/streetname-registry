@@ -1,3 +1,10 @@
+# [2.44.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.43.1...v2.44.0) (2022-02-14)
+
+
+### Features
+
+* add migration command ([b1cfba0](https://github.com/informatievlaanderen/streetname-registry/commit/b1cfba0e54166a3d6c02cb931c04591040b84b7a))
+
 ## [2.43.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.43.0...v2.43.1) (2022-02-14)
 
 # [2.43.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.42.0...v2.43.0) (2022-02-11)
