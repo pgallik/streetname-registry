@@ -7,12 +7,15 @@ namespace StreetNameRegistry.StreetName
     public class Names : List<StreetNameName>
     {
         public Names()
-        {
-        }
+        { }
 
-        public Names(IEnumerable<StreetNameName> streetNameNames): base(streetNameNames)
-        {
-        }
+        public Names(IEnumerable<StreetNameName> streetNameNames)
+            : base(streetNameNames)
+        { }
+
+        public Names(IDictionary<Language, string> streetNameNames)
+            : base(streetNameNames.Select(x => new StreetNameName(x.Value, x.Key)))
+        { }
 
         public bool HasMatch(Language? language, string name)
             => this.Any(x => x.Language == language && x.Name == name);
@@ -27,6 +30,11 @@ namespace StreetNameRegistry.StreetName
             else
                 Add(language, name);
         }
+
+        public IDictionary<Language, string> ToDictionary() =>
+            this.ToDictionary(
+                x => x.Language ?? throw new ArgumentNullException(nameof(StreetNameHomonymAddition.Language)),
+                x => x.Name);
 
         private void Update(Language? language, string name)
         {

@@ -27,6 +27,24 @@ namespace StreetNameRegistry.StreetName
                     var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
                     municipality.ProposeStreetName(message.Command.StreetNameNames, message.Command.PersistentLocalId);
                 });
+
+            For<MigrateStreetNameToMunicipality>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    municipality.MigrateStreetName(
+                        message.Command.StreetNameId,
+                        message.Command.PersistentLocalId,
+                        message.Command.Status,
+                        message.Command.PrimaryLanguage,
+                        message.Command.SecondaryLanguage,
+                        message.Command.Names,
+                        message.Command.HomonymAdditions,
+                        message.Command.IsCompleted,
+                        message.Command.IsRemoved);
+                });
         }
     }
 }

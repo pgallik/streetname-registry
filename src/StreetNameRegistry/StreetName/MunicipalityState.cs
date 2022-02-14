@@ -6,11 +6,10 @@ namespace StreetNameRegistry.StreetName
     public partial class Municipality
     {
         private MunicipalityId _municipalityId;
-        private Names _streetNameNames = new();
         private NisCode _nisCode;
-        private readonly List<Language> _officialLanguages = new();
-        private readonly List<Language> _facilityLanguages = new();
-
+        private readonly List<Language> _officialLanguages = new List<Language>();
+        private readonly List<Language> _facilityLanguages = new List<Language>();
+        private readonly MunicipalityStreetNames _streetNames = new MunicipalityStreetNames();
         internal MunicipalityId MunicipalityId => _municipalityId;
 
         public MunicipalityStatus MunicipalityStatus { get; private set; }
@@ -30,6 +29,7 @@ namespace StreetNameRegistry.StreetName
             Register<MunicipalityWasCorrectedToRetired>(When);
 
             Register<StreetNameWasProposedV2>(When);
+            Register<StreetNameMigratedToMunicipality>(When);
         }
 
         #region Municipality
@@ -87,9 +87,18 @@ namespace StreetNameRegistry.StreetName
         }
         #endregion Municipality
 
+        public void When(StreetNameMigratedToMunicipality @event)
+        {
+            var streetName = new MunicipalityStreetName(ApplyChange);
+            streetName.Route(@event);
+            _streetNames.Add(streetName);
+        }
+
         private void When(StreetNameWasProposedV2 @event)
         {
-            _streetNameNames = new Names(@event.StreetNameNames);
+            var streetName = new MunicipalityStreetName(ApplyChange);
+            streetName.Route(@event);
+            _streetNames.Add(streetName);
         }
     }
 }
