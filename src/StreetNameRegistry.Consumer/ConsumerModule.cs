@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Consumer
             ILoggerFactory loggerFactory)
         {
             var logger = loggerFactory.CreateLogger<ConsumerModule>();
-            var connectionString = configuration.GetConnectionString("ConsumerAdmin");
+            var connectionString = configuration.GetConnectionString("Consumer");
 
             var hasConnectionString = !string.IsNullOrWhiteSpace(connectionString);
             if (hasConnectionString)
