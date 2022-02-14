@@ -96,9 +96,9 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                                     name: $"sqlserver-{connectionString.Key.ToLowerInvariant()}",
                                     tags: new[] { DatabaseTag, "sql", "sqlserver" });
                         }
-                    },
-                    EnableJsonErrorActionFilter = true
-                })
+                    }
+                }
+                .EnableJsonErrorActionFilterOption())
                 .Configure<ResponseOptions>(_configuration);
 
             var containerBuilder = new ContainerBuilder();
