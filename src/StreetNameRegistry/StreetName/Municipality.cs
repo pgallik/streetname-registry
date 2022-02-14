@@ -24,7 +24,7 @@ namespace StreetNameRegistry.StreetName
 
             foreach (var streetNameName in streetNameNames)
             {
-                if (_streetNameNames.HasMatch(streetNameName.Language, streetNameName.Name))
+                if (_streetNames.HasStreetNameName(streetNameName))
                 {
                     throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
                 }
@@ -120,6 +120,36 @@ namespace StreetNameRegistry.StreetName
         {
             if (_facilityLanguages.Contains(language))
                 ApplyChange(new MunicipalityFacilityLanguageWasRemoved(_municipalityId, language));
+        }
+
+        public void MigrateStreetName(
+            StreetNameId streetNameId,
+            PersistentLocalId persistentLocalId,
+            StreetNameStatus? status,
+            Language? primaryLanguage,
+            Language? secondaryLanguage,
+            Names names,
+            HomonymAdditions homonymAdditions,
+            bool isCompleted,
+            bool isRemoved)
+        {
+            if (_streetNames.HasPersistentLocalId(persistentLocalId))
+            {
+                throw new InvalidOperationException(
+                    $"Cannot migrate StreetName with id '{persistentLocalId}' in municipality '{_municipalityId}'.");
+            }
+
+            ApplyChange(new StreetNameMigratedToMunicipality(
+                _municipalityId,
+                streetNameId,
+                persistentLocalId,
+                status,
+                primaryLanguage,
+                secondaryLanguage,
+                names,
+                homonymAdditions,
+                isCompleted,
+                isRemoved));
         }
     }
 }

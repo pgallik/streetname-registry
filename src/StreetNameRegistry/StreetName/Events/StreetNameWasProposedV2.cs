@@ -11,7 +11,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventDescription("De straatnaam werd voorgesteld.")]
     public class StreetNameWasProposedV2 : IHasMunicipalityId, IHasProvenance, ISetProvenance
     {
-        [EventPropertyDescription("Interne GUID van de straatnaam.")]
+        [EventPropertyDescription("Interne GUID van de gemeente.")]
         public Guid MunicipalityId { get; }
 
         public string NisCode { get; }

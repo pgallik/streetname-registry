@@ -6,6 +6,17 @@ namespace StreetNameRegistry.StreetName
 
     public class HomonymAdditions : List<StreetNameHomonymAddition>
     {
+        public HomonymAdditions()
+        { }
+
+        public HomonymAdditions(IEnumerable<StreetNameHomonymAddition> homonymAdditions)
+            : base(homonymAdditions)
+        { }
+
+        public HomonymAdditions(IDictionary<Language, string> homonymAdditions)
+            : base(homonymAdditions.Select(x => new StreetNameHomonymAddition(x.Value, x.Key)))
+        { }
+
         public bool HasMatch(Language? language, string homonymAddition)
             => this.Any(addition => addition.Language == language && addition.HomonymAddition == homonymAddition);
 
@@ -26,6 +37,11 @@ namespace StreetNameRegistry.StreetName
             if (index != -1)
                 RemoveAt(index);
         }
+
+        public IDictionary<Language, string> ToDictionary() =>
+            this.ToDictionary(
+                x => x.Language ?? throw new ArgumentNullException(nameof(StreetNameHomonymAddition.Language)),
+                x => x.HomonymAddition);
 
         private void Update(Language? language, string homonymAddition)
         {
