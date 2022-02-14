@@ -2,8 +2,6 @@ namespace StreetNameRegistry.StreetName.Events
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
@@ -13,16 +11,16 @@ namespace StreetNameRegistry.StreetName.Events
     [EventDescription("De straatnaam werd gemigreerd naar gemeente.")]
     public class StreetNameMigratedToMunicipality : IHasMunicipalityId, IHasProvenance, ISetProvenance
     {
-        public Guid MunicipalityId { get; set; }
-        public Guid StreetNameId { get; set; }
-        public int PersistentLocalId { get; set; }
-        public StreetNameStatus? Status { get; set; }
-        public Language? PrimaryLanguage { get; set; }
-        public Language? SecondaryLanguage { get; set; }
-        public IDictionary<Language, string> Names { get; set; }
-        public IDictionary<Language, string> HomonymAdditions { get; set; }
-        public bool IsCompleted { get; set; }
-        public bool IsRemoved { get; set; }
+        public Guid MunicipalityId { get; }
+        public Guid StreetNameId { get; }
+        public int PersistentLocalId { get; }
+        public StreetNameStatus? Status { get; }
+        public Language? PrimaryLanguage { get; }
+        public Language? SecondaryLanguage { get; }
+        public IDictionary<Language, string> Names { get; }
+        public IDictionary<Language, string> HomonymAdditions { get; }
+        public bool IsCompleted { get; }
+        public bool IsRemoved { get; }
         public ProvenanceData Provenance { get; private set; }
         
         public StreetNameMigratedToMunicipality(
