@@ -15,7 +15,6 @@ namespace StreetNameRegistry
             Language = language;
         }
 
-
         protected override IEnumerable<object> Reflect()
         {
             yield return Name;
