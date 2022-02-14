@@ -1,3 +1,10 @@
+## [2.45.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.45.0...v2.45.1) (2022-02-14)
+
+
+### Bug Fixes
+
+* correct consumer non admin usage ([cad68d9](https://github.com/informatievlaanderen/streetname-registry/commit/cad68d9cc7af7b840ea7df3d24227692efb74d6c))
+
 # [2.45.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.44.0...v2.45.0) (2022-02-14)
 
 
