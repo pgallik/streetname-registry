@@ -1,8 +1,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyDescription("StreetNameRegistry Projector API")]
+[assembly: AssemblyDescription("StreetNameRegistry Consumer")]
 
 [assembly: ComVisible(false)]
-[assembly: Guid("6b2d2e95-53a4-498e-8492-218ec00b1d36")]
-
+[assembly: Guid("5a08cc78-0eb5-4583-8d06-3df20b6d2598")]
