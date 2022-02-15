@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Sequence = "StreetNameRegistrySequence";
         public const string Consumer = "StreetNameRegistryConsumer";
         public const string Wfs = "wfs.streetname";
+        public const string MigrateStreetName = "StreetNameRegistryMigration";
     }
 
     public class MigrationTables

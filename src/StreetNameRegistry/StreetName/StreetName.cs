@@ -4,8 +4,11 @@ namespace StreetNameRegistry.StreetName
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Crab;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Commands;
     using Events;
     using Events.Crab;
+    using NodaTime;
 
     public partial class StreetName : AggregateRootEntity
     {
@@ -117,6 +120,28 @@ namespace StreetNameRegistry.StreetName
                 _streetNameId,
                 persistentLocalId,
                 assignmentDate));
+        }
+
+        public MigrateStreetNameToMunicipality CreateMigrateCommand(MunicipalityId municipalityId)
+        {
+            return new MigrateStreetNameToMunicipality(
+                municipalityId,
+                _streetNameId,
+                _persistentLocalId,
+                _status,
+                _primaryLanguage,
+                _secondaryLanguage,
+                _names,
+                _homonymAdditions,
+                _isCompleted,
+                IsRemoved,
+                new Provenance(
+                    SystemClock.Instance.GetCurrentInstant(),
+                    Application.StreetNameRegistry,
+                    new Reason("Migrate StreetName aggregate to Municipality."),
+                    new Operator("StreetName Registry"), 
+                    Modification.Insert,
+                    Organisation.DigitaalVlaanderen));
         }
 
         private void ApplyNameChanges(CrabStreetName primaryStreetName, CrabStreetName secondaryStreetName)
