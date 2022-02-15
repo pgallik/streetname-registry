@@ -21,6 +21,8 @@ namespace StreetNameRegistry.StreetName
         private readonly Names _names = new Names();
         private readonly Chronicle<StreetNameStatusWasImportedFromCrab, int> _statusChronicle = new Chronicle<StreetNameStatusWasImportedFromCrab, int>();
 
+
+        public NisCode NisCode { get; set; }
         public bool IsRemoved { get; private set; }
 
         public Modification LastModificationBasedOnCrab { get; private set; }
@@ -196,6 +198,7 @@ namespace StreetNameRegistry.StreetName
         private void When(StreetNameWasRegistered @event)
         {
             _streetNameId = new StreetNameId(@event.StreetNameId);
+            NisCode = new NisCode(@event.NisCode);
         }
 
         private void When(StreetNameHomonymAdditionWasCorrected @event)
