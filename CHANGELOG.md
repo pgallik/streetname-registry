@@ -1,3 +1,10 @@
+## [2.45.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.45.1...v2.45.2) (2022-02-15)
+
+
+### Bug Fixes
+
+* consumer docker + assembly file ([f1ab955](https://github.com/informatievlaanderen/streetname-registry/commit/f1ab9552318270b8a078ba22c52e37c86ba99b16))
+
 ## [2.45.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.45.0...v2.45.1) (2022-02-14)
 
 
