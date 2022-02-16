@@ -30,7 +30,7 @@ SELECT IdOriginal FROM
  IdOriginal,
  round(ROW_NUMBER() OVER(ORDER BY IdInternal ASC)/{_pageSize},0,1) AS PageIndex
  FROM [{Schema.Default}].[Streams]) a
-WHERE IdOriginal not like 'municipality-%' AND PageIndex = {_pageIndex}");
+WHERE IdOriginal not like 'municipality-%' AND PageIndex = {_pageIndex}", commandTimeout: 60);
         }
     }
 }

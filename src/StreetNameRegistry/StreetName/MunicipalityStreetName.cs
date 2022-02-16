@@ -17,11 +17,11 @@ namespace StreetNameRegistry.StreetName
         public MunicipalityStreetName(Action<object> applier)
             : base(applier)
         {
-            Register<StreetNameMigratedToMunicipality>(When);
+            Register<StreetNameWasMigratedToMunicipality>(When);
             Register<StreetNameWasProposedV2>(When);
         }
 
-        void When(StreetNameMigratedToMunicipality @event)
+        void When(StreetNameWasMigratedToMunicipality @event)
         {
             _municipalityId = new MunicipalityId(@event.MunicipalityId);
             Status = @event.Status;

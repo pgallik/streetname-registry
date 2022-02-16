@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -14,12 +15,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
     public class GivenMunicipalityHasAFacilityLanguage : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipalityHasAFacilityLanguage(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Theory]

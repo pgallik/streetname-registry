@@ -38,6 +38,9 @@ namespace StreetNameRegistry.StreetName
             CrabModification? beginModification,
             CrabOrganisation? beginOrganisation)
         {
+            if (IsMigrated)
+                throw new InvalidOperationException($"The StreetName aggregate {_streetNameId} has been migrated!");
+
             if (IsRemoved)
                 throw new InvalidOperationException($"Cannot change removed street name for street name id {_streetNameId}/{streetNameId}");
 
@@ -89,6 +92,9 @@ namespace StreetNameRegistry.StreetName
             CrabModification? beginModification,
             CrabOrganisation? beginOrganisation)
         {
+            if (IsMigrated)
+                throw new InvalidOperationException($"The StreetName aggregate {_streetNameId} has been migrated!");
+
             if (IsRemoved && beginModification != CrabModification.Delete)
                 throw new InvalidOperationException($"Cannot change removed street name for street name id {_streetNameId}/{streetNameId}");
 
@@ -113,6 +119,9 @@ namespace StreetNameRegistry.StreetName
             PersistentLocalId persistentLocalId,
             PersistentLocalIdAssignmentDate assignmentDate)
         {
+            if (IsMigrated)
+                throw new InvalidOperationException($"The StreetName aggregate {_streetNameId} has been migrated!");
+
             if (_persistentLocalId != null)
                 return;
 
@@ -124,6 +133,9 @@ namespace StreetNameRegistry.StreetName
 
         public MigrateStreetNameToMunicipality CreateMigrateCommand(MunicipalityId municipalityId)
         {
+            if (IsMigrated)
+                throw new InvalidOperationException($"The StreetName aggregate {_streetNameId} has been migrated!");
+
             // Discussed with business, only send names for primary and secondary language which are not null
             var migrateNames = new Names();
             migrateNames.AddRange(_names.Where(name =>
@@ -150,9 +162,15 @@ namespace StreetNameRegistry.StreetName
                     SystemClock.Instance.GetCurrentInstant(),
                     Application.StreetNameRegistry,
                     new Reason("Migrate StreetName aggregate to Municipality."),
-                    new Operator("StreetName Registry"), 
+                    new Operator("StreetName Registry"),
                     Modification.Insert,
                     Organisation.DigitaalVlaanderen));
+        }
+
+        public void MarkMigrated(MunicipalityId municipalityId)
+        {
+            if(!IsMigrated)
+                ApplyChange(new StreetNameWasMigrated(_streetNameId, municipalityId, _persistentLocalId));
         }
 
         private void ApplyNameChanges(CrabStreetName primaryStreetName, CrabStreetName secondaryStreetName)

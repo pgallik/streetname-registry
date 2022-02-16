@@ -139,7 +139,7 @@ namespace StreetNameRegistry.StreetName
                     $"Cannot migrate StreetName with id '{persistentLocalId}' in municipality '{_municipalityId}'.");
             }
 
-            ApplyChange(new StreetNameMigratedToMunicipality(
+            ApplyChange(new StreetNameWasMigratedToMunicipality(
                 _municipalityId,
                 streetNameId,
                 persistentLocalId,

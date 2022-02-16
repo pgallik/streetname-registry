@@ -7,9 +7,9 @@ namespace StreetNameRegistry.StreetName.Events
     using Newtonsoft.Json;
 
     [EventTags(EventTag.For.Sync)]
-    [EventName("StreetNameMigratedToMunicipality")]
+    [EventName("StreetNameWasMigratedToMunicipality")]
     [EventDescription("De straatnaam werd gemigreerd naar gemeente.")]
-    public class StreetNameMigratedToMunicipality : IHasMunicipalityId, IHasProvenance, ISetProvenance
+    public class StreetNameWasMigratedToMunicipality : IHasMunicipalityId, IHasProvenance, ISetProvenance
     {
         public Guid MunicipalityId { get; }
         public Guid StreetNameId { get; }
@@ -23,7 +23,7 @@ namespace StreetNameRegistry.StreetName.Events
         public bool IsRemoved { get; }
         public ProvenanceData Provenance { get; private set; }
         
-        public StreetNameMigratedToMunicipality(
+        public StreetNameWasMigratedToMunicipality(
             MunicipalityId municipalityId,
             StreetNameId streetNameId,
             PersistentLocalId persistentLocalId,
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.StreetName.Events
         }
 
         [JsonConstructor]
-        private StreetNameMigratedToMunicipality(
+        private StreetNameWasMigratedToMunicipality(
             Guid municipalityId,
             Guid streetNameId,
             int persistentLocalId,

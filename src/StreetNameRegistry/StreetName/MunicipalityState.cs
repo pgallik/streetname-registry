@@ -29,7 +29,7 @@ namespace StreetNameRegistry.StreetName
             Register<MunicipalityWasCorrectedToRetired>(When);
 
             Register<StreetNameWasProposedV2>(When);
-            Register<StreetNameMigratedToMunicipality>(When);
+            Register<StreetNameWasMigratedToMunicipality>(When);
         }
 
         #region Municipality
@@ -87,7 +87,7 @@ namespace StreetNameRegistry.StreetName
         }
         #endregion Municipality
 
-        public void When(StreetNameMigratedToMunicipality @event)
+        public void When(StreetNameWasMigratedToMunicipality @event)
         {
             var streetName = new MunicipalityStreetName(ApplyChange);
             streetName.Route(@event);

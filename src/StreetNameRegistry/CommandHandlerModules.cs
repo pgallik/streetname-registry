@@ -13,6 +13,10 @@ namespace StreetNameRegistry
                 .SingleInstance();
 
             containerBuilder
+                .RegisterType<StreetNameLegacyProvenanceFactory>()
+                .SingleInstance();
+
+            containerBuilder
                 .RegisterType<CrabStreetNameCommandHandlerModule>()
                 .Named<CommandHandlerModule>(typeof(CrabStreetNameCommandHandlerModule).FullName)
                 .As<CommandHandlerModule>();

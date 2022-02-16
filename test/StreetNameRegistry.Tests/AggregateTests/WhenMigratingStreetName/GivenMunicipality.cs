@@ -34,7 +34,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
                 .Given(_municipalityId, municipalityWasImported)
                 .When(command)
                 .Then(
-                    new Fact(_municipalityId, new StreetNameMigratedToMunicipality(
+                    new Fact(_municipalityId, new StreetNameWasMigratedToMunicipality(
                         _municipalityId,
                         command.StreetNameId,
                         command.PersistentLocalId,
@@ -57,7 +57,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
             var command = Fixture.Create<MigrateStreetNameToMunicipality>();
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
-            var streetNameMigratedToMunicipality = Fixture.Create<StreetNameMigratedToMunicipality>();
+            var streetNameMigratedToMunicipality = Fixture.Create<StreetNameWasMigratedToMunicipality>();
 
             // Act, Assert
             Assert(new Scenario()

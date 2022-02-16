@@ -19,17 +19,29 @@ namespace StreetNameRegistry.StreetName
             Func<IStreamStore> getStreamStore,
             EventMapping eventMapping,
             EventSerializer eventSerializer,
-            CrabStreetNameProvenanceFactory provenanceFactory)
+            CrabStreetNameProvenanceFactory crabProvenanceFactory,
+            StreetNameLegacyProvenanceFactory streetNameProvenanceFactory)
         {
             For<ImportStreetNameFromCrab>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
-                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .AddProvenance(getUnitOfWork, crabProvenanceFactory)
                 .Handle(async (message, ct) => { await ImportStreetNameFromCrab(getStreetNames, message, ct); });
 
             For<ImportStreetNameStatusFromCrab>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
-                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .AddProvenance(getUnitOfWork, crabProvenanceFactory)
                 .Handle(async (message, ct) => { await ImportStreetNameStatusFromCrab(getStreetNames, message, ct); });
+
+            For<MarkStreetNameMigrated>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddProvenance(getUnitOfWork, streetNameProvenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var streetNames = getStreetNames();
+                    var streetName = await streetNames.GetAsync(message.Command.StreetNameId, ct);
+
+                    streetName.MarkMigrated(message.Command.MunicipalityId);
+                });
         }
 
         public async Task ImportStreetNameFromCrab(

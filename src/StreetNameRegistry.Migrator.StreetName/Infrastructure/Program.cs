@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Modules;
     using Serilog;
     using StreetNameRegistry.StreetName;
+    using StreetNameRegistry.StreetName.Commands;
 
     public class Program
     {
@@ -78,8 +79,14 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
                             while (streams.Any())
                             {
+                                if (CancellationTokenSource.IsCancellationRequested)
+                                    break;
+
                                 foreach (var id in streams)
                                 {
+                                    if (CancellationTokenSource.IsCancellationRequested)
+                                        break;
+
                                     if (processedIds.Contains(id, StringComparer.InvariantCultureIgnoreCase))
                                     {
                                         logger.LogDebug($"Already migrated '{id}', skipping...");
@@ -99,20 +106,29 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                                             $"Municipality for NisCode '{streetName.NisCode}' was not found.");
                                     }
 
-                                    var migrateCommand = streetName.CreateMigrateCommand(new MunicipalityId(municipality.MunicipalityId));
+                                    var municipalityId = new MunicipalityId(municipality.MunicipalityId);
+                                    var migrateCommand = streetName.CreateMigrateCommand(municipalityId);
+                                    var markMigrated = new MarkStreetNameMigrated(municipalityId, streetNameId, migrateCommand.Provenance);
 
-                                    await using var scope = actualContainer.BeginLifetimeScope();
+                                    await using (var scope = actualContainer.BeginLifetimeScope())
+                                    {
+                                        var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
+                                        await cmdResolver.Dispatch(
+                                            markMigrated.CreateCommandId(),
+                                            markMigrated,
+                                            cancellationToken: ct);
+                                    }
 
-                                    var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
-
-                                    await cmdResolver.Dispatch(
-                                        migrateCommand.CreateCommandId(),
-                                        migrateCommand,
-                                        cancellationToken: ct);
+                                    await using (var scope = actualContainer.BeginLifetimeScope())
+                                    {
+                                        var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
+                                        await cmdResolver.Dispatch(
+                                            migrateCommand.CreateCommandId(),
+                                            migrateCommand,
+                                            cancellationToken: ct);
+                                    }
 
                                     await processedIdsTable.Add(id);
-
-                                    // TODO: dispatch to StreetName aggregate
                                 }
 
                                 streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
@@ -141,7 +157,6 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
             Closing.Close();
         }
 
-       
         private static IServiceProvider ConfigureServices(IConfiguration configuration)
         {
             var services = new ServiceCollection();

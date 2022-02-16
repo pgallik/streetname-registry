@@ -21,8 +21,8 @@ namespace StreetNameRegistry.StreetName
         private readonly Names _names = new Names();
         private readonly Chronicle<StreetNameStatusWasImportedFromCrab, int> _statusChronicle = new Chronicle<StreetNameStatusWasImportedFromCrab, int>();
 
-
-        public NisCode NisCode { get; set; }
+        public bool IsMigrated { get; private set; } = false;
+        public NisCode NisCode { get; private set; }
         public bool IsRemoved { get; private set; }
 
         public Modification LastModificationBasedOnCrab { get; private set; }
@@ -67,6 +67,12 @@ namespace StreetNameRegistry.StreetName
 
             Register<StreetNameStatusWasImportedFromCrab>(When);
             Register<StreetNameWasImportedFromCrab>(@event => WhenCrabEventApplied(@event.Modification == CrabModification.Delete));
+            Register<StreetNameWasMigrated>(When);
+        }
+
+        private void When(StreetNameWasMigrated @event)
+        {
+            IsMigrated = true;
         }
 
         private void When(StreetNameStatusWasImportedFromCrab @event)
