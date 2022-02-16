@@ -64,7 +64,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                             var kafkaOptions = new KafkaOptions(bootstrapServers, EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
                             var topic = $"{configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
-                            var consumerGroupSuffix = $"{configuration["MunicipalityTopic"]}" ?? "";
+                            var consumerGroupSuffix = $"{configuration["MunicipalityConsumerGroupSuffix"]}" ?? "";
                             var consumerOptions = new ConsumerOptions(topic, consumerGroupSuffix);
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();

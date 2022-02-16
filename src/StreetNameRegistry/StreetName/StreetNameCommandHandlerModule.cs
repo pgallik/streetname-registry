@@ -24,7 +24,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.ProposeStreetName(message.Command.StreetNameNames, message.Command.PersistentLocalId);
                 });
 
@@ -33,7 +33,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.MigrateStreetName(
                         message.Command.StreetNameId,
                         message.Command.PersistentLocalId,

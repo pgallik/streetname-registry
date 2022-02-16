@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Infrastructure.Repositories
     using SqlStreamStore;
     using StreetName;
 
-    public class Municipalities : Repository<Municipality, MunicipalityId>, IMunicipalities
+    public class Municipalities : Repository<Municipality, MunicipalityStreamId>, IMunicipalities
     {
         public Municipalities(ConcurrentUnitOfWork unitOfWork, IStreamStore eventStore, EventMapping eventMapping, EventDeserializer eventDeserializer)
             : base(Municipality.Factory, unitOfWork, eventStore, eventMapping, eventDeserializer) { }

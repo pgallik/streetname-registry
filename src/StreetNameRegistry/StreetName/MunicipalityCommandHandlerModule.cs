@@ -24,7 +24,8 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetOptionalAsync(message.Command.MunicipalityId, ct);
+                    var municipalityStreamId = new MunicipalityStreamId(message.Command.MunicipalityId);
+                    var municipality = await getMunicipalities().GetOptionalAsync(municipalityStreamId, ct);
 
                     if (municipality.HasValue)
                     {
@@ -33,7 +34,7 @@ namespace StreetNameRegistry.StreetName
 
                     var newMunicipality = Municipality.Register(message.Command.MunicipalityId, message.Command.NisCode);
 
-                    getMunicipalities().Add(newMunicipality.MunicipalityId, newMunicipality);
+                    getMunicipalities().Add(municipalityStreamId, newMunicipality);
                 });
 
             For<ChangeMunicipalityNisCode>()
@@ -41,7 +42,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.DefineOrChangeNisCode(message.Command.NisCode);
                 });
 
@@ -50,7 +51,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.BecomeCurrent();
                 });
 
@@ -59,7 +60,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.Retire();
                 });
 
@@ -68,7 +69,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.DefineOrChangeNisCode(message.Command.NisCode);
                 });
 
@@ -77,7 +78,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.DefineOrChangeNisCode(message.Command.NisCode);
                 });
 
@@ -86,7 +87,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.NameMunicipality(message.Command.Name);
                 });
 
@@ -95,7 +96,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.NameMunicipality(message.Command.Name);
                 });
 
@@ -104,7 +105,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.NameMunicipality(new MunicipalityName(string.Empty, message.Command.Language));
                 });
 
@@ -113,7 +114,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.AddOfficialLanguage(message.Command.Language);
                 });
 
@@ -122,7 +123,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.RemoveOfficialLanguage(message.Command.Language);
                 });
 
@@ -131,7 +132,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.AddFacilityLanguage(message.Command.Language);
                 });
 
@@ -140,7 +141,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.RemoveFacilityLanguage(message.Command.Language);
                 });
 
@@ -149,7 +150,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.CorrectToCurrent();
                 });
 
@@ -158,7 +159,7 @@ namespace StreetNameRegistry.StreetName
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
-                    var municipality = await getMunicipalities().GetAsync(message.Command.MunicipalityId, ct);
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
                     municipality.CorrectToRetired();
                 });
         }
