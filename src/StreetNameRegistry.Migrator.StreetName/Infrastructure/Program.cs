@@ -12,6 +12,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Consumer;
+    using Consumer.Municipality;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -61,78 +62,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                     {
                         try
                         {
-                            var loggerFactory = container.GetRequiredService<ILoggerFactory>();
-                            var logger = loggerFactory.CreateLogger("StreetNameMigrator");
-
-                            var connectionString = configuration.GetConnectionString("events");
-                            var processedIdsTable = new ProcessedIdsTable(connectionString, loggerFactory);
-                            await processedIdsTable.CreateTableIfNotExists();
-                            var processedIds = (await processedIdsTable.GetProcessedIds())?.ToList() ?? new List<string>();
-
-                            var actualContainer = container.GetRequiredService<ILifetimeScope>();
-
-                            var streetNameRepo = actualContainer.Resolve<IStreetNames>();
-                            var consumerContext = actualContainer.Resolve<ConsumerContext>();
-                            var sqlStreamTable = new SqlStreamsTable(connectionString);
-
-                            var streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
-
-                            while (streams.Any())
-                            {
-                                if (CancellationTokenSource.IsCancellationRequested)
-                                    break;
-
-                                foreach (var id in streams)
-                                {
-                                    if (CancellationTokenSource.IsCancellationRequested)
-                                        break;
-
-                                    if (processedIds.Contains(id, StringComparer.InvariantCultureIgnoreCase))
-                                    {
-                                        logger.LogDebug($"Already migrated '{id}', skipping...");
-                                        continue;
-                                    }
-
-                                    var streetNameId = new StreetNameId(Guid.Parse(id));
-                                    var streetName = await streetNameRepo.GetAsync(streetNameId, ct);
-
-                                    var municipality =
-                                        await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
-                                            x.NisCode == streetName.NisCode, ct);
-
-                                    if (municipality == null)
-                                    {
-                                        throw new InvalidOperationException(
-                                            $"Municipality for NisCode '{streetName.NisCode}' was not found.");
-                                    }
-
-                                    var municipalityId = new MunicipalityId(municipality.MunicipalityId);
-                                    var migrateCommand = streetName.CreateMigrateCommand(municipalityId);
-                                    var markMigrated = new MarkStreetNameMigrated(municipalityId, streetNameId, migrateCommand.Provenance);
-
-                                    await using (var scope = actualContainer.BeginLifetimeScope())
-                                    {
-                                        var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
-                                        await cmdResolver.Dispatch(
-                                            markMigrated.CreateCommandId(),
-                                            markMigrated,
-                                            cancellationToken: ct);
-                                    }
-
-                                    await using (var scope = actualContainer.BeginLifetimeScope())
-                                    {
-                                        var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
-                                        await cmdResolver.Dispatch(
-                                            migrateCommand.CreateCommandId(),
-                                            migrateCommand,
-                                            cancellationToken: ct);
-                                    }
-
-                                    await processedIdsTable.Add(id);
-                                }
-
-                                streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
-                            }
+                            await ProcessStreams(container, configuration, ct);
                         }
                         catch (Exception e)
                         {
@@ -155,6 +85,108 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
             Log.Information("Stopping...");
             Closing.Close();
+        }
+
+        private static async Task ProcessStreams(
+            IServiceProvider container,
+            IConfigurationRoot configuration,
+            CancellationToken ct)
+        {
+            var loggerFactory = container.GetRequiredService<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger("StreetNameMigrator");
+
+            var connectionString = configuration.GetConnectionString("events");
+            var processedIdsTable = new ProcessedIdsTable(connectionString, loggerFactory);
+            await processedIdsTable.CreateTableIfNotExists();
+            var processedIds = (await processedIdsTable.GetProcessedIds())?.ToList() ?? new List<string>();
+
+            var actualContainer = container.GetRequiredService<ILifetimeScope>();
+
+            var streetNameRepo = actualContainer.Resolve<IStreetNames>();
+            var consumerContext = actualContainer.Resolve<ConsumerContext>();
+            var sqlStreamTable = new SqlStreamsTable(connectionString);
+
+            var streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
+
+            async Task<bool> ProcessStream(IEnumerable<string> streamsToProcess)
+            {
+                if (CancellationTokenSource.IsCancellationRequested)
+                {
+                    return false;
+                }
+
+                foreach (var id in streamsToProcess)
+                {
+                    if (CancellationTokenSource.IsCancellationRequested)
+                    {
+                        return false;
+                    }
+
+                    if (processedIds.Contains(id, StringComparer.InvariantCultureIgnoreCase))
+                    {
+                        logger.LogDebug($"Already migrated '{id}', skipping...");
+                        continue;
+                    }
+
+                    var streetNameId = new StreetNameId(Guid.Parse(id));
+                    var streetName = await streetNameRepo.GetAsync(streetNameId, ct);
+
+                    var municipality =
+                        await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
+                            x.NisCode == streetName.NisCode, ct);
+
+                    if (municipality == null)
+                    {
+                        throw new InvalidOperationException(
+                            $"Municipality for NisCode '{streetName.NisCode}' was not found.");
+                    }
+
+                    await CreateAndDispatchCommand(municipality, streetName, actualContainer, ct);
+
+                    await processedIdsTable.Add(id);
+                }
+
+                return true;
+            }
+
+            while (streams.Any())
+            {
+                if (!await ProcessStream(streams))
+                {
+                    break;
+                }
+
+                streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
+            }
+        }
+
+        private static async Task CreateAndDispatchCommand(
+            MunicipalityConsumerItem municipality,
+            StreetName streetName,
+            ILifetimeScope actualContainer,
+            CancellationToken ct)
+        {
+            var municipalityId = new MunicipalityId(municipality.MunicipalityId);
+            var migrateCommand = streetName.CreateMigrateCommand(municipalityId);
+            var markMigrated = new MarkStreetNameMigrated(municipalityId, migrateCommand.StreetNameId, migrateCommand.Provenance);
+
+            await using (var scope = actualContainer.BeginLifetimeScope())
+            {
+                var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
+                await cmdResolver.Dispatch(
+                    markMigrated.CreateCommandId(),
+                    markMigrated,
+                    cancellationToken: ct);
+            }
+
+            await using (var scope = actualContainer.BeginLifetimeScope())
+            {
+                var cmdResolver = scope.Resolve<ICommandHandlerResolver>();
+                await cmdResolver.Dispatch(
+                    migrateCommand.CreateCommandId(),
+                    migrateCommand,
+                    cancellationToken: ct);
+            }
         }
 
         private static IServiceProvider ConfigureServices(IConfiguration configuration)
