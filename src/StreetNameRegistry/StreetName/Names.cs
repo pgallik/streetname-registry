@@ -33,7 +33,7 @@ namespace StreetNameRegistry.StreetName
 
         public IDictionary<Language, string> ToDictionary() =>
             this.ToDictionary(
-                x => x.Language ?? throw new ArgumentNullException(nameof(StreetNameHomonymAddition.Language)),
+                x => x.Language ?? throw new ArgumentNullException(nameof(StreetNameName.Language)),
                 x => x.Name);
 
         private void Update(Language? language, string name)

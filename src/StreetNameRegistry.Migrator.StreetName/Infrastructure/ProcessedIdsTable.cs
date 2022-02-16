@@ -1,18 +1,22 @@
 namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
     using Microsoft.Data.SqlClient;
+    using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
 
     public class ProcessedIdsTable
     {
         private readonly string _connectionString;
+        private readonly ILogger<ProcessedIdsTable> _logger;
 
-        public ProcessedIdsTable(string connectionString)
+        public ProcessedIdsTable(string connectionString, ILoggerFactory loggerFactory)
         {
             _connectionString = connectionString;
+            _logger = loggerFactory.CreateLogger<ProcessedIdsTable>();
         }
 
         private const string ProcessedIdsTableName = "ProcessedIds";
@@ -25,23 +29,28 @@ IF NOT EXISTS ( SELECT  *
                 FROM    sys.schemas
                 WHERE   name = N'{Schema.MigrateStreetName}')
     EXEC('CREATE SCHEMA [{Schema.MigrateStreetName}]');
-GO
 
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='{ProcessedIdsTableName}' and xtype='U')
 CREATE TABLE [{Schema.MigrateStreetName}].[{ProcessedIdsTableName}](
-[Id] [char](42) NOT NULL,
+[Id] [nvarchar](1000) NOT NULL,
 CONSTRAINT [PK_ProcessedIds] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-))
-GO");
+))");
         }
 
-        public async Task<bool> Add(string streetNameStreamId)
+        public async Task Add(string streetNameStreamId)
         {
-            await using var conn = new SqlConnection(_connectionString);
-            var result = await conn.ExecuteAsync(@$"INSERT INTO [{Schema.MigrateStreetName}].[{ProcessedIdsTableName}] VALUES ({streetNameStreamId})");
-            return result > 0;
+            try
+            {
+                await using var conn = new SqlConnection(_connectionString);
+                await conn.ExecuteAsync(@$"INSERT INTO [{Schema.MigrateStreetName}].[{ProcessedIdsTableName}] VALUES ('{streetNameStreamId}')");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogCritical(ex, $"Failed to add Id '{streetNameStreamId}' to ProcessedIds table");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<string>?> GetProcessedIds()

@@ -26,12 +26,11 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
             return await conn.QueryAsync<string>(@$"
 SELECT IdOriginal FROM 
-(
-SELECT
-IdOriginal,
-round(ROW_NUMBER() OVER(ORDER BY IdInternal ASC)/{_pageSize},0,1) AS PageIndex
-FROM [{Schema.Default}].[Streams])
-WHERE PageIndex = {_pageIndex}");
+(SELECT
+ IdOriginal,
+ round(ROW_NUMBER() OVER(ORDER BY IdInternal ASC)/{_pageSize},0,1) AS PageIndex
+ FROM [{Schema.Default}].[Streams]) a
+WHERE IdOriginal not like 'municipality-%' AND PageIndex = {_pageIndex}");
         }
     }
 }

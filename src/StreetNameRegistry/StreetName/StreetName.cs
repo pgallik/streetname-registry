@@ -124,6 +124,17 @@ namespace StreetNameRegistry.StreetName
 
         public MigrateStreetNameToMunicipality CreateMigrateCommand(MunicipalityId municipalityId)
         {
+            // Discussed with business, only send names for primary and secondary language which are not null
+            var migrateNames = new Names();
+            migrateNames.AddRange(_names.Where(name =>
+                (name.Language == _primaryLanguage && _primaryLanguage != null)
+                || (name.Language == _secondaryLanguage && _secondaryLanguage != null)));
+
+            var migrateHomonymAdditions = new HomonymAdditions();
+            migrateHomonymAdditions.AddRange(_homonymAdditions.Where(homonymAddition =>
+                (homonymAddition.Language == _primaryLanguage && _primaryLanguage != null)
+                || (homonymAddition.Language == _secondaryLanguage && _secondaryLanguage != null)));
+
             return new MigrateStreetNameToMunicipality(
                 municipalityId,
                 _streetNameId,
@@ -131,8 +142,8 @@ namespace StreetNameRegistry.StreetName
                 _status,
                 _primaryLanguage,
                 _secondaryLanguage,
-                _names,
-                _homonymAdditions,
+                migrateNames,
+                migrateHomonymAdditions,
                 _isCompleted,
                 IsRemoved,
                 new Provenance(

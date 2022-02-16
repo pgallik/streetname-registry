@@ -1,13 +1,12 @@
 namespace StreetNameRegistry.Migrator.StreetName.Infrastructure.Modules
 {
+    using Autofac;
+    using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
-    using Be.Vlaanderen.Basisregisters.Projector;
-    using Autofac;
-    using Autofac.Extensions.DependencyInjection;
-    using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using Consumer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -36,12 +35,10 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure.Modules
 
             builder
                 .RegisterModule(new DataDogModule(_configuration))
-
                 .RegisterModule<EnvelopeModule>()
-
                 .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
-
-                .RegisterModule(new CommandHandlingModule(_configuration));
+                .RegisterModule(new CommandHandlingModule(_configuration))
+                .RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
 
             builder.RegisterEventstreamModule(_configuration);
 

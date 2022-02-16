@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
@@ -19,8 +18,6 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Microsoft.Extensions.Logging;
     using Modules;
     using Serilog;
-    using SqlStreamStore;
-    using SqlStreamStore.Streams;
     using StreetNameRegistry.StreetName;
 
     public class Program
@@ -63,18 +60,13 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                     {
                         try
                         {
-                            // create if not exist table
-                            // table with one field, primarykey (streetNameId)
-                            // Schema.Default
-
-                            var connectionString = configuration.GetConnectionString("events");
-                            var processedIdsTable = new ProcessedIdsTable(connectionString);
-                            await processedIdsTable.CreateTableIfNotExists();
-                            var processedIds = (await processedIdsTable.GetProcessedIds())?.ToList() ?? new List<string>();
-
-
                             var loggerFactory = container.GetRequiredService<ILoggerFactory>();
                             var logger = loggerFactory.CreateLogger("StreetNameMigrator");
+
+                            var connectionString = configuration.GetConnectionString("events");
+                            var processedIdsTable = new ProcessedIdsTable(connectionString, loggerFactory);
+                            await processedIdsTable.CreateTableIfNotExists();
+                            var processedIds = (await processedIdsTable.GetProcessedIds())?.ToList() ?? new List<string>();
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();
 
@@ -118,10 +110,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                                         migrateCommand,
                                         cancellationToken: ct);
 
-                                    if (!await processedIdsTable.Add(id))
-                                    {
-                                        logger.LogCritical($"Failed to add Id '{id}' to ProcessedIds table");
-                                    }
+                                    await processedIdsTable.Add(id);
 
                                     // TODO: dispatch to StreetName aggregate
                                 }
