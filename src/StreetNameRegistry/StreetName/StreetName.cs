@@ -133,9 +133,6 @@ namespace StreetNameRegistry.StreetName
 
         public MigrateStreetNameToMunicipality CreateMigrateCommand(MunicipalityId municipalityId)
         {
-            if (IsMigrated)
-                throw new InvalidOperationException($"The StreetName aggregate {_streetNameId} has been migrated!");
-
             // Discussed with business, only send names for primary and secondary language which are not null
             var migrateNames = new Names();
             migrateNames.AddRange(_names.Where(name =>

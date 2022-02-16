@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.AggregateTests
+namespace StreetNameRegistry.Tests.AggregateTests.Legacy
 {
     using Assert;
     using Generate;

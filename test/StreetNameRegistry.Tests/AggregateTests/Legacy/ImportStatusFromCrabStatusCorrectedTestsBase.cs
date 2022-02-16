@@ -1,13 +1,13 @@
-namespace StreetNameRegistry.Tests.AggregateTests
+namespace StreetNameRegistry.Tests.AggregateTests.Legacy
 {
     using System;
-    using Be.Vlaanderen.Basisregisters.Crab;
     using Assert;
+    using Be.Vlaanderen.Basisregisters.Crab;
+    using Generate;
     using StreetName.Events;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
-    using Generate;
 
     public class ImportStatusFromCrabStatusCorrectedTestsBase : ImportStatusFromCrabTest
     {
