@@ -1,3 +1,17 @@
+# [2.46.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.45.2...v2.46.0) (2022-02-16)
+
+
+### Bug Fixes
+
+* got migrator working ([ab0d739](https://github.com/informatievlaanderen/streetname-registry/commit/ab0d739724df0126c1279200ea5b63644d84c241))
+
+
+### Features
+
+* add new command to mark legacy streetname migration ([a22cc0b](https://github.com/informatievlaanderen/streetname-registry/commit/a22cc0be127d9d50567c57c06f1b7bfa5505a4a6))
+* add new municipalitystreamid ([8d0e25f](https://github.com/informatievlaanderen/streetname-registry/commit/8d0e25f3bb7d48e7f0cf7f49c5fc250ec80e20ce))
+* add streetname migrator proj ([fcd0727](https://github.com/informatievlaanderen/streetname-registry/commit/fcd0727662245723b0cb279af2487710900e2afa))
+
 ## [2.45.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.45.1...v2.45.2) (2022-02-15)
 
 
