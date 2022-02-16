@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityOffici
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -11,13 +12,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityOffici
 
     public class GivenMunicipalityHasNoOfficialLanguage : StreetNameRegistryTest
     {
-        private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipalityHasNoOfficialLanguage(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
-            _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Theory]
@@ -30,7 +31,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityOffici
             Fixture.Register(() => language);
             var commandLanguageRemoved = Fixture.Create<RemoveOfficialLanguageFromMunicipality>();
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                 })

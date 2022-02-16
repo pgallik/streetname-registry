@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
             var commandLanguageAdded = Fixture.Create<AddFacilityLanguageToMunicipality>();
 
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityFacilityLanguageWasAdded>()
@@ -56,7 +56,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
             var commandLanguageAdded = Fixture.Create<AddFacilityLanguageToMunicipality>();
 
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityFacilityLanguageWasAdded>(),
@@ -65,7 +65,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
                 .When(commandLanguageAdded)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityFacilityLanguageWasAdded(_municipalityId, language))
+                    new Fact(_streamId, new MunicipalityFacilityLanguageWasAdded(_municipalityId, language))
                 }));
         }
 
@@ -76,7 +76,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
             var commandAddedEnglish = Fixture.Create<AddFacilityLanguageToMunicipality>().WithLanguage(Language.English);
             var commandAddedDutch = Fixture.Create<AddFacilityLanguageToMunicipality>().WithLanguage(Language.Dutch);
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                     commandAddedEnglish.ToEvent(),
@@ -85,7 +85,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
                 .When(languageAddGerman)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityFacilityLanguageWasAdded(_municipalityId, Language.German))
+                    new Fact(_streamId, new MunicipalityFacilityLanguageWasAdded(_municipalityId, Language.German))
                 }));
         }
     }

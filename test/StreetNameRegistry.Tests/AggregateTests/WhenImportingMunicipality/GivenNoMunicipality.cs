@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenImportingMunicipality
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -27,7 +28,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenImportingMunicipality
                 .When(command)
                 .Then(new[]
                 {
-                    new Fact(command.MunicipalityId,
+                    new Fact(new MunicipalityStreamId(command.MunicipalityId),
                         new MunicipalityWasImported(command.MunicipalityId, command.NisCode))
                 }));
         }

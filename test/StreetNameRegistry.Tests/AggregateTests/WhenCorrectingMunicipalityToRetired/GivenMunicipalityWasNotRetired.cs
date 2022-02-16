@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToRe
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -13,12 +14,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToRe
     public class GivenMunicipalityWasNotRetired : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipalityWasNotRetired(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Fact]
@@ -26,14 +29,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToRe
         {
             var commandCorrectMunicipality = Fixture.Create<CorrectToRetiredMunicipality>();
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                 })
                 .When(commandCorrectMunicipality)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityWasCorrectedToRetired(_municipalityId))
+                    new Fact(_streamId, new MunicipalityWasCorrectedToRetired(_municipalityId))
                 }));
         }
 
@@ -42,7 +45,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToRe
         {
             var commandCorrectMunicipality = Fixture.Create<CorrectToRetiredMunicipality>();
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityWasCorrectedToRetired>(),

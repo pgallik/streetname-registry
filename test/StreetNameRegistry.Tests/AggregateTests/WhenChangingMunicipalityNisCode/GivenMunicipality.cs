@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using Exceptions;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -14,12 +15,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
     public class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipality(ITestOutputHelper output) : base(output)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Fact]
@@ -29,12 +32,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
                 .WithMunicipalityId(_municipalityId);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId,
+                    new Fact(_streamId,
                         new MunicipalityNisCodeWasChanged(command.MunicipalityId, command.NisCode))
                 }));
         }
@@ -48,12 +51,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
                 .WithNisCode(nisCode);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityNisCodeWasChanged(command.MunicipalityId, nisCode))
+                    new Fact(_streamId, new MunicipalityNisCodeWasChanged(command.MunicipalityId, nisCode))
                 }));
         }
 
@@ -65,7 +68,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
                 .WithNisCode(null);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
                 .Throws(new NoNisCodeException("NisCode of a municipality cannot be empty.")));
@@ -80,7 +83,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
                 .WithNisCode(new NisCode(municipalityWasImported.NisCode));
 
             Assert(new Scenario()
-                .Given(_municipalityId, municipalityWasImported)
+                .Given(_streamId, municipalityWasImported)
                 .When(command)
                 .ThenNone());
         }

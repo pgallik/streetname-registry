@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -13,12 +14,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
     public class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipality(ITestOutputHelper output) : base(output)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Fact]
@@ -28,10 +31,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
                 .WithMunicipalityId(_municipalityId);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
-                .Then(new Fact(_municipalityId, new MunicipalityWasRetired(command.MunicipalityId))));
+                .Then(new Fact(_streamId, new MunicipalityWasRetired(command.MunicipalityId))));
         }
 
         [Fact]
@@ -44,7 +47,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringMunicipality
 
             Assert(new Scenario()
                 .Given(
-                    _municipalityId,
+                    _streamId,
                     municipalityWasImported,
                     municipalityWasRetired
                 )

@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenNamingMunicipality
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -13,12 +14,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenNamingMunicipality
     public class GivenMunicipalityWasNotAlreadyNamed : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipalityWasNotAlreadyNamed(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
 
@@ -31,14 +34,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenNamingMunicipality
         {
             var commandNameMunicipality = Fixture.Create<NameMunicipality>().WithName("GreatName", language);
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                 })
                 .When(commandNameMunicipality)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))
+                    new Fact(_streamId, new MunicipalityWasNamed(_municipalityId, new MunicipalityName("GreatName", language)))
                 }));
         }
     }

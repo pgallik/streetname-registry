@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -14,12 +15,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
     public class GivenMunicipalityHasAOfficialLanguage : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipalityHasAOfficialLanguage(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Theory]
@@ -33,7 +36,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
             var commandLanguageAdded = Fixture.Create<AddOfficialLanguageToMunicipality>();
 
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityOfficialLanguageWasAdded>()
@@ -53,7 +56,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
             var commandLanguageAdded = Fixture.Create<AddOfficialLanguageToMunicipality>();
 
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityOfficialLanguageWasAdded>(),
@@ -62,7 +65,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
                 .When(commandLanguageAdded)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, language))
+                    new Fact(_streamId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, language))
                 }));
         }
 
@@ -73,7 +76,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
             var commandAddedEnglish = Fixture.Create<AddOfficialLanguageToMunicipality>().WithLanguage(Language.English);
             var commandAddedDutch = Fixture.Create<AddOfficialLanguageToMunicipality>().WithLanguage(Language.Dutch);
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                     commandAddedEnglish.ToEvent(),
@@ -82,7 +85,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityOfficial
                 .When(languageAddGerman)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.German))
+                    new Fact(_streamId, new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.German))
                 }));
         }
     }

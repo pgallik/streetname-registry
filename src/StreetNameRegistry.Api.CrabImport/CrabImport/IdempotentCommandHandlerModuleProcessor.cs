@@ -26,7 +26,8 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
             Func<IStreamStore> getStreamStore,
             EventMapping eventMapping,
             EventSerializer eventSerializer,
-            CrabStreetNameProvenanceFactory provenanceFactory)
+            CrabStreetNameProvenanceFactory provenanceFactory,
+            StreetNameLegacyProvenanceFactory legacyProvenanceFactory)
         {
             _getStreetNames = getStreetNames;
             _concurrentUnitOfWork = concurrentUnitOfWork;
@@ -38,7 +39,8 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
                 getStreamStore,
                 eventMapping,
                 eventSerializer,
-                provenanceFactory);
+                provenanceFactory,
+                legacyProvenanceFactory);
         }
 
         public async Task<CommandMessage> Process(

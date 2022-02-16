@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands;
     using StreetName.Events;
     using Testing;
@@ -14,12 +15,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
     public class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipality(ITestOutputHelper output) : base(output)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Fact]
@@ -31,10 +34,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
 
             // Act, Assert
             Assert(new Scenario()
-                .Given(_municipalityId, municipalityWasImported)
+                .Given(_streamId, municipalityWasImported)
                 .When(command)
                 .Then(
-                    new Fact(_municipalityId, new StreetNameWasMigratedToMunicipality(
+                    new Fact(_streamId, new StreetNameWasMigratedToMunicipality(
                         _municipalityId,
                         command.StreetNameId,
                         command.PersistentLocalId,
@@ -61,7 +64,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
 
             // Act, Assert
             Assert(new Scenario()
-                .Given(_municipalityId, municipalityWasImported, streetNameMigratedToMunicipality)
+                .Given(_streamId, municipalityWasImported, streetNameMigratedToMunicipality)
                 .When(command)
                 .Throws(new InvalidOperationException($"Cannot migrate StreetName with id '{persistentLocalId}' in municipality '{_municipalityId}'.")));
         }

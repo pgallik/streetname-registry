@@ -16,12 +16,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
     public class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipality(ITestOutputHelper output) : base(output)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Fact]
@@ -40,11 +42,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
             //Act, assert
             Assert(new Scenario()
-                .Given(_municipalityId, municipalityWasImported, municipalityOfficialLanguageWasAdded)
+                .Given(_streamId, municipalityWasImported, municipalityOfficialLanguageWasAdded)
                 .When(command)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
+                    new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
                 }));
         }
 
@@ -61,7 +63,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithMunicipalityId(_municipalityId);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     municipalityWasImported,
                     streetNameWasProposed)
                 .When(command)
@@ -83,7 +85,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithStreetNameNames(new Names { existingStreetNameName, newStreetNameName });
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     municipalityWasImported,
                     streetNameWasProposed)
                 .When(command)
@@ -109,14 +111,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithStreetNameNames(new Names { newStreetNameName });
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     municipalityWasImported,
                     municipalityOfficialLanguageWasAdded,
                     streetNameWasProposed)
                 .When(command)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
+                    new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))
                 }));
         }
 
@@ -131,7 +133,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithRandomStreetName(Fixture);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     municipalityWasImported,
                     municipalityWasRetired)
                 .When(command)
@@ -155,7 +157,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithStreetNameNames(names);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     municipalityWasImported,
                     municipalityOfficialLanguageWasAdded)
                 .When(command)
@@ -179,7 +181,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithStreetNameNames(names);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     municipalityWasImported,
                     municipalityFacilityLanguageWasAdded)
                 .When(command)
@@ -205,7 +207,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                 .WithStreetNameNames(names);
 
             Assert(new Scenario()
-                .Given(_municipalityId,
+                .Given(_streamId,
                     municipalityWasImported,
                     municipalityDutchOfficialLanguageWasAdded,
                     municipalityFacilityLanguageWasAdded)

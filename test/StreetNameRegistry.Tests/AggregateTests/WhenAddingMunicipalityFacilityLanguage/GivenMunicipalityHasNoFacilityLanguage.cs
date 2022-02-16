@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands.Municipality;
     using StreetName.Events;
     using Testing;
@@ -13,12 +14,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
     public class GivenMunicipalityHasNoFacilityLanguage : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
+        private readonly MunicipalityStreamId _streamId;
 
         public GivenMunicipalityHasNoFacilityLanguage(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture.Customize(new InfrastructureCustomization());
             Fixture.Customize(new WithFixedMunicipalityId());
             _municipalityId = Fixture.Create<MunicipalityId>();
+            _streamId = Fixture.Create<MunicipalityStreamId>();
         }
 
         [Theory]
@@ -31,14 +34,14 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
             Fixture.Register(() => language);
             var commandLanguageAdded = Fixture.Create<AddFacilityLanguageToMunicipality>();
             Assert(new Scenario()
-                .Given(_municipalityId, new object[]
+                .Given(_streamId, new object[]
                 {
                     Fixture.Create<MunicipalityWasImported>(),
                 })
                 .When(commandLanguageAdded)
                 .Then(new[]
                 {
-                    new Fact(_municipalityId, new MunicipalityFacilityLanguageWasAdded(_municipalityId, language))
+                    new Fact(_streamId, new MunicipalityFacilityLanguageWasAdded(_municipalityId, language))
                 }));
         }
     }
