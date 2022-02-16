@@ -1,3 +1,10 @@
+## [2.46.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.0...v2.46.1) (2022-02-16)
+
+
+### Bug Fixes
+
+* bump Kafka Simple ([00e49c2](https://github.com/informatievlaanderen/streetname-registry/commit/00e49c2693886e830be8aa9990a6b4bd0ce3505c))
+
 # [2.46.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.45.2...v2.46.0) (2022-02-16)
 
 
