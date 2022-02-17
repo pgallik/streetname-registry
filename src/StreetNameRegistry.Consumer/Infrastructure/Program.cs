@@ -19,15 +19,18 @@ namespace StreetNameRegistry.Consumer.Infrastructure
 
     public class Program
     {
-        private static readonly AutoResetEvent Closing = new AutoResetEvent(false);
-        private static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        private static readonly AutoResetEvent closing = new AutoResetEvent(false);
+        private static readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        protected Program()
+        { }
 
         public static async Task Main(string[] args)
         {
-            var ct = CancellationTokenSource.Token;
+            var cancellationToken = cancellationTokenSource.Token;
 
-            ct.Register(() => Closing.Set());
-            Console.CancelKeyPress += (sender, eventArgs) => CancellationTokenSource.Cancel();
+            cancellationToken.Register(() => closing.Set());
+            Console.CancelKeyPress += (sender, eventArgs) => cancellationTokenSource.Cancel();
 
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
                 Log.Debug(
@@ -42,6 +45,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{Environment.MachineName.ToLowerInvariant()}.json", optional: true, reloadOnChange: false)
+                .AddUserSecrets<Program>()
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .Build();
@@ -58,22 +62,22 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                         try
                         {
                             var loggerFactory = container.GetRequiredService<ILoggerFactory>();
-                            await MigrationsHelper.RunAsync(configuration.GetConnectionString("ConsumerAdmin"), loggerFactory, ct);
+                            await MigrationsHelper.RunAsync(configuration.GetConnectionString("ConsumerAdmin"), loggerFactory, cancellationToken);
 
                             var bootstrapServers = configuration["Kafka:BootstrapServers"];
-                            var kafkaOptions = new KafkaOptions(bootstrapServers, EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
+                            var kafkaOptions = new KafkaOptions(bootstrapServers, configuration["Kafka:Authentication"].FromString(), configuration["Kafka:SaslUserName"], configuration["Kafka:SaslPassword"], EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
                             var topic = $"{configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
-                            var consumerGroupSuffix = $"{configuration["MunicipalityConsumerGroupSuffix"]}" ?? "";
+                            var consumerGroupSuffix = configuration["MunicipalityConsumerGroupSuffix"];
                             var consumerOptions = new ConsumerOptions(topic, consumerGroupSuffix);
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();
 
                             var projectionsManager = actualContainer.Resolve<IConnectedProjectionsManager>();
-                            var projectionsTask = projectionsManager.Start(ct);
+                            var projectionsTask = projectionsManager.Start(cancellationToken);
 
                             var consumer = new Consumer(actualContainer, loggerFactory, kafkaOptions, consumerOptions);
-                            var consumerTask = consumer.Start(ct);
+                            var consumerTask = consumer.Start(cancellationToken);
 
                             await Task.WhenAll(projectionsTask, consumerTask);
                         }
@@ -97,7 +101,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
             }
 
             Log.Information("Stopping...");
-            Closing.Close();
+            closing.Close();
         }
 
         private static IServiceProvider ConfigureServices(IConfiguration configuration)
