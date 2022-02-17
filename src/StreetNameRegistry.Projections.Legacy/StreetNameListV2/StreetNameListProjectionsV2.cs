@@ -1,11 +1,13 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using NodaTime;
+    using StreetName;
     using StreetName.Events;
     using StreetNameList;
     using StreetNameName = StreetNameRegistry.StreetNameName;
@@ -16,6 +18,31 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
     {
         public StreetNameListProjectionsV2()
         {
+            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            {
+                var municipality =
+                    await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId,
+                        cancellationToken: ct);
+
+                var streetNameListItemV2 = new StreetNameListItemV2
+                {
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    NisCode = message.Message.NisCode,
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    Removed = message.Message.IsRemoved,
+                    PrimaryLanguage = municipality.PrimaryLanguage,
+                    Status = message.Message.Status
+                };
+
+                UpdateNameByLanguage(streetNameListItemV2, new Names(message.Message.Names));
+                UpdateHomonymAdditionByLanguage(streetNameListItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+
+                await context
+                    .StreetNameListV2
+                    .AddAsync(streetNameListItemV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var municipality =
@@ -101,25 +128,30 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
             }
         }
 
-        private static void UpdateHomonymAdditionByLanguage(StreetNameListItem entity, Language? language, string homonymAddition)
+        private static void UpdateHomonymAdditionByLanguage(StreetNameListItemV2 entity, List<StreetNameHomonymAddition> homonymAdditions)
         {
-            switch (language)
+            foreach (var homonymAddition in homonymAdditions)
             {
-                case Language.Dutch:
-                    entity.HomonymAdditionDutch = homonymAddition;
-                    break;
+                switch (homonymAddition.Language)
+                {
+                    case Language.Dutch:
+                        entity.HomonymAdditionDutch = homonymAddition.HomonymAddition;
+                        break;
 
-                case Language.French:
-                    entity.HomonymAdditionFrench = homonymAddition;
-                    break;
+                    case Language.French:
+                        entity.HomonymAdditionFrench = homonymAddition.HomonymAddition;
+                        break;
 
-                case Language.German:
-                    entity.HomonymAdditionGerman = homonymAddition;
-                    break;
+                    case Language.German:
+                        entity.HomonymAdditionGerman = homonymAddition.HomonymAddition;
+                        break;
 
-                case Language.English:
-                    entity.HomonymAdditionEnglish = homonymAddition;
-                    break;
+                    case Language.English:
+                        entity.HomonymAdditionEnglish = homonymAddition.HomonymAddition;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(homonymAddition.Language), homonymAddition.Language, null);
+                }
             }
         }
 

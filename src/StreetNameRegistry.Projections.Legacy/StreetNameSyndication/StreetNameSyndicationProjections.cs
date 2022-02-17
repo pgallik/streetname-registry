@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
+    using StreetName;
     using StreetName.Events;
     using StreetName.Events.Crab;
     using StreetNameName = StreetNameRegistry.StreetNameName;
@@ -232,6 +233,32 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
             #endregion
 
+            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            {
+                var streetNameSyndicationItem = new StreetNameSyndicationItem
+                {
+                    Position = message.Position,
+                    StreetNameId = message.Message.StreetNameId,
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    NisCode = message.Message.NisCode,
+                    RecordCreatedAt = message.Message.Provenance.Timestamp,
+                    LastChangedOn = message.Message.Provenance.Timestamp,
+                    ChangeType = message.EventName,
+                    SyndicationItemCreatedAt = DateTimeOffset.UtcNow,
+                    Status = message.Message.Status,
+                    IsComplete = true
+                };
+                UpdateNameByLanguage(streetNameSyndicationItem, new Names(message.Message.Names));
+                UpdateHomonymAdditionByLanguage(streetNameSyndicationItem, new HomonymAdditions(message.Message.HomonymAdditions));
+                streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
+                streetNameSyndicationItem.SetEventData(message.Message, message.EventName);
+
+                await context
+                    .StreetNameSyndication
+                    .AddAsync(streetNameSyndicationItem, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameSyndicationItem = new StreetNameSyndicationItem
@@ -243,7 +270,9 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     RecordCreatedAt = message.Message.Provenance.Timestamp,
                     LastChangedOn = message.Message.Provenance.Timestamp,
                     ChangeType = message.EventName,
-                    SyndicationItemCreatedAt = DateTimeOffset.UtcNow
+                    SyndicationItemCreatedAt = DateTimeOffset.UtcNow,
+                    Status = StreetNameStatus.Proposed,
+                    IsComplete = true
                 };
                 UpdateNameByLanguage(streetNameSyndicationItem, message.Message.StreetNameNames);
                 streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
@@ -295,6 +324,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             foreach (var streetNameName in streetNameNames)
             {
                 UpdateNameByLanguage(streetNameSyndicationItem, streetNameName.Name, streetNameName.Language);
+            }
+        }
+
+        private static void UpdateHomonymAdditionByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, List<StreetNameHomonymAddition> homonymAdditions)
+        {
+            foreach (var homonymAddition in homonymAdditions)
+            {
+                UpdateHomonymAdditionByLanguage(streetNameSyndicationItem, homonymAddition.HomonymAddition, homonymAddition.Language);
             }
         }
 

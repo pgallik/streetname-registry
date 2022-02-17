@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using NodaTime;
+    using StreetName;
     using StreetName.Events;
     using StreetNameName = StreetNameRegistry.StreetNameName;
 
@@ -14,6 +15,26 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
     {
         public StreetNameDetailProjectionsV2()
         {
+            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            {
+                var streetNameDetailV2 = new StreetNameDetailV2
+                {
+                    MunicipalityId = message.Message.MunicipalityId,
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    NisCode = message.Message.NisCode,
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    Removed = message.Message.IsRemoved,
+                    Status = message.Message.Status
+                };
+
+                UpdateNameByLanguage(streetNameDetailV2, new Names(message.Message.Names));
+                UpdateHomonymAdditionByLanguage(streetNameDetailV2, new HomonymAdditions(message.Message.HomonymAdditions));
+
+                await context
+                    .StreetNameDetailV2
+                    .AddAsync(streetNameDetailV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameDetailV2 = new StreetNameDetailV2
@@ -56,35 +77,35 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(streetNameName), streetNameName, null);
+                        throw new ArgumentOutOfRangeException(nameof(streetNameName.Language), streetNameName.Language, null);
                 }
             }
         }
 
-        private static void UpdateHomonymAdditionByLanguage(StreetNameDetailV2 entity, Language? language, string homonymAddition)
+        private static void UpdateHomonymAdditionByLanguage(StreetNameDetailV2 entity, List<StreetNameHomonymAddition> homonymAdditions)
         {
-            if (entity == null)
-                return;
-
-            switch (language)
+            foreach (var homonymAddition in homonymAdditions)
             {
-                case Language.Dutch:
-                    entity.HomonymAdditionDutch = homonymAddition;
-                    break;
+                switch (homonymAddition.Language)
+                {
+                    case Language.Dutch:
+                        entity.HomonymAdditionDutch = homonymAddition.HomonymAddition;
+                        break;
 
-                case Language.French:
-                    entity.HomonymAdditionFrench = homonymAddition;
-                    break;
+                    case Language.French:
+                        entity.HomonymAdditionFrench = homonymAddition.HomonymAddition;
+                        break;
 
-                case Language.German:
-                    entity.HomonymAdditionGerman = homonymAddition;
-                    break;
+                    case Language.German:
+                        entity.HomonymAdditionGerman = homonymAddition.HomonymAddition;
+                        break;
 
-                case Language.English:
-                    entity.HomonymAdditionEnglish = homonymAddition;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(language), language, null);
+                    case Language.English:
+                        entity.HomonymAdditionEnglish = homonymAddition.HomonymAddition;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(homonymAddition.Language), homonymAddition.Language, null);
+                }
             }
         }
 
