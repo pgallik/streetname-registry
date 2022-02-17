@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Projections.Wfs
         public override string ProjectionStateSchema => Schema.Wfs;
 
         public DbSet<StreetName.StreetNameHelper> StreetNameHelper { get; set; }
+        public DbSet<StreetNameHelperV2.StreetNameHelperV2> StreetNameHelperV2 { get; set; }
 
         public DbSet<T> Get<T>() where T : class, new()
         {
