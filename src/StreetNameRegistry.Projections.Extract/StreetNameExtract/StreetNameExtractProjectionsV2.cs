@@ -11,6 +11,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using NodaTime;
+    using StreetName;
     using StreetName.Events;
     using StreetName.Events.Crab;
 
@@ -29,6 +30,40 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             _extractConfig = extractConfig.Value;
             _encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
 
+            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            {
+                var streetNameExtractItemV2 = new StreetNameExtractItemV2
+                {
+                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    Complete = message.Message.IsCompleted, // TODO: complete needed?
+                    DbaseRecord = new StreetNameDbaseRecord
+                    {
+                        gemeenteid = { Value = message.Message.NisCode },
+                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
+                    }.ToBytes(_encoding)
+                };
+                UpdateStraatnm(streetNameExtractItemV2, new Names(message.Message.Names));
+                UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+
+                switch (message.Message.Status)
+                {
+                    case StreetNameStatus.Current:
+                        UpdateStatus(streetNameExtractItemV2, InUse);
+                        break;
+                    case StreetNameStatus.Proposed:
+                        UpdateStatus(streetNameExtractItemV2, Proposed);
+                        break;
+                    case StreetNameStatus.Retired:
+                        UpdateStatus(streetNameExtractItemV2, Retired);
+                        break;
+                }
+
+                await context
+                    .StreetNameExtractV2
+                    .AddAsync(streetNameExtractItemV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameExtractItemV2 = new StreetNameExtractItemV2
@@ -42,6 +77,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     }.ToBytes(_encoding)
                 };
                 UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
+                UpdateStatus(streetNameExtractItemV2, Proposed);
                 await context
                     .StreetNameExtractV2
                     .AddAsync(streetNameExtractItemV2, ct);
@@ -63,25 +99,32 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
         }
 
-        private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, Language? language, string homonymAddition)
+        private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, List<StreetNameHomonymAddition> homonymAdditions)
             => UpdateRecord(streetName, record =>
             {
-                switch (language)
+                foreach (var streetNameHomonymAddition in homonymAdditions)
                 {
-                    case Language.Dutch:
-                        streetName.HomonymDutch = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    case Language.French:
-                        streetName.HomonymFrench = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    case Language.German:
-                        streetName.HomonymGerman = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    case Language.English:
-                        streetName.HomonymEnglish = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(language), language, null);
+                    switch (streetNameHomonymAddition.Language)
+                    {
+                        case Language.Dutch:
+                            streetName.HomonymDutch =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        case Language.French:
+                            streetName.HomonymFrench =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        case Language.German:
+                            streetName.HomonymGerman =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        case Language.English:
+                            streetName.HomonymEnglish =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(streetNameHomonymAddition.Language), streetNameHomonymAddition.Language, null);
+                    }
                 }
             });
 

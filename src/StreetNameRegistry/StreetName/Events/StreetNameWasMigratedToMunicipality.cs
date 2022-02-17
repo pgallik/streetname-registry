@@ -12,8 +12,10 @@ namespace StreetNameRegistry.StreetName.Events
     public class StreetNameWasMigratedToMunicipality : IHasMunicipalityId, IHasProvenance, ISetProvenance
     {
         public Guid MunicipalityId { get; }
+        public string NisCode { get; }
         public Guid StreetNameId { get; }
         public int PersistentLocalId { get; }
+        // TODO: status can be null if not complete
         public StreetNameStatus? Status { get; }
         public Language? PrimaryLanguage { get; }
         public Language? SecondaryLanguage { get; }
@@ -25,6 +27,7 @@ namespace StreetNameRegistry.StreetName.Events
         
         public StreetNameWasMigratedToMunicipality(
             MunicipalityId municipalityId,
+            NisCode nisCode,
             StreetNameId streetNameId,
             PersistentLocalId persistentLocalId,
             StreetNameStatus? status,
@@ -36,6 +39,7 @@ namespace StreetNameRegistry.StreetName.Events
             bool isRemoved)
         {
             MunicipalityId = municipalityId;
+            NisCode = nisCode;
             StreetNameId = streetNameId;
             PersistentLocalId = persistentLocalId;
             Status = status;
@@ -50,6 +54,7 @@ namespace StreetNameRegistry.StreetName.Events
         [JsonConstructor]
         private StreetNameWasMigratedToMunicipality(
             Guid municipalityId,
+            string nisCode,
             Guid streetNameId,
             int persistentLocalId,
             StreetNameStatus? status,
@@ -62,6 +67,7 @@ namespace StreetNameRegistry.StreetName.Events
             ProvenanceData provenance)
             : this(
                 new MunicipalityId(municipalityId),
+                new NisCode(nisCode),
                 new StreetNameId(streetNameId),
                 new PersistentLocalId(persistentLocalId),
                 status,

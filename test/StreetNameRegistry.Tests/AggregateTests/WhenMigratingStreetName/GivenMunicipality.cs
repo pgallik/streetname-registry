@@ -39,6 +39,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
                 .Then(
                     new Fact(_streamId, new StreetNameWasMigratedToMunicipality(
                         _municipalityId,
+                        new NisCode(municipalityWasImported.NisCode),
                         command.StreetNameId,
                         command.PersistentLocalId,
                         command.Status,

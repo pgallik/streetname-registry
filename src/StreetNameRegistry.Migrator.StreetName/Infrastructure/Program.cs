@@ -131,6 +131,8 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                     var streetNameId = new StreetNameId(Guid.Parse(id));
                     var streetName = await streetNameRepo.GetAsync(streetNameId, ct);
 
+                    // TODO: skip if streetname not complete (Mathieu)
+
                     var municipality =
                         await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
                             x.NisCode == streetName.NisCode, ct);
