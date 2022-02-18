@@ -1,3 +1,10 @@
+## [2.46.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.1...v2.46.2) (2022-02-18)
+
+
+### Bug Fixes
+
+* support kafka sasl authentication ([6f64b9d](https://github.com/informatievlaanderen/streetname-registry/commit/6f64b9ddd6242e2163c4599e5b124e01763b0d2e))
+
 ## [2.46.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.0...v2.46.1) (2022-02-16)
 
 
