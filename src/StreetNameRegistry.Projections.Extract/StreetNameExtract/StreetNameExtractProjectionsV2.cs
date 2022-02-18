@@ -4,16 +4,15 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Amazon.DynamoDBv2.Model;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using NodaTime;
     using StreetName;
     using StreetName.Events;
-    using StreetName.Events.Crab;
 
     [ConnectedProjectionName("Extract straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen extract voorziet.")]
@@ -46,18 +45,15 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 UpdateStraatnm(streetNameExtractItemV2, new Names(message.Message.Names));
                 UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
 
-                switch (message.Message.Status)
+                var status = message.Message.Status switch
                 {
-                    case StreetNameStatus.Current:
-                        UpdateStatus(streetNameExtractItemV2, InUse);
-                        break;
-                    case StreetNameStatus.Proposed:
-                        UpdateStatus(streetNameExtractItemV2, Proposed);
-                        break;
-                    case StreetNameStatus.Retired:
-                        UpdateStatus(streetNameExtractItemV2, Retired);
-                        break;
-                }
+                    StreetNameStatus.Current => InUse,
+                    StreetNameStatus.Proposed => Proposed,
+                    StreetNameStatus.Retired => Retired,
+                    _ => string.Empty // TODO: can be empty?
+                };
+
+                UpdateStatus(streetNameExtractItemV2, status);
 
                 await context
                     .StreetNameExtractV2
