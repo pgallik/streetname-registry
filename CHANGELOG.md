@@ -1,3 +1,10 @@
+## [2.46.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.2...v2.46.3) (2022-02-18)
+
+
+### Bug Fixes
+
+* update legacy projections migration event ([7beee58](https://github.com/informatievlaanderen/streetname-registry/commit/7beee58c8facbd09ddf15f77c4067a22205bd4df))
+
 ## [2.46.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.1...v2.46.2) (2022-02-18)
 
 
