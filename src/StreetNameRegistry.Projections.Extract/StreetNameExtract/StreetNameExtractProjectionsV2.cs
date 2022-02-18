@@ -4,15 +4,15 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Amazon.DynamoDBv2.Model;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
     using NodaTime;
+    using StreetName;
     using StreetName.Events;
-    using StreetName.Events.Crab;
 
     [ConnectedProjectionName("Extract straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen extract voorziet.")]
@@ -29,6 +29,37 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             _extractConfig = extractConfig.Value;
             _encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
 
+            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            {
+                var streetNameExtractItemV2 = new StreetNameExtractItemV2
+                {
+                    StreetNamePersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    Complete = message.Message.IsCompleted, // TODO: complete needed?
+                    DbaseRecord = new StreetNameDbaseRecord
+                    {
+                        gemeenteid = { Value = message.Message.NisCode },
+                        versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
+                    }.ToBytes(_encoding)
+                };
+                UpdateStraatnm(streetNameExtractItemV2, new Names(message.Message.Names));
+                UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
+
+                var status = message.Message.Status switch
+                {
+                    StreetNameStatus.Current => InUse,
+                    StreetNameStatus.Proposed => Proposed,
+                    StreetNameStatus.Retired => Retired,
+                    _ => string.Empty // TODO: can be empty?
+                };
+
+                UpdateStatus(streetNameExtractItemV2, status);
+
+                await context
+                    .StreetNameExtractV2
+                    .AddAsync(streetNameExtractItemV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameExtractItemV2 = new StreetNameExtractItemV2
@@ -42,6 +73,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     }.ToBytes(_encoding)
                 };
                 UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
+                UpdateStatus(streetNameExtractItemV2, Proposed);
                 await context
                     .StreetNameExtractV2
                     .AddAsync(streetNameExtractItemV2, ct);
@@ -63,25 +95,32 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
         }
 
-        private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, Language? language, string homonymAddition)
+        private void UpdateHomoniemtv(StreetNameExtractItemV2 streetName, List<StreetNameHomonymAddition> homonymAdditions)
             => UpdateRecord(streetName, record =>
             {
-                switch (language)
+                foreach (var streetNameHomonymAddition in homonymAdditions)
                 {
-                    case Language.Dutch:
-                        streetName.HomonymDutch = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    case Language.French:
-                        streetName.HomonymFrench = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    case Language.German:
-                        streetName.HomonymGerman = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    case Language.English:
-                        streetName.HomonymEnglish = homonymAddition?.Substring(0, Math.Min(homonymAddition.Length, 5));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(language), language, null);
+                    switch (streetNameHomonymAddition.Language)
+                    {
+                        case Language.Dutch:
+                            streetName.HomonymDutch =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        case Language.French:
+                            streetName.HomonymFrench =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        case Language.German:
+                            streetName.HomonymGerman =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        case Language.English:
+                            streetName.HomonymEnglish =
+                                streetNameHomonymAddition.HomonymAddition.Substring(0, Math.Min(streetNameHomonymAddition.HomonymAddition.Length, 5));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(streetNameHomonymAddition.Language), streetNameHomonymAddition.Language, null);
+                    }
                 }
             });
 

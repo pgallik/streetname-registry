@@ -141,6 +141,7 @@ namespace StreetNameRegistry.StreetName
 
             ApplyChange(new StreetNameWasMigratedToMunicipality(
                 _municipalityId,
+                _nisCode,
                 streetNameId,
                 persistentLocalId,
                 status,

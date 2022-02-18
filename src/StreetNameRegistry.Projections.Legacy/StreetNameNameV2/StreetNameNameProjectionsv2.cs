@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using NodaTime;
+    using StreetName;
     using StreetName.Events;
     using StreetNameName = StreetNameRegistry.StreetNameName;
 
@@ -16,6 +17,26 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     {
         public StreetNameNameProjectionsV2()
         {
+            When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
+            {
+                var streetNameNameV2 = new StreetNameNameV2
+                {
+                    PersistentLocalId = message.Message.PersistentLocalId,
+                    MunicipalityId = message.Message.MunicipalityId,
+                    NisCode = message.Message.NisCode,
+                    VersionTimestamp = message.Message.Provenance.Timestamp,
+                    Removed = message.Message.IsRemoved,
+                    Status = message.Message.Status,
+                    IsFlemishRegion = RegionFilter.IsFlemishRegion(message.Message.NisCode)
+                };
+
+                UpdateNameByLanguage(streetNameNameV2, new Names(message.Message.Names));
+
+                await context
+                    .StreetNameNamesV2
+                    .AddAsync(streetNameNameV2, ct);
+            });
+
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
                 var streetNameNameV2 = new StreetNameNameV2

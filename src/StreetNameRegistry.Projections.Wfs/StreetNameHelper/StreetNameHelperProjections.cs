@@ -267,25 +267,6 @@ namespace StreetNameRegistry.Projections.Wfs.StreetName
                     },
                     ct);
             });
-
-            When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
-            {
-                var entity = new StreetNameHelper
-                {
-                    MunicipalityId = message.Message.MunicipalityId,
-                    PersistentLocalId = message.Message.PersistentLocalId,
-                    NisCode = message.Message.NisCode,
-                    Complete = false,
-                    Removed = false,
-                    Status = StreetNameStatus.Proposed,
-                    Version = message.Message.Provenance.Timestamp,
-                };
-                UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
-                UpdateNameByLanguage(entity, message.Message.StreetNameNames);
-                await context
-                    .StreetNameHelper
-                    .AddAsync(entity, ct);
-            });
         }
 
         private static void UpdateNameByLanguage(StreetNameHelper entity, List<StreetNameName> streetNameNames)
