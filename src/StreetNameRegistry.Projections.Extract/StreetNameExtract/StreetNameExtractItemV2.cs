@@ -9,7 +9,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     {
         public Guid MunicipalityId { get; set; }
         public int StreetNamePersistentLocalId { get; set; }
-        public bool Complete { get; set; }
         public string? NameDutch { get; set; }
         public string? NameFrench { get; set; }
         public string? NameEnglish { get; set; }
@@ -33,7 +32,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 .IsClustered(false);
 
             builder.Property(p => p.StreetNamePersistentLocalId);
-            builder.Property(p => p.Complete);
             builder.Property(p => p.DbaseRecord);
             builder.Property(p => p.NameDutch);
             builder.Property(p => p.NameFrench);

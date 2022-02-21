@@ -153,7 +153,7 @@ namespace StreetNameRegistry.StreetName
                 _secondaryLanguage,
                 migrateNames,
                 migrateHomonymAdditions,
-                _isCompleted,
+                IsCompleted,
                 IsRemoved,
                 new Provenance(
                     SystemClock.Instance.GetCurrentInstant(),
@@ -371,11 +371,11 @@ namespace StreetNameRegistry.StreetName
 
         private void ApplyCompletion()
         {
-            if (_status == null && _isCompleted)
+            if (_status == null && IsCompleted)
             {
                 ApplyChange(new StreetNameBecameIncomplete(_streetNameId));
             }
-            else if (_status != null && !_isCompleted)
+            else if (_status != null && !IsCompleted)
             {
                 ApplyChange(new StreetNameBecameComplete(_streetNameId));
             }

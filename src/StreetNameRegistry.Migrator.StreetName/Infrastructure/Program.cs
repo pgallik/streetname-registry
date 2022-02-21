@@ -131,7 +131,16 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                     var streetNameId = new StreetNameId(Guid.Parse(id));
                     var streetName = await streetNameRepo.GetAsync(streetNameId, ct);
 
-                    // TODO: skip if streetname not complete (Mathieu)
+                    if (!streetName.IsCompleted)
+                    {
+                        if (streetName.IsRemoved)
+                        {
+                            logger.LogDebug($"Skipping incomplete & removed StreetnameId '{id}'.");
+                            continue;
+                        }
+
+                        throw new InvalidOperationException($"Incomplete but not removed Streetname '{id}'.");
+                    }
 
                     var municipality =
                         await consumerContext.MunicipalityConsumerItems.SingleOrDefaultAsync(x =>
