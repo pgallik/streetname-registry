@@ -21,12 +21,10 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private const string InUse = "InGebruik";
         private const string Proposed = "Voorgesteld";
         private const string Retired = "Gehistoreerd";
-        private readonly ExtractConfig _extractConfig;
         private readonly Encoding _encoding;
 
-        public StreetNameExtractProjectionsV2(IOptions<ExtractConfig> extractConfig, Encoding encoding)
+        public StreetNameExtractProjectionsV2(Encoding encoding)
         {
-            _extractConfig = extractConfig.Value;
             _encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
@@ -35,7 +33,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 {
                     StreetNamePersistentLocalId = message.Message.PersistentLocalId,
                     MunicipalityId = message.Message.MunicipalityId,
-                    Complete = true,
                     DbaseRecord = new StreetNameDbaseRecord
                     {
                         gemeenteid = { Value = message.Message.NisCode },

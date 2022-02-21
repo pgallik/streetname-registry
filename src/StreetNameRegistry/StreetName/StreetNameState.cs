@@ -9,8 +9,6 @@ namespace StreetNameRegistry.StreetName
     {
         private StreetNameId _streetNameId;
 
-        public bool IsCompleted;
-
         private StreetNameStatus? _status;
 
         private Language? _primaryLanguage;
@@ -21,6 +19,7 @@ namespace StreetNameRegistry.StreetName
         private readonly Names _names = new Names();
         private readonly Chronicle<StreetNameStatusWasImportedFromCrab, int> _statusChronicle = new Chronicle<StreetNameStatusWasImportedFromCrab, int>();
 
+        public bool IsCompleted { get; private set; }
         public bool IsMigrated { get; private set; } = false;
         public NisCode NisCode { get; private set; }
         public bool IsRemoved { get; private set; }
