@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     StreetNameStatus.Current => InUse,
                     StreetNameStatus.Proposed => Proposed,
                     StreetNameStatus.Retired => Retired,
-                    _ => string.Empty // TODO: can be empty?
+                    _ => throw new ArgumentOutOfRangeException(nameof(message.Message.Status))
                 };
 
                 UpdateStatus(streetNameExtractItemV2, status);
