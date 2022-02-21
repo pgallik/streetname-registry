@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 {
                     StreetNamePersistentLocalId = message.Message.PersistentLocalId,
                     MunicipalityId = message.Message.MunicipalityId,
-                    Complete = message.Message.IsCompleted, // TODO: complete needed?
+                    Complete = true,
                     DbaseRecord = new StreetNameDbaseRecord
                     {
                         gemeenteid = { Value = message.Message.NisCode },

@@ -9,7 +9,7 @@ namespace StreetNameRegistry.StreetName
     {
         private StreetNameId _streetNameId;
 
-        private bool _isCompleted;
+        public bool IsCompleted;
 
         private StreetNameStatus? _status;
 
@@ -88,12 +88,12 @@ namespace StreetNameRegistry.StreetName
 
         private void When(StreetNameBecameComplete @event)
         {
-            _isCompleted = true;
+            IsCompleted = true;
         }
 
         private void When(StreetNameBecameIncomplete @event)
         {
-            _isCompleted = false;
+            IsCompleted = false;
         }
 
         private void When(StreetNameSecondaryLanguageWasCorrectedToCleared @event)

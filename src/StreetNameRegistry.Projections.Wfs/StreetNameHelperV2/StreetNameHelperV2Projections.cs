@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
                     PersistentLocalId = message.Message.PersistentLocalId,
                     MunicipalityId = message.Message.MunicipalityId,
                     NisCode = message.Message.NisCode,
-                    Removed = false,
+                    Removed = message.Message.IsRemoved,
                     Status = message.Message.Status.Value,
                     Version = message.Message.Provenance.Timestamp,
                 };
