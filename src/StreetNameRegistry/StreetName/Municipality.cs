@@ -125,7 +125,7 @@ namespace StreetNameRegistry.StreetName
         public void MigrateStreetName(
             StreetNameId streetNameId,
             PersistentLocalId persistentLocalId,
-            StreetNameStatus? status,
+            StreetNameStatus status,
             Language? primaryLanguage,
             Language? secondaryLanguage,
             Names names,

@@ -13,7 +13,7 @@ namespace StreetNameRegistry.StreetName.Commands
         public MunicipalityId MunicipalityId { get; }
         public StreetNameId StreetNameId { get; }
         public PersistentLocalId PersistentLocalId { get; }
-        public StreetNameStatus? Status { get; }
+        public StreetNameStatus Status { get; }
         public Language? PrimaryLanguage { get; }
         public Language? SecondaryLanguage { get; }
         public Names Names { get; }
@@ -25,7 +25,7 @@ namespace StreetNameRegistry.StreetName.Commands
         public MigrateStreetNameToMunicipality(MunicipalityId municipalityId,
             StreetNameId streetNameId,
             PersistentLocalId persistentLocalId,
-            StreetNameStatus? status,
+            StreetNameStatus status,
             Language? primaryLanguage,
             Language? secondaryLanguage,
             Names names,
@@ -57,7 +57,7 @@ namespace StreetNameRegistry.StreetName.Commands
         {
             yield return StreetNameId;
             yield return IsCompleted;
-            yield return Status ?? StreetNameStatus.Current;
+            yield return Status;
             yield return PrimaryLanguage ?? Language.Dutch;
             yield return SecondaryLanguage ?? Language.Dutch;
             yield return PersistentLocalId;
