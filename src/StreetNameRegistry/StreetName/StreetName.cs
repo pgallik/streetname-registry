@@ -144,11 +144,13 @@ namespace StreetNameRegistry.StreetName
                 (homonymAddition.Language == _primaryLanguage && _primaryLanguage != null)
                 || (homonymAddition.Language == _secondaryLanguage && _secondaryLanguage != null)));
 
+            var status = _status ?? throw new InvalidOperationException($"No status found for StreetNameId '{_streetNameId}'");
+
             return new MigrateStreetNameToMunicipality(
                 municipalityId,
                 _streetNameId,
                 _persistentLocalId,
-                _status,
+                status,
                 _primaryLanguage,
                 _secondaryLanguage,
                 migrateNames,
