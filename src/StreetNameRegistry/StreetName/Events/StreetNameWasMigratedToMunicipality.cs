@@ -15,8 +15,7 @@ namespace StreetNameRegistry.StreetName.Events
         public string NisCode { get; }
         public Guid StreetNameId { get; }
         public int PersistentLocalId { get; }
-        // TODO: status can be null if not complete
-        public StreetNameStatus? Status { get; }
+        public StreetNameStatus Status { get; }
         public Language? PrimaryLanguage { get; }
         public Language? SecondaryLanguage { get; }
         public IDictionary<Language, string> Names { get; }
@@ -30,7 +29,7 @@ namespace StreetNameRegistry.StreetName.Events
             NisCode nisCode,
             StreetNameId streetNameId,
             PersistentLocalId persistentLocalId,
-            StreetNameStatus? status,
+            StreetNameStatus status,
             Language? primaryLanguage,
             Language? secondaryLanguage,
             Names names,
@@ -57,7 +56,7 @@ namespace StreetNameRegistry.StreetName.Events
             string nisCode,
             Guid streetNameId,
             int persistentLocalId,
-            StreetNameStatus? status,
+            StreetNameStatus status,
             Language? primaryLanguage,
             Language? secondaryLanguage,
             IDictionary<Language, string> names,

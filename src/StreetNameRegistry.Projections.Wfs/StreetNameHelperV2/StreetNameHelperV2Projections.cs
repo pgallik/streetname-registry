@@ -38,7 +38,7 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
                     MunicipalityId = message.Message.MunicipalityId,
                     NisCode = message.Message.NisCode,
                     Removed = message.Message.IsRemoved,
-                    Status = message.Message.Status.Value,
+                    Status = message.Message.Status,
                     Version = message.Message.Provenance.Timestamp,
                 };
                 UpdateVersionTimestamp(entity, message.Message.Provenance.Timestamp);
