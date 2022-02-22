@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using NodaTime;
+    using StreetName;
 
     public class StreetNameName
     {

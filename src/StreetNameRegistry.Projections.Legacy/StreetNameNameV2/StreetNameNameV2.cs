@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Municipality;
     using NodaTime;
 
     public class StreetNameNameV2

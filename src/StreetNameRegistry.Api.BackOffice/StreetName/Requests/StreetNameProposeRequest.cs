@@ -6,9 +6,9 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Convertors;
+    using Municipality;
+    using Municipality.Commands;
     using Newtonsoft.Json;
-    using StreetNameRegistry.StreetName;
-    using StreetNameRegistry.StreetName.Commands;
     using Swashbuckle.AspNetCore.Filters;
 
     [DataContract(Name = "VoorstelStraatnaam", Namespace = "")]

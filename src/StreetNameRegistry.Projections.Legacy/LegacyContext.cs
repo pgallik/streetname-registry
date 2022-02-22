@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Projections.Legacy
     using System;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner;
     using Infrastructure;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using StreetNameList;
     using StreetNameListV2;

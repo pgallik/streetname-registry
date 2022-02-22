@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Projections.Syndication;
     using Projections.Syndication.Municipality;
     using Responses;
+    using StreetNameRegistry.StreetName;
     using StreetNameName = Projections.Legacy.StreetNameName.StreetNameName;
 
     public class StreetNameBosaQuery
@@ -257,8 +258,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             ObjectId = request?.StraatnaamCode?.ObjectId;
             StreetNameVersion = request?.StraatnaamCode?.VersieId;
             StreetName = request?.Straatnaam?.Spelling;
-            Language = request?.Straatnaam?.Taal?.ConvertFromTaal();
-            Status = request?.StraatnaamStatus?.ConvertFromStraatnaamStatus();
+            Language = request?.Straatnaam?.Taal?.ConvertToStreetNameLanguage();
+            Status = request?.StraatnaamStatus?.ConvertToStreetNameStatus();
             MunicipalityObjectId = request?.GemeenteCode?.ObjectId;
             MunicipalityVersion = request?.GemeenteCode?.VersieId != null ? new Rfc3339SerializableDateTimeOffset(request.GemeenteCode.VersieId.Value).ToString() : string.Empty;
             IsContainsFilter = (request?.Straatnaam?.SearchType ?? BosaSearchType.Bevat) == BosaSearchType.Bevat;

@@ -1,6 +1,6 @@
-﻿namespace StreetNameRegistry.Tests.Testing
+namespace StreetNameRegistry.Tests.Testing
 {
-    using StreetName;
+    using Municipality;
 
     public class FakePersistentLocalIdGenerator : IPersistentLocalIdGenerator
     {

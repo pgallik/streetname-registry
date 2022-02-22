@@ -4,8 +4,8 @@ namespace StreetNameRegistry.Consumer.Projections
     using System.Threading.Tasks;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Microsoft.Extensions.Logging;
-    using StreetName.Commands;
 
     public class CommandHandler
     {

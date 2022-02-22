@@ -3,8 +3,8 @@ namespace StreetNameRegistry.Infrastructure.Repositories
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.EventHandling;
+    using Municipality;
     using SqlStreamStore;
-    using StreetName;
 
     public class Municipalities : Repository<Municipality, MunicipalityStreamId>, IMunicipalities
     {

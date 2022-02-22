@@ -5,9 +5,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
-    using StreetName;
-    using StreetName.Commands;
-    using StreetName.Events;
+    using Municipality;
+    using Municipality.Commands;
+    using Municipality.Events;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -57,6 +57,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
         {
             var persistentLocalId = 123456;
             Fixture.Register(() => new PersistentLocalId(persistentLocalId));
+            Fixture.Register(() => new StreetName.PersistentLocalId(persistentLocalId));
 
             var command = Fixture.Create<MigrateStreetNameToMunicipality>();
 

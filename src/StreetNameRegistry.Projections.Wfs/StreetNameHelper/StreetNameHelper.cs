@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Projections.Wfs.StreetName
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.Utilities;
+    using StreetNameRegistry.StreetName;
 
     public class StreetNameHelper
     {

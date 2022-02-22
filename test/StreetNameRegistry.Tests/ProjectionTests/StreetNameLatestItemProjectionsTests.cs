@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using FluentAssertions;
     using Generate;
     using Projections.Legacy.StreetNameDetail;
+    using StreetName;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

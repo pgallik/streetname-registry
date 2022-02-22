@@ -35,7 +35,7 @@ namespace StreetNameRegistry.StreetName
             this.ToDictionary(
                 x => x.Language ?? throw new ArgumentNullException(nameof(StreetNameName.Language)),
                 x => x.Name);
-
+        
         private void Update(Language? language, string name)
         {
             if (!HasLanguage(language))

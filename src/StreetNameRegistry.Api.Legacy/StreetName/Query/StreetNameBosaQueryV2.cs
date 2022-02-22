@@ -1,19 +1,24 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName.Query
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Bosa;
+    using Be.Vlaanderen.Basisregisters.Utilities;
     using Convertors;
     using Infrastructure.Options;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
+    using Municipality;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameNameV2;
     using Projections.Syndication;
     using Projections.Syndication.Municipality;
+    using Requests;
     using Responses;
 
     public class StreetNameBosaQueryV2
@@ -32,7 +37,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             _responseOptionsProvider = responseOptionsProvider;
         }
 
-        public async Task<StreetNameBosaResponse> FilterAsync(StreetNameNameFilter filter, CancellationToken ct = default)
+        public async Task<StreetNameBosaResponse> FilterAsync(StreetNameNameFilterV2 filter, CancellationToken ct = default)
         {
             var shouldFilterOnMunicipalityObjectId = !string.IsNullOrEmpty(filter.MunicipalityObjectId);
             var shouldFilterOnMunicipalityVersion =  !string.IsNullOrEmpty(filter.MunicipalityVersion);
@@ -72,19 +77,27 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             }
 
             if (filter.StreetNameVersion.HasValue)
+            {
                 streetNames = streetNames.Where(m => m.VersionTimestampAsDateTimeOffset == filter.StreetNameVersion.Value);
+            }
 
             if (filter.Status.HasValue)
+            {
                 streetNames = streetNames.Where(s => s.Status == filter.Status.Value);
+            }
 
             if (!string.IsNullOrEmpty(filter.StreetName))
+            {
                 streetNames = CompareByCompareType(
                     streetNames,
                     filter.StreetName,
                     filter.Language,
                     filter.IsContainsFilter);
+            }
             else if (filter.Language.HasValue)
+            {
                 streetNames = ApplyLanguageFilter(streetNames, filter.Language.Value);
+            }
 
             var names = await TransformAsync(streetNames, municipalities, filter.Language, ct);
 
@@ -119,7 +132,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     _responseOptionsProvider.Value.GemeenteNaamruimte,
                     streetName.VersionTimestamp.ToBelgianDateTimeOffset(),
                     municipality?.Version,
-                    streetName.Status.ConvertFromStreetNameStatus(),
+                    streetName.Status.ConvertFromMunicipalityStreetNameStatus(),
                     GetStreetNamesByLanguage(streetName, language),
                     GetMunicipalityNames(municipality)));
             }
@@ -234,6 +247,30 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                         ? query.Where(i => i.NameEnglishSearch.Contains(containsValue))
                         : query.Where(i => i.NameEnglish.Equals(searchValue));
             }
+        }
+    }
+
+    public class StreetNameNameFilterV2
+    {
+        public string ObjectId { get; set; }
+        public DateTimeOffset? StreetNameVersion { get; set; }
+        public string StreetName { get; set; }
+        public StreetNameStatus? Status { get; set; }
+        public Language? Language { get; set; }
+        public string MunicipalityObjectId { get; set; }
+        public string MunicipalityVersion { get; set; }
+        public bool IsContainsFilter { get; set; }
+
+        public StreetNameNameFilterV2(BosaStreetNameRequest request)
+        {
+            ObjectId = request?.StraatnaamCode?.ObjectId;
+            StreetNameVersion = request?.StraatnaamCode?.VersieId;
+            StreetName = request?.Straatnaam?.Spelling;
+            Language = request?.Straatnaam?.Taal?.ConvertToMunicipalityLanguage();
+            Status = request?.StraatnaamStatus?.ConvertToMunicipalityStreetNameStatus();
+            MunicipalityObjectId = request?.GemeenteCode?.ObjectId;
+            MunicipalityVersion = request?.GemeenteCode?.VersieId != null ? new Rfc3339SerializableDateTimeOffset(request.GemeenteCode.VersieId.Value).ToString() : string.Empty;
+            IsContainsFilter = (request?.Straatnaam?.SearchType ?? BosaSearchType.Bevat) == BosaSearchType.Bevat;
         }
     }
 }

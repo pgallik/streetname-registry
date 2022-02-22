@@ -3,9 +3,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityOffici
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
-    using StreetName;
-    using StreetName.Commands.Municipality;
-    using StreetName.Events;
+    using Municipality;
+    using Municipality.Commands;
+    using Municipality.Events;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

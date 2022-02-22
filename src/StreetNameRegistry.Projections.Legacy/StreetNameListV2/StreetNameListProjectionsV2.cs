@@ -6,11 +6,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
+    using Municipality;
+    using Municipality.Events;
     using NodaTime;
-    using StreetName;
-    using StreetName.Events;
     using StreetNameList;
-    using StreetNameName = StreetNameRegistry.StreetNameName;
+    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint lijst straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen lijst voorziet.")]

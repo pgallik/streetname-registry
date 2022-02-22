@@ -1,13 +1,14 @@
 namespace StreetNameRegistry.Consumer.Projections
 {
     using System;
+    using System.Security;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts;
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using NodaTime.Text;
-    using StreetName.Commands.Municipality;
-    using StreetName.Commands;
+    using StreetNameRegistry.Municipality;
+    using StreetNameRegistry.Municipality.Commands;
     using Contracts = Be.Vlaanderen.Basisregisters.GrAr.Contracts.Common;
     using Provenance = Be.Vlaanderen.Basisregisters.GrAr.Provenance.Provenance;
 
@@ -18,7 +19,7 @@ namespace StreetNameRegistry.Consumer.Projections
                 InstantPattern.General.Parse(provenance.Timestamp).GetValueOrThrow(),
                 Enum.Parse<Application>(provenance.Application),
                 new Reason(provenance.Reason),
-                new Operator(provenance.Operator),
+                new Operator(string.Empty), // TODO: municipality registry?
                 Enum.Parse<Modification>(provenance.Modification),
                 Enum.Parse<Organisation>(provenance.Organisation));
 
@@ -110,9 +111,9 @@ namespace StreetNameRegistry.Consumer.Projections
                     FromProvenance(msg.Provenance));
             }
 
-            if (type == typeof(MunicipalityFacilitiesLanguageWasRemoved))
+            if (type == typeof(MunicipalityFacilityLanguageWasRemoved))
             {
-                var msg = (MunicipalityFacilitiesLanguageWasRemoved)message;
+                var msg = (MunicipalityFacilityLanguageWasRemoved)message;
                 return new RemoveFacilityLanguageFromMunicipality(
                     MunicipalityId.CreateFor(msg.MunicipalityId),
                     Enum.Parse<Language>(msg.Language),
@@ -212,7 +213,7 @@ namespace StreetNameRegistry.Consumer.Projections
                 await commandHandler.Handle(command, ct);
             });
 
-            When<MunicipalityFacilitiesLanguageWasRemoved>(async (commandHandler, message, ct) =>
+            When<MunicipalityFacilityLanguageWasRemoved>(async (commandHandler, message, ct) =>
             {
                 var command = GetCommand(message);
                 await commandHandler.Handle(command, ct);

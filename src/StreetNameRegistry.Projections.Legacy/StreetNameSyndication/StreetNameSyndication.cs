@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Municipality;
     using NodaTime;
 
     public class StreetNameSyndicationItem

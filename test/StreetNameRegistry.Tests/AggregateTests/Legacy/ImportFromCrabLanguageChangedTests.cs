@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.Legacy
     using Assert;
     using Be.Vlaanderen.Basisregisters.Crab;
     using Generate;
+    using StreetName;
     using StreetName.Events;
     using Testing;
     using Xunit;

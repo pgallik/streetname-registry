@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Projections.Wfs.StreetName
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetNameRegistry.StreetName.Events;
     using NodaTime;
+    using StreetNameRegistry.StreetName;
 
     [ConnectedProjectionName("WFS straatnaam")]
     [ConnectedProjectionDescription("Projectie die de straatnaam data voor het WFS straatnaamregister voorziet.")]

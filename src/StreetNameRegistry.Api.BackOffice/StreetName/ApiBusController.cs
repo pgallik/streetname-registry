@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading;
@@ -15,7 +14,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.Utilities.HexByteConvertor;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     public abstract class ApiBusController : ApiController

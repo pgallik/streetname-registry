@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using NodaTime;
+    using Municipality;
 
     public class StreetNameHelperV2
     {

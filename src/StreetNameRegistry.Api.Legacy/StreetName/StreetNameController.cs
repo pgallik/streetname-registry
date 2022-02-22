@@ -1,7 +1,16 @@
 namespace StreetNameRegistry.Api.Legacy.StreetName
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Mime;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Xml;
     using Be.Vlaanderen.Basisregisters.Api;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Api.Search;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
     using Be.Vlaanderen.Basisregisters.Api.Search.Pagination;
     using Be.Vlaanderen.Basisregisters.Api.Search.Sorting;
@@ -9,7 +18,11 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Syndication;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
+    using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Straatnaam;
     using Convertors;
+    using Infrastructure;
+    using Infrastructure.FeatureToggles;
     using Infrastructure.Options;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -20,25 +33,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     using Microsoft.SyndicationFeed.Atom;
     using Projections.Legacy;
     using Projections.Legacy.StreetNameList;
+    using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
+    using Projections.Syndication.Municipality;
     using Query;
     using Requests;
     using Responses;
+    using StreetNameRegistry.StreetName;
     using Swashbuckle.AspNetCore.Filters;
-    using System;
-    using System.Linq;
-    using System.Net.Mime;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Xml;
-    using Be.Vlaanderen.Basisregisters.Api.Search;
-    using Infrastructure;
-    using Infrastructure.FeatureToggles;
-    using Projections.Legacy.Interfaces;
-    using Projections.Legacy.StreetNameDetail;
-    using Projections.Legacy.StreetNameDetailV2;
-    using Projections.Legacy.StreetNameListV2;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
 
     [ApiVersion("1.0")]
@@ -84,18 +86,63 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         {
             if (_useProjectionsV2Toggle.FeatureEnabled)
             {
-                return Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
-                    .FilterAsync<StreetNameDetailV2>(
-                        i => i.PersistentLocalId,
-                        i => i.PersistentLocalId == persistentLocalId
-                        , cancellationToken));
+                var streetNameV2 = await legacyContext
+                    .StreetNameDetailV2
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(x => x.PersistentLocalId == persistentLocalId, cancellationToken);
+
+                if (streetNameV2 == null)
+                    throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
+
+                if (streetNameV2.Removed)
+                    throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
+
+                var gemeenteV2 = await GetStraatnaamDetailGemeente(syndicationContext, streetNameV2.NisCode, responseOptions.Value.GemeenteDetailUrl,cancellationToken);
+
+
+                return Ok(new StreetNameResponse(
+                    responseOptions.Value.Naamruimte,
+                    persistentLocalId,
+                    streetNameV2.Status.ConvertFromMunicipalityStreetNameStatus(),
+                    gemeenteV2,
+                    streetNameV2.VersionTimestamp.ToBelgianDateTimeOffset(),
+                    streetNameV2.NameDutch,
+                    streetNameV2.NameFrench,
+                    streetNameV2.NameGerman,
+                    streetNameV2.NameEnglish,
+                    streetNameV2.HomonymAdditionDutch,
+                    streetNameV2.HomonymAdditionFrench,
+                    streetNameV2.HomonymAdditionGerman,
+                    streetNameV2.HomonymAdditionEnglish));
             }
 
-            return Ok(await new StreetNameDetailQuery(legacyContext, syndicationContext, responseOptions)
-                .FilterAsync<StreetNameDetail>(
-                    i => i.PersistentLocalId,
-                    i => i.PersistentLocalId == persistentLocalId
-                    , cancellationToken));
+            var streetName = await legacyContext
+                .StreetNameDetail
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.PersistentLocalId == persistentLocalId, cancellationToken);
+
+            if (streetName == null)
+                throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
+
+            if (streetName.Removed)
+                throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
+
+            var gemeente = await GetStraatnaamDetailGemeente(syndicationContext, streetName.NisCode, responseOptions.Value.GemeenteDetailUrl, cancellationToken);
+
+            return Ok(new StreetNameResponse(
+                responseOptions.Value.Naamruimte,
+                persistentLocalId,
+                streetName.Status.ConvertFromStreetNameStatus(),
+                gemeente,
+                streetName.VersionTimestamp.ToBelgianDateTimeOffset(),
+                streetName.NameDutch,
+                streetName.NameFrench,
+                streetName.NameGerman,
+                streetName.NameEnglish,
+                streetName.HomonymAdditionDutch,
+                streetName.HomonymAdditionFrench,
+                streetName.HomonymAdditionGerman,
+                streetName.HomonymAdditionEnglish));
         }
 
         /// <summary>
@@ -127,7 +174,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             if (_useProjectionsV2Toggle.FeatureEnabled)
             {
                 var pagedStreetNamesV2 =
-                    new StreetNameListQuery<StreetNameListItemV2>(legacyContext, syndicationContext)
+                    new StreetNameListQueryV2(legacyContext, syndicationContext)
                         .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination);
 
                 Response.AddPagedQueryResultHeaders(pagedStreetNamesV2);
@@ -143,14 +190,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                                 responseOptions.Value.DetailUrl,
                                 GetGeografischeNaamByTaal(m, m.PrimaryLanguage),
                                 GetHomoniemToevoegingByTaal(m, m.PrimaryLanguage),
-                                m.Status.ConvertFromStreetNameStatus(),
+                                m.Status.ConvertFromMunicipalityStreetNameStatus(),
                                 m.VersionTimestamp.ToBelgianDateTimeOffset()))
                             .ToListAsync(cancellationToken),
                         Volgende = BuildNextUri(pagedStreetNamesV2.PaginationInfo, responseOptions.Value.VolgendeUrl)
                     });
             }
 
-            var pagedStreetNames = new StreetNameListQuery<StreetNameListItem>(legacyContext, syndicationContext)
+            var pagedStreetNames = new StreetNameListQuery(legacyContext, syndicationContext)
                 .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination);
 
             Response.AddPagedQueryResultHeaders(pagedStreetNames);
@@ -200,7 +247,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 return Ok(
                     new TotaalAantalResponse
                     {
-                        Aantal = await new StreetNameListQuery<StreetNameListItemV2>(context, syndicationContext)
+                        Aantal = await new StreetNameListQueryV2(context, syndicationContext)
                             .Fetch<StreetNameListItemV2, StreetNameListItemV2>(filtering, sorting, pagination)
                             .Items
                             .CountAsync(cancellationToken)
@@ -211,7 +258,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 new TotaalAantalResponse
                 {
                     Aantal = filtering.ShouldFilter
-                        ? await new StreetNameListQuery<StreetNameListItem>(context, syndicationContext)
+                        ? await new StreetNameListQuery(context, syndicationContext)
                             .Fetch<StreetNameListItem, StreetNameListItem>(filtering, sorting, pagination)
                             .Items
                             .CountAsync(cancellationToken)
@@ -299,20 +346,21 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             if (Request.ContentLength.HasValue && Request.ContentLength > 0 && request == null)
                 return Ok(new StreetNameBosaResponse());
 
-            var filter = new StreetNameNameFilter(request);
-
             if (_useProjectionsV2Toggle.FeatureEnabled)
             {
+                var filterV2 = new StreetNameNameFilterV2(request);
+
                 var streetNameBosaResponseV2 = await
                     new StreetNameBosaQueryV2(
                             legacyContext,
                             syndicationContext,
                             responseOptions)
-                        .FilterAsync(filter, cancellationToken);
+                        .FilterAsync(filterV2, cancellationToken);
 
                 return Ok(streetNameBosaResponseV2);
             }
 
+            var filter = new StreetNameNameFilter(request);
             var streetNameBosaResponse = await
                 new StreetNameBosaQuery(
                         legacyContext,
@@ -323,7 +371,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             return Ok(streetNameBosaResponse);
         }
 
-        private static GeografischeNaam GetGeografischeNaamByTaal(IStreetNameListItem item, Language? taal)
+        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -353,7 +401,37 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             }
         }
 
-        private static GeografischeNaam GetHomoniemToevoegingByTaal(IStreetNameListItem item, Language? taal)
+        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItemV2 item, Municipality.Language? taal)
+        {
+            switch (taal)
+            {
+                case null when !string.IsNullOrEmpty(item.NameDutch):
+                case Municipality.Language.Dutch when !string.IsNullOrEmpty(item.NameDutch):
+                    return new GeografischeNaam(
+                        item.NameDutch,
+                        Taal.NL);
+
+                case Municipality.Language.French when !string.IsNullOrEmpty(item.NameFrench):
+                    return new GeografischeNaam(
+                        item.NameFrench,
+                        Taal.FR);
+
+                case Municipality.Language.German when !string.IsNullOrEmpty(item.NameGerman):
+                    return new GeografischeNaam(
+                        item.NameGerman,
+                        Taal.DE);
+
+                case Municipality.Language.English when !string.IsNullOrEmpty(item.NameEnglish):
+                    return new GeografischeNaam(
+                        item.NameEnglish,
+                        Taal.EN);
+
+                default:
+                    return null;
+            }
+        }
+
+        private static GeografischeNaam GetHomoniemToevoegingByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -374,6 +452,36 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                         Taal.DE);
 
                 case Language.English when !string.IsNullOrEmpty(item.HomonymAdditionEnglish):
+                    return new GeografischeNaam(
+                        item.HomonymAdditionEnglish,
+                        Taal.EN);
+
+                default:
+                    return null;
+            }
+        }
+
+        private static GeografischeNaam GetHomoniemToevoegingByTaal(StreetNameListItemV2 item, Municipality.Language? taal)
+        {
+            switch (taal)
+            {
+                case null when !string.IsNullOrEmpty(item.HomonymAdditionDutch):
+                case Municipality.Language.Dutch when !string.IsNullOrEmpty(item.HomonymAdditionDutch):
+                    return new GeografischeNaam(
+                        item.HomonymAdditionDutch,
+                        Taal.NL);
+
+                case Municipality.Language.French when !string.IsNullOrEmpty(item.HomonymAdditionFrench):
+                    return new GeografischeNaam(
+                        item.HomonymAdditionFrench,
+                        Taal.FR);
+
+                case Municipality.Language.German when !string.IsNullOrEmpty(item.HomonymAdditionGerman):
+                    return new GeografischeNaam(
+                        item.HomonymAdditionGerman,
+                        Taal.DE);
+
+                case Municipality.Language.English when !string.IsNullOrEmpty(item.HomonymAdditionEnglish):
                     return new GeografischeNaam(
                         item.HomonymAdditionEnglish,
                         Taal.EN);
@@ -437,6 +545,41 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             return from.HasValue
                 ? new Uri(string.Format(nextUrlBase, from, limit))
                 : null;
+        }
+
+        private async Task<StraatnaamDetailGemeente> GetStraatnaamDetailGemeente(SyndicationContext syndicationContext, string nisCode, string gemeenteDetailUrl, CancellationToken ct)
+        {
+            var municipality = await syndicationContext
+                .MunicipalityLatestItems
+                .AsNoTracking()
+                .OrderByDescending(m => m.Position)
+                .FirstOrDefaultAsync(m => m.NisCode == nisCode, ct);
+
+            var municipalityDefaultName = GetDefaultMunicipalityName(municipality);
+            var gemeente = new StraatnaamDetailGemeente
+            {
+                ObjectId = nisCode,
+                Detail = string.Format(gemeenteDetailUrl, nisCode),
+                Gemeentenaam = new Gemeentenaam(new GeografischeNaam(municipalityDefaultName.Value, municipalityDefaultName.Key))
+            };
+            return gemeente;
+        }
+
+        private static KeyValuePair<Taal, string> GetDefaultMunicipalityName(MunicipalityLatestItem municipality)
+        {
+            switch (municipality.PrimaryLanguage)
+            {
+                default:
+                case null:
+                case Taal.NL:
+                    return new KeyValuePair<Taal, string>(Taal.NL, municipality.NameDutch);
+                case Taal.FR:
+                    return new KeyValuePair<Taal, string>(Taal.FR, municipality.NameFrench);
+                case Taal.DE:
+                    return new KeyValuePair<Taal, string>(Taal.DE, municipality.NameGerman);
+                case Taal.EN:
+                    return new KeyValuePair<Taal, string>(Taal.EN, municipality.NameEnglish);
+            }
         }
     }
 }

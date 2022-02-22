@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Projections.LastChangedList
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
+    using Municipality.Events;
     using StreetName.Events;
     using StreetName.Events.Crab;
 

@@ -2,12 +2,12 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 {
     using System;
     using Infrastructure;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Municipality;
     using NodaTime;
 
-    public class StreetNameDetailV2 : IStreetNameDetail
+    public class StreetNameDetailV2
     {
         public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 

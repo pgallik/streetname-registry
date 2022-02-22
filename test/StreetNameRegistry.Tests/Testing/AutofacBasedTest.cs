@@ -8,8 +8,8 @@ namespace StreetNameRegistry.Tests.Testing
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing.SqlStreamStore.Autofac;
     using KellermanSoftware.CompareNetObjects;
     using Microsoft.Extensions.Logging;
+    using Municipality;
     using Newtonsoft.Json;
-    using StreetName;
     using Xunit.Abstractions;
 
     public abstract class AutofacBasedTest

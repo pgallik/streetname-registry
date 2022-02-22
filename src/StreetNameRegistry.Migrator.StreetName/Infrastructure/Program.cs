@@ -179,7 +179,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
         {
             var municipalityId = new MunicipalityId(municipality.MunicipalityId);
             var migrateCommand = streetName.CreateMigrateCommand(municipalityId);
-            var markMigrated = new MarkStreetNameMigrated(municipalityId, migrateCommand.StreetNameId, migrateCommand.Provenance);
+            var markMigrated = new MarkStreetNameMigrated(municipalityId, new StreetNameId(migrateCommand.StreetNameId), migrateCommand.Provenance);
 
             await using (var scope = actualContainer.BeginLifetimeScope())
             {

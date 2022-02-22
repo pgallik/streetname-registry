@@ -2,9 +2,9 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
 {
     using System;
     using Infrastructure;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using Municipality;
 
     public class StreetNameListMunicipality
     {
