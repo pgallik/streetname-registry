@@ -91,7 +91,6 @@ namespace StreetNameRegistry.Api.Extract.Extracts
             var extractItems = context
                 .StreetNameExtractV2
                 .AsNoTracking()
-                .Where(x => x.Complete)
                 .OrderBy(x => x.StreetNamePersistentLocalId);
 
             var streetNameProjectionState = context
