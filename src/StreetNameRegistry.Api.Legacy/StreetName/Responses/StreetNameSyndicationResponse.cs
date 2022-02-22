@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
     using Microsoft.Extensions.Options;
     using Microsoft.SyndicationFeed;
     using Microsoft.SyndicationFeed.Atom;
+    using Municipality;
     using Query;
     using Swashbuckle.AspNetCore.Filters;
     using Provenance = Be.Vlaanderen.Basisregisters.GrAr.Provenance.Syndication.Provenance;
@@ -197,7 +198,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             AggregateId = aggregateId;
             NisCode = nisCode;
             Identificator = new StraatnaamIdentificator(naamruimte, persistentLocalId?.ToString(CultureInfo.InvariantCulture), version);
-            StreetNameStatus = status?.ConvertFromStreetNameStatus();
+            StreetNameStatus = status?.ConvertFromMunicipalityStreetNameStatus();
             IsComplete = isComplete;
 
             var straatnamen = new List<GeografischeNaam>

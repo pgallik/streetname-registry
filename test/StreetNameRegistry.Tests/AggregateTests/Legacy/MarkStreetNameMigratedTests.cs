@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.Legacy
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using global::AutoFixture;
+    using StreetName;
     using StreetName.Commands;
     using StreetName.Events;
     using StreetName.Events.Crab;

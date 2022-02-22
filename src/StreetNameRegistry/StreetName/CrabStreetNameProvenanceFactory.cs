@@ -2,7 +2,6 @@ namespace StreetNameRegistry.StreetName
 {
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Commands;
 
     public class CrabStreetNameProvenanceFactory : CrabProvenanceFactory, IProvenanceFactory<StreetName>
     {

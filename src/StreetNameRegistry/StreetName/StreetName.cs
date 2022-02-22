@@ -5,9 +5,9 @@ namespace StreetNameRegistry.StreetName
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Crab;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Commands;
     using Events;
     using Events.Crab;
+    using Municipality.Commands;
     using NodaTime;
 
     public partial class StreetName : AggregateRootEntity
@@ -135,14 +135,16 @@ namespace StreetNameRegistry.StreetName
         {
             // Discussed with business, only send names for primary and secondary language which are not null
             var migrateNames = new Names();
-            migrateNames.AddRange(_names.Where(name =>
-                (name.Language == _primaryLanguage && _primaryLanguage != null)
-                || (name.Language == _secondaryLanguage && _secondaryLanguage != null)));
+            migrateNames.AddRange(_names
+                .Where(name =>
+                    (name.Language == _primaryLanguage && _primaryLanguage != null)
+                    || (name.Language == _secondaryLanguage && _secondaryLanguage != null)));
 
             var migrateHomonymAdditions = new HomonymAdditions();
-            migrateHomonymAdditions.AddRange(_homonymAdditions.Where(homonymAddition =>
-                (homonymAddition.Language == _primaryLanguage && _primaryLanguage != null)
-                || (homonymAddition.Language == _secondaryLanguage && _secondaryLanguage != null)));
+            migrateHomonymAdditions.AddRange(_homonymAdditions
+                .Where(homonymAddition =>
+                    (homonymAddition.Language == _primaryLanguage && _primaryLanguage != null)
+                    || (homonymAddition.Language == _secondaryLanguage && _secondaryLanguage != null)));
 
             var status = _status ?? throw new InvalidOperationException($"No status found for StreetNameId '{_streetNameId}'");
 

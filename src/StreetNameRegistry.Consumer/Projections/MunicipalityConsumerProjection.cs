@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Consumer.Projections
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Municipality;
-    using StreetName.Events;
+    using StreetNameRegistry.Municipality.Events;
 
     public class MunicipalityConsumerProjection : ConnectedProjection<ConsumerContext>
     {

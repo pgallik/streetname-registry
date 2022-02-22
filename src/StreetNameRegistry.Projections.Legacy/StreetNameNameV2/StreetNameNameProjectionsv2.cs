@@ -6,10 +6,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
+    using Municipality;
+    using Municipality.Events;
     using NodaTime;
-    using StreetName;
-    using StreetName.Events;
-    using StreetNameName = StreetNameRegistry.StreetNameName;
+    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor straatnamen ifv BOSA DT voorziet.")]

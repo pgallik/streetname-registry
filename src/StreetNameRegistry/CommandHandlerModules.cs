@@ -2,6 +2,7 @@ namespace StreetNameRegistry
 {
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
+    using Municipality;
     using StreetName;
 
     public static class CommandHandlerModules

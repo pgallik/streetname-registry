@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests
     using System;
     using Be.Vlaanderen.Basisregisters.Crab;
     using FluentAssertions;
+    using StreetName;
     using StreetName.Commands;
     using Xunit;
 

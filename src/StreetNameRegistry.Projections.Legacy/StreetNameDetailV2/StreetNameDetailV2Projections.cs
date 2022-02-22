@@ -4,10 +4,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
+    using Municipality;
+    using Municipality.Events;
     using NodaTime;
-    using StreetName;
-    using StreetName.Events;
-    using StreetNameName = StreetNameRegistry.StreetNameName;
+    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint detail straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen detail voorziet.")]

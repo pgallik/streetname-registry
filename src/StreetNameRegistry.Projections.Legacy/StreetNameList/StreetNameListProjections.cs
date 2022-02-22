@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using NodaTime;
+    using StreetName;
     using StreetName.Events;
     using StreetName.Events.Crab;
 

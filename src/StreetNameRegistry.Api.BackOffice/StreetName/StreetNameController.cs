@@ -14,7 +14,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Consumer;
     using Convertors;
-    using Exceptions;
     using FluentValidation;
     using FluentValidation.Results;
     using Microsoft.AspNetCore.Http;
@@ -23,8 +22,9 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Requests;
     using Infrastructure.Options;
     using Microsoft.EntityFrameworkCore;
+    using Municipality;
+    using Municipality.Exceptions;
     using NodaTime.Extensions;
-    using StreetNameRegistry.StreetName;
     using Swashbuckle.AspNetCore.Filters;
 
     [ApiVersion("2.0")]

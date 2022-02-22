@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.Assert
     using System;
     using FluentAssertions;
     using FluentAssertions.Primitives;
+    using StreetName;
     using StreetName.Events;
 
     public abstract class HasStreetNameIdAssertions<T, TAssertions> :

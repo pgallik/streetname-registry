@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Infrastructure.Modules
 {
     using Autofac;
+    using Municipality;
     using StreetName;
     using Repositories;
 

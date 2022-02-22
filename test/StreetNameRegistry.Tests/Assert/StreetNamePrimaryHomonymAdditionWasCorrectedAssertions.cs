@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests.Assert
 {
     using FluentAssertions;
+    using StreetName;
     using StreetName.Events;
 
     public class StreetNameHomonymAdditionWasCorrectedAssertions :

@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Convertors
 {
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using System;
+    using Municipality;
 
     public static class TaalMapper
     {

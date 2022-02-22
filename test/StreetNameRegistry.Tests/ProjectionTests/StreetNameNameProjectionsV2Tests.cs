@@ -6,9 +6,9 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using AutoFixture;
     using FluentAssertions;
     using global::AutoFixture;
+    using Municipality;
+    using Municipality.Events;
     using Projections.Legacy.StreetNameNameV2;
-    using StreetName;
-    using StreetName.Events;
     using Xunit;
 
     public class StreetNameNameProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameNameProjectionsV2>

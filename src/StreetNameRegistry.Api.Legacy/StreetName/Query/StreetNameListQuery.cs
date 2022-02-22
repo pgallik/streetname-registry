@@ -11,13 +11,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
     using Convertors;
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
-    using Projections.Legacy.Interfaces;
     using Projections.Legacy.StreetNameList;
-    using Projections.Legacy.StreetNameListV2;
     using Projections.Syndication;
 
-    public class StreetNameListQuery<T> : Query<T, StreetNameFilter>
-        where T : class, IStreetNameListItem
+    public class StreetNameListQuery : Query<StreetNameListItem, StreetNameFilter>
     {
         private readonly LegacyContext _legacyContext;
         private readonly SyndicationContext _syndicationContext;
@@ -30,46 +27,22 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             _syndicationContext = syndicationContext;
         }
 
-        protected override IQueryable<T> Filter(FilteringHeader<StreetNameFilter> filtering)
+        protected override IQueryable<StreetNameListItem> Filter(FilteringHeader<StreetNameFilter> filtering)
         {
-            IQueryable<T>? streetNames = default;
-            if (typeof(T) == typeof(StreetNameListItem))
-            {
-                streetNames = (_legacyContext
+            var streetNames = _legacyContext
                     .StreetNameList
                     .AsNoTracking()
                     .OrderBy(x => x.PersistentLocalId)
-                    .Where(s => !s.Removed && s.Complete && s.PersistentLocalId != null) as IQueryable<T>)!;
-            }
-
-            if (typeof(T) == typeof(StreetNameListItemV2))
-            {
-                streetNames = (_legacyContext
-                    .StreetNameListV2
-                    .AsNoTracking()
-                    .OrderBy(x => x.PersistentLocalId)
-                    .Where(s => !s.Removed) as IQueryable<T>)!;
-            }
-
-            if (streetNames == null)
-                throw new NotImplementedException();
+                    .Where(s => !s.Removed && s.Complete && s.PersistentLocalId != null);
 
             if (!filtering.ShouldFilter)
+            {
                 return streetNames;
+            }
 
             if (!string.IsNullOrEmpty(filtering.Filter.NisCode))
             {
-                if ((streetNames is IQueryable<StreetNameListItemV2> streetNamesV2))
-                {
-                    streetNamesV2 = streetNamesV2.Where(m => m.NisCode == filtering.Filter.NisCode);
-                    streetNames = streetNamesV2 as IQueryable<T>;
-                }
-
-                if ((streetNames is IQueryable<StreetNameListItem> streetNamesV1))
-                {
-                    streetNamesV1 = streetNamesV1.Where(m => m.NisCode == filtering.Filter.NisCode);
-                    streetNames = streetNamesV1 as IQueryable<T>;
-                }
+                streetNames = streetNames.Where(m => m.NisCode == filtering.Filter.NisCode);
             }
 
             if (!string.IsNullOrEmpty(filtering.Filter.NameDutch))
@@ -97,18 +70,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
                     .Select(x => x.NisCode)
                     .ToList();
 
-
-                if ((streetNames is IQueryable<StreetNameListItemV2> streetNamesV2))
-                {
-                    streetNamesV2 = streetNamesV2.Where(m => municipalityNisCodes.Contains(m.NisCode));
-                    streetNames = streetNamesV2 as IQueryable<T>;
-                }
-
-                if ((streetNames is IQueryable<StreetNameListItem> streetNamesV1))
-                {
-                    streetNamesV1 = streetNamesV1.Where(m => municipalityNisCodes.Contains(m.NisCode));
-                    streetNames = streetNamesV1 as IQueryable<T>;
-                }
+                streetNames = streetNames.Where(m => municipalityNisCodes.Contains(m.NisCode));
             }
 
             var filterStreetName = filtering.Filter.StreetNameName.RemoveDiacritics();
@@ -125,7 +87,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Query
             {
                 if (Enum.TryParse(typeof(StraatnaamStatus), filtering.Filter.Status, true, out var status))
                 {
-                    var streetNameStatus = ((StraatnaamStatus) status).ConvertFromStraatnaamStatus();
+                    var streetNameStatus = ((StraatnaamStatus) status).ConvertToStreetNameStatus();
                     streetNames = streetNames.Where(m => m.Status.HasValue && m.Status.Value == streetNameStatus);
                 }
                 else

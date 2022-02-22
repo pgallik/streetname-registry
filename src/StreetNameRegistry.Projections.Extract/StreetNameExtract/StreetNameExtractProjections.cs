@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Text;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Microsoft.Extensions.Options;
+    using StreetName;
     using StreetName.Events.Crab;
 
     [ConnectedProjectionName("Extract straatnamen")]

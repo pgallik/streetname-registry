@@ -7,10 +7,10 @@ namespace StreetNameRegistry.Tests.Testing
     using Api.BackOffice.StreetName;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
-    using StreetName.Commands;
     using Xunit.Abstractions;
 
     public class StreetNameRegistryBackOfficeTest : StreetNameRegistryTest

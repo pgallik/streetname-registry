@@ -12,9 +12,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using global::AutoFixture;
     using Infrastructure;
     using Moq;
-    using StreetName;
-    using StreetName.Commands;
-    using StreetName.Commands.Municipality;
+    using Municipality;
+    using Municipality.Commands;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetNameRegistry.Api.BackOffice.Validators;

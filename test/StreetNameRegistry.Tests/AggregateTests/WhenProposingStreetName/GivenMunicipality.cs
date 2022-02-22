@@ -4,11 +4,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Exceptions;
     using global::AutoFixture;
-    using StreetName;
-    using StreetName.Commands;
-    using StreetName.Events;
+    using Municipality;
+    using Municipality.Commands;
+    using Municipality.Events;
+    using Municipality.Exceptions;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

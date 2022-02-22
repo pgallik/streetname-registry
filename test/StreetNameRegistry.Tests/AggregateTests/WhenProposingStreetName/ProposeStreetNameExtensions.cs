@@ -2,8 +2,8 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 {
     using System.Collections.Generic;
     using global::AutoFixture;
-    using StreetName;
-    using StreetName.Commands;
+    using Municipality;
+    using Municipality.Commands;
 
     public static class ProposeStreetNameExtensions
     {

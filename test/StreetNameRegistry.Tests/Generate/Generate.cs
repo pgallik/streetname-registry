@@ -8,8 +8,10 @@ namespace StreetNameRegistry.Tests.Generate
     using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Municipality.Events;
     using NodaTime;
     using Projections.Syndication;
+    using StreetName;
 
     [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
     public static class Generate
@@ -217,13 +219,7 @@ namespace StreetNameRegistry.Tests.Generate
             return new Generator<string>(r =>
                 StreetNameString.Select(s => s + "_" + homonymAddition).Generate(r));
         }
-
-        public static Generator<MunicipalityWasImported> MunicipalityWasImported = new Generator<MunicipalityWasImported>(r =>
-            new MunicipalityWasImported(MunicipalityId.Generate(r), NisCode.Generate(r)));
-
-        public static Generator<MunicipalityNisCodeWasChanged> MunicipalityNisCodeWasChanged = new Generator<MunicipalityNisCodeWasChanged>(r =>
-            new MunicipalityNisCodeWasChanged(MunicipalityId.Generate(r), NisCode.Generate(r)));
-
+        
         public static Generator<T> This<T>(T t) => new Generator<T>(r => t);
 
         public static class EventsFor
@@ -252,40 +248,8 @@ namespace StreetNameRegistry.Tests.Generate
                         events.Add(StreetNameNameWasNamed
                             .Select(e => e.WithId(streetNameId)
                                 .WithName(nameDutch)
-                                .WithLanguage(StreetNameRegistry.Language.Dutch)
+                                .WithLanguage(StreetNameRegistry.StreetName.Language.Dutch)
                                 .WithProvenance(provenance)));
-
-                    return events.Select(e => e.Generate(r));
-                });
-            }
-
-            public static Generator<IEnumerable<object>> ImportedMunicipalities(Guid municipalityId, string nisCode)
-            {
-                return new Generator<IEnumerable<object>>(r =>
-                {
-                    var events = new List<IGenerator<object>>
-                    {
-                        MunicipalityWasImported
-                            .Select(e =>
-                                e.WithIdAndNisCode(municipalityId, nisCode))
-                    };
-
-                    return events.Select(e => e.Generate(r));
-                });
-            }
-
-            public static Generator<IEnumerable<object>> ChangedMunicipalityNisCodes(Guid municipalityId, string nisCode)
-            {
-                return new Generator<IEnumerable<object>>(r =>
-                {
-                    var events = new List<IGenerator<object>>
-                    {
-                        MunicipalityWasImported
-                            .Select(e => e.WithIdAndNisCode(municipalityId, nisCode)),
-                        MunicipalityNisCodeWasChanged
-                            .Select(e =>
-                                e.WithIdAndNisCode(municipalityId, nisCode))
-                    };
 
                     return events.Select(e => e.Generate(r));
                 });
@@ -372,16 +336,6 @@ namespace StreetNameRegistry.Tests.Generate
         public static StreetNameBecameComplete WithId(this StreetNameBecameComplete e, Guid id)
         {
             return new StreetNameBecameComplete(new StreetNameId(id));
-        }
-
-        public static MunicipalityWasImported WithIdAndNisCode(this MunicipalityWasImported e, Guid id, string nisCode)
-        {
-            return new MunicipalityWasImported(new MunicipalityId(id), new NisCode(nisCode));
-        }
-
-        public static MunicipalityNisCodeWasChanged WithIdAndNisCode(this MunicipalityNisCodeWasChanged e, Guid id, string nisCode)
-        {
-            return new MunicipalityNisCodeWasChanged(new MunicipalityId(id), new NisCode(nisCode));
         }
 
         public static StreetNameBecameComplete WithProvenance(this StreetNameBecameComplete e, Provenance provenance)

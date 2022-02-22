@@ -12,9 +12,9 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Generate;
     using global::AutoFixture;
     using Moq;
+    using Municipality;
     using NodaTime;
     using Projections.Legacy.StreetNameDetail;
-    using StreetName.Commands;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -48,7 +48,6 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     Instant.FromDateTimeOffset(DateTimeOffset.Now).ToString(),
                     Application.StreetNameRegistry.ToString(),
                     Modification.Unknown.ToString(),
-                    new Operator(""),
                     Organisation.DigitaalVlaanderen.ToString(),
                     new Reason("")
                     );
@@ -64,7 +63,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     new object[] { new MunicipalityOfficialLanguageWasAdded(id, language, provenance) },
                     new object[] { new MunicipalityOfficialLanguageWasRemoved(id, language, provenance) },
                     new object[] { new MunicipalityFacilityLanguageWasAdded(id, language, provenance) },
-                    new object[] { new MunicipalityFacilitiesLanguageWasRemoved(id, language, provenance) },
+                    new object[] { new MunicipalityFacilityLanguageWasRemoved(id, language, provenance) },
                     new object[] { new MunicipalityBecameCurrent(id, provenance) },
                     new object[] { new MunicipalityWasCorrectedToCurrent(id, provenance) },
                     new object[] { new MunicipalityWasRetired(id, retirementDate, provenance) },

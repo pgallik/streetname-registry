@@ -5,10 +5,12 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
-    using StreetName;
+    using Municipality;
+    using Municipality.Events;
     using StreetName.Events;
     using StreetName.Events.Crab;
-    using StreetNameName = StreetNameRegistry.StreetNameName;
+    using LanguageHelpers = StreetName.LanguageHelpers;
+    using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("Feed endpoint straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen feed voorziet.")]
@@ -53,7 +55,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateNameByLanguage(x, message.Message.Name, message.Message.Language),
+                    x => UpdateNameByLanguage(x, message.Message.Name, LanguageHelpers.ToMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
@@ -62,7 +64,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateNameByLanguage(x, null, message.Message.Language),
+                    x => UpdateNameByLanguage(x, null, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
@@ -71,7 +73,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateNameByLanguage(x, message.Message.Name, message.Message.Language),
+                    x => UpdateNameByLanguage(x, message.Message.Name, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
@@ -80,7 +82,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateNameByLanguage(x, null, message.Message.Language),
+                    x => UpdateNameByLanguage(x, null, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
@@ -89,7 +91,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateHomonymAdditionByLanguage(x, message.Message.HomonymAddition, message.Message.Language),
+                    x => UpdateHomonymAdditionByLanguage(x, message.Message.HomonymAddition, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
@@ -98,7 +100,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateHomonymAdditionByLanguage(x, null, message.Message.Language),
+                    x => UpdateHomonymAdditionByLanguage(x, null, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
@@ -107,7 +109,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateHomonymAdditionByLanguage(x, message.Message.HomonymAddition, message.Message.Language),
+                    x => UpdateHomonymAdditionByLanguage(x, message.Message.HomonymAddition, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
@@ -116,7 +118,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateHomonymAdditionByLanguage(x, null, message.Message.Language),
+                    x => UpdateHomonymAdditionByLanguage(x, null, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 

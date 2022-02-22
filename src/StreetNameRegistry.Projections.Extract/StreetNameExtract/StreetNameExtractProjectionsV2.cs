@@ -4,15 +4,14 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Amazon.DynamoDBv2.Model;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Microsoft.Extensions.Options;
+    using Municipality;
+    using Municipality.Events;
     using NodaTime;
-    using StreetName;
-    using StreetName.Events;
 
     [ConnectedProjectionName("Extract straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen extract voorziet.")]

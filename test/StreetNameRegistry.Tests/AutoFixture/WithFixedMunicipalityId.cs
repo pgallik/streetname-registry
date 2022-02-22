@@ -3,7 +3,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
     using System;
     using global::AutoFixture;
     using global::AutoFixture.Kernel;
-    using StreetName;
+    using Municipality;
 
     public class WithFixedMunicipalityId : ICustomization
     {
@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             
             fixture.Register(() => municipalityId);
             fixture.Register(() => new MunicipalityStreamId(municipalityId));
+            fixture.Register(() => new StreetName.MunicipalityId(municipalityId));
 
             fixture.Customizations.Add(
                 new FilteringSpecimenBuilder(

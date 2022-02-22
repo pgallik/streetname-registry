@@ -1,8 +1,8 @@
 namespace StreetNameRegistry.Infrastructure
 {
     using System.Data;
-    using StreetName;
     using Microsoft.EntityFrameworkCore;
+    using Municipality;
 
     public class SqlPersistentLocalIdGenerator : IPersistentLocalIdGenerator
     {

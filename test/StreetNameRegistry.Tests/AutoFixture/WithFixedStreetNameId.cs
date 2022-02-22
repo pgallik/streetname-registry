@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
     using Be.Vlaanderen.Basisregisters.Crab;
     using global::AutoFixture;
     using global::AutoFixture.Kernel;
+    using StreetName;
 
     public class WithFixedStreetNameId : ICustomization
     {
