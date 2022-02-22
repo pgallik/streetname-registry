@@ -1,3 +1,17 @@
+# [2.47.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.3...v2.47.0) (2022-02-22)
+
+
+### Bug Fixes
+
+* changes that wouldnt be added to commit ([f61f9d0](https://github.com/informatievlaanderen/streetname-registry/commit/f61f9d096868674230112bb8c48d979d2d840fcb))
+* remove .Complete ([c081c8a](https://github.com/informatievlaanderen/streetname-registry/commit/c081c8a9f9d1827e9d14acdeb04e264c3374d1b7))
+* remove Value from StreetNameWasMigratedToMunicipality.Status ([82287e0](https://github.com/informatievlaanderen/streetname-registry/commit/82287e0d1b9a5415de539117e59470c386423d29))
+
+
+### Features
+
+* do not migrate incomplete streetnames ([bd16610](https://github.com/informatievlaanderen/streetname-registry/commit/bd166106e442832525ae8ab82e379ee117ab1339))
+
 ## [2.46.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.2...v2.46.3) (2022-02-18)
 
 
