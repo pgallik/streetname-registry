@@ -1,3 +1,10 @@
+# [2.48.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.47.1...v2.48.0) (2022-02-23)
+
+
+### Features
+
+* build migrator streetname ([68a94af](https://github.com/informatievlaanderen/streetname-registry/commit/68a94af4e8546c4cb24a5dafbca147bbeb3603e8))
+
 ## [2.47.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.47.0...v2.47.1) (2022-02-22)
 
 # [2.47.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.46.3...v2.47.0) (2022-02-22)
