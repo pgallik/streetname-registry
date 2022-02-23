@@ -15,6 +15,10 @@
     <Content Include="init.sh" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
