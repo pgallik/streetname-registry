@@ -125,6 +125,8 @@ jobs:
         docker push $BUILD_DOCKER_REGISTRY_TST/streetname-registry/api-extract:$SEMVER
         docker push $BUILD_DOCKER_REGISTRY_TST/streetname-registry/projector:$SEMVER
         docker push $BUILD_DOCKER_REGISTRY_TST/streetname-registry/projections-syndication:$SEMVER
+        docker push $BUILD_DOCKER_REGISTRY_TST/streetname-registry/consumer:$SEMVER
+        docker push $BUILD_DOCKER_REGISTRY_TST/streetname-registry/migrator-streetname:$SEMVER
       env:
         BUILD_DOCKER_REGISTRY_TST: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
         SEMVER: ${{ env.RELEASE_VERSION }}
@@ -166,6 +168,12 @@ jobs:
 
         docker tag  $BUILD_DOCKER_REGISTRY_TST/streetname-registry/projections-syndication:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER
         docker push $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER
+
+        docker tag  $BUILD_DOCKER_REGISTRY_TST/streetname-registry/consumer:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER
+        docker push $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER
+
+        docker tag  $BUILD_DOCKER_REGISTRY_TST/streetname-registry/migrator-streetname:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
+        docker push $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
       env:
         BUILD_DOCKER_REGISTRY_TST: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
         BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY }}
@@ -208,6 +216,12 @@ jobs:
 
         docker tag  $BUILD_DOCKER_REGISTRY_TST/streetname-registry/projections-syndication:$SEMVER $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/projections-syndication:$SEMVER
         docker push $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/projections-syndication:$SEMVER
+
+        docker tag  $BUILD_DOCKER_REGISTRY_TST/streetname-registry/consumer:$SEMVER $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/consumer:$SEMVER
+        docker push $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/consumer:$SEMVER
+
+        docker tag  $BUILD_DOCKER_REGISTRY_TST/streetname-registry/migrator-streetname:$SEMVER $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/migrator-streetname:$SEMVER
+        docker push $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/migrator-streetname:$SEMVER
       env:
         BUILD_DOCKER_REGISTRY_TST: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
         BUILD_DOCKER_REGISTRY_PRD: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_PRD }}
