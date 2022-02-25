@@ -1,3 +1,10 @@
+# [2.49.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.48.0...v2.49.0) (2022-02-25)
+
+
+### Features
+
+* create wms projection ([4a1cab4](https://github.com/informatievlaanderen/streetname-registry/commit/4a1cab409fbc348da32a28d886922e2877ab7e72))
+
 # [2.48.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.47.1...v2.48.0) (2022-02-23)
 
 
