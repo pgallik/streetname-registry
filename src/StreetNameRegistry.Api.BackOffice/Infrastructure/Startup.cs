@@ -182,7 +182,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                 _configuration.GetConnectionString("Sequences"),
                 serviceProvider.GetService<ILoggerFactory>());
 
-            StartupHelpers.CheckDatabases(healthCheckService, DatabaseTag).GetAwaiter().GetResult();
+            StartupHelpers.CheckDatabases(healthCheckService, DatabaseTag, loggerFactory).GetAwaiter().GetResult();
         }
 
         private static string GetApiLeadingText(ApiVersionDescription description)

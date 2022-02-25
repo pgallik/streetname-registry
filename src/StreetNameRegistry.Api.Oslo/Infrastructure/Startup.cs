@@ -123,7 +123,7 @@ namespace StreetNameRegistry.Api.Oslo.Infrastructure
             ApiDebugDataDogToggle debugDataDogToggle,
             HealthCheckService healthCheckService)
         {
-            StartupHelpers.CheckDatabases(healthCheckService, databaseTag)
+            StartupHelpers.CheckDatabases(healthCheckService, databaseTag, loggerFactory)
                 .GetAwaiter()
                 .GetResult();
 
