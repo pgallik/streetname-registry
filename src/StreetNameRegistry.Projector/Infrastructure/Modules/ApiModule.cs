@@ -26,6 +26,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Legacy.StreetNameList;
     using StreetNameRegistry.Projections.Legacy.StreetNameName;
     using StreetNameRegistry.Projections.Wfs;
+    using StreetNameRegistry.Projections.Wms;
     using StreetNameRegistry.Projections.Legacy.StreetNameSyndication;
 
     public class ApiModule : Module
@@ -74,6 +75,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
             RegisterLastChangedProjections(builder);
             RegisterLegacyProjections(builder);
             RegisterWfsProjections(builder);
+            RegisterWmsProjections(builder);
         }
 
         private void RegisterExtractProjections(ContainerBuilder builder)
@@ -154,6 +156,29 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 .RegisterProjections<StreetNameRegistry.Projections.Wfs.StreetName.StreetNameHelperProjections, WfsContext>(() =>
                         new StreetNameRegistry.Projections.Wfs.StreetName.StreetNameHelperProjections(),
                     wfsProjectionSettings);
+        }
+
+        private void RegisterWmsProjections(ContainerBuilder builder)
+        {
+            builder
+                .RegisterModule(
+                    new WmsModule(
+                        _configuration,
+                        _services,
+                        _loggerFactory));
+
+            var wmsProjectionSettings = ConnectedProjectionSettings
+                .Configure(settings =>
+                    settings.ConfigureLinearBackoff<SqlException>(_configuration, "Wms"));
+
+            builder
+                .RegisterProjectionMigrator<WmsContextMigrationFactory>(
+                    _configuration,
+                    _loggerFactory)
+
+                .RegisterProjections<StreetNameRegistry.Projections.Wms.StreetName.StreetNameHelperProjections, WmsContext>(() =>
+                        new StreetNameRegistry.Projections.Wms.StreetName.StreetNameHelperProjections(),
+                    wmsProjectionSettings);
         }
     }
 }

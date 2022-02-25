@@ -63,6 +63,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Projecti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Migrator.StreetName", "src\StreetNameRegistry.Migrator.StreetName\StreetNameRegistry.Migrator.StreetName.csproj", "{414D56C6-9181-4EE1-ABA9-9D312FEFDCA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreetNameRegistry.Projections.Wms", "src\StreetNameRegistry.Projections.Wms\StreetNameRegistry.Projections.Wms.csproj", "{D2883268-1DD0-4659-8054-1FEE0A0054F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{414D56C6-9181-4EE1-ABA9-9D312FEFDCA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{414D56C6-9181-4EE1-ABA9-9D312FEFDCA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{414D56C6-9181-4EE1-ABA9-9D312FEFDCA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2883268-1DD0-4659-8054-1FEE0A0054F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2883268-1DD0-4659-8054-1FEE0A0054F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2883268-1DD0-4659-8054-1FEE0A0054F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2883268-1DD0-4659-8054-1FEE0A0054F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,6 +165,7 @@ Global
 		{9201DA1D-BB67-4FB5-AA0F-4E392071E6C0} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{5B5CF2B8-5B61-4786-9173-72ED8C6D81B6} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{414D56C6-9181-4EE1-ABA9-9D312FEFDCA4} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
+		{D2883268-1DD0-4659-8054-1FEE0A0054F0} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3B44FE80-30FE-47B7-A0DE-8610218FFF63}

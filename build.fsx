@@ -49,6 +49,7 @@ Target.create "Build_Solution" (fun _ ->
   buildSource "StreetNameRegistry.Projections.Extract"
   buildSource "StreetNameRegistry.Projections.LastChangedList"
   buildSource "StreetNameRegistry.Projections.Wfs"
+  buildSource "StreetNameRegistry.Projections.Wms"
   buildSource "StreetNameRegistry.Projections.Syndication"
   buildTest "StreetNameRegistry.Tests"
 )
@@ -73,6 +74,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Projections.Extract"
     "StreetNameRegistry.Projections.LastChangedList"
     "StreetNameRegistry.Projections.Wfs"
+    "StreetNameRegistry.Projections.Wms"
     "StreetNameRegistry.Projections.Syndication"
   ] |> List.iter publishSource)
 
