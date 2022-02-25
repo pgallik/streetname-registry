@@ -1,3 +1,15 @@
+# [2.50.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.49.0...v2.50.0) (2022-02-25)
+
+
+### Bug Fixes
+
+* remove user secrets ([65c8977](https://github.com/informatievlaanderen/streetname-registry/commit/65c8977db4c452959ab05911da2effce8016c940))
+
+
+### Features
+
+* update api to 17.0.0 ([e9bac79](https://github.com/informatievlaanderen/streetname-registry/commit/e9bac797f75ac0cc269cdae448ed3b438d485edd))
+
 # [2.49.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.48.0...v2.49.0) (2022-02-25)
 
 
