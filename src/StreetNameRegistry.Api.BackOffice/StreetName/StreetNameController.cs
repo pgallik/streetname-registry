@@ -105,29 +105,42 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             {
                 throw exception switch
                 {
-                    StreetNameNameAlreadyExistsException nameExists => new ValidationException(new List<ValidationFailure>
-                    {
-                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), $"Streetname '{nameExists.Name}' already exists within the municipality.")
-                    }),
+                    StreetNameNameAlreadyExistsException nameExists => CreateValidationException(
+                        "StreetNameAlreadyExistsInMunicipality",
+                        nameof(streetNameProposeRequest.Straatnamen),
+                        $"Streetname '{nameExists.Name}' already exists within the municipality."),
 
-                    MunicipalityWasRetiredException municipalityWasRetired => new ValidationException(new List<ValidationFailure>
-                    {
-                        new ValidationFailure(nameof(streetNameProposeRequest.GemeenteId), "This municipality was retired.")
-                    }),
+                    MunicipalityWasRetiredException municipalityWasRetired => CreateValidationException(
+                        "StreetNameMunicipalityRetired",
+                        nameof(streetNameProposeRequest.GemeenteId),
+                        "This municipality was retired."),
 
-                    StreetNameNameLanguageNotSupportedException _ => new ValidationException(new List<ValidationFailure>
-                    {
-                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), "'Straatnamen' can only be in the official or facility language of the municipality.")
-                    }),
+                    StreetNameNameLanguageNotSupportedException _ => CreateValidationException(
+                        "StreetNameLanguageNotOfficialOrFacilityLanguage",
+                        nameof(streetNameProposeRequest.Straatnamen),
+                        "'Straatnamen' can only be in the official or facility language of the municipality."),
 
-                    StreetNameMissingLanguageException _ => new ValidationException(new List<ValidationFailure>
-                    {
-                        new ValidationFailure(nameof(streetNameProposeRequest.Straatnamen), "'Straatnamen' is missing an official or facility language.")
-                    }),
+                    StreetNameMissingLanguageException _ => CreateValidationException(
+                        "StreetNameMissingOfficialOrFacilityLanguage",
+                        nameof(streetNameProposeRequest.Straatnamen),
+                        "'Straatnamen' is missing an official or facility language."),
 
                     _ => new ValidationException(new List<ValidationFailure> { new ValidationFailure(string.Empty, exception.Message) })
                 };
             }
+        }
+
+        private ValidationException CreateValidationException(string errorCode, string propertyName, string message)
+        {
+            var failure = new ValidationFailure(propertyName, message)
+            {
+                ErrorCode = errorCode
+            };
+
+            return new ValidationException(new List<ValidationFailure>
+            {
+                failure
+            });
         }
     }
 }
