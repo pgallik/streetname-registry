@@ -1,3 +1,10 @@
+# [2.51.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.50.0...v2.51.0) (2022-02-28)
+
+
+### Features
+
+* add errorcodes to validationexception ([6c25f45](https://github.com/informatievlaanderen/streetname-registry/commit/6c25f45941a702e137fdf6f4089aadb5d6ff4067))
+
 # [2.50.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.49.0...v2.50.0) (2022-02-25)
 
 
