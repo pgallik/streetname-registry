@@ -1,3 +1,10 @@
+# [2.52.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.51.0...v2.52.0) (2022-02-28)
+
+
+### Features
+
+* update grar common for IHasHash ([ec77314](https://github.com/informatievlaanderen/streetname-registry/commit/ec7731483a8a1e37a6745bb2a51596974b76aaa3))
+
 # [2.51.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.50.0...v2.51.0) (2022-02-28)
 
 
