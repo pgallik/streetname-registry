@@ -2,7 +2,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
+    using Autofac;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
@@ -14,6 +16,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetNameRegistry.Api.BackOffice.Validators;
+    using StreetNameRegistry.Infrastructure.Repositories;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -42,7 +45,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             mockPersistentLocalIdGenerator
                 .Setup(x => x.GenerateNextPersistentLocalId())
                 .Returns(new PersistentLocalId(5));
-            
+
             var body = new StreetNameProposeRequest
             {
                 GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
@@ -54,7 +57,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), Container.Resolve<IMunicipalities>(), body);
 
             //Assert
             act.Should().Throw<AggregateNotFoundException>();

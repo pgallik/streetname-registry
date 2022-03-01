@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Municipality
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Events;
@@ -152,5 +153,24 @@ namespace StreetNameRegistry.Municipality
                 isCompleted,
                 isRemoved));
         }
+
+        public string GetStreetNameHash(PersistentLocalId persistentLocalId)
+        {
+            var streetName = _streetNames.FindByPersistentLocalId(persistentLocalId);
+
+            if (streetName == null)
+                throw new AggregateSourceException($"Cannot find a streetname entity with id {persistentLocalId}");
+
+            return streetName.LastEventHash;
+        }
+
+        #region Metadata
+        protected override void BeforeApplyChange(object @event)
+        {
+            new EventMetadataContext(new Dictionary<string, object>());
+            base.BeforeApplyChange(@event);
+        }
+
+        #endregion
     }
 }

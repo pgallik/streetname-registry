@@ -29,6 +29,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
         public bool Removed { get; set; }
 
+        public string? LastEventHash { get; set; }
+
         private DateTimeOffset VersionTimestampAsDateTimeOffset { get; set; }
 
         public Instant VersionTimestamp
@@ -69,7 +71,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
             builder.Property(x => x.HomonymAdditionEnglish);
 
             builder.Property(x => x.Status);
-            
+            builder.Property(x => x.LastEventHash);
             builder.Property(x => x.Removed);
 
             builder.HasIndex(x => x.Removed);

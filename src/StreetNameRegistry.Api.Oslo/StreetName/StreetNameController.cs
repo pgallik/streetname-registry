@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
+    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.Api.Search;
     using Be.Vlaanderen.Basisregisters.Api.Search.Filtering;
@@ -89,9 +90,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                     throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
 
                 var gemeenteV2 = await GetStraatnaamDetailGemeente(syndicationContext, streetNameV2.NisCode, responseOptions.Value.GemeenteDetailUrl, cancellationToken);
-
-
-                return Ok(new StreetNameOsloResponse(
+                var streetNameOsloResponse = new StreetNameOsloResponse(
                     responseOptions.Value.Naamruimte,
                     responseOptions.Value.ContextUrlDetail,
                     persistentLocalId,
@@ -105,7 +104,11 @@ namespace StreetNameRegistry.Api.Oslo.StreetName
                     streetNameV2.HomonymAdditionDutch,
                     streetNameV2.HomonymAdditionFrench,
                     streetNameV2.HomonymAdditionGerman,
-                    streetNameV2.HomonymAdditionEnglish));
+                    streetNameV2.HomonymAdditionEnglish);
+
+                return string.IsNullOrWhiteSpace(streetNameV2.LastEventHash)
+                    ? Ok(streetNameOsloResponse)
+                    : new OkWithLastObservedPositionAsETagResult(streetNameOsloResponse, streetNameV2.LastEventHash);
             }
 
             var streetName = await legacyContext

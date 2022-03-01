@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreetNameRegistry.Projections.Legacy;
 
 namespace StreetNameRegistry.Projections.Legacy.Migrations
 {
     [DbContext(typeof(LegacyContext))]
-    partial class LegacyContextModelSnapshot : ModelSnapshot
+    [Migration("20220303140726_AddLastEventHash_To_Detail")]
+    partial class AddLastEventHash_To_Detail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

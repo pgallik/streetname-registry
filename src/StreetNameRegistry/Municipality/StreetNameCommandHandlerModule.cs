@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Municipality
         {
             For<ProposeStreetName>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<ProposeStreetName, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -30,6 +31,7 @@ namespace StreetNameRegistry.Municipality
 
             For<MigrateStreetNameToMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<MigrateStreetNameToMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {

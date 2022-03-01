@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
@@ -58,8 +59,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             // Assert
             act.Should().ThrowAsync<ValidationException>()

@@ -24,7 +24,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Microsoft.EntityFrameworkCore;
     using Municipality;
     using Municipality.Exceptions;
-    using NodaTime.Extensions;
     using Swashbuckle.AspNetCore.Filters;
 
     [ApiVersion("2.0")]
@@ -63,6 +62,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             [FromServices] ConsumerContext consumerContext,
             [FromServices] IPersistentLocalIdGenerator persistentLocalIdGenerator,
             [FromServices] IValidator<StreetNameProposeRequest> validator,
+            [FromServices] IMunicipalities municipalityRepository,
             [FromBody] StreetNameProposeRequest streetNameProposeRequest,
             CancellationToken cancellationToken = default)
         {
@@ -71,7 +71,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             try
             {
                 var fakeProvenanceData = new Provenance(
-                    DateTime.UtcNow.ToInstant(),
+                    NodaTime.SystemClock.Instance.GetCurrentInstant(),
                     Application.StreetNameRegistry,
                     new Reason(""), // TODO: TBD
                     new Operator(""), // TODO: from claims
@@ -93,9 +93,15 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                 }
 
                 var persistentLocalId = persistentLocalIdGenerator.GenerateNextPersistentLocalId();
-                var cmd = streetNameProposeRequest.ToCommand(new MunicipalityId(municipality.MunicipalityId), fakeProvenanceData, persistentLocalId);
-                var position = await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd, cancellationToken);
-                return new CreatedWithLastObservedPositionAsETagResult(new Uri(string.Format(options.Value.DetailUrl, persistentLocalId)), position.ToString(), Application.StreetNameRegistry.ToString());
+                var municipalityId = new MunicipalityId(municipality.MunicipalityId);
+
+                var cmd = streetNameProposeRequest.ToCommand(municipalityId, fakeProvenanceData, persistentLocalId);
+                await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd, cancellationToken);
+
+                var muniAggregate = await municipalityRepository.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
+                var streetNameHash = muniAggregate.GetStreetNameHash(persistentLocalId);
+
+                return new CreatedWithLastObservedPositionAsETagResult(new Uri(string.Format(options.Value.DetailUrl, persistentLocalId)), streetNameHash);
             }
             catch (IdempotencyException)
             {
@@ -110,7 +116,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                         nameof(streetNameProposeRequest.Straatnamen),
                         $"Streetname '{nameExists.Name}' already exists within the municipality."),
 
-                    MunicipalityWasRetiredException municipalityWasRetired => CreateValidationException(
+                    MunicipalityWasRetiredException _ => CreateValidationException(
                         "StreetNameMunicipalityRetired",
                         nameof(streetNameProposeRequest.GemeenteId),
                         "This municipality was retired."),

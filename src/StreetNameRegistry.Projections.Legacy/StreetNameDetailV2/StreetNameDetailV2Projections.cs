@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 {
     using System;
     using System.Collections.Generic;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Municipality;
@@ -29,6 +30,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
                 UpdateNameByLanguage(streetNameDetailV2, new Names(message.Message.Names));
                 UpdateHomonymAdditionByLanguage(streetNameDetailV2, new HomonymAdditions(message.Message.HomonymAdditions));
+                UpdateHash(streetNameDetailV2, message);
 
                 await context
                     .StreetNameDetailV2
@@ -46,12 +48,24 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     Removed = false,
                     Status = StreetNameStatus.Proposed
                 };
+
                 UpdateNameByLanguage(streetNameDetailV2, message.Message.StreetNameNames);
+                UpdateHash(streetNameDetailV2, message);
+
                 await context
                     .StreetNameDetailV2
                     .AddAsync(streetNameDetailV2, ct);
             });
+        }
 
+        private static void UpdateHash<T>(StreetNameDetailV2 entity, Envelope<T> wrappedEvent) where T : IHaveHash
+        {
+            if (!wrappedEvent.Metadata.ContainsKey(AddHashPipe.HashMetadataKey))
+            {
+                throw new InvalidOperationException($"Cannot find hash in metadata for event at position {wrappedEvent.Position}");
+            }
+
+            entity.LastEventHash = wrappedEvent.Metadata[AddHashPipe.HashMetadataKey].ToString()!;
         }
 
         private static void UpdateNameByLanguage(StreetNameDetailV2 entity, List<StreetNameName> streetNameNames)

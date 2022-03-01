@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
@@ -27,8 +28,13 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
 
+            var metadata = new Dictionary<string, object>
+            {
+                { AddHashPipe.HashMetadataKey, streetNameWasProposedV2.GetHash() }
+            };
+
             await Sut
-                .Given(streetNameWasProposedV2)
+                .Given(new Envelope<StreetNameWasProposedV2>(new Envelope(streetNameWasProposedV2, metadata)))
                 .Then(async ct =>
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameDetailV2>(streetNameWasProposedV2.PersistentLocalId));
@@ -43,6 +49,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     expectedStreetName.NameFrench.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.French));
                     expectedStreetName.NameGerman.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.German));
                     expectedStreetName.NameEnglish.Should().Be(DetermineExpectedNameForLanguage(streetNameWasProposedV2.StreetNameNames, Language.English));
+                    expectedStreetName.LastEventHash.Should().Be(streetNameWasProposedV2.GetHash());
                 });
         }
 

@@ -2,7 +2,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Autofac;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
@@ -14,6 +16,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Moq;
     using Municipality;
     using Municipality.Commands;
+    using SqlStreamStore;
+    using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.StreetName;
     using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
     using StreetNameRegistry.Api.BackOffice.Validators;
@@ -78,14 +82,21 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            var result = (CreatedWithLastObservedPositionAsETagResult)await _controller.Propose(ResponseOptions,
-                _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object,
-                new StreetNameProposeRequestValidator(_consumerContext), body);
+            var result = (CreatedWithLastObservedPositionAsETagResult)await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             //Assert
-            var expectedPosition = 3;
             result.Location.Should().Be(string.Format(DetailUrl, expectedLocation));
-            result.LastObservedPositionAsETag.Should().Be(expectedPosition.ToString());
+            result.LastObservedPositionAsETag.Length.Should().Be(128);
+
+            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 3, 1); //3 = version of stream (zero based)
+            stream.Messages.First().JsonMetadata.Should().Contain(result.LastObservedPositionAsETag);
         }
 
         [Fact]
@@ -106,8 +117,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             //Assert
             act
@@ -136,8 +153,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             //Assert
             act
@@ -168,7 +191,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             //Act
             Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), Container.Resolve<IMunicipalities>(), body);
 
             //Assert
             act
@@ -222,8 +245,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             //Assert
             act
@@ -268,8 +297,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             //Assert
             act
@@ -307,8 +342,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             //Assert
             act
@@ -358,8 +399,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(),
+                body);
 
             //Assert
             act

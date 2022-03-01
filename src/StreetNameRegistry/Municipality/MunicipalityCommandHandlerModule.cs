@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Municipality
         {
             For<ImportMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<ImportMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -39,6 +40,7 @@ namespace StreetNameRegistry.Municipality
 
             For<ChangeMunicipalityNisCode>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<ChangeMunicipalityNisCode, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -48,6 +50,7 @@ namespace StreetNameRegistry.Municipality
 
             For<SetMunicipalityToCurrent>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<SetMunicipalityToCurrent, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -57,6 +60,7 @@ namespace StreetNameRegistry.Municipality
 
             For<RetireMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<RetireMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -66,6 +70,7 @@ namespace StreetNameRegistry.Municipality
 
             For<DefineMunicipalityNisCode>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<DefineMunicipalityNisCode, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -75,6 +80,7 @@ namespace StreetNameRegistry.Municipality
 
             For<CorrectMunicipalityNisCode>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<CorrectMunicipalityNisCode, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -84,6 +90,7 @@ namespace StreetNameRegistry.Municipality
 
             For<NameMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<NameMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -93,6 +100,7 @@ namespace StreetNameRegistry.Municipality
 
             For<CorrectMunicipalityName>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<CorrectMunicipalityName, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -102,6 +110,7 @@ namespace StreetNameRegistry.Municipality
 
             For<CorrectToClearedMunicipalityName>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<CorrectToClearedMunicipalityName, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -111,6 +120,7 @@ namespace StreetNameRegistry.Municipality
 
             For<AddOfficialLanguageToMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<AddOfficialLanguageToMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -120,6 +130,7 @@ namespace StreetNameRegistry.Municipality
 
             For<RemoveOfficialLanguageFromMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<RemoveOfficialLanguageFromMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -129,6 +140,7 @@ namespace StreetNameRegistry.Municipality
 
             For<AddFacilityLanguageToMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<AddFacilityLanguageToMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -138,6 +150,7 @@ namespace StreetNameRegistry.Municipality
 
             For<RemoveFacilityLanguageFromMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<RemoveFacilityLanguageFromMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -147,6 +160,7 @@ namespace StreetNameRegistry.Municipality
 
             For<CorrectToCurrentMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<CorrectToCurrentMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -156,6 +170,7 @@ namespace StreetNameRegistry.Municipality
 
             For<CorrectToRetiredMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddHash<CorrectToRetiredMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {

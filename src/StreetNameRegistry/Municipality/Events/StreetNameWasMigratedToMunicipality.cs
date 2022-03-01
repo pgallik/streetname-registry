@@ -2,16 +2,19 @@ namespace StreetNameRegistry.Municipality.Events
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
     using StreetNameRegistry.Municipality;
 
     [EventTags(EventTag.For.Sync)]
-    [EventName("StreetNameWasMigratedToMunicipality")]
+    [EventName(EventName)]
     [EventDescription("De straatnaam werd gemigreerd naar gemeente.")]
-    public class StreetNameWasMigratedToMunicipality : IHasMunicipalityId, IHasProvenance, ISetProvenance
+    public class StreetNameWasMigratedToMunicipality : IMunicipalityEvent
     {
+        public const string EventName = "StreetNameWasMigratedToMunicipality"; // BE CAREFUL CHANGING THIS!!
+
         public Guid MunicipalityId { get; }
         public string NisCode { get; }
         public Guid StreetNameId { get; }
@@ -80,5 +83,24 @@ namespace StreetNameRegistry.Municipality.Events
             => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         void ISetProvenance.SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
+
+        public IEnumerable<string> GetHashFields()
+        {
+            var fields = Provenance.GetHashFields().ToList();
+            fields.Add(MunicipalityId.ToString("D"));
+            fields.Add(NisCode);
+            fields.Add(StreetNameId.ToString("D"));
+            fields.Add(PersistentLocalId.ToString());
+            fields.Add(Status.ToString());
+            fields.Add(PrimaryLanguage?.ToString() ?? string.Empty);
+            fields.Add(SecondaryLanguage?.ToString() ?? string.Empty);
+            fields.AddRange(Names.Select(x => x.Key + x.Value));
+            fields.AddRange(HomonymAdditions.Select(x => x.Key + x.Value));
+            fields.Add(IsCompleted.ToString());
+            fields.Add(IsRemoved.ToString());
+            return fields;
+        }
+
+        public string GetHash() => this.ToHash(EventName);
     }
 }

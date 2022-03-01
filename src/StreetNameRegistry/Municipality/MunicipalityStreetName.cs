@@ -2,17 +2,20 @@ namespace StreetNameRegistry.Municipality
 {
     using System;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Events;
 
     public class MunicipalityStreetName : Entity
     {
         private MunicipalityId _municipalityId;
+        private IHaveHash _lastEvent;
 
         public StreetNameStatus? Status { get; private set; }
         public HomonymAdditions HomonymAdditions { get; private set; } = new HomonymAdditions();
         public Names Names { get; private set; } = new Names();
         public PersistentLocalId PersistentLocalId { get; private set; }
         public bool IsRemoved { get; private set; }
+        public string LastEventHash => _lastEvent.GetHash();
 
         public MunicipalityStreetName(Action<object> applier)
             : base(applier)
@@ -29,6 +32,7 @@ namespace StreetNameRegistry.Municipality
             HomonymAdditions = new HomonymAdditions(@event.HomonymAdditions);
             Names = new Names(@event.Names);
             IsRemoved = @event.IsRemoved;
+            _lastEvent = @event;
         }
 
         void When(StreetNameWasProposedV2 @event)
@@ -38,6 +42,7 @@ namespace StreetNameRegistry.Municipality
             PersistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
             Names = new Names(@event.StreetNameNames);
             IsRemoved = false;
+            _lastEvent = @event;
         }
     }
 }

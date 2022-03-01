@@ -10,5 +10,8 @@ namespace StreetNameRegistry.Municipality
 
         public bool HasStreetNameName(StreetNameName streetNameName)
             => this.Any(x => x.Names.HasMatch(streetNameName.Language, streetNameName.Name));
+
+        public MunicipalityStreetName? FindByPersistentLocalId(PersistentLocalId persistentLocalId)
+            => this.SingleOrDefault(x => x.PersistentLocalId == persistentLocalId);
     }
 }

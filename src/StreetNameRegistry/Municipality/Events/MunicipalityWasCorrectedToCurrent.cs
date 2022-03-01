@@ -1,15 +1,19 @@
 namespace StreetNameRegistry.Municipality.Events
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
     [EventTags(EventTag.For.Sync)]
-    [EventName("MunicipalityWasCorrectedToCurrent")]
+    [EventName(EventName)]
     [EventDescription("De gemeente werd gecorrigeerd tot in gebruik.")]
-    public class MunicipalityWasCorrectedToCurrent : IHasMunicipalityId, IHasProvenance, ISetProvenance
+    public class MunicipalityWasCorrectedToCurrent : IMunicipalityEvent
     {
+        public const string EventName = "MunicipalityWasCorrectedToCurrent"; // BE CAREFUL CHANGING THIS!!
+
         public Guid MunicipalityId { get; }
         public ProvenanceData Provenance { get; private set; }
         
@@ -26,5 +30,14 @@ namespace StreetNameRegistry.Municipality.Events
             => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         public void SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
+
+        public IEnumerable<string> GetHashFields()
+        {
+            var fields = Provenance.GetHashFields().ToList();
+            fields.Add(MunicipalityId.ToString("D"));
+            return fields;
+        }
+
+        public string GetHash() => this.ToHash(EventName);
     }
 }

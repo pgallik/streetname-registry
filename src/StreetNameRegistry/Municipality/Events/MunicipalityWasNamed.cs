@@ -1,15 +1,19 @@
 namespace StreetNameRegistry.Municipality.Events
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
     [EventTags(EventTag.For.Sync)]
-    [EventName("MunicipalityWasNamed")]
+    [EventName(EventName)]
     [EventDescription("De gemeente werd benoemd.")]
-    public class MunicipalityWasNamed : IHasMunicipalityId, IHasProvenance, ISetProvenance
+    public class MunicipalityWasNamed : IMunicipalityEvent
     {
+        public const string EventName = "MunicipalityWasNamed"; // BE CAREFUL CHANGING THIS!!
+
         public Guid MunicipalityId { get; }
         public string Name { get; }
         public Language Language { get; set; }
@@ -32,5 +36,16 @@ namespace StreetNameRegistry.Municipality.Events
             => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         public void SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
+
+        public IEnumerable<string> GetHashFields()
+        {
+            var fields = Provenance.GetHashFields().ToList();
+            fields.Add(MunicipalityId.ToString("D"));
+            fields.Add(Name);
+            fields.Add(Language.ToString());
+            return fields;
+        }
+
+        public string GetHash() => this.ToHash(EventName);
     }
 }
