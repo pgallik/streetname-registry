@@ -15,7 +15,11 @@ namespace StreetNameRegistry.Consumer
         private readonly KafkaOptions _options;
         private readonly ConsumerOptions _consumerOptions;
 
-        public Consumer(ILifetimeScope container, ILoggerFactory loggerFactory, KafkaOptions options, ConsumerOptions consumerOptions)
+        public Consumer(
+            ILifetimeScope container,
+            ILoggerFactory loggerFactory,
+            KafkaOptions options,
+            ConsumerOptions consumerOptions)
         {
             _container = container;
             _loggerFactory = loggerFactory;
