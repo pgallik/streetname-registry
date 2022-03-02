@@ -1,3 +1,10 @@
+## [2.52.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.2...v2.52.3) (2022-03-02)
+
+
+### Bug Fixes
+
+* style to retrigger build ([c0340c5](https://github.com/informatievlaanderen/streetname-registry/commit/c0340c53b53fc178dc554ef9886a59f1266b3745))
+
 ## [2.52.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.1...v2.52.2) (2022-03-02)
 
 
