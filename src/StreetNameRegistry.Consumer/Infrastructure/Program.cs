@@ -64,7 +64,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure
                             await MigrationsHelper.RunAsync(configuration.GetConnectionString("ConsumerAdmin"), loggerFactory, cancellationToken);
 
                             var bootstrapServers = configuration["Kafka:BootstrapServers"];
-                            var kafkaOptions = new KafkaOptions(bootstrapServers, configuration["Kafka:Authentication"].FromString(), configuration["Kafka:SaslUserName"], configuration["Kafka:SaslPassword"], EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
+                            var kafkaOptions = new KafkaOptions(bootstrapServers, configuration["Kafka:SaslUserName"], configuration["Kafka:SaslPassword"], EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
                             var topic = $"{configuration["MunicipalityTopic"]}" ?? throw new ArgumentException("Configuration has no MunicipalityTopic.");
                             var consumerGroupSuffix = configuration["MunicipalityConsumerGroupSuffix"];
