@@ -1,3 +1,5 @@
+## [2.52.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.0...v2.52.1) (2022-03-02)
+
 # [2.52.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.51.0...v2.52.0) (2022-02-28)
 
 
