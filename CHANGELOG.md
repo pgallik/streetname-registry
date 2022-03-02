@@ -1,3 +1,10 @@
+## [2.52.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.1...v2.52.2) (2022-03-02)
+
+
+### Bug Fixes
+
+* add consumer to connection strings ([c3caf10](https://github.com/informatievlaanderen/streetname-registry/commit/c3caf105b48caf0aadb71f27a988fc96def661da))
+
 ## [2.52.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.0...v2.52.1) (2022-03-02)
 
 # [2.52.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.51.0...v2.52.0) (2022-02-28)
