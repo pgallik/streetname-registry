@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        services: ['streetname-registry-api', 'streetname-registry-projections', 'streetname-registry-backoffice-api']
+        services: ['streetname-registry-api', 'streetname-registry-projections', 'streetname-registry-backoffice-api', 'streetname-registry-consumer']
     steps:
     - name: CD
       env:
