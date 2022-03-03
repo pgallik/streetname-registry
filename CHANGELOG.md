@@ -1,3 +1,10 @@
+# [2.54.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.53.0...v2.54.0) (2022-03-03)
+
+
+### Features
+
+* add hash to events ([e1e252d](https://github.com/informatievlaanderen/streetname-registry/commit/e1e252d375a40c3e831055319966f054ef98dd28))
+
 # [2.53.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.3...v2.53.0) (2022-03-03)
 
 
