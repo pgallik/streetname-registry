@@ -1,3 +1,10 @@
+# [2.53.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.3...v2.53.0) (2022-03-03)
+
+
+### Features
+
+* add retry policy for streetname migrator ([18bfc2e](https://github.com/informatievlaanderen/streetname-registry/commit/18bfc2ef755e9daf8b1e2f8e332c5f544c1efb2e))
+
 ## [2.52.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.52.2...v2.52.3) (2022-03-02)
 
 
