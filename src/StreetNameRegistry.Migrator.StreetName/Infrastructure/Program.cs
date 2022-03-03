@@ -13,11 +13,13 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using Be.Vlaanderen.Basisregisters.Projector.Modules;
     using Consumer;
     using Consumer.Municipality;
+    using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Modules;
+    using Polly;
     using Serilog;
     using StreetNameRegistry.StreetName;
     using StreetNameRegistry.StreetName.Commands;
@@ -62,7 +64,14 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                     {
                         try
                         {
-                            await ProcessStreams(container, configuration, ct);
+                            await Policy
+                                    .Handle<SqlException>()
+                                    .WaitAndRetryAsync(10, _ => TimeSpan.FromSeconds(60),
+                                        (_, timespan) => Log.Information($"SqlException occurred retrying after {timespan.Seconds} seconds."))
+                                    .ExecuteAsync(async () =>
+                                    {
+                                        await ProcessStreams(container, configuration, ct);
+                                    });
                         }
                         catch (Exception e)
                         {
@@ -155,6 +164,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                     await CreateAndDispatchCommand(municipality, streetName, actualContainer, ct);
 
                     await processedIdsTable.Add(id);
+                    processedIds.Add(id);
                 }
 
                 return true;
