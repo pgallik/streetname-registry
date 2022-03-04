@@ -1,3 +1,11 @@
+## [2.55.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.0...v2.55.1) (2022-03-04)
+
+
+### Bug Fixes
+
+* remove identity insert for wfs/wms v2 ([b0f41b4](https://github.com/informatievlaanderen/streetname-registry/commit/b0f41b483f370de7478a1deeefb1984a6f93028d))
+* run wfs/wms v1 in v2 for testing ([77cb91d](https://github.com/informatievlaanderen/streetname-registry/commit/77cb91d6d889213e095b875f76a9b12dfdacf65e))
+
 # [2.55.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.54.0...v2.55.0) (2022-03-04)
 
 
