@@ -106,6 +106,67 @@ namespace StreetNameRegistry.Projections.Wfs.Migrations
 
                     b.ToTable("StreetNameHelper", "wfs.streetname");
                 });
+
+            modelBuilder.Entity("StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2", b =>
+                {
+                    b.Property<int>("PersistentLocalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("HomonymAdditionDutch")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HomonymAdditionEnglish")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HomonymAdditionFrench")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HomonymAdditionGerman")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("MunicipalityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NameDutch")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEnglish")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameFrench")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameGerman")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NisCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Removed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VersionAsString")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("VersionTimestampAsDateTimeOffset")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("VersionTimestamp");
+
+                    b.HasKey("PersistentLocalId")
+                        .IsClustered();
+
+                    b.HasIndex("MunicipalityId");
+
+                    b.HasIndex("Removed");
+
+                    b.ToTable("StreetNameHelperV2", "wfs.streetname");
+                });
 #pragma warning restore 612, 618
         }
     }
