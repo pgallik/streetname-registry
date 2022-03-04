@@ -1,3 +1,15 @@
+# [2.55.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.54.0...v2.55.0) (2022-03-04)
+
+
+### Bug Fixes
+
+* add missing files ([b2f3a48](https://github.com/informatievlaanderen/streetname-registry/commit/b2f3a48c62f18aa7c20c8c3c84dbf0738a7db56b))
+
+
+### Features
+
+* add v2 projections to projector with toggle ([8e024dd](https://github.com/informatievlaanderen/streetname-registry/commit/8e024dd85daf59c21bb0d1e4e0bbc99c8dee86f3))
+
 # [2.54.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.53.0...v2.54.0) (2022-03-03)
 
 
