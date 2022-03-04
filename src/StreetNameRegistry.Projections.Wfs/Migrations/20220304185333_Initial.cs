@@ -1,18 +1,18 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace StreetNameRegistry.Projections.Wms.Migrations
+namespace StreetNameRegistry.Projections.Wfs.Migrations
 {
-    public partial class Initial_WmsProjection : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "wms.streetname");
+                name: "wfs.streetname");
 
             migrationBuilder.CreateTable(
                 name: "ProjectionStates",
-                schema: "wms.streetname",
+                schema: "wfs.streetname",
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Projections.Wms.Migrations
 
             migrationBuilder.CreateTable(
                 name: "StreetNameHelper",
-                schema: "wms.streetname",
+                schema: "wfs.streetname",
                 columns: table => new
                 {
                     StreetNameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -58,11 +58,10 @@ namespace StreetNameRegistry.Projections.Wms.Migrations
 
             migrationBuilder.CreateTable(
                 name: "StreetNameHelperV2",
-                schema: "wms.streetname",
+                schema: "wfs.streetname",
                 columns: table => new
                 {
-                    PersistentLocalId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PersistentLocalId = table.Column<int>(type: "int", nullable: false),
                     MunicipalityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NisCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NameDutch = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -86,25 +85,25 @@ namespace StreetNameRegistry.Projections.Wms.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetNameHelper_MunicipalityId",
-                schema: "wms.streetname",
+                schema: "wfs.streetname",
                 table: "StreetNameHelper",
                 column: "MunicipalityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetNameHelper_Removed_Complete",
-                schema: "wms.streetname",
+                schema: "wfs.streetname",
                 table: "StreetNameHelper",
                 columns: new[] { "Removed", "Complete" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetNameHelperV2_MunicipalityId",
-                schema: "wms.streetname",
+                schema: "wfs.streetname",
                 table: "StreetNameHelperV2",
                 column: "MunicipalityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetNameHelperV2_Removed",
-                schema: "wms.streetname",
+                schema: "wfs.streetname",
                 table: "StreetNameHelperV2",
                 column: "Removed");
         }
@@ -113,15 +112,15 @@ namespace StreetNameRegistry.Projections.Wms.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ProjectionStates",
-                schema: "wms.streetname");
+                schema: "wfs.streetname");
 
             migrationBuilder.DropTable(
                 name: "StreetNameHelper",
-                schema: "wms.streetname");
+                schema: "wfs.streetname");
 
             migrationBuilder.DropTable(
                 name: "StreetNameHelperV2",
-                schema: "wms.streetname");
+                schema: "wfs.streetname");
         }
     }
 }

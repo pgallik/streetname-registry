@@ -10,8 +10,8 @@ using StreetNameRegistry.Projections.Wms;
 namespace StreetNameRegistry.Projections.Wms.Migrations
 {
     [DbContext(typeof(WmsContext))]
-    [Migration("20220304130028_RemoveIdenityInsert")]
-    partial class RemoveIdenityInsert
+    [Migration("20220304185407_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
