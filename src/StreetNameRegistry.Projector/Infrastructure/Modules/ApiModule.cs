@@ -84,6 +84,8 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                 RegisterLegacyProjectionsV2(builder);
                 RegisterWfsProjectionsV2(builder);
                 RegisterWmsProjectionsV2(builder);
+                RegisterWfsProjections(builder); //TODO: Remove when Wfs has been filled in staging
+                RegisterWmsProjections(builder); //TODO: Remove when Wms has been filled in staging
             }
             else
             {
