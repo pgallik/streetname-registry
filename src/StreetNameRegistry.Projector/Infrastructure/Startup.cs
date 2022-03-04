@@ -22,6 +22,7 @@ namespace StreetNameRegistry.Projector.Infrastructure
     using System.Reflection;
     using System.Threading;
     using Be.Vlaanderen.Basisregisters.Projector.ConnectedProjections;
+    using Microsoft.Extensions.Options;
     using StreetNameRegistry.Projections.Wfs;
     using StreetNameRegistry.Projections.Wms;
     using Microsoft.OpenApi.Models;
@@ -123,7 +124,9 @@ namespace StreetNameRegistry.Projector.Infrastructure
                         }
                     }
                 })
-                .Configure<ExtractConfig>(_configuration.GetSection("Extract"));
+                .Configure<ExtractConfig>(_configuration.GetSection("Extract"))
+                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
+                .AddSingleton(c => new UseProjectionsV2Toggle(c.GetService<IOptions<FeatureToggleOptions>>().Value.UseProjectionsV2));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new LoggingModule(_configuration, services));
