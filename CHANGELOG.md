@@ -1,3 +1,10 @@
+## [2.55.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.1...v2.55.2) (2022-03-04)
+
+
+### Bug Fixes
+
+* remade wms/wfs migrations cause of identity ([15ad445](https://github.com/informatievlaanderen/streetname-registry/commit/15ad445c07263e004eae9c9d7dc916f8320d34ec))
+
 ## [2.55.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.0...v2.55.1) (2022-03-04)
 
 
