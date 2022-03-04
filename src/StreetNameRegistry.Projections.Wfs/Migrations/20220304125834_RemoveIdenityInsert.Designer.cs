@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StreetNameRegistry.Projections.Wms;
+using StreetNameRegistry.Projections.Wfs;
 
-namespace StreetNameRegistry.Projections.Wms.Migrations
+namespace StreetNameRegistry.Projections.Wfs.Migrations
 {
-    [DbContext(typeof(WmsContext))]
-    partial class WmsContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(WfsContext))]
+    [Migration("20220304125834_RemoveIdenityInsert")]
+    partial class RemoveIdenityInsert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,10 +41,10 @@ namespace StreetNameRegistry.Projections.Wms.Migrations
                     b.HasKey("Name")
                         .IsClustered();
 
-                    b.ToTable("ProjectionStates", "wms.streetname");
+                    b.ToTable("ProjectionStates", "wfs.streetname");
                 });
 
-            modelBuilder.Entity("StreetNameRegistry.Projections.Wms.StreetName.StreetNameHelper", b =>
+            modelBuilder.Entity("StreetNameRegistry.Projections.Wfs.StreetName.StreetNameHelper", b =>
                 {
                     b.Property<Guid>("StreetNameId")
                         .ValueGeneratedOnAdd()
@@ -104,10 +106,10 @@ namespace StreetNameRegistry.Projections.Wms.Migrations
 
                     b.HasIndex("Removed", "Complete");
 
-                    b.ToTable("StreetNameHelper", "wms.streetname");
+                    b.ToTable("StreetNameHelper", "wfs.streetname");
                 });
 
-            modelBuilder.Entity("StreetNameRegistry.Projections.Wms.StreetNameHelperV2.StreetNameHelperV2", b =>
+            modelBuilder.Entity("StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2", b =>
                 {
                     b.Property<int>("PersistentLocalId")
                         .HasColumnType("int");
@@ -163,7 +165,7 @@ namespace StreetNameRegistry.Projections.Wms.Migrations
 
                     b.HasIndex("Removed");
 
-                    b.ToTable("StreetNameHelperV2", "wms.streetname");
+                    b.ToTable("StreetNameHelperV2", "wfs.streetname");
                 });
 #pragma warning restore 612, 618
         }

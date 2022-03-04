@@ -110,9 +110,7 @@ namespace StreetNameRegistry.Projections.Wfs.Migrations
             modelBuilder.Entity("StreetNameRegistry.Projections.Wfs.StreetNameHelperV2.StreetNameHelperV2", b =>
                 {
                     b.Property<int>("PersistentLocalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("HomonymAdditionDutch")
                         .HasColumnType("nvarchar(max)");

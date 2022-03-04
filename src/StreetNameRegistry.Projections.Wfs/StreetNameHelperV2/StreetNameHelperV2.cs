@@ -54,7 +54,10 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
             builder.ToTable(TableName, Schema.Wfs)
                 .HasKey(x => x.PersistentLocalId)
                 .IsClustered(true);
-            
+
+            builder.Property(x => x.PersistentLocalId)
+                .ValueGeneratedNever();
+
             builder.Property(x => x.MunicipalityId);
 
             builder.Property(StreetNameHelperV2.VersionTimestampBackingPropertyName)
