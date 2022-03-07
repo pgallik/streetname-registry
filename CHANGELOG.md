@@ -1,3 +1,10 @@
+## [2.55.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.2...v2.55.3) (2022-03-07)
+
+
+### Bug Fixes
+
+* name WFS adressen & name WMS adressen ([85f843d](https://github.com/informatievlaanderen/streetname-registry/commit/85f843dddc02f999de7f812bc0ddfaaeb83e53d3))
+
 ## [2.55.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.1...v2.55.2) (2022-03-04)
 
 
