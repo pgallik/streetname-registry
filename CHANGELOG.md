@@ -1,3 +1,10 @@
+## [2.55.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.3...v2.55.4) (2022-03-07)
+
+
+### Bug Fixes
+
+* rebuild key and uri for v2 insert events ([e23f63c](https://github.com/informatievlaanderen/streetname-registry/commit/e23f63ce2d1e96e3e2a9c7bcb97cc139971f2d49))
+
 ## [2.55.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.2...v2.55.3) (2022-03-07)
 
 
