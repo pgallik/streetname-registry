@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetName
     using NodaTime;
     using StreetNameRegistry.StreetName;
 
-    [ConnectedProjectionName("WMS straatnaam")]
+    [ConnectedProjectionName("WMS adressen")]
     [ConnectedProjectionDescription("Projectie die de straatnaam data voor het WMS straatnaamregister voorziet.")]
     public class StreetNameHelperProjections: ConnectedProjection<WmsContext>
     {
