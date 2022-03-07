@@ -1,8 +1,10 @@
 namespace StreetNameRegistry.Projections.LastChangedList
 {
     using System;
+    using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList.Model;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Municipality.Events;
     using StreetName.Events;
@@ -22,11 +24,7 @@ namespace StreetNameRegistry.Projections.LastChangedList
             {
                 var attachedRecords = await GetLastChangedRecordsAndUpdatePosition(message.Message.StreetNameId.ToString(), message.Position, context, ct);
 
-                foreach (var record in attachedRecords)
-                {
-                    record.CacheKey = string.Format(record.CacheKey, message.Message.PersistentLocalId);
-                    record.Uri = string.Format(record.Uri, message.Message.PersistentLocalId);
-                }
+                RebuildKeyAndUri(attachedRecords, message.Message.PersistentLocalId);
             });
 
             When<Envelope<StreetNameWasRemoved>>(async (context, message, ct) =>
@@ -152,13 +150,24 @@ namespace StreetNameRegistry.Projections.LastChangedList
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                var records = await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                RebuildKeyAndUri(records, message.Message.PersistentLocalId);
             });
 
             When<Envelope<StreetNameWasProposedV2>>(async (context, message, ct) =>
             {
-                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                var records = await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
+                RebuildKeyAndUri(records, message.Message.PersistentLocalId);
             });
+        }
+
+        private static void RebuildKeyAndUri(IEnumerable<LastChangedRecord>? attachedRecords, int persistentLocalId)
+        {
+            foreach (var record in attachedRecords)
+            {
+                record.CacheKey = string.Format(record.CacheKey, persistentLocalId);
+                record.Uri = string.Format(record.Uri, persistentLocalId);
+            }
         }
 
         protected override string BuildCacheKey(AcceptType acceptType, string identifier)
