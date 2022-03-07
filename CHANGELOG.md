@@ -1,3 +1,10 @@
+## [2.55.5](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.4...v2.55.5) (2022-03-07)
+
+
+### Bug Fixes
+
+* update api for etag fix ([2ee757f](https://github.com/informatievlaanderen/streetname-registry/commit/2ee757fa15c27b2c174eaf674ca6d4eafd25eb33))
+
 ## [2.55.4](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.3...v2.55.4) (2022-03-07)
 
 
