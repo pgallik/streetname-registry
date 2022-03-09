@@ -86,7 +86,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
             if (streetName.ContainsObject)
                 content.Object = new StreetNameSyndicationContent(
-                    streetName.StreetNameId.HasValue ? streetName.StreetNameId.Value : streetName.MunicipalityId.Value,
+                    streetName.StreetNameId.HasValue ? streetName.StreetNameId.Value.ToString("D") : streetName.PersistentLocalId.ToString(),
                     naamruimte,
                     streetName.PersistentLocalId,
                     streetName.Status,
@@ -132,7 +132,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         /// De technische id van de aggregate.
         /// </summary>
         [DataMember(Name = "Id", Order = 1)]
-        public Guid AggregateId { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// De identificator van de straatnaam.
@@ -177,7 +177,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         public Provenance Provenance { get; set; }
 
         public StreetNameSyndicationContent(
-            Guid aggregateId,
+            string id,
             string naamruimte,
             int? persistentLocalId,
             StreetNameStatus? status,
@@ -195,7 +195,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             Organisation? organisation,
             string reason)
         {
-            AggregateId = aggregateId;
+            Id = id;
             NisCode = nisCode;
             Identificator = new StraatnaamIdentificator(naamruimte, persistentLocalId?.ToString(CultureInfo.InvariantCulture), version);
             StreetNameStatus = status?.ConvertFromMunicipalityStreetNameStatus();

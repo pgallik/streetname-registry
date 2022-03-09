@@ -240,7 +240,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 var streetNameSyndicationItem = new StreetNameSyndicationItem
                 {
                     Position = message.Position,
-                    StreetNameId = message.Message.StreetNameId,
+                    StreetNameId = null, //while we have the information, we shouldn't identify streetname with his old internal id
                     PersistentLocalId = message.Message.PersistentLocalId,
                     MunicipalityId = message.Message.MunicipalityId,
                     NisCode = message.Message.NisCode,
