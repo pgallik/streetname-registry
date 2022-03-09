@@ -1,3 +1,10 @@
+## [2.55.6](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.5...v2.55.6) (2022-03-09)
+
+
+### Bug Fixes
+
+* use persistentlocalid as id for object in feed ([a48c289](https://github.com/informatievlaanderen/streetname-registry/commit/a48c289f4bb1efb390b93360bb985885deec0628))
+
 ## [2.55.5](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.4...v2.55.5) (2022-03-07)
 
 
