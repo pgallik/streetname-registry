@@ -1,3 +1,10 @@
+## [2.55.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.6...v2.55.7) (2022-03-09)
+
+
+### Bug Fixes
+
+* use nullable language for old events ([ef961cb](https://github.com/informatievlaanderen/streetname-registry/commit/ef961cb846d3160edc73ac9c5309af616a1673af))
+
 ## [2.55.6](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.5...v2.55.6) (2022-03-09)
 
 
