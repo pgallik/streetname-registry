@@ -22,6 +22,7 @@ namespace StreetNameRegistry.Municipality
         {
             Register<StreetNameWasMigratedToMunicipality>(When);
             Register<StreetNameWasProposedV2>(When);
+            Register<StreetNameWasApproved>(When);
         }
 
         void When(StreetNameWasMigratedToMunicipality @event)
@@ -44,5 +45,13 @@ namespace StreetNameRegistry.Municipality
             IsRemoved = false;
             _lastEvent = @event;
         }
+
+        void When(StreetNameWasApproved @event)
+        {
+            Status = StreetNameStatus.Current;
+            _lastEvent = @event;
+        }
+
+        public void Approve() => Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
     }
 }

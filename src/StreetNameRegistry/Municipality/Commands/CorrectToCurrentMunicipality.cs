@@ -28,7 +28,11 @@ namespace StreetNameRegistry.Municipality.Commands
         private IEnumerable<object> IdentityFields()
         {
             yield return MunicipalityId;
-            yield return Provenance;
+
+            foreach (var field in Provenance.GetIdentityFields())
+            {
+                yield return field;
+            }
         }
     }
 }

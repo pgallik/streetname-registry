@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Municipality
         private NisCode _nisCode;
         private readonly List<Language> _officialLanguages = new List<Language>();
         private readonly List<Language> _facilityLanguages = new List<Language>();
-        private readonly MunicipalityStreetNames _streetNames = new MunicipalityStreetNames();
+        public MunicipalityStreetNames StreetNames { get; } = new MunicipalityStreetNames();
         internal MunicipalityId MunicipalityId => _municipalityId;
 
         public MunicipalityStatus MunicipalityStatus { get; private set; }
@@ -29,6 +29,7 @@ namespace StreetNameRegistry.Municipality
             Register<MunicipalityWasCorrectedToRetired>(When);
 
             Register<StreetNameWasProposedV2>(When);
+            Register<StreetNameWasApproved>(When);
             Register<StreetNameWasMigratedToMunicipality>(When);
         }
 
@@ -91,14 +92,20 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = new MunicipalityStreetName(ApplyChange);
             streetName.Route(@event);
-            _streetNames.Add(streetName);
+            StreetNames.Add(streetName);
         }
 
         private void When(StreetNameWasProposedV2 @event)
         {
             var streetName = new MunicipalityStreetName(ApplyChange);
             streetName.Route(@event);
-            _streetNames.Add(streetName);
+            StreetNames.Add(streetName);
+        }
+
+        private void When(StreetNameWasApproved @event)
+        {
+            var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
+            streetName.Route(@event);
         }
     }
 }

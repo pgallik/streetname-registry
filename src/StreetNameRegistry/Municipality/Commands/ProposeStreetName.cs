@@ -36,9 +36,12 @@ namespace StreetNameRegistry.Municipality.Commands
         private IEnumerable<object> IdentityFields()
         {
             yield return MunicipalityId;
-            yield return Provenance;
             yield return PersistentLocalId;
-            yield return Provenance.Timestamp;
+
+            foreach (var field in Provenance.GetIdentityFields())
+            {
+                yield return field;
+            }
 
             foreach (var streetNameName in StreetNameNames)
             {

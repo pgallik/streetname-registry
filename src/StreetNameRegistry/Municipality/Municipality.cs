@@ -25,7 +25,7 @@ namespace StreetNameRegistry.Municipality
 
             foreach (var streetNameName in streetNameNames)
             {
-                if (_streetNames.HasStreetNameName(streetNameName))
+                if (StreetNames.HasStreetNameName(streetNameName))
                 {
                     throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
                 }
@@ -47,6 +47,16 @@ namespace StreetNameRegistry.Municipality
             }
 
             ApplyChange(new StreetNameWasProposedV2(_municipalityId, _nisCode, streetNameNames, persistentLocalId));
+        }
+
+        public void ApproveStreetName(PersistentLocalId persistentLocalId)
+        {
+            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName))
+            {
+                throw new StreetNameNotFoundException(persistentLocalId);
+            }
+
+            streetName.Approve();
         }
 
         public void DefineOrChangeNisCode(NisCode nisCode)
@@ -134,7 +144,7 @@ namespace StreetNameRegistry.Municipality
             bool isCompleted,
             bool isRemoved)
         {
-            if (_streetNames.HasPersistentLocalId(persistentLocalId))
+            if (StreetNames.HasPersistentLocalId(persistentLocalId))
             {
                 throw new InvalidOperationException(
                     $"Cannot migrate StreetName with id '{persistentLocalId}' in municipality '{_municipalityId}'.");
@@ -156,10 +166,11 @@ namespace StreetNameRegistry.Municipality
 
         public string GetStreetNameHash(PersistentLocalId persistentLocalId)
         {
-            var streetName = _streetNames.FindByPersistentLocalId(persistentLocalId);
-
+            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
             if (streetName == null)
+            {
                 throw new AggregateSourceException($"Cannot find a streetname entity with id {persistentLocalId}");
+            }
 
             return streetName.LastEventHash;
         }

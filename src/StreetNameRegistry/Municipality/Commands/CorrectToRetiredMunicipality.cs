@@ -31,7 +31,11 @@ namespace StreetNameRegistry.Municipality.Commands
         {
             yield return MunicipalityId;
             yield return RetirementDate;
-            yield return Provenance;
+
+            foreach (var field in Provenance.GetIdentityFields())
+            {
+                yield return field;
+            }
         }
     }
 }
