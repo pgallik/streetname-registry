@@ -55,7 +55,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 await context.CreateNewStreetNameSyndicationItem(
                     message.Message.StreetNameId,
                     message,
-                    x => UpdateNameByLanguage(x, message.Message.Name, LanguageHelpers.ToMunicipalityLanguage(message.Message.Language)),
+                    x => UpdateNameByLanguage(x, message.Message.Name, LanguageHelpers.ToNullableMunicipalityLanguage(message.Message.Language)),
                     ct);
             });
 
