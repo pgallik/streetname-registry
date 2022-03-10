@@ -1,3 +1,10 @@
+# [2.56.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.7...v2.56.0) (2022-03-10)
+
+
+### Features
+
+* approve streetname ([beb9ae4](https://github.com/informatievlaanderen/streetname-registry/commit/beb9ae4023f50ecedc1bba52532f5cec67af7fa8))
+
 ## [2.55.7](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.6...v2.55.7) (2022-03-09)
 
 
