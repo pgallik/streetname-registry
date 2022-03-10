@@ -1,3 +1,10 @@
+## [2.56.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.56.0...v2.56.1) (2022-03-10)
+
+
+### Bug Fixes
+
+* can propose with retired duplicate name present GAWR-2843 ([47489d6](https://github.com/informatievlaanderen/streetname-registry/commit/47489d67de453154303c23c5f07b39c93b56eb20))
+
 # [2.56.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.55.7...v2.56.0) (2022-03-10)
 
 
