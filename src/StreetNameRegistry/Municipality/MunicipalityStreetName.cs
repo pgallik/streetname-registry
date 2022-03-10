@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Municipality
         public Names Names { get; private set; } = new Names();
         public PersistentLocalId PersistentLocalId { get; private set; }
         public bool IsRemoved { get; private set; }
+        public bool IsRetired => Status == StreetNameStatus.Retired;
         public string LastEventHash => _lastEvent.GetHash();
 
         public MunicipalityStreetName(Action<object> applier)

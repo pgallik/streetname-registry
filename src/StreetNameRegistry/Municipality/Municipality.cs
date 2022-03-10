@@ -25,7 +25,7 @@ namespace StreetNameRegistry.Municipality
 
             foreach (var streetNameName in streetNameNames)
             {
-                if (StreetNames.HasStreetNameName(streetNameName))
+                if (StreetNames.HasActiveStreetNameName(streetNameName))
                 {
                     throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
                 }
