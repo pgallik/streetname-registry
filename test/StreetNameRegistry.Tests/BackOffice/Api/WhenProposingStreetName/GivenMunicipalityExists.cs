@@ -28,6 +28,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     public class GivenMunicipalityExists : StreetNameRegistryBackOfficeTest
     {
         private readonly TestConsumerContext _consumerContext;
+        private readonly TestBackOfficeContext _backOfficeContext;
         private readonly StreetNameController _controller;
         private readonly Fixture _fixture;
         private readonly IdempotencyContext _idempotencyContext;
@@ -38,6 +39,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
             _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
+            _backOfficeContext = new FakeBackOfficeContextFactory().CreateDbContext(Array.Empty<string>());
         }
 
         [Fact]
@@ -86,6 +88,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),
@@ -97,6 +100,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 3, 1); //3 = version of stream (zero based)
             stream.Messages.First().JsonMetadata.Should().Contain(result.LastObservedPositionAsETag);
+
+            var municipalityIdByPersistentLocalId = await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(expectedLocation);
+            municipalityIdByPersistentLocalId.Should().NotBeNull();
+            municipalityIdByPersistentLocalId.MunicipalityId.Should().Be(municipalityLatestItem.MunicipalityId);
         }
 
         [Fact]
@@ -121,6 +128,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),
@@ -157,6 +165,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),
@@ -190,8 +199,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext,
-                _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), Container.Resolve<IMunicipalities>(), body);
+            Func<Task> act = async () => await _controller.Propose(
+                ResponseOptions,
+                _idempotencyContext,
+                _consumerContext,
+                _backOfficeContext,
+                mockPersistentLocalIdGenerator.Object,
+                new StreetNameProposeRequestValidator(_consumerContext),
+                Container.Resolve<IMunicipalities>(), body);
 
             //Assert
             act
@@ -249,6 +264,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),
@@ -301,6 +317,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),
@@ -346,6 +363,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),
@@ -403,6 +421,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),

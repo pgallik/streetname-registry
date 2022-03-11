@@ -26,6 +26,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         private readonly Fixture _fixture;
         private readonly StreetNameController _controller;
         private readonly TestConsumerContext _consumerContext;
+        private readonly TestBackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;
 
         public GivenMunicipalityLatestItemDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -34,6 +35,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
             _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
+            _backOfficeContext = new FakeBackOfficeContextFactory().CreateDbContext(Array.Empty<string>());
         }
 
         [Fact]
@@ -63,6 +65,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 ResponseOptions,
                 _idempotencyContext,
                 _consumerContext,
+                _backOfficeContext,
                 mockPersistentLocalIdGenerator.Object,
                 new StreetNameProposeRequestValidator(_consumerContext),
                 Container.Resolve<IMunicipalities>(),

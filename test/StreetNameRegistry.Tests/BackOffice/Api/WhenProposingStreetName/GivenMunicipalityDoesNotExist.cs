@@ -26,6 +26,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         private readonly Fixture _fixture;
         private readonly StreetNameController _controller;
         private readonly TestConsumerContext _consumerContext;
+        private readonly TestBackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;
 
         public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -34,6 +35,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
             _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
+            _backOfficeContext = new FakeBackOfficeContextFactory().CreateDbContext(Array.Empty<string>());
         }
 
         [Fact]
@@ -57,7 +59,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             };
 
             //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), Container.Resolve<IMunicipalities>(), body);
+            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, _backOfficeContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), Container.Resolve<IMunicipalities>(), body);
 
             //Assert
             act.Should().Throw<AggregateNotFoundException>();

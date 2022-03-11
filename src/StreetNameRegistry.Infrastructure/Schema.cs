@@ -12,6 +12,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Wfs = "wfs.streetname";
         public const string Wms = "wms.streetname";
         public const string MigrateStreetName = "StreetNameRegistryMigration";
+        public const string BackOffice = "StreetNameRegistryBackOffice";
     }
 
     public class MigrationTables
@@ -24,5 +25,6 @@ namespace StreetNameRegistry.Infrastructure
         public const string Consumer = "__EFMigrationsHistoryConsumer";
         public const string Wfs = "__EFMigrationsHistoryWfsStreetName";
         public const string Wms = "__EFMigrationsHistoryWmsStreetName";
+        public const string BackOffice = "__EFMigrationsHistoryBackOffice";
     }
 }

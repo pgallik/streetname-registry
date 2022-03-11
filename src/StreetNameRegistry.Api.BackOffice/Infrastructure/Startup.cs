@@ -180,6 +180,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 
             MigrationsHelper.Run(
                 _configuration.GetConnectionString("Sequences"),
+                _configuration.GetConnectionString("BackOffice"),
                 serviceProvider.GetService<ILoggerFactory>());
 
             StartupHelpers.CheckDatabases(healthCheckService, DatabaseTag, loggerFactory).GetAwaiter().GetResult();
