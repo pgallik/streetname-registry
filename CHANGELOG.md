@@ -1,3 +1,10 @@
+## [2.58.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.0...v2.58.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* hide municipality events ([78cb8ff](https://github.com/informatievlaanderen/streetname-registry/commit/78cb8ff474593f4c074d1fb51e9ccd1847e8eae8))
+
 # [2.58.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.57.1...v2.58.0) (2022-03-14)
 
 
