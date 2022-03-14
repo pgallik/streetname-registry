@@ -1,3 +1,10 @@
+## [2.57.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.57.0...v2.57.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* add migration persistent local id's to backoffice ([2f5394f](https://github.com/informatievlaanderen/streetname-registry/commit/2f5394f5ffac923e2f99081ebf86e9f54d4f2b60))
+
 # [2.57.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.56.1...v2.57.0) (2022-03-14)
 
 
