@@ -14,13 +14,16 @@ namespace StreetNameRegistry.Municipality.Events
     {
         public const string EventName = "StreetNameWasProposedV2"; // BE CAREFUL CHANGING THIS!!
 
-        [EventPropertyDescription("Interne GUID van de gemeente.")]
+        [EventPropertyDescription("Interne GUID van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public Guid MunicipalityId { get; }
 
+        [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public string NisCode { get; }
 
+        [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
         public List<StreetNameName> StreetNameNames { get; }
 
+        [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
 
         [EventPropertyDescription("Metadata bij het event.")]
