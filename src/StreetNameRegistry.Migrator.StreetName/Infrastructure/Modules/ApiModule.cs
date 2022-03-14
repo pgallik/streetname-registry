@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Migrator.StreetName.Infrastructure.Modules
 {
+    using Api.BackOffice.Infrastructure.Modules;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
@@ -37,6 +38,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure.Modules
                 .RegisterModule(new DataDogModule(_configuration))
                 .RegisterModule<EnvelopeModule>()
                 .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
+                .RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory))
                 .RegisterModule(new CommandHandlingModule(_configuration))
                 .RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
 

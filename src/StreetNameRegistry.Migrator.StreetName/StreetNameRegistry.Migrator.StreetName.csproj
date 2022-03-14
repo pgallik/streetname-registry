@@ -20,6 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
   </ItemGroup>

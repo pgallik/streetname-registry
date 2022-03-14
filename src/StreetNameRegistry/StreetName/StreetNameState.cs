@@ -8,17 +8,15 @@ namespace StreetNameRegistry.StreetName
     public partial class StreetName
     {
         private StreetNameId _streetNameId;
-
         private StreetNameStatus? _status;
-
         private Language? _primaryLanguage;
         private Language? _secondaryLanguage;
-        private PersistentLocalId _persistentLocalId;
 
         private readonly HomonymAdditions _homonymAdditions = new HomonymAdditions();
         private readonly Names _names = new Names();
         private readonly Chronicle<StreetNameStatusWasImportedFromCrab, int> _statusChronicle = new Chronicle<StreetNameStatusWasImportedFromCrab, int>();
 
+        public PersistentLocalId PersistentLocalId { get; private set; }
         public bool IsCompleted { get; private set; }
         public bool IsMigrated { get; private set; } = false;
         public NisCode NisCode { get; private set; }
@@ -82,7 +80,7 @@ namespace StreetNameRegistry.StreetName
 
         private void When(StreetNamePersistentLocalIdWasAssigned @event)
         {
-            _persistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
+            PersistentLocalId = new PersistentLocalId(@event.PersistentLocalId);
         }
 
         private void When(StreetNameBecameComplete @event)

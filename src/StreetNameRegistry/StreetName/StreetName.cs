@@ -122,7 +122,7 @@ namespace StreetNameRegistry.StreetName
             if (IsMigrated)
                 throw new InvalidOperationException($"The StreetName aggregate {_streetNameId} has been migrated!");
 
-            if (_persistentLocalId != null)
+            if (PersistentLocalId != null)
                 return;
 
             ApplyChange(new StreetNamePersistentLocalIdWasAssigned(
@@ -151,7 +151,7 @@ namespace StreetNameRegistry.StreetName
             return new MigrateStreetNameToMunicipality(
                 municipalityId,
                 _streetNameId,
-                _persistentLocalId,
+                PersistentLocalId,
                 status,
                 _primaryLanguage,
                 _secondaryLanguage,
@@ -171,7 +171,7 @@ namespace StreetNameRegistry.StreetName
         public void MarkMigrated(MunicipalityId municipalityId)
         {
             if(!IsMigrated)
-                ApplyChange(new StreetNameWasMigrated(_streetNameId, municipalityId, _persistentLocalId));
+                ApplyChange(new StreetNameWasMigrated(_streetNameId, municipalityId, PersistentLocalId));
         }
 
         private void ApplyNameChanges(CrabStreetName primaryStreetName, CrabStreetName secondaryStreetName)

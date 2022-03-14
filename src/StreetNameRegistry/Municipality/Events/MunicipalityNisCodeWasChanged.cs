@@ -14,8 +14,9 @@ namespace StreetNameRegistry.Municipality.Events
     {
         public const string EventName = "MunicipalityNisCodeWasChanged"; // BE CAREFUL CHANGING THIS!!
 
-        [EventPropertyDescription("Interne GUID van de straatnaam.")]
+        [EventPropertyDescription("Interne GUID van de gemeente.")]
         public Guid MunicipalityId { get; }
+        [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente.")]
         public string NisCode { get; }
 
         [EventPropertyDescription("Metadata bij het event.")]
