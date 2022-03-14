@@ -15,17 +15,29 @@ namespace StreetNameRegistry.Municipality.Events
     {
         public const string EventName = "StreetNameWasMigratedToMunicipality"; // BE CAREFUL CHANGING THIS!!
 
+        [EventPropertyDescription("Interne GUID van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public Guid MunicipalityId { get; }
+        [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public string NisCode { get; }
+        [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }
+        [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
+        [EventPropertyDescription("De status van de straatnaam. Mogelijkheden: Current, Proposed en Retired;")]
         public StreetNameStatus Status { get; }
+        [EventPropertyDescription("Taal waarin de officiële naam staat. Mogelijkheden: Dutch, French of German.")]
         public Language? PrimaryLanguage { get; }
+        [EventPropertyDescription("Taal waarin de officiële naam staat. Mogelijkheden: Dutch, French of German.")]
         public Language? SecondaryLanguage { get; }
+        [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
         public IDictionary<Language, string> Names { get; }
+        [EventPropertyDescription("Homoniemtoevoeging aan de straatnaam.")]
         public IDictionary<Language, string> HomonymAdditions { get; }
+        [EventPropertyDescription("De inhoud is altijd true en is wanneer de straatnaam voldoet aan het informatiemodel. ")]
         public bool IsCompleted { get; }
+        [EventPropertyDescription("False wanneer de straatnaam niet werd verwijderd. True wanneer de straatnaam werd verwijderd.")]
         public bool IsRemoved { get; }
+        [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
         
         public StreetNameWasMigratedToMunicipality(
