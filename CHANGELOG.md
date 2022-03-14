@@ -1,3 +1,10 @@
+# [2.58.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.57.1...v2.58.0) (2022-03-14)
+
+
+### Features
+
+* update projections for StreetNameWasApproved ([cd3c488](https://github.com/informatievlaanderen/streetname-registry/commit/cd3c488cc79e691bc23815cabcc2676f74016f72))
+
 ## [2.57.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.57.0...v2.57.1) (2022-03-14)
 
 
