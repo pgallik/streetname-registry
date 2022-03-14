@@ -1,3 +1,18 @@
+# [2.57.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.56.1...v2.57.0) (2022-03-14)
+
+
+### Bug Fixes
+
+* add docs ([91289b0](https://github.com/informatievlaanderen/streetname-registry/commit/91289b0a4737ed3aaebbcead50affd4f91a6c503))
+* add property descriptions ([68569cb](https://github.com/informatievlaanderen/streetname-registry/commit/68569cb6d1e5b35cb9c6986207600fe11faff4e5))
+* update paket.template in backoffice after removing reference ([dd26a89](https://github.com/informatievlaanderen/streetname-registry/commit/dd26a89fbd39c501fd43f3718e25e722921eea61))
+
+
+### Features
+
+* approve streetname endpoint backoffice ([fc513c2](https://github.com/informatievlaanderen/streetname-registry/commit/fc513c27a293e3bd6b0646a005704b62098c318b))
+* update grar-common to 16.15.1 ([b8f6984](https://github.com/informatievlaanderen/streetname-registry/commit/b8f6984b6e1916db63020a0ef24a036c84d021fa))
+
 ## [2.56.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.56.0...v2.56.1) (2022-03-10)
 
 
