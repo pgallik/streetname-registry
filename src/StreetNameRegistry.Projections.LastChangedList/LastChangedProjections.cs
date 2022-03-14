@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Projections.LastChangedList
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList.Model;
@@ -141,7 +142,7 @@ namespace StreetNameRegistry.Projections.LastChangedList
 
             #endregion
 
-            When<Envelope<StreetNameWasMigrated>>(async (context, message, ct) =>
+           When<Envelope<StreetNameWasMigrated>>(async (context, message, ct) =>
             {
                 var attachedRecords = await GetLastChangedRecordsAndUpdatePosition(message.Message.StreetNameId.ToString(), message.Position, context, ct);
 
@@ -158,6 +159,11 @@ namespace StreetNameRegistry.Projections.LastChangedList
             {
                 var records = await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
                 RebuildKeyAndUri(records, message.Message.PersistentLocalId);
+            });
+
+            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            {
+                await GetLastChangedRecordsAndUpdatePosition(message.Message.PersistentLocalId.ToString(), message.Position, context, ct);
             });
         }
 

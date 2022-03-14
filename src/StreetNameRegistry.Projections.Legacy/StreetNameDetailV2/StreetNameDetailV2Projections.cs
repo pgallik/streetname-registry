@@ -56,6 +56,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     .StreetNameDetailV2
                     .AddAsync(streetNameDetailV2, ct);
             });
+
+            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
+                {
+                    UpdateStatus(streetNameDetailV2, StreetNameStatus.Current);
+                    UpdateHash(streetNameDetailV2, message);
+                    UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
         }
 
         private static void UpdateHash<T>(StreetNameDetailV2 entity, Envelope<T> wrappedEvent) where T : IHaveHash
@@ -125,5 +135,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
         private static void UpdateVersionTimestamp(StreetNameDetailV2 streetName, Instant versionTimestamp)
             => streetName.VersionTimestamp = versionTimestamp;
+
+        private static void UpdateStatus(StreetNameDetailV2 streetName, StreetNameStatus status)
+            => streetName.Status = status;
     }
 }

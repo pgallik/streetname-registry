@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
@@ -21,10 +22,21 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private const string Proposed = "Voorgesteld";
         private const string Retired = "Gehistoreerd";
         private readonly Encoding _encoding;
+        private readonly ExtractConfig _extractConfig;
 
-        public StreetNameExtractProjectionsV2(Encoding encoding)
+        public StreetNameExtractProjectionsV2(IOptions<ExtractConfig> extractConfig, Encoding encoding)
         {
+            _extractConfig = extractConfig.Value ?? throw new ArgumentNullException(nameof(extractConfig));
             _encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
+
+            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                {
+                    UpdateStatus(x, InUse);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            }); 
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
@@ -38,6 +50,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                         versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
                     }.ToBytes(_encoding)
                 };
+                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
                 UpdateStraatnm(streetNameExtractItemV2, new Names(message.Message.Names));
                 UpdateHomoniemtv(streetNameExtractItemV2, new HomonymAdditions(message.Message.HomonymAdditions));
 
@@ -68,6 +81,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                         versieid = { Value = message.Message.Provenance.Timestamp.ToBelgianDateTimeOffset().FromDateTimeOffset() }
                     }.ToBytes(_encoding)
                 };
+                UpdateId(streetNameExtractItemV2, message.Message.PersistentLocalId);
                 UpdateStraatnm(streetNameExtractItemV2, message.Message.StreetNameNames);
                 UpdateStatus(streetNameExtractItemV2, Proposed);
                 await context
@@ -143,6 +157,13 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                             throw new ArgumentOutOfRangeException(nameof(streetName), streetName, null);
                     }
                 }
+            });
+
+        private void UpdateId(StreetNameExtractItemV2 streetName, int id)
+            => UpdateRecord(streetName, record =>
+            {
+                record.id.Value = $"{_extractConfig.DataVlaanderenNamespace}/{id}";
+                record.straatnmid.Value = id;
             });
 
         private void UpdateStatus(StreetNameExtractItemV2 streetName, string status)

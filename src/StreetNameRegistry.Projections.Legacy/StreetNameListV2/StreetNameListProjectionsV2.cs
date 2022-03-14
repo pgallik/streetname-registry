@@ -67,6 +67,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     .AddAsync(streetNameListItemV2, ct);
             });
 
+            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameListItem(
+                    message.Message.PersistentLocalId, streetNameListItemV2 =>
+                    {
+                        UpdateStatus(streetNameListItemV2, StreetNameStatus.Current);
+                        UpdateVersionTimestamp(streetNameListItemV2, message.Message.Provenance.Timestamp);
+                    }, ct);
+            });
+
             When<Envelope<MunicipalityWasImported>>(async (context, message, ct) =>
             {
                 var streetNameListMunicipality = new StreetNameListMunicipality
@@ -155,7 +165,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
             }
         }
 
-        private static void UpdateVersionTimestamp(StreetNameListItem streetNameListItem, Instant timestamp)
-            => streetNameListItem.VersionTimestamp = timestamp;
+        private static void UpdateVersionTimestamp(StreetNameListItemV2 streetNameListItemV2, Instant timestamp)
+            => streetNameListItemV2.VersionTimestamp = timestamp;
+
+        private static void UpdateStatus(StreetNameListItemV2 streetNameListItemV2, StreetNameStatus status)
+            => streetNameListItemV2.Status = status;
     }
 }

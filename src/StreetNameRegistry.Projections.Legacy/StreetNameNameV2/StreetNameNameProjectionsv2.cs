@@ -57,6 +57,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                     .AddAsync(streetNameNameV2, ct);
             });
 
+            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Current);
+                    UpdateVersionTimestamp(streetNameNameV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var streetNames = context
@@ -99,7 +109,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
             }
         }
 
-        private static void UpdateVersionTimestamp(StreetNameNameV2 streetNameName, Instant versionTimestamp)
-            => streetNameName.VersionTimestamp = versionTimestamp;
+        private static void UpdateVersionTimestamp(StreetNameNameV2 streetNameNameV2, Instant versionTimestamp)
+            => streetNameNameV2.VersionTimestamp = versionTimestamp;
+
+        private static void UpdateStatus(StreetNameNameV2 streetNameNameV2, StreetNameStatus status)
+            => streetNameNameV2.Status = status;
     }
 }

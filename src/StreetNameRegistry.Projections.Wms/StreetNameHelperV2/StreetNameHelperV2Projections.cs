@@ -66,6 +66,15 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
                     .StreetNameHelperV2
                     .AddAsync(entity, ct);
             });
+
+            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    UpdateStatus(streetNameHelperV2, StreetNameStatus.Current);
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameHelperV2 entity, List<StreetNameName> streetNameNames)
@@ -126,5 +135,8 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
 
         private static void UpdateVersionTimestamp(StreetNameHelperV2 streetName, Instant versionTimestamp)
             => streetName.Version = versionTimestamp;
+
+        private static void UpdateStatus(StreetNameHelperV2 streetName, StreetNameStatus status)
+            => streetName.Status = status;
     }
 }
