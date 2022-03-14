@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
     public static class StreetNameDetailV2Extensions
     {
-        public static async Task<StreetNameDetailV2> FindAndUpdateStreetNameDetail(
+        public static async Task<StreetNameDetailV2> FindAndUpdateStreetNameDetailV2(
             this LegacyContext context,
             int persistentLocalId,
             Action<StreetNameDetailV2> updateFunc,

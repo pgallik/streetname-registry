@@ -126,7 +126,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
                     _configuration,
                     _loggerFactory)
                 .RegisterProjections<StreetNameExtractProjectionsV2, ExtractContext>(
-                    context => new StreetNameExtractProjectionsV2(DbaseCodePage.Western_European_ANSI.ToEncoding()),
+                    context => new StreetNameExtractProjectionsV2(context.Resolve<IOptions<ExtractConfig>>(), DbaseCodePage.Western_European_ANSI.ToEncoding()),
                     ConnectedProjectionSettings.Default);
         }
 

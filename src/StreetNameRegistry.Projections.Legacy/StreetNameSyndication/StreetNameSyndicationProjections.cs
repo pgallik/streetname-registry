@@ -285,19 +285,33 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     .AddAsync(streetNameSyndicationItem, ct);
             });
 
+            When<Envelope<StreetNameWasApproved>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Current);
+                }, ct);
+            });
+
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
-                var streetNames = context
+                var persistentLocalIds = context
                     .StreetNameSyndication
                     .Local
-                    .Where(s => s.MunicipalityId == message.Message.MunicipalityId)
-                    .Union(context.StreetNameSyndication.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
+                    .Where(s =>
+                        s.MunicipalityId == message.Message.MunicipalityId
+                        && s.PersistentLocalId.HasValue)
+                    .Union(context.StreetNameSyndication.Where(s =>
+                        s.MunicipalityId == message.Message.MunicipalityId
+                        && s.PersistentLocalId.HasValue))
+                    .Select(s => s.PersistentLocalId);
 
-                foreach (var streetNameSyndicationItem in streetNames)
+                foreach (var persistentLocalId in persistentLocalIds)
                 {
-                    streetNameSyndicationItem.NisCode = message.Message.NisCode;
-                    streetNameSyndicationItem.ApplyProvenance(message.Message.Provenance);
-                    streetNameSyndicationItem.SetEventData(message.Message, message.EventName);
+                    await context.CreateNewStreetNameSyndicationItem(persistentLocalId!.Value, message, syndicationItem =>
+                    {
+                        syndicationItem.NisCode = message.Message.NisCode;
+                    }, ct);
                 }
             });
         }
@@ -357,5 +371,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         }
 
         private static void DoNothing() { }
+
+        private static void UpdateStatus(StreetNameSyndicationItem syndicationItem, StreetNameStatus status)
+            => syndicationItem.Status = status;
     }
 }
