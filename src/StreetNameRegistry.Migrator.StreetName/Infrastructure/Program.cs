@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Api.BackOffice;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
@@ -113,6 +114,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
             var streetNameRepo = actualContainer.Resolve<IStreetNames>();
             var consumerContext = actualContainer.Resolve<ConsumerContext>();
+            var backOfficeContext = actualContainer.Resolve<BackOfficeContext>();
             var sqlStreamTable = new SqlStreamsTable(connectionString);
 
             var streams = (await sqlStreamTable.ReadNextStreetNameStreamPage())?.ToList() ?? new List<string>();
@@ -139,7 +141,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
 
                     var streetNameId = new StreetNameId(Guid.Parse(id));
                     var streetName = await streetNameRepo.GetAsync(streetNameId, ct);
-
+                    
                     if (!streetName.IsCompleted)
                     {
                         if (streetName.IsRemoved)
@@ -160,11 +162,16 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                         throw new InvalidOperationException(
                             $"Municipality for NisCode '{streetName.NisCode}' was not found.");
                     }
-
+                    
                     await CreateAndDispatchCommand(municipality, streetName, actualContainer, ct);
-
+                    
                     await processedIdsTable.Add(id);
                     processedIds.Add(id);
+
+                    await backOfficeContext
+                              .MunicipalityIdByPersistentLocalId
+                              .AddAsync(new MunicipalityIdByPersistentLocalId(streetName.PersistentLocalId, municipality.MunicipalityId), ct);
+                    await backOfficeContext.SaveChangesAsync(ct);
                 }
 
                 return true;
