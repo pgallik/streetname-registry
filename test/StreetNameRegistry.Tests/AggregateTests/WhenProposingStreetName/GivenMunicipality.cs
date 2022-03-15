@@ -97,6 +97,31 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
         }
 
         [Fact]
+        public void WithExistingRejectedStreetName_ThenStreetNameWasProposed()
+        {
+            var streetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { streetNameName });
+            Fixture.Register(() => StreetNameStatus.Rejected);
+            Fixture.Register(() => Language.Dutch);
+            Fixture.Register(() => Taal.NL);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityOfficialLanguageWasAdded = Fixture.Create<MunicipalityOfficialLanguageWasAdded>();
+            var streetNameWasMigrated = Fixture.Create<StreetNameWasMigratedToMunicipality>();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId);
+
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityOfficialLanguageWasAdded,
+                    streetNameWasMigrated)
+                .When(command)
+                .Then(new Fact(_streamId, new StreetNameWasProposedV2(_municipalityId, new NisCode(municipalityWasImported.NisCode), command.StreetNameNames, command.PersistentLocalId))));
+        }
+
+        [Fact]
         public void WithExistingRemovedStreetName_ThenStreetNameWasProposed()
         {
             var streetNameName = Fixture.Create<StreetNameName>();

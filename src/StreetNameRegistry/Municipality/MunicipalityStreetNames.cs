@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Municipality
         public bool HasActiveStreetNameName(StreetNameName streetNameName)
             => this.Any(x => !x.IsRemoved
                 && !x.IsRetired
+                && !x.IsRejected
                 && x.Names.HasMatch(streetNameName.Language, streetNameName.Name));
 
         public MunicipalityStreetName? FindByPersistentLocalId(PersistentLocalId persistentLocalId)

@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Municipality
     {
         Proposed = 0,
         Current = 1,
-        Retired = 2
+        Retired = 2,
+        Rejected = 3
     }
 }
