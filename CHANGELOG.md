@@ -1,3 +1,10 @@
+## [2.58.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.2...v2.58.3) (2022-03-15)
+
+
+### Bug Fixes
+
+* add municipality event tag on municipality events ([80eb619](https://github.com/informatievlaanderen/streetname-registry/commit/80eb6194cfcbc6ef02262da41366b6244340025a))
+
 ## [2.58.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.1...v2.58.2) (2022-03-15)
 
 
