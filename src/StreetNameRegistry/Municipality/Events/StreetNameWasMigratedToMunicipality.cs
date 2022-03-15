@@ -23,11 +23,11 @@ namespace StreetNameRegistry.Municipality.Events
         public Guid StreetNameId { get; }
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
-        [EventPropertyDescription("De status van de straatnaam. Mogelijkheden: Current, Proposed en Retired;")]
+        [EventPropertyDescription("De status van de straatnaam. Mogelijkheden: Current, Proposed en Retired.")]
         public StreetNameStatus Status { get; }
-        [EventPropertyDescription("Taal waarin de officiële naam staat. Mogelijkheden: Dutch, French of German.")]
+        [EventPropertyDescription("Taal waarin de officiële naam staat. Mogelijkheden: Dutch, French, German of English.")]
         public Language? PrimaryLanguage { get; }
-        [EventPropertyDescription("Taal waarin de officiële naam staat. Mogelijkheden: Dutch, French of German.")]
+        [EventPropertyDescription("Taal waarin de officiële naam staat. Mogelijkheden: Dutch, French, German of English.")]
         public Language? SecondaryLanguage { get; }
         [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
         public IDictionary<Language, string> Names { get; }
