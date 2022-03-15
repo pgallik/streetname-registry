@@ -1,3 +1,12 @@
+## [2.58.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.1...v2.58.2) (2022-03-15)
+
+
+### Bug Fixes
+
+* add Code to propose validators ([74b5706](https://github.com/informatievlaanderen/streetname-registry/commit/74b570639fc342e435f1720b7e8b9dac525db6f7))
+* correct docs with events ([1eefcf9](https://github.com/informatievlaanderen/streetname-registry/commit/1eefcf956b7a47a284e4aee88fd0c40343a74996))
+* correct property description ([8c6bba3](https://github.com/informatievlaanderen/streetname-registry/commit/8c6bba31d2a1093439ee483dd6dbac4f651cc425))
+
 ## [2.58.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.0...v2.58.1) (2022-03-14)
 
 
