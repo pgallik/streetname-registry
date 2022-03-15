@@ -195,5 +195,56 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .Result
                 .Where(x => x.Message.Contains("Straatnaam verwijderd"));
         }
+
+        [Fact]
+        public void WhenStreetNameIsNotInStatusProposed_ThenBadRequestIsExpected()
+        {
+            //Arrange
+            var persistentLocalId = new PersistentLocalId(1);
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
+            _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityLatestItem.MunicipalityId);
+
+            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
+            var importMunicipality = new ImportMunicipality(
+                municipalityId,
+                new NisCode("23002"),
+                _fixture.Create<Provenance>());
+            DispatchArrangeCommand(importMunicipality);
+
+            var migrateCommand = new MigrateStreetNameToMunicipality(
+                new StreetName.MunicipalityId(municipalityId),
+                new StreetName.StreetNameId(Fixture.Create<Guid>()),
+                new StreetName.PersistentLocalId(persistentLocalId),
+                StreetNameStatus.Current,
+                StreetName.Language.Dutch,
+                StreetName.Language.French,
+                new StreetName.Names(),
+                new StreetName.HomonymAdditions(),
+                true,
+                isRemoved: false,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(migrateCommand);
+
+            var body = new StreetNameApproveRequest
+            {
+                PersistentLocalId = persistentLocalId
+            };
+
+            //Act
+            Func<Task> act = async () => await _controller.Approve(
+                _idempotencyContext,
+                _backOfficeContext,
+                new StreetNameApproveRequestValidator(),
+                Container.Resolve<IMunicipalities>(),
+                body,
+                null);
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ApiException>()
+                .Result
+                .Where(x => x.Message.Contains("Straatnaam kan nietmeer goedgekeurd worden."));
+        }
     }
 }

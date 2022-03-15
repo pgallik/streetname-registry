@@ -97,6 +97,42 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         }
 
         [Fact]
+        public void ThenStreetNameStatusPreventsApprovalExceptionWasThrown()
+        {
+            var command = Fixture.Create<ApproveStreetName>()
+                .WithMunicipalityId(_municipalityId);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var streetNameMigratedToMunicipality = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        Fixture.Create<PersistentLocalId>(),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        Fixture.Create<Names>(),
+                        new HomonymAdditions(),
+                        true,
+                        isRemoved: false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId, municipalityWasImported, streetNameMigratedToMunicipality)
+                .When(command)
+                .Throws(new StreetNameStatusPreventsApprovalException(command.PersistentLocalId)));
+        }
+
+        [Fact]
         public void ThenStreetNameStatusIsCurrent()
         {
             var persistentLocalId = Fixture.Create<PersistentLocalId>();

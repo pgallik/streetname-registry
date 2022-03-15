@@ -32,14 +32,15 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         /// <param name="cancellationToken"></param>
         /// <response code="202">Aanvraag tot goedkeuring wordt reeds verwerkt.</response>
         /// <response code="204">Als de straatnaam goedgekeurd is.</response>
+        /// <response code="409">Als de straatnaam status niet 'voorgesteld' is.</response>
         /// <response code="412">Als de If-Match header niet overeenkomt met de laatste ETag.</response>
         /// <returns></returns>
         [HttpPut("{persistentLocalId}/goedgekeurd")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
@@ -106,6 +107,8 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                     StreetNameNotFoundException => new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound),
 
                     StreetNameWasRemovedException => new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone),
+
+                    StreetNameStatusPreventsApprovalException => new ApiException("Straatnaam kan niet meer goedgekeurd worden.", StatusCodes.Status409Conflict),
 
                     _ => new ValidationException(new List<ValidationFailure>
                     {

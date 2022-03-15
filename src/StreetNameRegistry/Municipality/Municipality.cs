@@ -63,6 +63,11 @@ namespace StreetNameRegistry.Municipality
                 throw new StreetNameWasRemovedException(persistentLocalId);
             }
 
+            if (streetName.Status != StreetNameStatus.Proposed)
+            {
+                throw new StreetNameStatusPreventsApprovalException(persistentLocalId);
+            }
+
             streetName.Approve();
         }
 
