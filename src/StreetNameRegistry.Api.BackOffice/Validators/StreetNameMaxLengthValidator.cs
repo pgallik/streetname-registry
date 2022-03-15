@@ -8,6 +8,8 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
 
     public class StreetNameMaxLengthValidator : PropertyValidator<StreetNameProposeRequest, KeyValuePair<Taal, string>>
     {
+        public const string Code = "StreetNameMaxLengthValidator";
+
         public override bool IsValid(ValidationContext<StreetNameProposeRequest> context, KeyValuePair<Taal, string> value) => value.Value.Length <= 60;
 
         public override string Name => nameof(StreetNameMaxLengthValidator);

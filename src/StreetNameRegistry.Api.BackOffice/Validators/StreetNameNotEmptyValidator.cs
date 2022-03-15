@@ -8,6 +8,8 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
 
     public class StreetNameNotEmptyValidator : PropertyValidator<StreetNameProposeRequest, KeyValuePair<Taal, string>>
     {
+        public const string Code = "StreetNameNotEmptyValidator";
+
         public override bool IsValid(ValidationContext<StreetNameProposeRequest> context, KeyValuePair<Taal, string> value) => !string.IsNullOrWhiteSpace(value.Value);
 
         public override string Name => nameof(StreetNameNotEmptyValidator);

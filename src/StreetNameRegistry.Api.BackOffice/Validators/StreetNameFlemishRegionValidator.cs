@@ -14,6 +14,8 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
 
     public class StreetNameFlemishRegionValidator : AsyncPropertyValidator<StreetNameProposeRequest, string>
     {
+        public const string Code = "StreetNameFlemishRegionValidator";
+
         private readonly ConsumerContext _consumerContext;
 
         public StreetNameFlemishRegionValidator(ConsumerContext consumerContext)
