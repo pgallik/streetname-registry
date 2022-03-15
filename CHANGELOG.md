@@ -1,3 +1,10 @@
+# [2.59.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.3...v2.59.0) (2022-03-15)
+
+
+### Features
+
+* validate streetname is found and not removed ([e5f7711](https://github.com/informatievlaanderen/streetname-registry/commit/e5f7711316ce876ea6267152777b340425ec9d70))
+
 ## [2.58.3](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.2...v2.58.3) (2022-03-15)
 
 
