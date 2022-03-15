@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
     using Municipality.Events;
     using Municipality.Exceptions;
     using System.Collections.Generic;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
     public class GivenMunicipality : StreetNameRegistryTest
     {
@@ -57,6 +58,42 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                 .Given(_streamId, municipalityWasImported)
                 .When(command)
                 .Throws(new StreetNameNotFoundException(command.PersistentLocalId)));
+        }
+
+        [Fact]
+        public void ThenStreetNameWasRemovedExceptionWasThrown()
+        {
+            var command = Fixture.Create<ApproveStreetName>()
+                .WithMunicipalityId(_municipalityId);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var streetNameMigratedToMunicipality = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        Fixture.Create<PersistentLocalId>(),
+                        StreetNameStatus.Current,
+                        Language.Dutch,
+                        null,
+                        Fixture.Create<Names>(),
+                        new HomonymAdditions(),
+                        true,
+                        true);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId, municipalityWasImported, streetNameMigratedToMunicipality)
+                .When(command)
+                .Throws(new StreetNameWasRemovedException(command.PersistentLocalId)));
         }
 
         [Fact]

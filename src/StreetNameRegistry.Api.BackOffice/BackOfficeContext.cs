@@ -36,8 +36,8 @@ namespace StreetNameRegistry.Api.BackOffice
 
     public class MunicipalityIdByPersistentLocalId
     {
-        public int PersistentLocalId { get; }
-        public Guid MunicipalityId { get; }
+        public int PersistentLocalId { get; set; }
+        public Guid MunicipalityId { get; set; }
 
         private MunicipalityIdByPersistentLocalId()
         { }

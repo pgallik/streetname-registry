@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice.StreetName
 {
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
@@ -8,11 +9,13 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentValidation;
+    using FluentValidation.Results;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
     using Municipality.Commands;
     using Requests;
+    using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
 
     public partial class StreetNameController
@@ -85,7 +88,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                         return new PreconditionFailedResult();
                     }
                 }
-                
+
                 var cmd = new ApproveStreetName(municipalityId, persistentLocalId, fakeProvenanceData);
                 await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd, cancellationToken);
 
@@ -96,12 +99,20 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             {
                 return Accepted();
             }
-            catch (DomainException ex)
+            catch (DomainException exception)
             {
+                throw exception switch
+                {
+                    StreetNameNotFoundException => new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound),
 
+                    StreetNameWasRemovedException => new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone),
+
+                    _ => new ValidationException(new List<ValidationFailure>
+                    {
+                        new ValidationFailure(string.Empty, exception.Message)
+                    })
+                };
             }
-
-            return NoContent();
         }
     }
 }

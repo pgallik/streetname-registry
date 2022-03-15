@@ -15,9 +15,18 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
         public TestBackOfficeContext(DbContextOptions<BackOfficeContext> options)
             : base(options) { }
 
-        public MunicipalityIdByPersistentLocalId AddMunicipalityIdByPersistentLocalIdToFixture()
+        public MunicipalityIdByPersistentLocalId AddMunicipalityIdByPersistentLocalIdToFixture(int? persistentLocalId = null, Guid? municipalityId = null)
         {
             var item = new Fixture().Create<MunicipalityIdByPersistentLocalId>();
+            if (persistentLocalId is not null)
+            {
+                item.PersistentLocalId = persistentLocalId.Value;
+            }
+
+            if (municipalityId is not null)
+            {
+                item.MunicipalityId = municipalityId.Value;
+            }
             MunicipalityIdByPersistentLocalId.Add(item);
             SaveChanges();
             return item;

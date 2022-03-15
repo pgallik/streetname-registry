@@ -21,7 +21,9 @@ namespace StreetNameRegistry.Municipality
         public void ProposeStreetName(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
             if (MunicipalityStatus == MunicipalityStatus.Retired)
+            {
                 throw new MunicipalityWasRetiredException($"Municipality with id '{_municipalityId}' was retired");
+            }
 
             foreach (var streetNameName in streetNameNames)
             {
@@ -51,9 +53,14 @@ namespace StreetNameRegistry.Municipality
 
         public void ApproveStreetName(PersistentLocalId persistentLocalId)
         {
-            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName))
+            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName) || streetName is null)
             {
                 throw new StreetNameNotFoundException(persistentLocalId);
+            }
+
+            if (streetName.IsRemoved)
+            {
+                throw new StreetNameWasRemovedException(persistentLocalId);
             }
 
             streetName.Approve();
@@ -112,25 +119,33 @@ namespace StreetNameRegistry.Municipality
         public void AddOfficialLanguage(Language language)
         {
             if (!_officialLanguages.Contains(language))
+            {
                 ApplyChange(new MunicipalityOfficialLanguageWasAdded(_municipalityId, language));
+            }
         }
 
         public void RemoveOfficialLanguage(Language language)
         {
             if (_officialLanguages.Contains(language))
+            {
                 ApplyChange(new MunicipalityOfficialLanguageWasRemoved(_municipalityId, language));
+            }
         }
 
         public void AddFacilityLanguage(Language language)
         {
             if (!_facilityLanguages.Contains(language))
+            {
                 ApplyChange(new MunicipalityFacilityLanguageWasAdded(_municipalityId, language));
+            }
         }
 
         public void RemoveFacilityLanguage(Language language)
         {
             if (_facilityLanguages.Contains(language))
+            {
                 ApplyChange(new MunicipalityFacilityLanguageWasRemoved(_municipalityId, language));
+            }
         }
 
         public void MigrateStreetName(

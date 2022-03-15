@@ -30,6 +30,6 @@ namespace StreetNameRegistry.Api.BackOffice.Convertors
 
     public static class IdentifierMappings
     {
-        public static Func<string, string> MunicipalityNisCode = s => s;
+        public static readonly Func<string, string> MunicipalityNisCode = s => s;
     }
 }
