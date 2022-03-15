@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Municipality.Events
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
+    [EventTags(Tag.Municipality)]
     [EventName(EventName)]
     [EventDescription("Er werd een faciliteitentaal verwijderd van de gemeente.")]
     public class MunicipalityFacilityLanguageWasRemoved : IMunicipalityEvent
