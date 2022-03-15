@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Municipality.Events
     {
         public const string EventName = "StreetNameWasApproved"; // BE CAREFUL CHANGING THIS!!
 
-        [EventPropertyDescription("Interne GUID van de gemeente.")]
+        [EventPropertyDescription("Interne GUID van de gemeente aan dewelke de straatnaam is gekoppeld.")]
         public Guid MunicipalityId { get; }
 
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
