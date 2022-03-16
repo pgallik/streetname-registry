@@ -8,14 +8,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
     using FluentValidation;
-    using global::AutoFixture;
     using Infrastructure;
     using Moq;
     using Municipality;
-    using Municipality.Commands;
     using SqlStreamStore;
     using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.StreetName;
@@ -30,12 +27,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         private readonly TestConsumerContext _consumerContext;
         private readonly TestBackOfficeContext _backOfficeContext;
         private readonly StreetNameController _controller;
-        private readonly Fixture _fixture;
         private readonly IdempotencyContext _idempotencyContext;
 
         public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
-            _fixture = new Fixture();
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
             _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
@@ -55,23 +50,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Returns(new PersistentLocalId(expectedLocation));
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode("23002"),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
+            ImportMunicipality(municipalityId);
 
-            var addOfficialLanguageDutch = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.Dutch,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguageDutch);
-
-            var addOfficialLanguageFrench = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.French,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguageFrench);
+            AddOfficialLanguageDutch(municipalityId);
+            AddOfficialLanguageFrench(municipalityId);
 
             var body = new StreetNameProposeRequest
             {
@@ -229,25 +211,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
 
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode(municipalityLatestItem.NisCode),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
-
-            var addOfficialLanguage = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.Dutch,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguage);
+            ImportMunicipality(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
 
             var streetNameName = new StreetNameName("teststraat", Language.Dutch);
-            var proposeStreetName = new ProposeStreetName(
-                municipalityId,
-                new Names { streetNameName },
-                persistentLocalId,
-                Fixture.Create<Provenance>());
-            DispatchArrangeCommand(proposeStreetName);
+            ProposeStreetName(municipalityId, new Names
+            {
+                streetNameName
+            }, persistentLocalId);
 
             var body = new StreetNameProposeRequest
             {
@@ -290,17 +261,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
 
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode("23002"),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
-
-            var retireMunicipality = new RetireMunicipality(
-                municipalityId,
-                Fixture.Create<RetirementDate>(),
-                Fixture.Create<Provenance>());
-            DispatchArrangeCommand(retireMunicipality);
+            ImportMunicipality(municipalityId);
+            RetireMunicipality(municipalityId);
 
             var body = new StreetNameProposeRequest
             {
@@ -343,11 +305,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
 
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode(municipalityLatestItem.NisCode),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
+            ImportMunicipality(municipalityId);
 
             var body = new StreetNameProposeRequest
             {
@@ -389,23 +347,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
 
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode(municipalityLatestItem.NisCode),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
-
-            var addOfficialLanguage = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.German,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguage);
-
-            var addFacilityLanguageToMunicipality = new AddFacilityLanguageToMunicipality(
-                municipalityId,
-                Language.English,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addFacilityLanguageToMunicipality);
+            ImportMunicipality(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            AddFacilityLanguageToMunicipality(municipalityId, Language.English);
 
             var body = new StreetNameProposeRequest
             {

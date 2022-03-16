@@ -22,7 +22,7 @@ namespace StreetNameRegistry.Municipality
         {
             if (MunicipalityStatus == MunicipalityStatus.Retired)
             {
-                throw new MunicipalityWasRetiredException($"Municipality with id '{_municipalityId}' was retired");
+                throw new MunicipalityHasUnexpectedStatusException($"Municipality with id '{_municipalityId}' was retired");
             }
 
             foreach (var streetNameName in streetNameNames)
@@ -61,6 +61,11 @@ namespace StreetNameRegistry.Municipality
             if (streetName.IsRemoved)
             {
                 throw new StreetNameWasRemovedException(persistentLocalId);
+            }
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasUnexpectedStatusException(MunicipalityStatus, MunicipalityStatus.Current);
             }
 
             if (streetName.Status == StreetNameStatus.Current)

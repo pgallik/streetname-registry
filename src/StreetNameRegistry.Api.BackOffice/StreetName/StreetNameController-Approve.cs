@@ -110,6 +110,11 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
 
                     StreetNameStatusPreventsApprovalException => new ApiException("Straatnaam kan niet meer goedgekeurd worden.", StatusCodes.Status409Conflict),
 
+                    MunicipalityHasUnexpectedStatusException _ => CreateValidationException(
+                        "StraatnaamGemeenteInGebruik",
+                        string.Empty,
+                        "Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'."),
+
                     _ => new ValidationException(new List<ValidationFailure>
                     {
                         new ValidationFailure(string.Empty, exception.Message)

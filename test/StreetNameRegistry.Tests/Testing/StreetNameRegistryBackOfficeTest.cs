@@ -11,6 +11,8 @@ namespace StreetNameRegistry.Tests.Testing
     using global::AutoFixture;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
+    using Municipality;
+    using Municipality.Commands;
     using Xunit.Abstractions;
 
     public class StreetNameRegistryBackOfficeTest : StreetNameRegistryTest
@@ -54,6 +56,79 @@ namespace StreetNameRegistry.Tests.Testing
             {
                 throw new Exception("Could not find controller type");
             }
+        }
+
+        protected void RetireMunicipality(MunicipalityId municipalityId)
+        {
+            var retireMunicipality = new RetireMunicipality(
+                municipalityId,
+                Fixture.Create<RetirementDate>(),
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(retireMunicipality);
+        }
+
+        protected void ProposeStreetName(MunicipalityId municipalityId, Names streetNameNames,
+            PersistentLocalId persistentLocalId)
+        {
+            var proposeCommand = new ProposeStreetName(
+                municipalityId,
+                streetNameNames,
+                persistentLocalId,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(proposeCommand);
+        }
+
+        protected void AddOfficialLanguageFrench(MunicipalityId municipalityId)
+        {
+            var addOfficialLanguageFrench = new AddOfficialLanguageToMunicipality(
+                municipalityId,
+                Language.French,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(addOfficialLanguageFrench);
+        }
+
+        protected void AddOfficialLanguageDutch(MunicipalityId municipalityId)
+        {
+            var addOfficialLanguageDutch = new AddOfficialLanguageToMunicipality(
+                municipalityId,
+                Language.Dutch,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(addOfficialLanguageDutch);
+        }
+
+        protected void ImportMunicipality(MunicipalityId municipalityId)
+        {
+            var importMunicipality = new ImportMunicipality(
+                municipalityId,
+                new NisCode("23002"),
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(importMunicipality);
+        }
+
+        protected void ApproveStreetName(MunicipalityId municipalityId, PersistentLocalId persistentLocalId)
+        {
+            var approveCommand = new ApproveStreetName(
+                municipalityId,
+                persistentLocalId,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(approveCommand);
+        }
+
+        protected void SetMunicipalityToCurrent(MunicipalityId municipalityId)
+        {
+            var setMunicipalityToCurrent = new SetMunicipalityToCurrent(
+                municipalityId,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(setMunicipalityToCurrent);
+        }
+
+        protected void AddFacilityLanguageToMunicipality(MunicipalityId municipalityId, Language language)
+        {
+            var addFacilityLanguageToMunicipality = new AddFacilityLanguageToMunicipality(
+                municipalityId,
+                language,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(addFacilityLanguageToMunicipality);
         }
     }
 }

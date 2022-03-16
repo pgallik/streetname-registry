@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
+    using FluentValidation;
     using global::AutoFixture;
     using Infrastructure;
     using Municipality;
@@ -24,7 +25,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
     using Language = Municipality.Language;
     using MunicipalityId = Municipality.MunicipalityId;
     using Names = Municipality.Names;
-    using NisCode = Municipality.NisCode;
     using PersistentLocalId = Municipality.PersistentLocalId;
     using StreetNameName = Municipality.StreetNameName;
     using StreetNameStatus = StreetName.StreetNameStatus;
@@ -34,12 +34,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         private readonly TestConsumerContext _consumerContext;
         private readonly TestBackOfficeContext _backOfficeContext;
         private readonly StreetNameController _controller;
-        private readonly Fixture _fixture;
         private readonly IdempotencyContext _idempotencyContext;
 
         public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
-            _fixture = new Fixture();
             _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
             _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
             _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
@@ -58,42 +56,23 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityLatestItem.MunicipalityId);
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode("23002"),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
 
-            var addOfficialLanguageDutch = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.Dutch,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguageDutch);
-
-            var addOfficialLanguageFrench = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.French,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguageFrench);
-
-            var streetNameNames = new Names
+            ImportMunicipality(municipalityId);
+            SetMunicipalityToCurrent(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            AddOfficialLanguageFrench(municipalityId);
+            ProposeStreetName(municipalityId, new Names
             {
                 new StreetNameName(Fixture.Create<string>(), Language.Dutch),
                 new StreetNameName(Fixture.Create<string>(), Language.French)
-            };
-            var proposeCommand = new ProposeStreetName(
-                municipalityId,
-                streetNameNames,
-                persistentLocalId,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(proposeCommand);
+            }, persistentLocalId);
 
+            // Act
             var body = new StreetNameApproveRequest
             {
                 PersistentLocalId = persistentLocalId
             };
 
-            //Act
             var result = (NoContentWithETagResult)await _controller.Approve(
                 _idempotencyContext,
                 _backOfficeContext,
@@ -104,7 +83,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
 
             //Assert
             result.ETag.Length.Should().Be(128);
-            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 4, 1); //4 = version of stream (zero based)
+            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 5, 1); //5 = version of stream (zero based)
             stream.Messages.First().JsonMetadata.Should().Contain(result.ETag);
         }
 
@@ -120,41 +99,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityLatestItem.MunicipalityId);
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode("23002"),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
-
-            var addOfficialLanguageDutch = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.Dutch,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguageDutch);
-
-            var addOfficialLanguageFrench = new AddOfficialLanguageToMunicipality(
-                municipalityId,
-                Language.French,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(addOfficialLanguageFrench);
-
-            var streetNameNames = new Names
+            ImportMunicipality(municipalityId);
+            SetMunicipalityToCurrent(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            AddOfficialLanguageFrench(municipalityId);
+            ProposeStreetName(municipalityId, new Names
             {
                 new StreetNameName(Fixture.Create<string>(), Language.Dutch),
                 new StreetNameName(Fixture.Create<string>(), Language.French)
-            };
-            var proposeCommand = new ProposeStreetName(
-                municipalityId,
-                streetNameNames,
-                persistentLocalId,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(proposeCommand);
-
-            var approveCommand = new ApproveStreetName(
-                municipalityId,
-                persistentLocalId,
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(approveCommand);
+            }, persistentLocalId);
+            ApproveStreetName(municipalityId, persistentLocalId);
 
             var body = new StreetNameApproveRequest
             {
@@ -172,7 +126,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
 
             //Assert
             result.ETag.Length.Should().Be(128);
-            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 4, 1); //4 = version of stream (zero based)
+            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 5, 1); //5 = version of stream (zero based)
             stream.Messages.First().JsonMetadata.Should().Contain(result.ETag);
         }
 
@@ -185,11 +139,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityLatestItem.MunicipalityId);
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode("23002"),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
+
+            ImportMunicipality(municipalityId);
 
             var body = new StreetNameApproveRequest
             {
@@ -222,11 +173,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityLatestItem.MunicipalityId);
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode("23002"),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
+
+            ImportMunicipality(municipalityId);
 
             var migrateCommand = new MigrateStreetNameToMunicipality(
                 new StreetName.MunicipalityId(municipalityId),
@@ -273,11 +221,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityLatestItem.MunicipalityId);
 
             var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
-            var importMunicipality = new ImportMunicipality(
-                municipalityId,
-                new NisCode("23002"),
-                _fixture.Create<Provenance>());
-            DispatchArrangeCommand(importMunicipality);
+
+            ImportMunicipality(municipalityId);
+            SetMunicipalityToCurrent(municipalityId);
 
             var migrateCommand = new MigrateStreetNameToMunicipality(
                 new StreetName.MunicipalityId(municipalityId),
@@ -313,6 +259,52 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .ThrowAsync<ApiException>()
                 .Result
                 .Where(x => x.Message.Contains("Straatnaam kan niet meer goedgekeurd worden."));
+        }
+
+        [Fact]
+        public async Task WhenMunicipalityIsRetired_ThenBadRequestIsReturned()
+        {
+            const int expectedLocation = 5;
+
+            var persistentLocalId = new PersistentLocalId(expectedLocation);
+
+            //Arrange
+            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
+            _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityLatestItem.MunicipalityId);
+
+            var municipalityId = new MunicipalityId(municipalityLatestItem.MunicipalityId);
+
+            ImportMunicipality(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            AddOfficialLanguageFrench(municipalityId);
+            ProposeStreetName(municipalityId, new Names
+            {
+                new StreetNameName(Fixture.Create<string>(), Language.Dutch),
+                new StreetNameName(Fixture.Create<string>(), Language.French)
+            }, persistentLocalId);
+            RetireMunicipality(municipalityId);
+
+            var body = new StreetNameApproveRequest
+            {
+                PersistentLocalId = persistentLocalId
+            };
+
+            //Act
+            Func<Task> act = async () => await _controller.Approve(
+                _idempotencyContext,
+                _backOfficeContext,
+                new StreetNameApproveRequestValidator(),
+                Container.Resolve<IMunicipalities>(),
+                body,
+                null);
+
+            //Assert
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x => x.Message.Contains("Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'."))
+                .Where(x => x.Errors.Single().ErrorCode == "StraatnaamGemeenteInGebruik");
         }
     }
 }
