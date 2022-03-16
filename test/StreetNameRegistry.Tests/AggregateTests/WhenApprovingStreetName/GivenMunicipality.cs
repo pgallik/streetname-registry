@@ -35,12 +35,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
             var command = Fixture.Create<ApproveStreetName>()
                 .WithMunicipalityId(_municipalityId);
 
-            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
-            var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
-
             // Act, assert
             Assert(new Scenario()
-                .Given(_streamId, municipalityWasImported, streetNameWasProposed)
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    Fixture.Create<StreetNameWasProposedV2>())
                 .When(command)
                 .Then(new Fact(_streamId, new StreetNameWasApproved(_municipalityId, command.PersistentLocalId))));
         }
@@ -96,6 +96,47 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                 .Throws(new StreetNameWasRemovedException(command.PersistentLocalId)));
         }
 
+        [Fact]
+        public void WithMunicipalityStatusRetired_ThenMunicipalityHasUnexpectedStatusExceptionWasThrown()
+        {
+            var command = Fixture.Create<ApproveStreetName>()
+                .WithMunicipalityId(_municipalityId);
+
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var streetNameMigratedToMunicipality = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+                .FromFactory(() =>
+                {
+                    var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
+                        _municipalityId,
+                        Fixture.Create<NisCode>(),
+                        Fixture.Create<StreetNameId>(),
+                        Fixture.Create<PersistentLocalId>(),
+                        StreetNameStatus.Proposed,
+                        Language.Dutch,
+                        null,
+                        Fixture.Create<Names>(),
+                        new HomonymAdditions(),
+                        true,
+                        isRemoved: false);
+
+                    ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
+                    return streetNameWasMigratedToMunicipality;
+                })
+                .Create();
+
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    Fixture.Create<MunicipalityWasRetired>(),
+                    streetNameMigratedToMunicipality)
+                .When(command)
+                .Throws(new MunicipalityHasUnexpectedStatusException(
+                    actual: MunicipalityStatus.Retired,
+                    expected: MunicipalityStatus.Current)));
+        }
+
         [Theory]
         [InlineData(StreetNameStatus.Rejected)]
         [InlineData(StreetNameStatus.Retired)]
@@ -129,7 +170,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
 
             // Act, assert
             Assert(new Scenario()
-                .Given(_streamId, municipalityWasImported, streetNameMigratedToMunicipality)
+                .Given(_streamId,
+                    municipalityWasImported,
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    streetNameMigratedToMunicipality)
                 .When(command)
                 .Throws(new StreetNameStatusPreventsApprovalException(command.PersistentLocalId)));
         }
@@ -162,10 +206,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                 })
                 .Create();
 
-
             // Act, assert
             Assert(new Scenario()
-                .Given(_streamId, municipalityWasImported, streetNameMigratedToMunicipality)
+                .Given(_streamId,
+                    municipalityWasImported,
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    streetNameMigratedToMunicipality)
                 .When(command)
                 .ThenNone());
         }
@@ -178,6 +224,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
             aggregate.Initialize(new List<object>
             {
                 Fixture.Create<MunicipalityWasImported>(),
+                Fixture.Create<MunicipalityBecameCurrent>(),
                 Fixture.Create<StreetNameWasProposedV2>()
             });
 

@@ -231,7 +231,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityWasImported,
                     municipalityWasRetired)
                 .When(command)
-                .Throws(new MunicipalityWasRetiredException($"Municipality with id '{_municipalityId}' was retired")));
+                .Throws(new MunicipalityHasUnexpectedStatusException($"Municipality with id '{_municipalityId}' was retired")));
         }
 
         [Fact]

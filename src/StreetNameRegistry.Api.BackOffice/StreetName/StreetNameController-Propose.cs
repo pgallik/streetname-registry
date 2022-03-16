@@ -117,7 +117,7 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                         nameof(streetNameProposeRequest.Straatnamen),
                         $"Streetname '{nameExists.Name}' already exists within the municipality."),
 
-                    MunicipalityWasRetiredException _ => CreateValidationException(
+                    MunicipalityHasUnexpectedStatusException _ => CreateValidationException(
                         "StreetNameMunicipalityRetired",
                         nameof(streetNameProposeRequest.GemeenteId),
                         "This municipality was retired."),
