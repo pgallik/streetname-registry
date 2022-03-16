@@ -1,3 +1,10 @@
+# [2.61.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.60.0...v2.61.0) (2022-03-16)
+
+
+### Features
+
+* municipality status validation when approving streetname ([2a864af](https://github.com/informatievlaanderen/streetname-registry/commit/2a864afca6f7555d0e39bb070fe6a8e39d822013))
+
 # [2.60.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.59.1...v2.60.0) (2022-03-16)
 
 
