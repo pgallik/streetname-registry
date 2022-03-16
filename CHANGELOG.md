@@ -1,3 +1,10 @@
+## [2.59.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.59.0...v2.59.1) (2022-03-16)
+
+
+### Bug Fixes
+
+* add rejected status and test with propose ([0c7c6ae](https://github.com/informatievlaanderen/streetname-registry/commit/0c7c6ae327074108122ccb93368cdf3cb7e68b50))
+
 # [2.59.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.58.3...v2.59.0) (2022-03-15)
 
 
