@@ -1,3 +1,10 @@
+# [2.60.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.59.1...v2.60.0) (2022-03-16)
+
+
+### Features
+
+* approval validation 4, status not proposed ([51060a1](https://github.com/informatievlaanderen/streetname-registry/commit/51060a1be2555de72475ad922fd1efa1e5560ea7))
+
 ## [2.59.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.59.0...v2.59.1) (2022-03-16)
 
 
