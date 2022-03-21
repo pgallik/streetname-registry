@@ -14,6 +14,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
     using Municipality.Exceptions;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using StreetName.Events;
 
     public class GivenMunicipality : StreetNameRegistryTest
     {

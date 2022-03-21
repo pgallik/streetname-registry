@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using Municipality;
     using Municipality.Events;
     using NodaTime;
+    using StreetName.Events;
 
     [ConnectedProjectionName("Extract straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen extract voorziet.")]

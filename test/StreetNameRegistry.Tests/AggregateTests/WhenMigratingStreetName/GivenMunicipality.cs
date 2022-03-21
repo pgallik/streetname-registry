@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenMigratingStreetName
     using Municipality;
     using Municipality.Commands;
     using Municipality.Events;
+    using StreetName.Events;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

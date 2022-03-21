@@ -1,27 +1,22 @@
-namespace StreetNameRegistry.Municipality.Events
+namespace StreetNameRegistry.StreetName.Events
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Municipality;
     using Newtonsoft.Json;
 
     [EventTags(EventTag.For.Sync)]
     [EventName(EventName)]
-    [EventDescription("De straatnaam werd voorgesteld.")]
-    public class StreetNameWasProposedV2 : IMunicipalityEvent
+    [EventDescription("De straatnaam werd goedgekeurd.")]
+    public class StreetNameWasApproved : IMunicipalityEvent
     {
-        public const string EventName = "StreetNameWasProposedV2"; // BE CAREFUL CHANGING THIS!!
+        public const string EventName = "StreetNameWasApproved"; // BE CAREFUL CHANGING THIS!!
 
-        [EventPropertyDescription("Interne GUID van de gemeente aan dewelke de straatnaam is toegewezen.")]
+        [EventPropertyDescription("Interne GUID van de gemeente aan dewelke de straatnaam is gekoppeld.")]
         public Guid MunicipalityId { get; }
-
-        [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente aan dewelke de straatnaam is toegewezen.")]
-        public string NisCode { get; }
-
-        [EventPropertyDescription("De straatnamen in de officiële en (eventuele) faciliteitentaal van de gemeente. Mogelijkheden: Dutch, French, German of English.")]
-        public List<StreetNameName> StreetNameNames { get; }
 
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
@@ -29,32 +24,24 @@ namespace StreetNameRegistry.Municipality.Events
         [EventPropertyDescription("Metadata bij het event.")]
         public ProvenanceData Provenance { get; private set; }
 
-        public StreetNameWasProposedV2(
+        public StreetNameWasApproved(
             MunicipalityId municipalityId,
-            NisCode nisCode,
-            Names streetNameNames,
             PersistentLocalId persistentLocalId)
         {
             MunicipalityId = municipalityId;
-            NisCode = nisCode;
-            StreetNameNames = streetNameNames;
             PersistentLocalId = persistentLocalId;
         }
 
         [JsonConstructor]
-        private StreetNameWasProposedV2(
+        private StreetNameWasApproved(
             Guid municipalityId,
-            string nisCode,
-            List<StreetNameName> streetNameNames,
             int persistentLocalId,
             ProvenanceData provenance
         ) :
             this(
                 new MunicipalityId(municipalityId),
-                new NisCode(nisCode),
-                new Names(streetNameNames),
                 new PersistentLocalId(persistentLocalId))
-        => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
+            => ((ISetProvenance)this).SetProvenance(provenance.ToProvenance());
 
         void ISetProvenance.SetProvenance(Provenance provenance) => Provenance = new ProvenanceData(provenance);
 
@@ -62,9 +49,7 @@ namespace StreetNameRegistry.Municipality.Events
         {
             var fields = Provenance.GetHashFields().ToList();
             fields.Add(MunicipalityId.ToString("D"));
-            fields.Add(NisCode);
             fields.Add(PersistentLocalId.ToString());
-            fields.AddRange(StreetNameNames.Select(streetNameName => streetNameName.ToString()));
             return fields;
         }
 

@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
+    using StreetName.Events;
     using StreetNameList;
     using StreetNameName = Municipality.StreetNameName;
 

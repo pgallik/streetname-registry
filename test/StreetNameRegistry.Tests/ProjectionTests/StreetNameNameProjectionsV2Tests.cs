@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Municipality;
     using Municipality.Events;
     using Projections.Legacy.StreetNameNameV2;
+    using StreetName.Events;
     using Xunit;
 
     public class StreetNameNameProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameNameProjectionsV2>
