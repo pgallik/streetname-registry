@@ -25,10 +25,10 @@ namespace StreetNameRegistry.Producer
             _topic = $"{configuration[_streetnameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {_streetnameTopicKey}");
 
 
-            //When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.MunicipalityWasDrawn>>(async (context, message, ct) =>
-            //{
-            //    await Produce(message.Message.MunicipalityId, message.Message.ToContract(), ct);
-            //});
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.MunicipalityWasDrawn>>(async (context, message, ct) =>
+            {
+                await Produce(message.Message.MunicipalityId, message.Message.ToContract(), ct);
+            });
         }
 
         private async Task Produce<T>(Guid municipalityId, T message, CancellationToken cancellationToken = default)

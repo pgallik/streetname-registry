@@ -1,71 +1,108 @@
-//namespace MunicipalityRegistry.Producer.Extensions
-//{
-//    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-//    using Contracts = Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
-//    using ContractsCommon = Be.Vlaanderen.Basisregisters.GrAr.Contracts.Common;
-//    using Domain = Municipality.Events;
+namespace StreetNameRegistry.Producer.Extensions
+{
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using Contracts = Be.Vlaanderen.Basisregisters.GrAr.Contracts.StreetNameRegistry;
+    using ContractsCommon = Be.Vlaanderen.Basisregisters.GrAr.Contracts.Common;
+    using Domain = StreetName.Events;
 
-//    public static class MessageExtensions
-//    {
-//        private static ContractsCommon.Provenance ToContract(this ProvenanceData provenance) => new ContractsCommon.Provenance(
-//            provenance.Timestamp.ToString(),
-//            provenance.Application.ToString(),
-//            provenance.Modification.ToString(),
-//            provenance.Organisation.ToString(),
-//            provenance.Reason);
+    public static class MessageExtensions
+    {
+        private static ContractsCommon.Provenance ToContract(this ProvenanceData provenance) => new ContractsCommon.Provenance(
+            provenance.Timestamp.ToString(),
+            provenance.Application.ToString(),
+            provenance.Modification.ToString(),
+            provenance.Organisation.ToString(),
+            provenance.Reason);
 
-//        public static Contracts.MunicipalityWasRegistered ToContract(this Domain.MunicipalityWasRegistered message) =>
-//            new Contracts.MunicipalityWasRegistered(message.MunicipalityId.ToString("D"), message.NisCode, message.Provenance.ToContract());
+        public static Contracts.StreetNameBecameComplete ToContract(this Domain.StreetNameBecameComplete message) =>
+            new Contracts.StreetNameBecameComplete(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityNisCodeWasDefined ToContract(this Domain.MunicipalityNisCodeWasDefined message) =>
-//            new Contracts.MunicipalityNisCodeWasDefined(message.MunicipalityId.ToString("D"), message.NisCode, message.Provenance.ToContract());
+        public static Contracts.StreetNameBecameCurrent ToContract(this Domain.StreetNameBecameCurrent message) =>
+            new Contracts.StreetNameBecameCurrent(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityNisCodeWasCorrected ToContract(this Domain.MunicipalityNisCodeWasCorrected message) =>
-//            new Contracts.MunicipalityNisCodeWasCorrected(message.MunicipalityId.ToString("D"), message.NisCode, message.Provenance.ToContract());
+        public static Contracts.StreetNameBecameIncomplete ToContract(this Domain.StreetNameBecameIncomplete message) =>
+            new Contracts.StreetNameBecameIncomplete(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityWasNamed ToContract(this Domain.MunicipalityWasNamed message) =>
-//            new Contracts.MunicipalityWasNamed(message.MunicipalityId.ToString("D"), message.Name, message.Language.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNameHomonymAdditionWasCleared ToContract(this Domain.StreetNameHomonymAdditionWasCleared message) =>
+            new Contracts.StreetNameHomonymAdditionWasCleared(message.StreetNameId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityNameWasCorrected ToContract(this Domain.MunicipalityNameWasCorrected message) =>
-//            new Contracts.MunicipalityNameWasCorrected(message.MunicipalityId.ToString("D"), message.Name, message.Language.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNameHomonymAdditionWasCorrected ToContract(this Domain.StreetNameHomonymAdditionWasCorrected message) =>
+            new Contracts.StreetNameHomonymAdditionWasCorrected(message.StreetNameId.ToString("D"), message.HomonymAddition, message.Language.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityNameWasCorrectedToCleared ToContract(this Domain.MunicipalityNameWasCorrectedToCleared message) =>
-//            new Contracts.MunicipalityNameWasCorrectedToCleared(message.MunicipalityId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNameHomonymAdditionWasCorrectedToCleared ToContract(this Domain.StreetNameHomonymAdditionWasCorrectedToCleared message) =>
+            new Contracts.StreetNameHomonymAdditionWasCorrectedToCleared(message.StreetNameId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityOfficialLanguageWasAdded ToContract(this Domain.MunicipalityOfficialLanguageWasAdded message) =>
-//            new Contracts.MunicipalityOfficialLanguageWasAdded(message.MunicipalityId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNameHomonymAdditionWasDefined ToContract(this Domain.StreetNameHomonymAdditionWasDefined message) =>
+            new Contracts.StreetNameHomonymAdditionWasDefined(message.StreetNameId.ToString("D"), message.HomonymAddition, message.Language.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityOfficialLanguageWasRemoved ToContract(this Domain.MunicipalityOfficialLanguageWasRemoved message) =>
-//            new Contracts.MunicipalityOfficialLanguageWasRemoved(message.MunicipalityId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNameNameWasCleared ToContract(this Domain.StreetNameNameWasCleared message) =>
+            new Contracts.StreetNameNameWasCleared(message.StreetNameId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityFacilityLanguageWasAdded ToContract(this Domain.MunicipalityFacilityLanguageWasAdded message) =>
-//            new Contracts.MunicipalityFacilityLanguageWasAdded(message.MunicipalityId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNameNameWasCorrected ToContract(this Domain.StreetNameNameWasCorrected message) =>
+            new Contracts.StreetNameNameWasCorrected(message.StreetNameId.ToString("D"), message.Name, message.Language.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityFacilityLanguageWasRemoved ToContract(this Domain.MunicipalityFacilityLanguageWasRemoved message) =>
-//            new Contracts.MunicipalityFacilityLanguageWasRemoved(message.MunicipalityId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNameNameWasCorrectedToCleared ToContract(this Domain.StreetNameNameWasCorrectedToCleared message) =>
+            new Contracts.StreetNameNameWasCorrectedToCleared(message.StreetNameId.ToString("D"), message.Language.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityBecameCurrent ToContract(this Domain.MunicipalityBecameCurrent message) =>
-//            new Contracts.MunicipalityBecameCurrent(message.MunicipalityId.ToString("D"), message.Provenance.ToContract());
+        public static Contracts.StreetNamePersistentLocalIdWasAssigned ToContract(this Domain.StreetNamePersistentLocalIdWasAssigned message) =>
+            new Contracts.StreetNamePersistentLocalIdWasAssigned(message.StreetNameId.ToString("D"), message.PersistentLocalId,
 
-//        public static Contracts.MunicipalityWasCorrectedToCurrent ToContract(this Domain.MunicipalityWasCorrectedToCurrent message) =>
-//            new Contracts.MunicipalityWasCorrectedToCurrent(message.MunicipalityId.ToString("D"), message.Provenance.ToContract());
+                message.AssignmentDate.ToString() /*TODO: correct format?*/
 
-//        public static Contracts.MunicipalityWasRetired ToContract(this Domain.MunicipalityWasRetired message) =>
-//            new Contracts.MunicipalityWasRetired(message.MunicipalityId.ToString("D"), message.RetirementDate.ToString(), message.Provenance.ToContract());
+                , message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityWasCorrectedToRetired ToContract(this Domain.MunicipalityWasCorrectedToRetired message) =>
-//            new Contracts.MunicipalityWasCorrectedToRetired(message.MunicipalityId.ToString("D"), message.RetirementDate.ToString(), message.Provenance.ToContract());
+        public static Contracts.StreetNamePrimaryLanguageWasCleared ToContract(this Domain.StreetNamePrimaryLanguageWasCleared message) =>
+            new Contracts.StreetNamePrimaryLanguageWasCleared(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityGeometryWasCleared ToContract(this Domain.MunicipalityGeometryWasCleared message) =>
-//            new Contracts.MunicipalityGeometryWasCleared(message.MunicipalityId.ToString("D"), message.Provenance.ToContract());
+        public static Contracts.StreetNamePrimaryLanguageWasCorrected ToContract(this Domain.StreetNamePrimaryLanguageWasCorrected message) =>
+            new Contracts.StreetNamePrimaryLanguageWasCorrected(message.StreetNameId.ToString("D"), message.PrimaryLanguage.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityGeometryWasCorrected ToContract(this Domain.MunicipalityGeometryWasCorrected message) =>
-//            new Contracts.MunicipalityGeometryWasCorrected(message.MunicipalityId.ToString("D"), message.ExtendedWkbGeometry, message.Provenance.ToContract());
+        public static Contracts.StreetNamePrimaryLanguageWasCorrectedToCleared ToContract(this Domain.StreetNamePrimaryLanguageWasCorrectedToCleared message) =>
+            new Contracts.StreetNamePrimaryLanguageWasCorrectedToCleared(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityGeometryWasCorrectedToCleared ToContract(this Domain.MunicipalityGeometryWasCorrectedToCleared message) =>
-//            new Contracts.MunicipalityGeometryWasCorrectedToCleared(message.MunicipalityId.ToString("D"), message.Provenance.ToContract());
+        public static Contracts.StreetNamePrimaryLanguageWasDefined ToContract(this Domain.StreetNamePrimaryLanguageWasDefined message) =>
+            new Contracts.StreetNamePrimaryLanguageWasDefined(message.StreetNameId.ToString("D"), message.PrimaryLanguage.ToString(), message.Provenance.ToContract());
 
-//        public static Contracts.MunicipalityWasDrawn ToContract(this Domain.MunicipalityWasDrawn message) =>
-//            new Contracts.MunicipalityWasDrawn(message.MunicipalityId.ToString("D"), message.ExtendedWkbGeometry, message.Provenance.ToContract());
-//    }
-//}
+        public static Contracts.StreetNameSecondaryLanguageWasCleared ToContract(this Domain.StreetNameSecondaryLanguageWasCleared message) =>
+            new Contracts.StreetNameSecondaryLanguageWasCleared(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameSecondaryLanguageWasCorrected ToContract(this Domain.StreetNameSecondaryLanguageWasCorrected message) =>
+            new Contracts.StreetNameSecondaryLanguageWasCorrected(message.StreetNameId.ToString("D"), message.SecondaryLanguage.ToString(), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameSecondaryLanguageWasCorrectedToCleared ToContract(this Domain.StreetNameSecondaryLanguageWasCorrectedToCleared message) =>
+            new Contracts.StreetNameSecondaryLanguageWasCorrectedToCleared(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameStatusWasCorrectedToRemoved ToContract(this Domain.StreetNameStatusWasCorrectedToRemoved message) =>
+            new Contracts.StreetNameStatusWasCorrectedToRemoved(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameStatusWasRemoved ToContract(this Domain.StreetNameStatusWasRemoved message) =>
+            new Contracts.StreetNameStatusWasRemoved(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasCorrectedToCurrent ToContract(this Domain.StreetNameWasCorrectedToCurrent message) =>
+            new Contracts.StreetNameWasCorrectedToCurrent(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasCorrectedToProposed ToContract(this Domain.StreetNameWasCorrectedToProposed message) =>
+            new Contracts.StreetNameWasCorrectedToProposed(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasCorrectedToRetired ToContract(this Domain.StreetNameWasCorrectedToRetired message) =>
+            new Contracts.StreetNameWasCorrectedToRetired(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasMigrated ToContract(this Domain.StreetNameWasMigrated message) =>
+            new Contracts.StreetNameWasMigrated(message.StreetNameId.ToString("D"), message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasNamed ToContract(this Domain.StreetNameWasNamed message) =>
+            new Contracts.StreetNameWasNamed(message.StreetNameId.ToString("D"), message.Name, message.Language.ToString(), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasProposed ToContract(this Domain.StreetNameWasProposed message) =>
+            new Contracts.StreetNameWasProposed(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasRegistered ToContract(this Domain.StreetNameWasRegistered message) =>
+            new Contracts.StreetNameWasRegistered(message.StreetNameId.ToString("D"), message.MunicipalityId.ToString(), message.NisCode, message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasRemoved ToContract(this Domain.StreetNameWasRemoved message) =>
+            new Contracts.StreetNameWasRemoved(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasRetired ToContract(this Domain.StreetNameWasRetired message) =>
+            new Contracts.StreetNameWasRetired(message.StreetNameId.ToString("D"), message.Provenance.ToContract());
+    }
+}
