@@ -1,3 +1,10 @@
+# [2.62.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.61.0...v2.62.0) (2022-03-21)
+
+
+### Features
+
+* add Producer ([#558](https://github.com/informatievlaanderen/streetname-registry/issues/558)) ([06af914](https://github.com/informatievlaanderen/streetname-registry/commit/06af9143b4144f3a487ea242a7c5a976b6a0e1d2))
+
 # [2.61.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.60.0...v2.61.0) (2022-03-16)
 
 
