@@ -1,3 +1,10 @@
+## [2.62.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.62.0...v2.62.1) (2022-03-21)
+
+
+### Bug Fixes
+
+* implement municipality streetname events ([dfc30c9](https://github.com/informatievlaanderen/streetname-registry/commit/dfc30c9176c54706adf02fcb44e66c3f06734ac4))
+
 # [2.62.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.61.0...v2.62.0) (2022-03-21)
 
 
