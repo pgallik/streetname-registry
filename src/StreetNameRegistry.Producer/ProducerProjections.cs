@@ -9,7 +9,8 @@ namespace StreetNameRegistry.Producer
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Extensions;
     using Microsoft.Extensions.Configuration;
-    using Domain = StreetNameRegistry.StreetName.Events;
+    using StreetNameDomain = StreetName.Events;
+    using MunicipalityDomain = Municipality.Events;
 
     [ConnectedProjectionName("Kafka producer")]
     [ConnectedProjectionDescription("Projectie die berichten naar de kafka broker stuurt.")]
@@ -26,184 +27,191 @@ namespace StreetNameRegistry.Producer
             _topic = $"{configuration[_streetnameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {_streetnameTopicKey}");
 
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameBecameComplete>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameBecameComplete>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameBecameCurrent>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameBecameCurrent>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameBecameIncomplete>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameBecameIncomplete>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameHomonymAdditionWasCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameHomonymAdditionWasCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameHomonymAdditionWasCorrected>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameHomonymAdditionWasCorrected>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameHomonymAdditionWasCorrectedToCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameHomonymAdditionWasCorrectedToCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameHomonymAdditionWasDefined>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameHomonymAdditionWasDefined>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameNameWasCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameNameWasCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameNameWasCorrected>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameNameWasCorrected>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameNameWasCorrectedToCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameNameWasCorrectedToCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNamePersistentLocalIdWasAssigned>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNamePersistentLocalIdWasAssigned>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNamePrimaryLanguageWasCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNamePrimaryLanguageWasCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNamePrimaryLanguageWasCorrected>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNamePrimaryLanguageWasCorrected>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNamePrimaryLanguageWasDefined>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNamePrimaryLanguageWasDefined>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameSecondaryLanguageWasCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameSecondaryLanguageWasCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameSecondaryLanguageWasCorrected>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameSecondaryLanguageWasCorrected>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameSecondaryLanguageWasDefined>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameSecondaryLanguageWasDefined>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameStatusWasCorrectedToRemoved>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameStatusWasCorrectedToRemoved>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameStatusWasRemoved>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameStatusWasRemoved>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
+            });
+            
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasCorrectedToCurrent>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            // TODO: review
-            //When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasApproved>>(async (_, message, ct) =>
-            //{
-            //    await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
-            //});
-
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasCorrectedToCurrent>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasCorrectedToProposed>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasCorrectedToProposed>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasCorrectedToRetired>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasCorrectedToRetired>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasMigrated>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasMigrated>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasNamed>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasMigratedToMunicipality>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasProposed>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
+            });
+            
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasRegistered>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasNamed>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasRemoved>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasProposed>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasRetired>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            // TODO: review
-            //When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasProposedV2>>(async (_, message, ct) =>
-            //{
-            //    await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
-            //});
-
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasRegistered>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameBecameComplete>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasRemoved>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasMigratedToMunicipality>>(async (_, message, ct) =>
             {
-                await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameWasRetired>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasProposedV2>>(async (_, message, ct) =>
             {
-                await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), ct);
             });
 
-            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<Domain.StreetNameBecameComplete>>(async (_, message, ct) =>
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasApproved>>(async (_, message, ct) =>
             {
-                await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), ct);
             });
         }
 
-        // TODO: review usage of streetNameId ...
-        private async Task Produce<T>(Guid streetNameId, T message, CancellationToken cancellationToken = default)
+        private async Task Produce<T>(Guid guid, T message, CancellationToken cancellationToken = default)
             where T : class, IQueueMessage
         {
-            var result = await KafkaProducer.Produce(_kafkaOptions, _topic, streetNameId.ToString("D"), message, cancellationToken);
+            var result = await KafkaProducer.Produce(_kafkaOptions, _topic, guid.ToString("D"), message, cancellationToken);
+            if (!result.IsSuccess)
+            {
+                throw new ApplicationException(result.Error + Environment.NewLine + result.ErrorReason); //TODO: create custom exception
+            }
+        }
+
+        private async Task Produce<T>(int persistentLocalId, T message, CancellationToken cancellationToken = default)
+            where T : class, IQueueMessage
+        {
+            var result = await KafkaProducer.Produce(_kafkaOptions, _topic, persistentLocalId.ToString(), message, cancellationToken);
             if (!result.IsSuccess)
             {
                 throw new ApplicationException(result.Error + Environment.NewLine + result.ErrorReason); //TODO: create custom exception
