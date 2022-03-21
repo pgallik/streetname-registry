@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
     using Municipality.Commands;
     using Municipality.Events;
     using Municipality.Exceptions;
+    using StreetName.Events;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

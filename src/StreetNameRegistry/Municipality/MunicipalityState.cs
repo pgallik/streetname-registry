@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Municipality
 {
     using System.Collections.Generic;
     using Events;
+    using StreetName.Events;
 
     public partial class Municipality
     {

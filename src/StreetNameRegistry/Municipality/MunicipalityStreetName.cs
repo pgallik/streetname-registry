@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Events;
+    using StreetName.Events;
 
     public class MunicipalityStreetName : Entity
     {
