@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
 
     public class StreetNameExistingNisCodeValidator : AsyncPropertyValidator<StreetNameProposeRequest, string>
     {
-        public const string Code = "StreetNameExisitingMunicipalityValidator";
+        public const string Code = "StraatnaamGemeenteNietGekendValidatie";
 
         private readonly ConsumerContext _consumerContext;
 

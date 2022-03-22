@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Events;
     using Exceptions;
-    using StreetName.Events;
 
     public partial class Municipality : AggregateRootEntity
     {

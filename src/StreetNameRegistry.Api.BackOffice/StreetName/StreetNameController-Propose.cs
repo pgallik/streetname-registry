@@ -113,24 +113,24 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
                 throw exception switch
                 {
                     StreetNameNameAlreadyExistsException nameExists => CreateValidationException(
-                        "StreetNameAlreadyExistsInMunicipality",
+                        "StraatnaamBestaatReedsInGemeente",
                         nameof(streetNameProposeRequest.Straatnamen),
-                        $"Streetname '{nameExists.Name}' already exists within the municipality."),
+                        $"Straatnaam '{nameExists.Name}' bestaat reeds in de gemeente."),
 
                     MunicipalityHasUnexpectedStatusException _ => CreateValidationException(
-                        "StreetNameMunicipalityRetired",
+                        "StraatnaamGemeenteGehistoreerd",
                         nameof(streetNameProposeRequest.GemeenteId),
-                        "This municipality was retired."),
+                        "De gemeente is gehistoreerd."),
 
                     StreetNameNameLanguageNotSupportedException _ => CreateValidationException(
-                        "StreetNameLanguageNotOfficialOrFacilityLanguage",
+                        "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal",
                         nameof(streetNameProposeRequest.Straatnamen),
-                        "'Straatnamen' can only be in the official or facility language of the municipality."),
+                        "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente."),
 
                     StreetNameMissingLanguageException _ => CreateValidationException(
-                        "StreetNameMissingOfficialOrFacilityLanguage",
+                        "StraatnaamOntbreektOfficieleOfFaciliteitenTaal",
                         nameof(streetNameProposeRequest.Straatnamen),
-                        "'Straatnamen' is missing an official or facility language."),
+                        "In 'Straatnamen' ontbreekt een officiële of faciliteitentaal."),
 
                     _ => new ValidationException(new List<ValidationFailure>
                         {new ValidationFailure(string.Empty, exception.Message)})
