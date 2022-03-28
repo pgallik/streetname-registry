@@ -1,3 +1,10 @@
+## [2.62.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.62.1...v2.62.2) (2022-03-28)
+
+
+### Bug Fixes
+
+* add producer to CI/CD ([513835a](https://github.com/informatievlaanderen/streetname-registry/commit/513835aac1667d332825c431ecbc7abb4dc964c0))
+
 ## [2.62.1](https://github.com/informatievlaanderen/streetname-registry/compare/v2.62.0...v2.62.1) (2022-03-21)
 
 
