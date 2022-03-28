@@ -43,6 +43,7 @@ Target.create "Build_Solution" (fun _ ->
   buildSource "StreetNameRegistry.Api.Oslo"
   buildSource "StreetNameRegistry.Api.Extract"
   buildSource "StreetNameRegistry.Api.CrabImport"
+  buildSource "StreetNameRegistry.Producer"
   buildSource "StreetNameRegistry.Consumer"
   buildSource "StreetNameRegistry.Migrator.StreetName"
   buildSource "StreetNameRegistry.Projections.Legacy"
@@ -68,6 +69,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
+    "StreetNameRegistry.Producer"
     "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Migrator.StreetName"
     "StreetNameRegistry.Projections.Legacy"
@@ -86,6 +88,7 @@ Target.create "Pack_Solution" (fun _ ->
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
+    "StreetNameRegistry.Producer"
     "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Migrator.StreetName"
   ] |> List.iter pack)
@@ -110,6 +113,9 @@ Target.create "PushContainer_ApiCrabImport" (fun _ -> push "api-crab-import")
 
 Target.create "Containerize_Consumer" (fun _ -> containerize "StreetNameRegistry.Consumer" "consumer")
 Target.create "PushContainer_Consumer" (fun _ -> push "consumer")
+
+Target.create "Containerize_Producer" (fun _ -> containerize "StreetNameRegistry.Producer" "producer")
+Target.create "PushContainer_Producer" (fun _ -> push "producer")
 
 Target.create "Containerize_Migrator_StreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
 Target.create "PushContainer_Migrator_StreetName" (fun _ -> push "migrator-streetname")
@@ -153,6 +159,7 @@ Target.create "Push" ignore
   ==> "Containerize_ApiExtract"
   ==> "Containerize_ApiCrabImport"
   ==> "Containerize_Consumer"
+  ==> "Containerize_Producer"
   ==> "Containerize_Migrator_StreetName"
   ==> "Containerize_ProjectionsSyndication"
   ==> "Containerize"
@@ -167,6 +174,7 @@ Target.create "Push" ignore
   ==> "PushContainer_ApiExtract"
   ==> "PushContainer_ApiCrabImport"
   ==> "PushContainer_Consumer"
+  ==> "PushContainer_Producer"
   ==> "PushContainer_Migrator_StreetName"
   ==> "PushContainer_ProjectionsSyndication"
   ==> "Push"
