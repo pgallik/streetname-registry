@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         }
 
         [Fact]
-        public void ThenAggregateIsNotFound()
+        public async Task ThenAggregateIsNotFound()
         {
             //Arrange
             var persistentLocalId = _fixture.Create<int>();
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
             Func<Task> act = async () => await _controller.Approve(_idempotencyContext, _backOfficeContext, new StreetNameApproveRequestValidator(), Container.Resolve<IMunicipalities>(), body, null);
 
             //Assert
-            act.Should().Throw<AggregateNotFoundException>();
+            await act.Should().ThrowAsync<AggregateNotFoundException>();
         }
 
         [Fact]

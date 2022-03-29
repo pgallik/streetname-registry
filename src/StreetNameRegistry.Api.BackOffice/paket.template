@@ -15,14 +15,14 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry.
 
 dependencies
-  framework: net5.0
+  framework: net6.0
     Be.Vlaanderen.Basisregisters.GrAr.Legacy >= LOCKEDVERSION
 
 files
-  StreetNameRegistry.Api.BackOffice.dll => lib\net5.0
-  StreetNameRegistry.Api.BackOffice.pdb => lib\net5.0
-  StreetNameRegistry.Api.BackOffice.xml => lib\net5.0
+  StreetNameRegistry.Api.BackOffice.dll => lib\net6.0
+  StreetNameRegistry.Api.BackOffice.pdb => lib\net6.0
+  StreetNameRegistry.Api.BackOffice.xml => lib\net6.0
   StreetNameRegistry.Api.BackOffice.xml => content
 
-  StreetNameRegistry.dll => lib\net5.0
-  StreetNameRegistry.pdb => lib\net5.0
+  StreetNameRegistry.dll => lib\net6.0
+  StreetNameRegistry.pdb => lib\net6.0
