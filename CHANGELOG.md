@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.0...v3.0.1) (2022-03-29)
+
+
+### Bug Fixes
+
+* set kafka username/pw for producer ([20128a5](https://github.com/informatievlaanderen/streetname-registry/commit/20128a57616639b1d8782a3f1acacd1f54f005ec))
+
 # [3.0.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.62.2...v3.0.0) (2022-03-29)
 
 
