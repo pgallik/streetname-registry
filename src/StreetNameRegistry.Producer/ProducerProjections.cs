@@ -23,9 +23,8 @@ namespace StreetNameRegistry.Producer
         public ProducerProjections(IConfiguration configuration)
         {
             var bootstrapServers = configuration["Kafka:BootstrapServers"];
-            _kafkaOptions = new KafkaOptions(bootstrapServers, EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
+            _kafkaOptions = new KafkaOptions(bootstrapServers, configuration["Kafka:SaslUserName"], configuration["Kafka:SaslPassword"], EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
             _topic = $"{configuration[_streetnameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {_streetnameTopicKey}");
-
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameBecameComplete>>(async (_, message, ct) =>
             {
