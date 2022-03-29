@@ -1,3 +1,20 @@
+# [3.0.0](https://github.com/informatievlaanderen/streetname-registry/compare/v2.62.2...v3.0.0) (2022-03-29)
+
+
+### Bug Fixes
+
+* propose validation messages in NL ([80c45e3](https://github.com/informatievlaanderen/streetname-registry/commit/80c45e3336456eea0e3e195d3fb895594100bc21))
+
+
+### Features
+
+* move to dotnet 6.0.3 ([7bf80f2](https://github.com/informatievlaanderen/streetname-registry/commit/7bf80f2d9296f2de96584de5ca1201eb5397d195))
+
+
+### BREAKING CHANGES
+
+* move to dotnet 6.0.3
+
 ## [2.62.2](https://github.com/informatievlaanderen/streetname-registry/compare/v2.62.1...v2.62.2) (2022-03-28)
 
 
