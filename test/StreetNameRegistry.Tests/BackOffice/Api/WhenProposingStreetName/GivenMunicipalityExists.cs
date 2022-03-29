@@ -121,7 +121,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("The streetname in 'nl' can not be empty."));
+                .Where(x => x.Message.Contains("Straatnaam in 'nl' kan niet leeg zijn."));
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("The streetname in 'nl' can not be empty."));
+                .Where(x => x.Message.Contains("Straatnaam in 'nl' kan niet leeg zijn."));
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains($"The max length of a streetname in 'nl' is 60 characters. You currently have {name.Length} characters."));
+                .Where(x => x.Message.Contains($"Maximum lengte van een straatnaam in 'nl' is 60 tekens. U heeft momenteel {name.Length} tekens."));
         }
 
         [Fact]
@@ -246,7 +246,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("Streetname 'teststraat' already exists within the municipality."));
+                .Where(x => x.Message.Contains("Straatnaam 'teststraat' bestaat reeds in de gemeente."));
         }
 
         [Fact]
@@ -290,7 +290,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("This municipality was retired."));
+                .Where(x => x.Message.Contains("De gemeente is gehistoreerd."));
         }
 
         [Fact]
@@ -332,7 +332,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("'Straatnamen' can only be in the official or facility language of the municipality."));
+                .Where(x => x.Message.Contains("'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente."));
         }
 
         [Fact]
@@ -376,7 +376,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("'Straatnamen' is missing an official or facility language."));
+                .Where(x => x.Message.Contains("In 'Straatnamen' ontbreekt een officiële of faciliteitentaal."));
         }
     }
 }

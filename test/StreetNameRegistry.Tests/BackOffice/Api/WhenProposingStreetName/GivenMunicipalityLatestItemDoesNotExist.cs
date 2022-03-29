@@ -73,7 +73,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 
             // Assert
             act.Should().ThrowAsync<ValidationException>()
-                .Result.Where(ex => ex.Message.Contains($"The municipality '{body.GemeenteId}' is not known in the Municipality registry."));
+                .Result.Where(ex => ex.Message.Contains($"De gemeente '{body.GemeenteId}' is niet gekend in het gemeenteregister."));
         }
     }
 }

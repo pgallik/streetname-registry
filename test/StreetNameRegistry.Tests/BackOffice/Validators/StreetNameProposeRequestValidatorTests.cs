@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[0]")
-                .WithErrorMessage($"The streetname in 'nl' can not be empty.");
+                .WithErrorMessage($"Straatnaam in 'nl' kan niet leeg zijn.");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[1]")
-                .WithErrorMessage("The streetname in 'fr' can not be empty.");
+                .WithErrorMessage("Straatnaam in 'fr' kan niet leeg zijn.");
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[0]")
-                .WithErrorMessage($"The max length of a streetname in 'nl' is 60 characters. You currently have {streetName.Length} characters.");
+                .WithErrorMessage($"Maximum lengte van een straatnaam in 'nl' is 60 tekens. U heeft momenteel {streetName.Length} tekens.");
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"The municipality '{gemeenteId}' is not known in the Municipality registry.");
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.");
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"The municipality '{gemeenteId}' is not known in the Municipality registry.");
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.");
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"The municipality '{gemeenteId}' is not a Flemish municipality.");
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.");
         }
     }
 }
