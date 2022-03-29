@@ -20,11 +20,10 @@ namespace StreetNameRegistry.Tests.Assert
     {
         private readonly Action<string> _logAction;
 
-        protected Assertions(T subject)
+        protected Assertions(T subject) : base(subject)
         {
             var notNullLogaction = Assertions.LogAction ?? (message => Trace.WriteLine(message));
             _logAction = message => notNullLogaction($"{"ASSERT".PadRight(10)}{Identifier}: {message}");
-            Subject = subject;
         }
 
         protected override string Identifier => typeof(T).Name;

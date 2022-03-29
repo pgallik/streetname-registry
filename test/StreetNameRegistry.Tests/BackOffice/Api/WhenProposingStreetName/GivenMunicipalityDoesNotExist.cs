@@ -39,7 +39,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         }
 
         [Fact]
-        public void ThenAggregateIsNotFound()
+        public async Task ThenAggregateIsNotFound()
         {
             //Arrange
             var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
@@ -62,7 +62,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
             Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, _backOfficeContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), Container.Resolve<IMunicipalities>(), body);
 
             //Assert
-            act.Should().Throw<AggregateNotFoundException>();
+            await act.Should().ThrowAsync<AggregateNotFoundException>();
         }
     }
 }

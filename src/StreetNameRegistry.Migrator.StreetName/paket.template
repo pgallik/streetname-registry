@@ -15,7 +15,7 @@ licenseUrl https://opensource.org/licenses/EUPL-1.2
 description StreetName Registry Migrator StreetName.
 
 dependencies
-  framework: net5.0
+  framework: net6.0
     Be.Vlaanderen.Basisregisters.Aws.DistributedMutex >= LOCKEDVERSION
     Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac >= LOCKEDVERSION
     Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql >= LOCKEDVERSION
@@ -30,5 +30,5 @@ dependencies
 
 
 files
-  StreetNameRegistry.Consumer.dll => lib\net5.0
-  StreetNameRegistry.Consumer.pdb => lib\net5.0
+  StreetNameRegistry.Consumer.dll => lib\net6.0
+  StreetNameRegistry.Consumer.pdb => lib\net6.0
