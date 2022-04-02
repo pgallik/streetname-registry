@@ -15,7 +15,6 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Filters;
     using ProblemDetails = Be.Vlaanderen.Basisregisters.BasicApiProblem.ProblemDetails;
-    using Be.Vlaanderen.Basisregisters.Api.JsonConverters;
 
     [DataContract(Name = "StraatnaamDetailOslo", Namespace = "")]
     public class StreetNameOsloResponse
@@ -25,8 +24,7 @@ namespace StreetNameRegistry.Api.Oslo.StreetName.Responses
         /// </summary>
         [DataMember(Name = "@context", Order = 0)]
         [JsonProperty(Required = Required.DisallowNull)]
-        [JsonConverter(typeof(PlainStringJsonConverter))]
-        public object Context { get; }
+        public string Context { get; }
 
         /// <summary>
         /// Het linked-data type van de straatnaam.
