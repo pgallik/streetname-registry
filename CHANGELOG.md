@@ -1,3 +1,11 @@
+## [3.0.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.1...v3.0.2) (2022-04-04)
+
+
+### Bug Fixes
+
+* bump grar-common and use event hash pipe & extension method ([9a75e99](https://github.com/informatievlaanderen/streetname-registry/commit/9a75e9990d4a749bc4c41a6f5beadedf486740d7))
+* set oslo context type to string ([3c5f66a](https://github.com/informatievlaanderen/streetname-registry/commit/3c5f66aeadbbe8787bce4d26b2a3548442968b1c))
+
 ## [3.0.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.0...v3.0.1) (2022-03-29)
 
 
