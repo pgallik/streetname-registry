@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.2...v3.0.3) (2022-04-04)
+
+
+### Bug Fixes
+
+* correct municipailty language for list streetnames GAWR-2970 ([46a5379](https://github.com/informatievlaanderen/streetname-registry/commit/46a53792c6f721e1484df58a86e9f15dc119b6d6))
+
 ## [3.0.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.1...v3.0.2) (2022-04-04)
 
 
