@@ -11,6 +11,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
         public Guid MunicipalityId { get; set; }
         public string NisCode { get; set; }
         public Language? PrimaryLanguage { get; set; }
+        public Language? SecondaryLanguage { get; set; }
     }
 
     public class StreetNameListMunicipalityConfiguration : IEntityTypeConfiguration<StreetNameListMunicipality>
@@ -24,6 +25,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                 .IsClustered();
 
             builder.Property(x => x.PrimaryLanguage);
+            builder.Property(x => x.SecondaryLanguage);
 
             builder.Property(x => x.NisCode);
         }

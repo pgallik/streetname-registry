@@ -9,8 +9,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetName.Events;
-    using StreetNameList;
     using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint lijst straatnamen")]
@@ -91,6 +89,47 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     .AddAsync(streetNameListMunicipality, ct);
             });
 
+            When<Envelope<MunicipalityOfficialLanguageWasAdded>>(async (context, message, ct) =>
+            {
+                var municipality =
+                    await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId, cancellationToken: ct);
+
+                if (municipality.PrimaryLanguage == null)
+                {
+                    municipality.PrimaryLanguage = message.Message.Language;
+                }
+                else if (municipality.SecondaryLanguage == null)
+                {
+                    municipality.SecondaryLanguage = message.Message.Language;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Cannot add an official language while primary and secondary are assigned for municipality {municipality.MunicipalityId}");
+                }
+            });
+
+            When<Envelope<MunicipalityOfficialLanguageWasRemoved>>(async (context, message, ct) =>
+            {
+                var municipality =
+                    await context.StreetNameListMunicipality.FindAsync(message.Message.MunicipalityId, cancellationToken: ct);
+
+                if (municipality.SecondaryLanguage == message.Message.Language)
+                {
+                    municipality.SecondaryLanguage = null;
+                }
+                else if (municipality.PrimaryLanguage == message.Message.Language)
+                {
+                    municipality.PrimaryLanguage = null;
+
+                    // if official is removed for primary, but still has secondary, then move secondary to primary
+                    if (municipality.SecondaryLanguage != null)
+                    {
+                        municipality.PrimaryLanguage = municipality.SecondaryLanguage;
+                    }
+                }
+            });
+
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var municipality =
@@ -106,7 +145,9 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
                     .Union(context.StreetNameListV2.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
 
                 foreach (var streetName in streetNames)
+                {
                     streetName.NisCode = message.Message.NisCode;
+                }
             });
         }
 
