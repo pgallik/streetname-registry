@@ -4,13 +4,13 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common.Pipes;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using FluentAssertions;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Events;
     using Projections.Legacy.StreetNameDetailV2;
-    using StreetName.Events;
     using Xunit;
 
     public class StreetNameLatestItemProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameDetailProjectionsV2>
@@ -31,7 +31,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
             var metadata = new Dictionary<string, object>
             {
-                { AddHashPipe.HashMetadataKey, streetNameWasProposedV2.GetHash() }
+                { AddEventHashPipe.HashMetadataKey, streetNameWasProposedV2.GetHash() }
             };
 
             await Sut

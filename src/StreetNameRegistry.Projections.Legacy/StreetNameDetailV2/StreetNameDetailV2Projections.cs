@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
     using System;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common.Pipes;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Municipality;
@@ -71,12 +72,12 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
         private static void UpdateHash<T>(StreetNameDetailV2 entity, Envelope<T> wrappedEvent) where T : IHaveHash
         {
-            if (!wrappedEvent.Metadata.ContainsKey(AddHashPipe.HashMetadataKey))
+            if (!wrappedEvent.Metadata.ContainsKey(AddEventHashPipe.HashMetadataKey))
             {
                 throw new InvalidOperationException($"Cannot find hash in metadata for event at position {wrappedEvent.Position}");
             }
 
-            entity.LastEventHash = wrappedEvent.Metadata[AddHashPipe.HashMetadataKey].ToString()!;
+            entity.LastEventHash = wrappedEvent.Metadata[AddEventHashPipe.HashMetadataKey].ToString()!;
         }
 
         private static void UpdateNameByLanguage(StreetNameDetailV2 entity, List<StreetNameName> streetNameNames)

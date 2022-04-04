@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.EventHandling;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common.Pipes;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Commands;
     using SqlStreamStore;
@@ -21,7 +22,7 @@ namespace StreetNameRegistry.Municipality
         {
             For<ProposeStreetName>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
-                .AddHash<ProposeStreetName, Municipality>(getUnitOfWork)
+                .AddEventHash<ProposeStreetName, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -31,7 +32,7 @@ namespace StreetNameRegistry.Municipality
 
             For<ApproveStreetName>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
-                .AddHash<ApproveStreetName, Municipality>(getUnitOfWork)
+                .AddEventHash<ApproveStreetName, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {
@@ -41,7 +42,7 @@ namespace StreetNameRegistry.Municipality
 
             For<MigrateStreetNameToMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
-                .AddHash<MigrateStreetNameToMunicipality, Municipality>(getUnitOfWork)
+                .AddEventHash<MigrateStreetNameToMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
                 {

@@ -4,6 +4,7 @@ namespace StreetNameRegistry.Municipality.Events
     using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.EventHandling;
+    using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
     using StreetNameRegistry.Municipality;
@@ -53,6 +54,6 @@ namespace StreetNameRegistry.Municipality.Events
             return fields;
         }
 
-        public string GetHash() => this.ToHash(EventName);
+        public string GetHash() => this.ToEventHash(EventName);
     }
 }
