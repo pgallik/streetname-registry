@@ -1,3 +1,10 @@
+## [3.0.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.3...v3.0.4) (2022-04-27)
+
+
+### Bug Fixes
+
+* redirect sonar to /dev/null ([07296f8](https://github.com/informatievlaanderen/streetname-registry/commit/07296f8e6ccea6f605ee9c65a3440b6afc3cf3dd))
+
 ## [3.0.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.2...v3.0.3) (2022-04-04)
 
 
