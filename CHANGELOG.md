@@ -1,3 +1,10 @@
+## [3.0.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.5...v3.0.6) (2022-05-05)
+
+
+### Bug Fixes
+
+* add make complete for incomplete streetnames in staging ([cda7a76](https://github.com/informatievlaanderen/streetname-registry/commit/cda7a76938b58018b4f290c0479d1c90693c80bc))
+
 ## [3.0.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.4...v3.0.5) (2022-04-29)
 
 
