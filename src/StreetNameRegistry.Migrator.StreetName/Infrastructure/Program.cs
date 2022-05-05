@@ -110,6 +110,8 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
             await processedIdsTable.CreateTableIfNotExists();
             var processedIds = (await processedIdsTable.GetProcessedIds())?.ToList() ?? new List<string>();
 
+            var makeComplete = Convert.ToBoolean(configuration["MakeComplete"]);
+
             var actualContainer = container.GetRequiredService<ILifetimeScope>();
 
             var streetNameRepo = actualContainer.Resolve<IStreetNames>();
@@ -150,7 +152,10 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                             continue;
                         }
 
-                        throw new InvalidOperationException($"Incomplete but not removed Streetname '{id}'.");
+                        if (!makeComplete)
+                        {
+                            throw new InvalidOperationException($"Incomplete but not removed Streetname '{id}'.");
+                        }
                     }
 
                     var municipality =
@@ -163,7 +168,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
                             $"Municipality for NisCode '{streetName.NisCode}' was not found.");
                     }
                     
-                    await CreateAndDispatchCommand(municipality, streetName, actualContainer, ct);
+                    await CreateAndDispatchCommand(municipality, streetName, makeComplete, actualContainer, ct);
                     
                     await processedIdsTable.Add(id);
                     processedIds.Add(id);
@@ -191,11 +196,12 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
         private static async Task CreateAndDispatchCommand(
             MunicipalityConsumerItem municipality,
             StreetName streetName,
+            bool makeComplete,
             ILifetimeScope actualContainer,
             CancellationToken ct)
         {
             var municipalityId = new MunicipalityId(municipality.MunicipalityId);
-            var migrateCommand = streetName.CreateMigrateCommand(municipalityId);
+            var migrateCommand = streetName.CreateMigrateCommand(municipalityId, makeComplete);
             var markMigrated = new MarkStreetNameMigrated(municipalityId, new StreetNameId(migrateCommand.StreetNameId), migrateCommand.Provenance);
 
             await using (var scope = actualContainer.BeginLifetimeScope())

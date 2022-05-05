@@ -131,7 +131,7 @@ namespace StreetNameRegistry.StreetName
                 assignmentDate));
         }
 
-        public MigrateStreetNameToMunicipality CreateMigrateCommand(MunicipalityId municipalityId)
+        public MigrateStreetNameToMunicipality CreateMigrateCommand(MunicipalityId municipalityId, bool makeComplete)
         {
             // Discussed with business, only send names for primary and secondary language which are not null
             var migrateNames = new Names();
@@ -146,7 +146,15 @@ namespace StreetNameRegistry.StreetName
                     (homonymAddition.Language == _primaryLanguage && _primaryLanguage != null)
                     || (homonymAddition.Language == _secondaryLanguage && _secondaryLanguage != null)));
 
-            var status = _status ?? throw new InvalidOperationException($"No status found for StreetNameId '{_streetNameId}'");
+            var status = _status;
+            if (makeComplete && status is null)
+            {
+                status = StreetNameStatus.Retired;
+            }
+            else if(!makeComplete && status is null)
+            {
+                throw new InvalidOperationException($"No status found for StreetNameId '{_streetNameId}'");
+            }
 
             return new MigrateStreetNameToMunicipality(
                 municipalityId,
@@ -170,7 +178,7 @@ namespace StreetNameRegistry.StreetName
 
         public void MarkMigrated(MunicipalityId municipalityId)
         {
-            if(!IsMigrated)
+            if (!IsMigrated)
                 ApplyChange(new StreetNameWasMigrated(_streetNameId, municipalityId, PersistentLocalId));
         }
 
