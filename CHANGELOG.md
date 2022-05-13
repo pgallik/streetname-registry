@@ -1,3 +1,10 @@
+## [3.0.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.6...v3.0.7) (2022-05-13)
+
+
+### Bug Fixes
+
+* upgrade message handling ([7ef8e29](https://github.com/informatievlaanderen/streetname-registry/commit/7ef8e29f0882816984672f6e66d1a64f6de90dfd))
+
 ## [3.0.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.5...v3.0.6) (2022-05-05)
 
 
