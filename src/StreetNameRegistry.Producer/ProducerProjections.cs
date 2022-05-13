@@ -16,15 +16,19 @@ namespace StreetNameRegistry.Producer
     [ConnectedProjectionDescription("Projectie die berichten naar de kafka broker stuurt.")]
     public class ProducerProjections : ConnectedProjection<ProducerContext>
     {
-        private readonly KafkaOptions _kafkaOptions;
-        private readonly string _topic;
-        private string _streetnameTopicKey = "StreetNameTopic";
+        private readonly KafkaProducerOptions _kafkaOptions;
+        private readonly string _streetNameTopicKey = "StreetNameTopic";
 
         public ProducerProjections(IConfiguration configuration)
         {
             var bootstrapServers = configuration["Kafka:BootstrapServers"];
-            _kafkaOptions = new KafkaOptions(bootstrapServers, configuration["Kafka:SaslUserName"], configuration["Kafka:SaslPassword"], EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
-            _topic = $"{configuration[_streetnameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {_streetnameTopicKey}");
+            var topic = $"{configuration[_streetNameTopicKey]}" ?? throw new ArgumentException($"Configuration has no value for {_streetNameTopicKey}");
+            _kafkaOptions = new KafkaProducerOptions(
+                bootstrapServers,
+                configuration["Kafka:SaslUserName"],
+                configuration["Kafka:SaslPassword"],
+                topic,
+                EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameBecameComplete>>(async (_, message, ct) =>
             {
@@ -200,7 +204,7 @@ namespace StreetNameRegistry.Producer
         private async Task Produce<T>(Guid guid, T message, CancellationToken cancellationToken = default)
             where T : class, IQueueMessage
         {
-            var result = await KafkaProducer.Produce(_kafkaOptions, _topic, guid.ToString("D"), message, cancellationToken);
+            var result = await KafkaProducer.Produce(_kafkaOptions, guid.ToString("D"), message, cancellationToken);
             if (!result.IsSuccess)
             {
                 throw new ApplicationException(result.Error + Environment.NewLine + result.ErrorReason); //TODO: create custom exception
@@ -210,7 +214,7 @@ namespace StreetNameRegistry.Producer
         private async Task Produce<T>(int persistentLocalId, T message, CancellationToken cancellationToken = default)
             where T : class, IQueueMessage
         {
-            var result = await KafkaProducer.Produce(_kafkaOptions, _topic, persistentLocalId.ToString(), message, cancellationToken);
+            var result = await KafkaProducer.Produce(_kafkaOptions, persistentLocalId.ToString(), message, cancellationToken);
             if (!result.IsSuccess)
             {
                 throw new ApplicationException(result.Error + Environment.NewLine + result.ErrorReason); //TODO: create custom exception

@@ -72,13 +72,24 @@ namespace StreetNameRegistry.Consumer.Infrastructure
 
                             var actualContainer = container.GetRequiredService<ILifetimeScope>();
 
-                            var projectionsManager = actualContainer.Resolve<IConnectedProjectionsManager>();
-                            var projectionsTask = projectionsManager.Start(cancellationToken);
+                            var projectorRunner = new ProjectorRunner(actualContainer.Resolve<IConnectedProjectionsManager>(), actualContainer.Resolve<ILoggerFactory>());
+                            var projectorTask = projectorRunner.Start(cancellationToken);
+
+                            Log.Information("The projection consumer was started");
 
                             var consumer = new Consumer(actualContainer, loggerFactory, kafkaOptions, consumerOptions);
                             var consumerTask = consumer.Start(cancellationToken);
 
-                            await Task.WhenAll(projectionsTask, consumerTask);
+                            Log.Information("The kafka consumer was started");
+
+                            await Task.WhenAny(projectorTask, consumerTask);
+
+                            cancellationTokenSource.Cancel();
+
+                            Log.Error($"Consumer task stopped with status: {consumerTask.Status}");
+                            Log.Error($"Projector task stopped with status: {projectorTask.Status}");
+
+                            Log.Error("The consumer was terminated");
                         }
                         catch (Exception e)
                         {

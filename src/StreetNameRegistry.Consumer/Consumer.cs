@@ -27,27 +27,27 @@ namespace StreetNameRegistry.Consumer
             _consumerOptions = consumerOptions;
         }
 
-        public async Task Start(CancellationToken cancellationToken = default)
+        public Task<Result<KafkaJsonMessage>> Start(CancellationToken cancellationToken = default)
         {
             var commandHandler = new CommandHandler(_container, _loggerFactory.CreateLogger<CommandHandler>());
             var projector = new ConnectedProjector<CommandHandler>(Resolve.WhenEqualToHandlerMessageType(new MunicipalityKafkaProjection().Handlers));
 
             var consumerGroupId = $"{nameof(StreetNameRegistry)}.{nameof(Consumer)}.{_consumerOptions.Topic}{_consumerOptions.ConsumerGroupSuffix}";
-            var result = await KafkaConsumer.Consume(
-                _options,
-                consumerGroupId,
-                _consumerOptions.Topic,
-                async message =>
-                {
-                    await projector.ProjectAsync(commandHandler, message, cancellationToken);
-                },
+            return KafkaConsumer.Consume(
+                new KafkaConsumerOptions(
+                    _options.BootstrapServers,
+                    _options.SaslUserName,
+                    _options.SaslPassword,
+                    consumerGroupId,
+                    _consumerOptions.Topic,
+                    async message =>
+                    {
+                        await projector.ProjectAsync(commandHandler, message, cancellationToken);
+                    },
+                    noMessageFoundDelay: 300,
+                    offset: null,
+                    _options.JsonSerializerSettings),
                 cancellationToken);
-
-            if (!result.IsSuccess)
-            {
-                var logger = _loggerFactory.CreateLogger<Consumer>();
-                logger.LogCritical($"Consumer group {consumerGroupId} could not consume from topic {_consumerOptions.Topic}");
-            }
         }
     }
 }
