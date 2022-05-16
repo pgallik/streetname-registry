@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Municipality.Events
     using Newtonsoft.Json;
     using StreetNameRegistry.Municipality;
 
-    [EventTags(EventTag.For.Sync)]
+    [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
     [EventDescription("De straatnaam werd voorgesteld.")]
     public class StreetNameWasProposedV2 : IMunicipalityEvent

@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Municipality.Events
     using Newtonsoft.Json;
     using StreetNameRegistry.Municipality;
 
-    [EventTags(EventTag.For.Sync)]
+    [EventTags(EventTag.For.Sync, Tag.Migration)]
     [EventName(EventName)]
     [EventDescription("De straatnaam werd gemigreerd naar gemeente.")]
     public class StreetNameWasMigratedToMunicipality : IMunicipalityEvent
