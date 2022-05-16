@@ -1,3 +1,10 @@
+## [3.0.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.7...v3.0.8) (2022-05-16)
+
+
+### Bug Fixes
+
+* add tags to new events ([2b342a6](https://github.com/informatievlaanderen/streetname-registry/commit/2b342a65122a29e7e959f317386ec72424eadc65))
+
 ## [3.0.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.6...v3.0.7) (2022-05-13)
 
 
