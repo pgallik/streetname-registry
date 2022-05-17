@@ -1,3 +1,10 @@
+## [3.0.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.8...v3.0.9) (2022-05-17)
+
+
+### Bug Fixes
+
+* update eventdescription StreetNameWasMigratedToMunicipality ([021a9dc](https://github.com/informatievlaanderen/streetname-registry/commit/021a9dc615b37673011569aac55860b91ec1cf2b))
+
 ## [3.0.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.7...v3.0.8) (2022-05-16)
 
 
