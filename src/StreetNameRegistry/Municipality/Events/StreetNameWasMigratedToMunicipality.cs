@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Municipality.Events
         public Guid MunicipalityId { get; }
         [EventPropertyDescription("NIS-code (= objectidentificator) van de gemeente aan dewelke de straatnaam is toegewezen.")]
         public string NisCode { get; }
-        [EventPropertyDescription("Interne GUID van de straatnaam.")]
+        [EventPropertyDescription("Interne GUID van de gemigreerde straatnaam.")]
         public Guid StreetNameId { get; }
         [EventPropertyDescription("Objectidentificator van de straatnaam.")]
         public int PersistentLocalId { get; }
