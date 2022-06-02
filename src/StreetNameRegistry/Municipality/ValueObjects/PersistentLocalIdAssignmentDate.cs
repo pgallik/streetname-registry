@@ -1,11 +1,10 @@
 namespace StreetNameRegistry.Municipality
 {
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Newtonsoft.Json;
     using NodaTime;
 
     public class PersistentLocalIdAssignmentDate : InstantValueObject<PersistentLocalIdAssignmentDate>
     {
-        public PersistentLocalIdAssignmentDate([JsonProperty("value")] Instant assignmentDate) : base(assignmentDate) { }
+        public PersistentLocalIdAssignmentDate(Instant assignmentDate) : base(assignmentDate) { }
     }
 }
