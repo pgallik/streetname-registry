@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Municipality
 {
     using System.Collections.Generic;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Events;
 
     public partial class Municipality
@@ -13,6 +14,11 @@ namespace StreetNameRegistry.Municipality
         internal MunicipalityId MunicipalityId => _municipalityId;
 
         public MunicipalityStatus MunicipalityStatus { get; private set; }
+
+        internal Municipality(ISnapshotStrategy snapshotStrategy) : this()
+        {
+            Strategy = snapshotStrategy;
+        }
 
         private Municipality()
         {

@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Municipality
     public sealed class MunicipalityCommandHandlerModule : CommandHandlerModule
     {
         public MunicipalityCommandHandlerModule(
+            IMunicipalityFactory municipalityFactory,
             Func<IMunicipalities> getMunicipalities,
             Func<ConcurrentUnitOfWork> getUnitOfWork,
             Func<IStreamStore> getStreamStore,
@@ -34,7 +35,7 @@ namespace StreetNameRegistry.Municipality
                         throw new AggregateSourceException($"Municipality with id {message.Command.MunicipalityId} already exists");
                     }
 
-                    var newMunicipality = Municipality.Register(message.Command.MunicipalityId, message.Command.NisCode);
+                    var newMunicipality = Municipality.Register(municipalityFactory, message.Command.MunicipalityId, message.Command.NisCode);
 
                     getMunicipalities().Add(municipalityStreamId, newMunicipality);
                 });

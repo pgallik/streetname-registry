@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Infrastructure.Repositories
 
     public class Municipalities : Repository<Municipality, MunicipalityStreamId>, IMunicipalities
     {
-        public Municipalities(ConcurrentUnitOfWork unitOfWork, IStreamStore eventStore, EventMapping eventMapping, EventDeserializer eventDeserializer)
-            : base(Municipality.Factory, unitOfWork, eventStore, eventMapping, eventDeserializer) { }
+        public Municipalities(IMunicipalityFactory municipalityFactory, ConcurrentUnitOfWork unitOfWork, IStreamStore eventStore, EventMapping eventMapping, EventDeserializer eventDeserializer)
+            : base(municipalityFactory.Create, unitOfWork, eventStore, eventMapping, eventDeserializer) { }
     }
 }

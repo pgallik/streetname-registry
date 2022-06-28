@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.Testing
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector.Testing;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
@@ -63,6 +64,7 @@ namespace StreetNameRegistry.Tests.Testing
 
         //DO NOT MOVE TO LIB
         public ConnectedProjectionScenarioWrapper<TContext> Project<T>(IGenerator<T> eventGenerator)
+        where T : IMessage
         {
             var @event = eventGenerator.Generate(_random);
             _logAction($"Projecting event\r\n{@event.ToLoggableString(Formatting.Indented)}");
@@ -106,7 +108,7 @@ namespace StreetNameRegistry.Tests.Testing
         }
 
         //DO NOT MOVE TO LIB
-        public ConnectedProjectionScenarioWrapper<TContext> GivenEvents(IGenerator<IEnumerable<object>> eventsGenerator)
+        public ConnectedProjectionScenarioWrapper<TContext> GivenEvents(IGenerator<IEnumerable<IMessage>> eventsGenerator)
         {
             var events = Arrange(eventsGenerator).ToList();
             LogArrange($"GivenEvents events:\r\n{events.ToLoggableString(Formatting.Indented)}");
@@ -119,22 +121,13 @@ namespace StreetNameRegistry.Tests.Testing
         }
 
         //DO NOT MOVE TO LIB
-        public ConnectedProjectionScenarioWrapper<TContext> GivenEvents(params IGenerator<object>[] eventGenerators)
+        public ConnectedProjectionScenarioWrapper<TContext> GivenEvents(params IGenerator<IMessage>[] eventGenerators)
         {
             var envelopes = eventGenerators
                 .Select(Arrange)
                 .Select(e => new Envelope(e, new ConcurrentDictionary<string, object>()).ToGenericEnvelope());
             return new ConnectedProjectionScenarioWrapper<TContext>(
                 When.Given(envelopes),
-                CreateContext,
-                Random, LogAct);
-        }
-
-        //MOVE TO LIB
-        public ConnectedProjectionScenarioWrapper<TContext> Given(params object[] events)
-        {
-            return new ConnectedProjectionScenarioWrapper<TContext>(
-                When.Given(events.Select(e => new Envelope(e, new ConcurrentDictionary<string, object>()).ToGenericEnvelope())),
                 CreateContext,
                 Random, LogAct);
         }

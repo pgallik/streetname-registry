@@ -1,28 +1,71 @@
 namespace StreetNameRegistry.Tests.ProjectionTests
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Testing;
-    using Consumer;
-    using Microsoft.EntityFrameworkCore;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector.Testing;
+    using FluentAssertions.Execution;
+    using Testing;
+    using Xunit.Abstractions;
 
-    public class StreetNameConsumerKafkaProjectionTest<TProjection>
-        where TProjection : ConnectedProjection<ConsumerContext>, new()
+    public abstract class StreetNameConsumerKafkaProjectionTest<TContext, TProjection> : StreetNameRegistryTest
+        where TProjection : ConnectedProjection<TContext>
     {
-        protected ConnectedProjectionTest<ConsumerContext, TProjection> Sut { get; }
+        private ConnectedProjectionScenario<TContext> _inner;
 
-        public StreetNameConsumerKafkaProjectionTest()
+        protected StreetNameConsumerKafkaProjectionTest(ITestOutputHelper testOutputHelper)
+            : base(testOutputHelper)
         {
-            Sut = new ConnectedProjectionTest<ConsumerContext, TProjection>(CreateContext);
         }
 
-        protected virtual ConsumerContext CreateContext()
+        protected ConnectedProjectionScenario<TContext> Given(params object[] messages)
         {
-            var options = new DbContextOptionsBuilder<ConsumerContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
+            var projection = CreateProjection();
+            var resolver = ConcurrentResolve.WhenEqualToHandlerMessageType(projection.Handlers);
 
-            return new ConsumerContext(options);
+            _inner = new ConnectedProjectionScenario<TContext>(resolver)
+                .Given(messages);
+
+            return _inner;
         }
+
+        public async Task Then(Func<TContext, Task> assertions)
+        {
+            var test = CreateTest(assertions);
+
+            var context = CreateContext();
+
+            foreach (var message in test.Messages)
+            {
+                await new ConnectedProjector<TContext>(test.Resolver)
+                    .ProjectAsync(context, message);
+            }
+
+            var result = await test.Verification(context, CancellationToken.None);
+            if (result.Failed)
+            {
+                throw new AssertionFailedException(result.Message);
+            }
+        }
+
+        private ConnectedProjectionTestSpecification<TContext> CreateTest(Func<TContext, Task> assertions)
+        {
+            return _inner.Verify(async context =>
+            {
+                try
+                {
+                    await assertions(context);
+                    return VerificationResult.Pass();
+                }
+                catch (Exception e)
+                {
+                    return VerificationResult.Fail(e.Message);
+                }
+            });
+        }
+
+        protected abstract TContext CreateContext();
+        protected abstract TProjection CreateProjection();
     }
 }

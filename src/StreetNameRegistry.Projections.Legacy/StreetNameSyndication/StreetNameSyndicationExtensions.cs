@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml.Linq;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
@@ -18,7 +19,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             Guid streetNameId,
             Envelope<T> message,
             Action<StreetNameSyndicationItem> applyEventInfoOn,
-            CancellationToken ct) where T : IHasProvenance
+            CancellationToken ct) where T : IHasProvenance, IMessage
         {
             var streetNameSyndicationItem = await context.LatestPosition(streetNameId, ct);
 
@@ -33,7 +34,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             int persistentLocalId,
             Envelope<T> message,
             Action<StreetNameSyndicationItem> applyEventInfoOn,
-            CancellationToken ct) where T : IHasProvenance
+            CancellationToken ct) where T : IHasProvenance, IMessage
         {
             var streetNameSyndicationItem = await context.LatestPosition(persistentLocalId, ct);
 
@@ -45,7 +46,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
         private static async Task CreateNewSyndicationItem<T>(LegacyContext context, Envelope<T> message,
             Action<StreetNameSyndicationItem> applyEventInfoOn, StreetNameSyndicationItem? streetNameSyndicationItem,
-            CancellationToken ct) where T : IHasProvenance
+            CancellationToken ct) where T : IHasProvenance, IMessage
         {
             var provenance = message.Message.Provenance;
 

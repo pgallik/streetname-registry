@@ -13,6 +13,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
     using Municipality.Events;
     using Municipality.Exceptions;
     using System.Collections.Generic;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using StreetName.Events;
 
@@ -221,7 +222,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         public void ThenStreetNameStatusIsCurrent()
         {
             var persistentLocalId = Fixture.Create<PersistentLocalId>();
-            var aggregate = Municipality.Factory();
+            var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
             aggregate.Initialize(new List<object>
             {
                 Fixture.Create<MunicipalityWasImported>(),

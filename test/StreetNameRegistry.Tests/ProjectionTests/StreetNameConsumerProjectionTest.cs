@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
 
         public StreetNameConsumerProjectionTest()
         {
-            Sut = new ConnectedProjectionTest<ConsumerContext, TProjection>(CreateContext);
+            Sut = new ConnectedProjectionTest<ConsumerContext, TProjection>(CreateContext, () => new TProjection());
         }
 
         protected virtual ConsumerContext CreateContext()

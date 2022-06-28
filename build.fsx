@@ -2,7 +2,7 @@
 version 7.0.2-beta8
 framework: net6.0
 source https://api.nuget.org/v3/index.json
-nuget Be.Vlaanderen.Basisregisters.Build.Pipeline 6.0.3 //"
+nuget Be.Vlaanderen.Basisregisters.Build.Pipeline 6.0.5 //"
 
 #load "packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/build-generic.fsx"
 
@@ -20,6 +20,7 @@ let dockerRepository = "streetname-registry"
 let assemblyVersionNumber = (sprintf "2.%s")
 let nugetVersionNumber = (sprintf "%s")
 
+let buildSolution = buildSolution assemblyVersionNumber
 let buildSource = build assemblyVersionNumber
 let buildTest = buildTest assemblyVersionNumber
 let setVersions = (setSolutionVersions assemblyVersionNumber product copyright company)
@@ -37,29 +38,10 @@ Target.create "Restore_Solution" (fun _ -> restore "StreetNameRegistry")
 
 Target.create "Build_Solution" (fun _ ->
   setVersions "SolutionInfo.cs"
-  buildSource "StreetNameRegistry.Projector"
-  buildSource "StreetNameRegistry.Api.BackOffice"
-  buildSource "StreetNameRegistry.Api.Legacy"
-  buildSource "StreetNameRegistry.Api.Oslo"
-  buildSource "StreetNameRegistry.Api.Extract"
-  buildSource "StreetNameRegistry.Api.CrabImport"
-  buildSource "StreetNameRegistry.Producer"
-  buildSource "StreetNameRegistry.Consumer"
-  buildSource "StreetNameRegistry.Migrator.StreetName"
-  buildSource "StreetNameRegistry.Projections.Legacy"
-  buildSource "StreetNameRegistry.Projections.Extract"
-  buildSource "StreetNameRegistry.Projections.LastChangedList"
-  buildSource "StreetNameRegistry.Projections.Wfs"
-  buildSource "StreetNameRegistry.Projections.Wms"
-  buildSource "StreetNameRegistry.Projections.Syndication"
-  buildTest "StreetNameRegistry.Tests"
+  buildSolution "StreetNameRegistry"
 )
 
-Target.create "Test_Solution" (fun _ ->
-    [
-        "test" @@ "StreetNameRegistry.Tests"
-    ] |> List.iter testWithDotNet
-)
+Target.create "Test_Solution" (fun _ -> test "StreetNameRegistry")
 
 Target.create "Publish_Solution" (fun _ ->
   [

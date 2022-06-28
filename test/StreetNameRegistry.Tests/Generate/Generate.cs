@@ -1,17 +1,17 @@
 namespace StreetNameRegistry.Tests.Generate
 {
-    using Be.Vlaanderen.Basisregisters.Crab;
-    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
-    using Projections.Syndication.Municipality;
-    using StreetName.Events;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Be.Vlaanderen.Basisregisters.Crab;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Municipality.Events;
+    using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
     using NodaTime;
     using Projections.Syndication;
+    using Projections.Syndication.Municipality;
     using StreetName;
+    using StreetName.Events;
 
     [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
     public static class Generate
@@ -224,7 +224,7 @@ namespace StreetNameRegistry.Tests.Generate
 
         public static class EventsFor
         {
-            public static Generator<IEnumerable<object>> StreetName(Guid streetNameId, string nameDutch = null)
+            public static Generator<IEnumerable<IMessage>> StreetName(Guid streetNameId, string nameDutch = null)
             {
                 var provenance = new Provenance(
                     Instant.FromDateTimeOffset(DateTimeOffset.Now),
@@ -234,9 +234,9 @@ namespace StreetNameRegistry.Tests.Generate
                     (Modification)Produce.Integer(1, 3).Generate(new Random()),
                     (Organisation)Produce.Integer(1, 10).Generate(new Random()));
 
-                return new Generator<IEnumerable<object>>(r =>
+                return new Generator<IEnumerable<IMessage>>(r =>
                 {
-                    var events = new List<IGenerator<object>>
+                    var events = new List<IGenerator<IMessage>>
                     {
                         StreetNameWasRegistered
                             .Select(e =>
@@ -253,11 +253,6 @@ namespace StreetNameRegistry.Tests.Generate
 
                     return events.Select(e => e.Generate(r));
                 });
-            }
-
-            public static Generator<IEnumerable<object>> Objects(params object[] objects)
-            {
-                return new Generator<IEnumerable<object>>(r => objects);
             }
         }
     }

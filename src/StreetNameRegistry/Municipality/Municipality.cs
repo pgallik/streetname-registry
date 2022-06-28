@@ -4,16 +4,18 @@ namespace StreetNameRegistry.Municipality
     using System.Collections.Generic;
     using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Events;
     using Exceptions;
 
-    public partial class Municipality : AggregateRootEntity
+    public partial class Municipality : AggregateRootEntity, ISnapshotable
     {
-        public static readonly Func<Municipality> Factory = () => new Municipality();
-
-        public static Municipality Register(MunicipalityId municipalityId, NisCode nisCode)
+        public static Municipality Register(
+            IMunicipalityFactory municipalityFactory,
+            MunicipalityId municipalityId,
+            NisCode nisCode)
         {
-            var municipality = Factory();
+            var municipality = municipalityFactory.Create();
             municipality.ApplyChange(new MunicipalityWasImported(municipalityId, nisCode));
             return municipality;
         }
@@ -213,5 +215,12 @@ namespace StreetNameRegistry.Municipality
         }
 
         #endregion
+
+        public object TakeSnapshot()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISnapshotStrategy Strategy { get; }
     }
 }

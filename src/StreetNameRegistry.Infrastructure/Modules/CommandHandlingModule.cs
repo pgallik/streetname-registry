@@ -1,13 +1,18 @@
 namespace StreetNameRegistry.Infrastructure.Modules
 {
-    using Infrastructure;
-    using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.CommandHandling;
+    using System;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
+    using Be.Vlaanderen.Basisregisters.CommandHandling;
+    using Infrastructure;
     using Microsoft.Extensions.Configuration;
+    using Municipality;
 
     public class CommandHandlingModule : Module
     {
+        public const string SnapshotIntervalKey = "SnapshotInterval";
+
         private readonly IConfiguration _configuration;
 
         public CommandHandlingModule(IConfiguration configuration)
@@ -15,6 +20,13 @@ namespace StreetNameRegistry.Infrastructure.Modules
 
         protected override void Load(ContainerBuilder containerBuilder)
         {
+            var value = _configuration[SnapshotIntervalKey] ?? "50";
+            var snapshotInterval = Convert.ToInt32(value);
+
+            containerBuilder
+                .Register(c => new MunicipalityFactory(NoSnapshotStrategy.Instance))
+                .As<IMunicipalityFactory>();
+
             containerBuilder
                 .RegisterModule<RepositoriesModule>();
 

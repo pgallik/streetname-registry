@@ -9,22 +9,24 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Be.Vlaanderen.Basisregisters.GrAr.Contracts.MunicipalityRegistry;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Consumer.Projections;
-    using Generate;
     using global::AutoFixture;
+    using Microsoft.Extensions.Logging;
     using Moq;
     using Municipality;
     using NodaTime;
-    using Projections.Legacy.StreetNameDetail;
-    using Testing;
     using Xunit;
     using Xunit.Abstractions;
     using Provenance = Be.Vlaanderen.Basisregisters.GrAr.Contracts.Common.Provenance;
 
-    public class StreetNameConsumerKafkaProjectionsTests : StreetNameRegistryProjectionTest<StreetNameDetailProjections>
+    public class StreetNameConsumerKafkaProjectionsTests : StreetNameConsumerKafkaProjectionTest<CommandHandler, MunicipalityKafkaProjection>
     {
+        private readonly Mock<CommandHandler> _mock;
+
         public StreetNameConsumerKafkaProjectionsTests(ITestOutputHelper output)
             : base(output)
-        { }
+        {
+            _mock = new Mock<CommandHandler>();
+        }
 
         private class MunicipalityEventsGenerator : IEnumerable<object[]>
         {
@@ -84,20 +86,25 @@ namespace StreetNameRegistry.Tests.ProjectionTests
             }
 
             var command = MunicipalityKafkaProjection.GetCommand(queueMessage);
-
-            var mock = new Mock<CommandHandler>();
-            mock.Setup(commandHandler => commandHandler.Handle(command, default))
+            _mock.Setup(commandHandler => commandHandler.Handle(command, default))
                 .Returns(Task.CompletedTask);
 
-            var given = GivenEvents(Generate.EventsFor.Objects(command));
-            var project = given
-                .Project(Generate.This(command));
-            await project
-                .Then(ct =>
+            Given(command);
+            await Then(ct =>
                 {
-                    mock.Verify(commandHandler => commandHandler.Handle(It.IsAny<IHasCommandProvenance>(), default), Times.AtMostOnce());
+                    _mock.Verify(commandHandler => commandHandler.Handle(It.IsAny<IHasCommandProvenance>(), default), Times.AtMostOnce());
                     return Task.CompletedTask;
                 });
+        }
+
+        protected override CommandHandler CreateContext()
+        {
+            return new CommandHandler(Container.BeginLifetimeScope(), new Mock<ILogger<CommandHandler>>().Object);
+        }
+
+        protected override MunicipalityKafkaProjection CreateProjection()
+        {
+            return new MunicipalityKafkaProjection();
         }
     }
 }
