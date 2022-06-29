@@ -11,7 +11,11 @@ namespace StreetNameRegistry.Municipality
         private readonly List<Language> _officialLanguages = new List<Language>();
         private readonly List<Language> _facilityLanguages = new List<Language>();
         public MunicipalityStreetNames StreetNames { get; } = new MunicipalityStreetNames();
+
         internal MunicipalityId MunicipalityId => _municipalityId;
+        internal NisCode NisCode => _nisCode;
+        internal IReadOnlyList<Language> OfficialLanguages => _officialLanguages;
+        internal IReadOnlyList<Language> FacilityLanguages => _facilityLanguages;
 
         public MunicipalityStatus MunicipalityStatus { get; private set; }
 
@@ -37,6 +41,8 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasProposedV2>(When);
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasMigratedToMunicipality>(When);
+
+            Register<MunicipalitySnapshot>(When);
         }
 
         #region Municipality
@@ -112,6 +118,26 @@ namespace StreetNameRegistry.Municipality
         {
             var streetName = StreetNames.GetByPersistentLocalId(new PersistentLocalId(@event.PersistentLocalId));
             streetName.Route(@event);
+        }
+
+        private void When(MunicipalitySnapshot @event)
+        {
+            _municipalityId = new MunicipalityId(@event.MunicipalityId);
+            _nisCode = new NisCode(@event.NisCode);
+            MunicipalityStatus = MunicipalityStatus.Parse(@event.MunicipalityStatus);
+
+            _officialLanguages.Clear();
+            _officialLanguages.AddRange(@event.OfficialLanguages);
+            _facilityLanguages.Clear();
+            _facilityLanguages.AddRange(@event.FacilityLanguages);
+
+            foreach (var streetNameData in @event.StreetNames)
+            {
+                var streetName = new MunicipalityStreetName(ApplyChange);
+                streetName.RestoreSnapshot(_municipalityId, streetNameData);
+
+                StreetNames.Add(streetName);
+            }
         }
     }
 }

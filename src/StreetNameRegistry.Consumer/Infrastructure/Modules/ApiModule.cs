@@ -45,6 +45,7 @@ namespace StreetNameRegistry.Consumer.Infrastructure.Modules
                 .RegisterModule(new CommandHandlingModule(_configuration));
 
             builder.RegisterEventstreamModule(_configuration);
+            builder.RegisterSnapshotModule(_configuration);
 
             builder
                 .RegisterProjectionMigrator<ConsumerContextFactory>(

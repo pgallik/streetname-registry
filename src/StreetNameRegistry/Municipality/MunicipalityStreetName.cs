@@ -2,22 +2,31 @@ namespace StreetNameRegistry.Municipality
 {
     using System;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.GrAr.Common;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using DataStructures;
     using Events;
 
     public class MunicipalityStreetName : Entity
     {
         private MunicipalityId _municipalityId;
-        private IHaveHash _lastEvent;
+        private IMunicipalityEvent _lastEvent;
 
-        public StreetNameStatus? Status { get; private set; }
+        private string _lastSnapshotEventHash = string.Empty;
+        private ProvenanceData _lastSnapshotProvenance;
+
+        public StreetNameStatus Status { get; private set; }
         public HomonymAdditions HomonymAdditions { get; private set; } = new HomonymAdditions();
         public Names Names { get; private set; } = new Names();
         public PersistentLocalId PersistentLocalId { get; private set; }
         public bool IsRemoved { get; private set; }
         public bool IsRetired => Status == StreetNameStatus.Retired;
         public bool IsRejected => Status == StreetNameStatus.Rejected;
-        public string LastEventHash => _lastEvent.GetHash();
+
+        public StreetNameId? LegacyStreetNameId { get; private set; }
+
+        public string LastEventHash => _lastEvent is null ? _lastSnapshotEventHash : _lastEvent.GetHash();
+        public ProvenanceData LastProvenanceData =>
+            _lastEvent is null ? _lastSnapshotProvenance : _lastEvent.Provenance;
 
         public MunicipalityStreetName(Action<object> applier)
             : base(applier)
@@ -27,7 +36,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasApproved>(When);
         }
 
-        void When(StreetNameWasMigratedToMunicipality @event)
+        private void When(StreetNameWasMigratedToMunicipality @event)
         {
             _municipalityId = new MunicipalityId(@event.MunicipalityId);
             Status = @event.Status;
@@ -35,10 +44,11 @@ namespace StreetNameRegistry.Municipality
             HomonymAdditions = new HomonymAdditions(@event.HomonymAdditions);
             Names = new Names(@event.Names);
             IsRemoved = @event.IsRemoved;
+            LegacyStreetNameId = new StreetNameId(@event.StreetNameId);
             _lastEvent = @event;
         }
 
-        void When(StreetNameWasProposedV2 @event)
+        private void When(StreetNameWasProposedV2 @event)
         {
             _municipalityId = new MunicipalityId(@event.MunicipalityId);
             Status = StreetNameStatus.Proposed;
@@ -48,12 +58,31 @@ namespace StreetNameRegistry.Municipality
             _lastEvent = @event;
         }
 
-        void When(StreetNameWasApproved @event)
+        private void When(StreetNameWasApproved @event)
         {
             Status = StreetNameStatus.Current;
             _lastEvent = @event;
         }
 
         public void Approve() => Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
+
+        public void RestoreSnapshot(MunicipalityId municipalityId, StreetNameData streetNameData)
+        {
+            _municipalityId = municipalityId;
+
+            PersistentLocalId = new PersistentLocalId(streetNameData.StreetNamePersistentLocalId);
+            Status = streetNameData.Status;
+            IsRemoved = streetNameData.IsRemoved;
+
+            Names = new Names(streetNameData.Names);
+            HomonymAdditions = new HomonymAdditions(streetNameData.HomonymAdditions);
+
+            LegacyStreetNameId = streetNameData.LegacyStreetNameId is null
+                ? null
+                : new StreetNameId(streetNameData.LegacyStreetNameId.Value);
+
+            _lastSnapshotEventHash = streetNameData.LastEventHash;
+            _lastSnapshotProvenance = streetNameData.LastProvenanceData;
+        }
     }
 }

@@ -11,11 +11,8 @@ namespace StreetNameRegistry.Municipality
 
         private MunicipalityStatus(string status) => Status = status;
 
-        public static MunicipalityStatus? Parse(string status)
+        public static MunicipalityStatus Parse(string status)
         {
-            if (string.IsNullOrEmpty(status))
-                return null;
-
             if (status != Retired.Status &&
                 status != Current.Status)
                 throw new NotImplementedException($"Cannot parse {status} to {nameof(MunicipalityStatus)}");

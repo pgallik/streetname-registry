@@ -24,7 +24,7 @@ namespace StreetNameRegistry.Infrastructure.Modules
             var snapshotInterval = Convert.ToInt32(value);
 
             containerBuilder
-                .Register(c => new MunicipalityFactory(NoSnapshotStrategy.Instance))
+                .Register(c => new MunicipalityFactory(IntervalStrategy.SnapshotEvery(snapshotInterval)))
                 .As<IMunicipalityFactory>();
 
             containerBuilder

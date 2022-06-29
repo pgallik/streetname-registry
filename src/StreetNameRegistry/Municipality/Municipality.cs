@@ -218,7 +218,13 @@ namespace StreetNameRegistry.Municipality
 
         public object TakeSnapshot()
         {
-            throw new NotImplementedException();
+            return new MunicipalitySnapshot(
+                MunicipalityId,
+                _nisCode,
+                MunicipalityStatus,
+                _officialLanguages,
+                _facilityLanguages,
+                StreetNames);
         }
 
         public ISnapshotStrategy Strategy { get; }

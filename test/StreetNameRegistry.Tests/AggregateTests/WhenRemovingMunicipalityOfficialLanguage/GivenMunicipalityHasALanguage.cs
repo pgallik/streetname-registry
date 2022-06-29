@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityOffici
     using Municipality.Commands;
     using Municipality.Events;
     using Testing;
+    using WhenAddingMunicipalityOfficialLanguage;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -85,27 +86,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityOffici
                 {
                     new Fact(_streamId, new MunicipalityOfficialLanguageWasRemoved(_municipalityId, Language.English))
                 }));
-        }
-    }
-
-    public static class OfficialLanguageExtensions
-    {
-        public static AddOfficialLanguageToMunicipality WithLanguage(this AddOfficialLanguageToMunicipality command, Language language)
-        {
-            return new AddOfficialLanguageToMunicipality(command.MunicipalityId, language, command.Provenance);
-        }
-
-        public static RemoveOfficialLanguageFromMunicipality WithLanguage(this RemoveOfficialLanguageFromMunicipality command, Language language)
-        {
-            return new RemoveOfficialLanguageFromMunicipality(command.MunicipalityId, language, command.Provenance);
-        }
-
-        public static MunicipalityOfficialLanguageWasAdded ToEvent(this AddOfficialLanguageToMunicipality command)
-        {
-            var eventAdded = new MunicipalityOfficialLanguageWasAdded(command.MunicipalityId, command.Language);
-            ((ISetProvenance)eventAdded).SetProvenance(command.Provenance);
-
-            return eventAdded;
         }
     }
 }

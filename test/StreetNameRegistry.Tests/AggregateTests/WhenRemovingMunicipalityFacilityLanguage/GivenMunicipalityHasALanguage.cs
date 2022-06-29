@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
     using Municipality.Commands;
     using Municipality.Events;
     using Testing;
+    using WhenAddingMunicipalityFacilityLanguage;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -65,27 +66,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
                 .Given(_streamId, Fixture.Create<MunicipalityWasImported>(), commandAddedEnglish.ToEvent(), commandAddedDutch.ToEvent())
                 .When(commandLanguageRemoved)
                 .Then(new Fact(_streamId, new MunicipalityFacilityLanguageWasRemoved(_municipalityId, Language.English))));
-        }
-    }
-
-    public static class FacilityLanguageExtensions
-    {
-        public static AddFacilityLanguageToMunicipality WithLanguage(this AddFacilityLanguageToMunicipality command, Language language)
-        {
-            return new AddFacilityLanguageToMunicipality(command.MunicipalityId, language, command.Provenance);
-        }
-
-        public static RemoveFacilityLanguageFromMunicipality WithLanguage(this RemoveFacilityLanguageFromMunicipality command, Language language)
-        {
-            return new RemoveFacilityLanguageFromMunicipality(command.MunicipalityId, language, command.Provenance);
-        }
-
-        public static MunicipalityFacilityLanguageWasAdded ToEvent(this AddFacilityLanguageToMunicipality command)
-        {
-            var eventAdded = new MunicipalityFacilityLanguageWasAdded(command.MunicipalityId, command.Language);
-            ((ISetProvenance)eventAdded).SetProvenance(command.Provenance);
-
-            return eventAdded;
         }
     }
 }

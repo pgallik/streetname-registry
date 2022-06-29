@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
@@ -89,25 +88,4 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
                 }));
         }
     }
-    public static class FacilityLanguageExtensions
-    {
-        public static AddFacilityLanguageToMunicipality WithLanguage(this AddFacilityLanguageToMunicipality command, Language language)
-        {
-            return new AddFacilityLanguageToMunicipality(command.MunicipalityId, language, command.Provenance);
-        }
-
-        public static RemoveFacilityLanguageFromMunicipality WithLanguage(this RemoveFacilityLanguageFromMunicipality command, Language language)
-        {
-            return new RemoveFacilityLanguageFromMunicipality(command.MunicipalityId, language, command.Provenance);
-        }
-
-        public static MunicipalityFacilityLanguageWasAdded ToEvent(this AddFacilityLanguageToMunicipality command)
-        {
-            var eventAdded = new MunicipalityFacilityLanguageWasAdded(command.MunicipalityId, command.Language);
-            ((ISetProvenance)eventAdded).SetProvenance(command.Provenance);
-
-            return eventAdded;
-        }
-    }
-
 }

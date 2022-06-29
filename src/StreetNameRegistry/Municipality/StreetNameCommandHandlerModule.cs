@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Municipality
 {
     using System;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.SqlStreamStore;
     using Be.Vlaanderen.Basisregisters.EventHandling;
@@ -18,10 +19,11 @@ namespace StreetNameRegistry.Municipality
             Func<IStreamStore> getStreamStore,
             EventMapping eventMapping,
             EventSerializer eventSerializer,
+            Func<ISnapshotStore> getSnapshotStore,
             StreetNameProvenanceFactory provenanceFactory)
         {
             For<ProposeStreetName>()
-                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<ProposeStreetName, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
@@ -31,7 +33,7 @@ namespace StreetNameRegistry.Municipality
                 });
 
             For<ApproveStreetName>()
-                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<ApproveStreetName, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>
@@ -41,7 +43,7 @@ namespace StreetNameRegistry.Municipality
                 });
 
             For<MigrateStreetNameToMunicipality>()
-                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer)
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<MigrateStreetNameToMunicipality, Municipality>(getUnitOfWork)
                 .AddProvenance(getUnitOfWork, provenanceFactory)
                 .Handle(async (message, ct) =>

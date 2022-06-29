@@ -59,6 +59,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 
             containerBuilder.RegisterModule(new CommandHandlingModule(_configuration));
             containerBuilder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
+            containerBuilder.RegisterSnapshotModule(_configuration);
 
             containerBuilder.Populate(_services);
         }
