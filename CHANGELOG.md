@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.11...v3.1.0) (2022-06-29)
+
+
+### Features
+
+* add snapshotting ([66672d6](https://github.com/informatievlaanderen/streetname-registry/commit/66672d6fccf68e67112a481e4d5bb76533c5346f))
+
 ## [3.0.11](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.10...v3.0.11) (2022-06-29)
 
 
