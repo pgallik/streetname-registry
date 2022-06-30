@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Wfs.StreetName
     using StreetNameRegistry.StreetName;
 
     [ConnectedProjectionName("WFS adressen")]
-    [ConnectedProjectionDescription("Projectie die de straatnaam data voor het WFS straatnaamregister voorziet.")]
+    [ConnectedProjectionDescription("Projectie die de straatnaam data voor het WFS adressenregister voorziet.")]
     public class StreetNameHelperProjections: ConnectedProjection<WfsContext>
     {
 
