@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.1.1...v3.1.2) (2022-06-30)
+
+
+### Bug Fixes
+
+* update projection description ([e1c7bd5](https://github.com/informatievlaanderen/streetname-registry/commit/e1c7bd591d405d975dff6a1228983a6ef2dcb9e3))
+
 ## [3.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.1.0...v3.1.1) (2022-06-30)
 
 
