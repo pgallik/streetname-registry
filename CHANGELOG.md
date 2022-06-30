@@ -1,3 +1,11 @@
+## [3.1.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.1.0...v3.1.1) (2022-06-30)
+
+
+### Bug Fixes
+
+* add LABEL to Dockerfile (for easier DataDog filtering) ([abc9b26](https://github.com/informatievlaanderen/streetname-registry/commit/abc9b2618b1a23ac866d3217a30ab5f26df4904a))
+* rename projection description ([0f518fb](https://github.com/informatievlaanderen/streetname-registry/commit/0f518fb22fcbee75d55fa1328f856d5d94fe5eb3))
+
 # [3.1.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.0.11...v3.1.0) (2022-06-29)
 
 
