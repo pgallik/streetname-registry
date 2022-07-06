@@ -43,6 +43,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure.Modules
                 .RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
 
             builder.RegisterEventstreamModule(_configuration);
+            builder.RegisterSnapshotModule(_configuration);
 
             builder.Populate(_services);
         }

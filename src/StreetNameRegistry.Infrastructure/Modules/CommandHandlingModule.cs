@@ -23,8 +23,14 @@ namespace StreetNameRegistry.Infrastructure.Modules
             var value = _configuration[SnapshotIntervalKey] ?? "50";
             var snapshotInterval = Convert.ToInt32(value);
 
+            ISnapshotStrategy snapshotStrategy = NoSnapshotStrategy.Instance;
+            if (snapshotInterval > 0)
+            {
+                snapshotStrategy = IntervalStrategy.SnapshotEvery(snapshotInterval);
+            }
+
             containerBuilder
-                .Register(c => new MunicipalityFactory(IntervalStrategy.SnapshotEvery(snapshotInterval)))
+                .Register(c => new MunicipalityFactory(snapshotStrategy))
                 .As<IMunicipalityFactory>();
 
             containerBuilder
