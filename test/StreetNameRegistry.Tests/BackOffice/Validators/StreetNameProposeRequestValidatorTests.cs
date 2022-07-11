@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Tests.BackOffice.Validators
 {
-    using System;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentValidation.TestHelper;
@@ -33,7 +32,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[0]")
-                .WithErrorMessage($"Straatnaam in 'nl' kan niet leeg zijn.");
+                .WithErrorMessage($"Straatnaam in 'nl' kan niet leeg zijn.")
+                .WithErrorCode(StreetNameNotEmptyValidator.Code);
         }
 
         [Fact]
@@ -50,7 +50,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[1]")
-                .WithErrorMessage("Straatnaam in 'fr' kan niet leeg zijn.");
+                .WithErrorMessage("Straatnaam in 'fr' kan niet leeg zijn.")
+                .WithErrorCode(StreetNameNotEmptyValidator.Code);
         }
 
         [Fact]
@@ -68,7 +69,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.Straatnamen)}[0]")
-                .WithErrorMessage($"Maximum lengte van een straatnaam in 'nl' is 60 tekens. U heeft momenteel {streetName.Length} tekens.");
+                .WithErrorMessage($"Maximum lengte van een straatnaam in 'nl' is 60 tekens. U heeft momenteel {streetName.Length} tekens.")
+                .WithErrorCode(StreetNameMaxLengthValidator.Code);
         }
 
         [Fact]
@@ -86,11 +88,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.");
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.")
+                .WithErrorCode(StreetNameExistingNisCodeValidator.Code);
         }
 
         [Fact]
-        public void GivenNonExistantNisCode_ThenReturnsExpectedMessage()
+        public void GivenNonExistentNisCode_ThenReturnsExpectedMessage()
         {
             const string gemeenteId = "https://data.vlaanderen.be/id/gemeente/bla";
 
@@ -104,18 +107,20 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.");
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.")
+                .WithErrorCode(StreetNameExistingNisCodeValidator.Code);
         }
 
         [Fact]
         public void GivenNonFlemishNisCode_ThenReturnsExpectedMessage()
         {
-            var gemeenteId = Guid.NewGuid();
+            const string nisCode = "55001";
+            const string gemeenteId = $"https://data.vlaanderen.be/id/gemeente/{nisCode}";
 
-            var item = _consumerContext.AddMunicipalityLatestItemFixtureWithMunicipalityIdAndNisCode(gemeenteId, "55001");
+            _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode(nisCode);
             var result = _validator.TestValidate(new StreetNameProposeRequest
             {
-                GemeenteId = item.MunicipalityId.ToString("D"),
+                GemeenteId = gemeenteId,
                 Straatnamen = new Dictionary<Taal, string>
                 {
                     { Taal.NL, "Sint-Niklaasstraat" }
@@ -123,7 +128,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
             });
 
             result.ShouldHaveValidationErrorFor($"{nameof(StreetNameProposeRequest.GemeenteId)}")
-                .WithErrorMessage($"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.");
+                .WithErrorMessage($"De gemeente '{gemeenteId}' is geen Vlaamse gemeente.")
+                .WithErrorCode(StreetNameFlemishRegionValidator.Code);
         }
     }
 }

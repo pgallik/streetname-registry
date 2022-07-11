@@ -7,12 +7,9 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Consumer;
     using Convertors;
-    using FluentValidation;
-    using FluentValidation.Validators;
     using Microsoft.EntityFrameworkCore;
-    using StreetName.Requests;
 
-    public class StreetNameFlemishRegionValidator : AsyncPropertyValidator<StreetNameProposeRequest, string>
+    public class StreetNameFlemishRegionValidator
     {
         public const string Code = "StraatnaamVlaamsGewestValidatie";
 
@@ -23,11 +20,11 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
             _consumerContext = consumerContext;
         }
 
-        public override async Task<bool> IsValidAsync(ValidationContext<StreetNameProposeRequest> context, string value, CancellationToken cancellation)
+        public async Task<bool> IsValidAsync(string municipalityPuri, CancellationToken cancellation)
         {
             try
             {
-                var identifier = value
+                var identifier = municipalityPuri
                     .AsIdentifier()
                     .Map(IdentifierMappings.MunicipalityNisCode);
 
@@ -43,7 +40,5 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
                 return false;
             }
         }
-
-        public override string Name => nameof(StreetNameFlemishRegionValidator);
     }
 }
