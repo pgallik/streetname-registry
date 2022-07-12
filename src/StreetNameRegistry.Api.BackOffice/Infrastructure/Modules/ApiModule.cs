@@ -42,7 +42,12 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .RegisterType<ProblemDetailsHelper>()
                 .AsSelf();
 
-            containerBuilder.RegisterModule(new IdempotencyModule(
+            containerBuilder
+                .RegisterType<IfMatchHeaderValidator>()
+                .As<IIfMatchHeaderValidator>()
+                .AsSelf();
+
+                containerBuilder.RegisterModule(new IdempotencyModule(
                 _services,
                 _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
                     .ConnectionString,
@@ -56,6 +61,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             containerBuilder.RegisterModule(new EnvelopeModule());
             containerBuilder.RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory));
             containerBuilder.RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory));
+            containerBuilder.RegisterModule(new MediatRModule());
 
             containerBuilder.RegisterModule(new CommandHandlingModule(_configuration));
             containerBuilder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));

@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
+namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,13 +6,15 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Convertors;
+    using MediatR;
     using Municipality;
     using Municipality.Commands;
     using Newtonsoft.Json;
-    using Swashbuckle.AspNetCore.Filters;
+    using Response;
+
 
     [DataContract(Name = "VoorstelStraatnaam", Namespace = "")]
-    public class StreetNameProposeRequest
+    public class StreetNameProposeRequest : IRequest<PersistentLocalIdETagResponse>
     {
         /// <summary>
         /// De unieke en persistente identificator van de gemeente die de straatnaam toekent.
@@ -28,6 +30,9 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         [JsonProperty(Required = Required.Always)]
         public Dictionary<Taal, string> Straatnamen { get; set; }
 
+        [JsonIgnore]
+        public IDictionary<string, object> Metadata { get; set; }
+
         /// <summary>
         /// Map to ProposeStreetName command
         /// </summary>
@@ -36,22 +41,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName.Requests
         {
             var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, x.Key.ToLanguage())));
             return new ProposeStreetName(municipalityId, names, persistentLocalId, provenance);
-        }
-    }
-
-    public class StreetNameProposeRequestExamples : IExamplesProvider<StreetNameProposeRequest>
-    {
-        public StreetNameProposeRequest GetExamples()
-        {
-            return new StreetNameProposeRequest
-            {
-                GemeenteId = "https://data.vlaanderen.be/id/gemeente/45041",
-                Straatnamen = new Dictionary<Taal, string>
-                {
-                    {Taal.NL, "Rodekruisstraat"},
-                    {Taal.FR, "Rue de la Croix-Rouge"}
-                }
-            };
         }
     }
 }

@@ -13,6 +13,9 @@ nuget Microsoft.Extensions.Http.Polly 6.0.3
 // For more healtchecks, look at https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
 nuget AspNetCore.HealthChecks.SqlServer 6.0.2
 
+nuget MediatR 10.0.1
+nuget MediatR.Contracts 1.0.1
+nuget Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite 6.0.3
 nuget NetTopologySuite 2.4.0
 nuget Dapper 2.0.123
 
@@ -64,12 +67,13 @@ nuget Be.Vlaanderen.Basisregisters.DataDog.Tracing.SqlStreamStore 5.0.0
 
 nuget Be.Vlaanderen.Basisregisters.Crab 3.0.0
 
-nuget Be.Vlaanderen.Basisregisters.GrAr.Common 17.3.1
-nuget Be.Vlaanderen.Basisregisters.GrAr.Contracts 17.3.1
-nuget Be.Vlaanderen.Basisregisters.GrAr.Import 17.3.1
-nuget Be.Vlaanderen.Basisregisters.GrAr.Legacy 17.3.1
-nuget Be.Vlaanderen.Basisregisters.GrAr.Provenance 17.3.1
-nuget Be.Vlaanderen.Basisregisters.GrAr.Extracts 17.3.1
+nuget Be.Vlaanderen.Basisregisters.GrAr.Common 17.4.0
+nuget Be.Vlaanderen.Basisregisters.GrAr.Contracts 17.4.0
+nuget Be.Vlaanderen.Basisregisters.GrAr.Edit 17.4.0
+nuget Be.Vlaanderen.Basisregisters.GrAr.Import 17.4.0
+nuget Be.Vlaanderen.Basisregisters.GrAr.Legacy 17.4.0
+nuget Be.Vlaanderen.Basisregisters.GrAr.Provenance 17.4.0
+nuget Be.Vlaanderen.Basisregisters.GrAr.Extracts 17.4.0
 
 nuget Be.Vlaanderen.Basisregisters.Shaperon 9.0.1
 

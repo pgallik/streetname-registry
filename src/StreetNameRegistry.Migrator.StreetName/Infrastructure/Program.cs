@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using System.Threading;
     using System.Threading.Tasks;
     using Api.BackOffice;
+    using Api.BackOffice.Abstractions;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;

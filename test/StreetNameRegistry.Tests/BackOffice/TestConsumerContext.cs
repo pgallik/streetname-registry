@@ -1,12 +1,12 @@
-namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
+namespace StreetNameRegistry.Tests.BackOffice
 {
     using System;
+    using Consumer;
+    using Consumer.Municipality;
     using global::AutoFixture;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
-    using Consumer;
-    using Consumer.Municipality;
-    
+
     public class TestConsumerContext : ConsumerContext
     {
         // This needs to be here to please EF

@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure
 {
     using System;
+    using Abstractions;
     using Microsoft.Data.SqlClient;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;

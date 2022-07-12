@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace StreetNameRegistry.Api.BackOffice.Migrations
+namespace StreetNameRegistry.Api.BackOffice.Abstractions.Migrations
 {
     public partial class Initial : Migration
     {

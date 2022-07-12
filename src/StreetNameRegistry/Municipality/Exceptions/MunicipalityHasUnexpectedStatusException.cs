@@ -4,14 +4,8 @@ namespace StreetNameRegistry.Municipality.Exceptions
 
     public class MunicipalityHasUnexpectedStatusException : StreetNameRegistryException
     {
-        public MunicipalityStatus Actual { get; }
-        public MunicipalityStatus Expected { get; }
-
-        public MunicipalityHasUnexpectedStatusException(MunicipalityStatus actual, MunicipalityStatus expected)
-        {
-            Actual = actual;
-            Expected = expected;
-        }
+        public MunicipalityHasUnexpectedStatusException()
+        { }
 
         public MunicipalityHasUnexpectedStatusException(string message) : base(message) { }
 

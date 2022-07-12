@@ -3,10 +3,13 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Abstractions.Convertors;
+    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Consumer;
-    using Convertors;
+    using FluentValidation;
+    using FluentValidation.Validators;
     using Microsoft.EntityFrameworkCore;
 
     public class StreetNameFlemishRegionValidator

@@ -1,7 +1,7 @@
 namespace StreetNameRegistry.Api.BackOffice.Validators
 {
+    using Abstractions.Requests;
     using FluentValidation;
-    using StreetName.Requests;
 
     public class StreetNameApproveRequestValidator : AbstractValidator<StreetNameApproveRequest>
     {
