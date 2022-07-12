@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
+namespace StreetNameRegistry.Tests.BackOffice
 {
     using System;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;

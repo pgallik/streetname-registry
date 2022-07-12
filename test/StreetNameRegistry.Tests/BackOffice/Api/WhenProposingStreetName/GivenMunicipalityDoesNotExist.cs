@@ -2,67 +2,53 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Autofac;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentAssertions;
-    using global::AutoFixture;
-    using Infrastructure;
+    using FluentValidation;
     using Moq;
     using Municipality;
-    using StreetNameRegistry.Api.BackOffice.StreetName;
-    using StreetNameRegistry.Api.BackOffice.StreetName.Requests;
-    using StreetNameRegistry.Api.BackOffice.Validators;
-    using StreetNameRegistry.Infrastructure.Repositories;
-    using Testing;
+    using StreetNameRegistry.Api.BackOffice;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityDoesNotExist : StreetNameRegistryBackOfficeTest
+    public class GivenMunicipalityDoesNotExist : BackOfficeApiTest<StreetNameController>
     {
-        private readonly Fixture _fixture;
-        private readonly StreetNameController _controller;
-        private readonly TestConsumerContext _consumerContext;
-        private readonly TestBackOfficeContext _backOfficeContext;
-        private readonly IdempotencyContext _idempotencyContext;
-
         public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
-            _fixture = new Fixture();
-            _controller = CreateApiBusControllerWithUser<StreetNameController>("John Doe");
-            _idempotencyContext = new FakeIdempotencyContextFactory().CreateDbContext(Array.Empty<string>());
-            _consumerContext = new FakeConsumerContextFactory().CreateDbContext(Array.Empty<string>());
-            _backOfficeContext = new FakeBackOfficeContextFactory().CreateDbContext(Array.Empty<string>());
         }
 
         [Fact]
-        public async Task ThenAggregateIsNotFound()
+        public void ThenAggregateIsNotFound()
         {
-            //Arrange
-            var municipalityLatestItem = _consumerContext.AddMunicipalityLatestItemFixtureWithNisCode("23002");
-            var mockPersistentLocalIdGenerator = new Mock<IPersistentLocalIdGenerator>();
-            mockPersistentLocalIdGenerator
-                .Setup(x => x.GenerateNextPersistentLocalId())
-                .Returns(new PersistentLocalId(5));
+            MockMediator
+                .Setup(x => x.Send(It.IsAny<StreetNameProposeRequest>(), CancellationToken.None))
+                .Throws(new AggregateNotFoundException("123", typeof(Municipality)));
 
-            var body = new StreetNameProposeRequest
-            {
-                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
-                Straatnamen = new Dictionary<Taal, string>
+            Func<Task> act = async () => await Controller.Propose(
+                ResponseOptions,
+                MockPassingRequestValidator<StreetNameProposeRequest>(),
+                new StreetNameProposeRequest
                 {
-                    {Taal.NL, "Rodekruisstraat"},
-                    {Taal.FR, "Rue de la Croix-Rouge"}
-                }
-            };
-
-            //Act
-            Func<Task> act = async () => await _controller.Propose(ResponseOptions, _idempotencyContext, _consumerContext, _backOfficeContext, mockPersistentLocalIdGenerator.Object, new StreetNameProposeRequestValidator(_consumerContext), Container.Resolve<IMunicipalities>(), body);
-
+                    GemeenteId = GetStreetNamePuri(123),
+                    Straatnamen = new Dictionary<Taal, string>
+                    {
+                        {Taal.NL, "Rodekruisstraat"},
+                        {Taal.FR, "Rue de la Croix-Rouge"}
+                    }
+                }, CancellationToken.None);
             //Assert
-            await act.Should().ThrowAsync<AggregateNotFoundException>();
+            act
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .Result
+                .Where(x =>
+                    x.Errors.Any(e => e.ErrorCode == "code"
+                    && e.ErrorMessage.Contains("message")));
         }
     }
 }

@@ -4,9 +4,12 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Abstractions.Convertors;
+    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Consumer;
-    using Convertors;
+    using FluentValidation;
+    using FluentValidation.Validators;
     using Microsoft.EntityFrameworkCore;
 
     public class StreetNameExistingNisCodeValidator

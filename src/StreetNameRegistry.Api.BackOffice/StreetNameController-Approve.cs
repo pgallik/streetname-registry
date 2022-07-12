@@ -1,20 +1,19 @@
-namespace StreetNameRegistry.Api.BackOffice.StreetName
+namespace StreetNameRegistry.Api.BackOffice
 {
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Abstractions.Exceptions;
+    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentValidation;
     using FluentValidation.Results;
+    using Infrastructure;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
-    using Municipality.Commands;
-    using Requests;
     using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
 
@@ -23,10 +22,8 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         /// <summary>
         /// Keur een straatnaam goed.
         /// </summary>
-        /// <param name="idempotencyContext"></param>
-        /// <param name="municipalityRepository"></param>
-        /// <param name="streetNameApproveRequest"></param>
-        /// <param name="backOfficeContext"></param>
+        /// <param name="request"></param>
+        /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="validator"></param>
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
@@ -45,56 +42,25 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
         public async Task<IActionResult> Approve(
-            [FromServices] IdempotencyContext idempotencyContext,
-            [FromServices] BackOfficeContext backOfficeContext,
+            [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromServices] IValidator<StreetNameApproveRequest> validator,
-            [FromServices] IMunicipalities municipalityRepository,
-            [FromRoute] StreetNameApproveRequest streetNameApproveRequest,
+            [FromRoute] StreetNameApproveRequest request,
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
         {
-            await validator.ValidateAndThrowAsync(streetNameApproveRequest, cancellationToken);
+            await validator.ValidateAndThrowAsync(request, cancellationToken);
 
             try
             {
-                var fakeProvenanceData = new Provenance(
-                    NodaTime.SystemClock.Instance.GetCurrentInstant(),
-                    Application.StreetNameRegistry,
-                    new Reason(""), // TODO: TBD
-                    new Operator(""), // TODO: from claims
-                    Modification.Update,
-                    Organisation.DigitaalVlaanderen // TODO: from claims
-                );
-
-                var persistentLocalId = new PersistentLocalId(streetNameApproveRequest.PersistentLocalId);
-
-                var municipalityIdByPersistentLocalId = await backOfficeContext
-                    .MunicipalityIdByPersistentLocalId
-                    .FindAsync(streetNameApproveRequest.PersistentLocalId);
-                if (municipalityIdByPersistentLocalId is null)
+                if (!await ifMatchHeaderValidator.IsValid(ifMatchHeaderValue, new PersistentLocalId(request.PersistentLocalId), cancellationToken))
                 {
-                    return NotFound();
+                    return new PreconditionFailedResult();
                 }
 
-                var municipalityId = new MunicipalityId(municipalityIdByPersistentLocalId.MunicipalityId);
+                request.Metadata = GetMetadata();
+                var response = await _mediator.Send(request, cancellationToken);
 
-                // Check if user provided ETag is equal to the current Entity Tag
-                if (ifMatchHeaderValue is not null)
-                {
-                    var ifMatchTag = ifMatchHeaderValue.Trim();
-                    var lastHash = await GetStreetNameHash(municipalityRepository, municipalityId, persistentLocalId, cancellationToken);
-                    var lastHashTag = new ETag(ETagType.Strong, lastHash);
-                    if (ifMatchTag != lastHashTag.ToString())
-                    {
-                        return new PreconditionFailedResult();
-                    }
-                }
-
-                var cmd = new ApproveStreetName(municipalityId, persistentLocalId, fakeProvenanceData);
-                await IdempotentCommandHandlerDispatch(idempotencyContext, cmd.CreateCommandId(), cmd, cancellationToken);
-
-                var etag = await GetStreetNameHash(municipalityRepository, municipalityId, persistentLocalId, cancellationToken);
-                return new NoContentWithETagResult(etag);
+                return new NoContentWithETagResult(response.LastEventHash);
             }
             catch (IdempotencyException)
             {

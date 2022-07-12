@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28917.181
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B591EFE3-728F-4A40-BADF-3499F039C63A}"
 EndProject
@@ -66,6 +66,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Projections.Wms", "src\StreetNameRegistry.Projections.Wms\StreetNameRegistry.Projections.Wms.csproj", "{D2883268-1DD0-4659-8054-1FEE0A0054F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Producer", "src\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj", "{D19924B4-850B-4294-9171-AEB6829DB4C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreetNameRegistry.Api.BackOffice.Abstractions", "src\StreetNameRegistry.Api.BackOffice.Abstractions\StreetNameRegistry.Api.BackOffice.Abstractions.csproj", "{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreetNameRegistry.Api.BackOffice.Handlers", "src\StreetNameRegistry.Api.BackOffice.Handlers\StreetNameRegistry.Api.BackOffice.Handlers.csproj", "{C79DD424-D0EE-4F21-BA62-BF03ADDE497A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,6 +153,14 @@ Global
 		{D19924B4-850B-4294-9171-AEB6829DB4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D19924B4-850B-4294-9171-AEB6829DB4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D19924B4-850B-4294-9171-AEB6829DB4C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C79DD424-D0EE-4F21-BA62-BF03ADDE497A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C79DD424-D0EE-4F21-BA62-BF03ADDE497A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C79DD424-D0EE-4F21-BA62-BF03ADDE497A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C79DD424-D0EE-4F21-BA62-BF03ADDE497A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +185,8 @@ Global
 		{414D56C6-9181-4EE1-ABA9-9D312FEFDCA4} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{D2883268-1DD0-4659-8054-1FEE0A0054F0} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 		{D19924B4-850B-4294-9171-AEB6829DB4C7} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
+		{259D0C1F-6363-4E53-B106-B2ADC13B6D5D} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
+		{C79DD424-D0EE-4F21-BA62-BF03ADDE497A} = {65EA04DE-5928-430F-92CA-24C11B6E5A00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3B44FE80-30FE-47B7-A0DE-8610218FFF63}

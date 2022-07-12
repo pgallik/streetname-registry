@@ -59,27 +59,12 @@ namespace StreetNameRegistry.Municipality
             {
                 throw new StreetNameNotFoundException(persistentLocalId);
             }
-
-            if (streetName.IsRemoved)
-            {
-                throw new StreetNameWasRemovedException(persistentLocalId);
-            }
-
+            
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
-                throw new MunicipalityHasUnexpectedStatusException(MunicipalityStatus, MunicipalityStatus.Current);
+                throw new MunicipalityHasUnexpectedStatusException();
             }
-
-            if (streetName.Status == StreetNameStatus.Current)
-            {
-                return;
-            }
-
-            if (streetName.Status != StreetNameStatus.Proposed)
-            {
-                throw new StreetNameStatusPreventsApprovalException(persistentLocalId);
-            }
-
+            
             streetName.Approve();
         }
 

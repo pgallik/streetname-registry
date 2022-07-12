@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using DataStructures;
     using Events;
+    using Exceptions;
 
     public class MunicipalityStreetName : Entity
     {
@@ -64,7 +65,25 @@ namespace StreetNameRegistry.Municipality
             _lastEvent = @event;
         }
 
-        public void Approve() => Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
+        public void Approve()
+        {
+            if (IsRemoved)
+            {
+                throw new StreetNameWasRemovedException(PersistentLocalId);
+            }
+
+            if (Status == StreetNameStatus.Current)
+            {
+                return;
+            }
+
+            if (Status != StreetNameStatus.Proposed)
+            {
+                throw new StreetNameStatusPreventsApprovalException(PersistentLocalId);
+            }
+
+            Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
+        }
 
         public void RestoreSnapshot(MunicipalityId municipalityId, StreetNameData streetNameData)
         {

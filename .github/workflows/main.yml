@@ -280,6 +280,7 @@ jobs:
       shell: bash
       run: |
         node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
         node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
         node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
         node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg

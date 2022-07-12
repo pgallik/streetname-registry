@@ -1,11 +1,11 @@
-namespace StreetNameRegistry.Api.BackOffice
+namespace StreetNameRegistry.Api.BackOffice.Abstractions
 {
     using System;
     using System.IO;
+    using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
     using Microsoft.Extensions.Configuration;
-    using StreetNameRegistry.Infrastructure;
 
     public class BackOfficeContext : DbContext
     {

@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice.Handlers\StreetNameRegistry.Api.BackOffice.Handlers.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Infrastructure\StreetNameRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\StreetNameRegistry\StreetNameRegistry.csproj" />

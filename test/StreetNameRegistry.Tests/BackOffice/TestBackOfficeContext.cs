@@ -1,10 +1,10 @@
-namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
+namespace StreetNameRegistry.Tests.BackOffice
 {
     using System;
     using global::AutoFixture;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
-    using StreetNameRegistry.Api.BackOffice;
+    using StreetNameRegistry.Api.BackOffice.Abstractions;
 
     public class TestBackOfficeContext : BackOfficeContext
     {

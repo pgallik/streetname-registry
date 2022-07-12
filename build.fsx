@@ -47,6 +47,7 @@ Target.create "Publish_Solution" (fun _ ->
   [
     "StreetNameRegistry.Projector"
     "StreetNameRegistry.Api.BackOffice"
+    "StreetNameRegistry.Api.BackOffice.Abstractions"
     "StreetNameRegistry.Api.Legacy"
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
@@ -66,6 +67,7 @@ Target.create "Pack_Solution" (fun _ ->
   [
     "StreetNameRegistry.Projector"
     "StreetNameRegistry.Api.BackOffice"
+    "StreetNameRegistry.Api.BackOffice.Abstractions"
     "StreetNameRegistry.Api.Legacy"
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"

@@ -69,6 +69,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                 .WithMunicipalityId(_municipalityId);
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var municipalityBecameCurrent = Fixture.Create<MunicipalityBecameCurrent>();
             var streetNameMigratedToMunicipality = Fixture.Build<StreetNameWasMigratedToMunicipality>()
                 .FromFactory(() =>
                 {
@@ -93,7 +94,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
 
             // Act, assert
             Assert(new Scenario()
-                .Given(_streamId, municipalityWasImported, streetNameMigratedToMunicipality)
+                .Given(_streamId,
+                    municipalityWasImported,
+                    municipalityBecameCurrent,
+                    streetNameMigratedToMunicipality)
                 .When(command)
                 .Throws(new StreetNameWasRemovedException(command.PersistentLocalId)));
         }
@@ -134,9 +138,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                     Fixture.Create<MunicipalityWasRetired>(),
                     streetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new MunicipalityHasUnexpectedStatusException(
-                    actual: MunicipalityStatus.Retired,
-                    expected: MunicipalityStatus.Current)));
+                .Throws(new MunicipalityHasUnexpectedStatusException()));
         }
 
         [Theory]

@@ -1,12 +1,12 @@
-namespace StreetNameRegistry.Api.BackOffice.StreetName
+namespace StreetNameRegistry.Api.BackOffice
 {
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
-    using Be.Vlaanderen.Basisregisters.CommandHandling;
     using FluentValidation;
     using FluentValidation.Results;
+    using MediatR;
     using Microsoft.AspNetCore.Mvc;
     using Municipality;
 
@@ -14,9 +14,13 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
     [AdvertiseApiVersions("2.0")]
     [ApiRoute("straatnamen")]
     [ApiExplorerSettings(GroupName = "Straatnamen")]
-    public partial class StreetNameController : ApiBusController
+    public partial class StreetNameController : BackOfficeApiController
     {
-        public StreetNameController(ICommandHandlerResolver bus) : base(bus) { }
+        private readonly IMediator _mediator;
+        public StreetNameController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         private ValidationException CreateValidationException(string errorCode, string propertyName, string message)
         {
@@ -29,18 +33,6 @@ namespace StreetNameRegistry.Api.BackOffice.StreetName
             {
                 failure
             });
-        }
-
-        private async Task<string> GetStreetNameHash(
-            IMunicipalities municipalityRepository,
-            MunicipalityId municipalityId,
-            PersistentLocalId persistentLocalId,
-            CancellationToken cancellationToken)
-        {
-            var muniAggregate =
-                await municipalityRepository.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
-            var streetNameHash = muniAggregate.GetStreetNameHash(persistentLocalId);
-            return streetNameHash;
         }
     }
 }
