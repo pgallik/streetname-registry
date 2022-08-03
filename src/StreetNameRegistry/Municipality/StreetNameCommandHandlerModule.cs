@@ -42,6 +42,16 @@ namespace StreetNameRegistry.Municipality
                     municipality.ApproveStreetName(message.Command.PersistentLocalId);
                 });
 
+            For<RejectStreetName>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RejectStreetName, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.RejectStreetName(message.Command.PersistentLocalId);
+                });
+
             For<MigrateStreetNameToMunicipality>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<MigrateStreetNameToMunicipality, Municipality>(getUnitOfWork)

@@ -134,7 +134,7 @@ namespace StreetNameRegistry.Producer
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
-            
+
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasCorrectedToCurrent>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
@@ -164,7 +164,7 @@ namespace StreetNameRegistry.Producer
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
             });
-            
+
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameWasRegistered>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.StreetNameId, message.Message.ToContract(), ct);
@@ -196,6 +196,11 @@ namespace StreetNameRegistry.Producer
             });
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasApproved>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), ct);
+            });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasRejected>>(async (_, message, ct) =>
             {
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), ct);
             });

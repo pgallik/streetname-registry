@@ -20,6 +20,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     public class StreetNameExtractProjectionsV2 : ConnectedProjection<ExtractContext>
     {
         private const string InUse = "InGebruik";
+        private const string Rejected = "Afgekeurd";
         private const string Proposed = "Voorgesteld";
         private const string Retired = "Gehistoreerd";
         private readonly Encoding _encoding;
@@ -37,7 +38,16 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                     UpdateStatus(x, InUse);
                     UpdateVersie(x, message.Message.Provenance.Timestamp);
                 }, ct);
-            }); 
+            });
+
+            When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                {
+                    UpdateStatus(x, Rejected);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
 
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {

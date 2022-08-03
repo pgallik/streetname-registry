@@ -67,6 +67,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRejected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Rejected);
+                    UpdateVersionTimestamp(streetNameNameV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
 
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {

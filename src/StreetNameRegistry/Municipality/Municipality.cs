@@ -59,13 +59,28 @@ namespace StreetNameRegistry.Municipality
             {
                 throw new StreetNameNotFoundException(persistentLocalId);
             }
-            
+
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
                 throw new MunicipalityHasUnexpectedStatusException();
             }
-            
+
             streetName.Approve();
+        }
+
+        public void RejectStreetName(PersistentLocalId persistentLocalId)
+        {
+            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName) || streetName is null)
+            {
+                throw new StreetNameNotFoundException(persistentLocalId);
+            }
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasUnexpectedStatusException();
+            }
+
+            streetName.Reject();
         }
 
         public void DefineOrChangeNisCode(NisCode nisCode)

@@ -354,7 +354,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
             var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
             var streetNameWasApproved = Fixture.Create<StreetNameWasApproved>();
             ((ISetProvenance)streetNameWasApproved).SetProvenance(Fixture.Create<Provenance>());
-            
+
             aggregate.Initialize(new List<object>
             {
                 Fixture.Create<MunicipalityWasImported>(),
@@ -378,6 +378,41 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     null,
                     streetNameWasApproved.GetHash(),
                     streetNameWasApproved.Provenance)
+            });
+        }
+
+        [Fact]
+        public void StreetNameWasRejectedIsSavedInSnapshot()
+        {
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasRejected = Fixture.Create<StreetNameWasRejected>();
+            ((ISetProvenance)streetNameWasRejected).SetProvenance(Fixture.Create<Provenance>());
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedV2,
+                streetNameWasRejected
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(streetNameWasRejected.PersistentLocalId),
+                    StreetNameStatus.Rejected,
+                    new Names(streetNameWasProposedV2.StreetNameNames),
+                    new HomonymAdditions(),
+                    false,
+                    null,
+                    streetNameWasRejected.GetHash(),
+                    streetNameWasRejected.Provenance)
             });
         }
     }
