@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
+namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
 {
     using System;
     using System.Linq;
@@ -10,10 +10,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
     using FluentValidation;
     using Microsoft.AspNetCore.Http;
     using Moq;
-    using Municipality.Exceptions;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
+    using Municipality.Exceptions;
     using Xunit;
     using Xunit.Abstractions;
     using MunicipalityId = Municipality.MunicipalityId;
@@ -29,20 +29,20 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         }
 
         [Fact]
-        public async Task ThenMediatorSends_StreetNameApproveRequest()
+        public async Task ThenMediatorSends_StreetNameRetireRequest()
         {
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var persistentLocalId = new PersistentLocalId(456);
 
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityId);
 
-            MockMediatorResponse<StreetNameApproveRequest, ETagResponse>(new ETagResponse("hash"));
+            MockMediatorResponse<StreetNameRetireRequest, ETagResponse>(new ETagResponse("hash"));
 
             // Act
-            var result = (NoContentWithETagResult)await Controller.Approve(
+            var result = (NoContentWithETagResult)await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
-                new StreetNameApproveRequest
+                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                new StreetNameRetireRequest
                 {
                     PersistentLocalId = persistentLocalId,
                 },
@@ -50,7 +50,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 CancellationToken.None);
 
             // Assert
-            MockMediator.Verify(x => x.Send(It.IsAny<StreetNameApproveRequest>(), CancellationToken.None));
+            MockMediator.Verify(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None));
             result.ETag.Should().Be("hash");
         }
 
@@ -58,14 +58,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         public void WhenStreetNameIsNotFound_ThenBadRequestIsExpected()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameApproveRequest>(), CancellationToken.None))
+                .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
                 .Throws(new StreetNameNotFoundException());
 
             //Act
-            Func<Task> act = async () => await Controller.Approve(
+            Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
-                new StreetNameApproveRequest
+                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
                 },
@@ -84,14 +84,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         public void WhenStreetNameIsRemoved_ThenBadRequestIsExpected()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameApproveRequest>(), CancellationToken.None))
+                .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
                 .Throws(new StreetNameWasRemovedException());
 
             //Act
-            Func<Task> act = async () => await Controller.Approve(
+            Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
-                new StreetNameApproveRequest
+                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
                 },
@@ -102,22 +102,22 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .Should()
                 .ThrowAsync<ApiException>()
                 .Result
-                .Where(x => x.Message.Contains("Straatnaam verwijderd")
+                .Where(x => x.Message.Contains("Verwijderde straatnaam")
                             && x.StatusCode == StatusCodes.Status410Gone);
         }
 
         [Fact]
-        public void WhenStreetNameIsNotInStatusProposedOrCurrent_ThenBadRequestIsExpected()
+        public void WhenStreetNameIsNotInStatusCurrent_ThenBadRequestIsExpected()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameApproveRequest>(), CancellationToken.None))
-                .Throws(new StreetNameStatusPreventsApprovalException());
+                .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
+                .Throws(new StreetNameStatusPreventsRetiringException());
 
             //Act
-            Func<Task> act = async () => await Controller.Approve(
+            Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
-                new StreetNameApproveRequest
+                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
                 },
@@ -128,7 +128,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .Should()
                 .ThrowAsync<ApiException>()
                 .Result
-                .Where(x => x.Message.Contains("Straatnaam kan niet meer goedgekeurd worden.")
+                .Where(x => x.Message.Contains("Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.")
                             && x.StatusCode == StatusCodes.Status409Conflict);
         }
 
@@ -136,14 +136,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         public async Task WhenMunicipalityIsRetired_ThenBadRequestIsReturned()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameApproveRequest>(), CancellationToken.None))
+                .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
                 .Throws(new MunicipalityHasUnexpectedStatusException());
 
             //Act
-            Func<Task> act = async () => await Controller.Approve(
+            Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
-                new StreetNameApproveRequest
+                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
                 },

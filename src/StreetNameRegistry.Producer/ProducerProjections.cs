@@ -204,6 +204,11 @@ namespace StreetNameRegistry.Producer
             {
                 await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), ct);
             });
+
+            When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<MunicipalityDomain.StreetNameWasRetiredV2>>(async (_, message, ct) =>
+            {
+                await Produce(message.Message.PersistentLocalId, message.Message.ToContract(), ct);
+            });
         }
 
         private async Task Produce<T>(Guid guid, T message, CancellationToken cancellationToken = default)

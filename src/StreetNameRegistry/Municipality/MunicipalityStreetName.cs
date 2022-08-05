@@ -36,6 +36,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasProposedV2>(When);
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
+            Register<StreetNameWasRetiredV2>(When);
         }
 
         private void When(StreetNameWasMigratedToMunicipality @event)
@@ -69,6 +70,12 @@ namespace StreetNameRegistry.Municipality
         private void When(StreetNameWasRejected @event)
         {
             Status = StreetNameStatus.Rejected;
+            _lastEvent = @event;
+        }
+
+        private void When(StreetNameWasRetiredV2 @event)
+        {
+            Status = StreetNameStatus.Retired;
             _lastEvent = @event;
         }
 
@@ -110,6 +117,26 @@ namespace StreetNameRegistry.Municipality
             }
 
             Apply(new StreetNameWasRejected(_municipalityId, PersistentLocalId));
+        }
+
+        public void Retire()
+        {
+            if (IsRemoved)
+            {
+                throw new StreetNameWasRemovedException(PersistentLocalId);
+            }
+
+            if (Status == StreetNameStatus.Retired)
+            {
+                return;
+            }
+
+            if (Status != StreetNameStatus.Current)
+            {
+                throw new StreetNameStatusPreventsRetiringException(PersistentLocalId);
+            }
+
+            Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
         }
 
         public void RestoreSnapshot(MunicipalityId municipalityId, StreetNameData streetNameData)

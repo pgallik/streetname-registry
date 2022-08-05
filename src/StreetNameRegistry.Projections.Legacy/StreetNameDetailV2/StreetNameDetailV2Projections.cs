@@ -79,6 +79,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                     UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
                 }, ct);
             });
+
+            When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
+                {
+                    UpdateStatus(streetNameDetailV2, StreetNameStatus.Retired);
+                    UpdateHash(streetNameDetailV2, message);
+                    UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
         }
 
         private static void UpdateHash<T>(StreetNameDetailV2 entity, Envelope<T> wrappedEvent) where T : IHaveHash, IMessage

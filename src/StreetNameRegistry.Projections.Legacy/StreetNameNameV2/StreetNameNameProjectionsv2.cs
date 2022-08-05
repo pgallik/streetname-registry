@@ -76,6 +76,15 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasRetiredV2>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameName(message.Message.PersistentLocalId, streetNameNameV2 =>
+                {
+                    UpdateStatus(streetNameNameV2, StreetNameStatus.Retired);
+                    UpdateVersionTimestamp(streetNameNameV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var streetNames = context

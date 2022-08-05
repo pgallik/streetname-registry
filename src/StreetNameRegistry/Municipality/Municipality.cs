@@ -83,6 +83,21 @@ namespace StreetNameRegistry.Municipality
             streetName.Reject();
         }
 
+        public void RetireStreetName(PersistentLocalId persistentLocalId)
+        {
+            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName) || streetName is null)
+            {
+                throw new StreetNameNotFoundException(persistentLocalId);
+            }
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasUnexpectedStatusException();
+            }
+
+            streetName.Retire();
+        }
+
         public void DefineOrChangeNisCode(NisCode nisCode)
         {
             if (string.IsNullOrWhiteSpace(nisCode))

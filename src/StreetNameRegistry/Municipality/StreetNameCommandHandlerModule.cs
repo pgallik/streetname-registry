@@ -70,6 +70,16 @@ namespace StreetNameRegistry.Municipality
                         message.Command.IsCompleted,
                         message.Command.IsRemoved);
                 });
+
+            For<RetireStreetName>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<RetireStreetName, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.RetireStreetName(message.Command.PersistentLocalId);
+                });
         }
     }
 }

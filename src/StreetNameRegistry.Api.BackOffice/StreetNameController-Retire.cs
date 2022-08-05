@@ -20,19 +20,19 @@ namespace StreetNameRegistry.Api.BackOffice
     public partial class StreetNameController
     {
         /// <summary>
-        /// Keur een straatnaam af.
+        /// Hef een straatnaam op.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="validator"></param>
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
-        /// <response code="202">Aanvraag tot afkeuring wordt reeds verwerkt.</response>
-        /// <response code="204">Als de straatnaam afgekeurd is.</response>
-        /// <response code="409">Als de straatnaam status niet 'voorgesteld' is.</response>
+        /// <response code="202">Aanvraag tot opheffing wordt reeds verwerkt.</response>
+        /// <response code="204">Als de straatnaam gehistoreerd is.</response>
+        /// <response code="409">Als de straatnaam status niet 'inGebruik' is.</response>
         /// <response code="412">Als de If-Match header niet overeenkomt met de laatste ETag.</response>
         /// <returns></returns>
-        [HttpPost("{persistentLocalId}/acties/afkeuren")]
+        [HttpPost("{persistentLocalId}/acties/opheffen")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
@@ -41,10 +41,10 @@ namespace StreetNameRegistry.Api.BackOffice
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
-        public async Task<IActionResult> Reject(
+        public async Task<IActionResult> Retire(
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
-            [FromServices] IValidator<StreetNameRejectRequest> validator,
-            [FromRoute] StreetNameRejectRequest request,
+            [FromServices] IValidator<StreetNameRetireRequest> validator,
+            [FromRoute] StreetNameRetireRequest request,
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
         {
@@ -74,7 +74,7 @@ namespace StreetNameRegistry.Api.BackOffice
 
                     StreetNameWasRemovedException => new ApiException("Verwijderde straatnaam.", StatusCodes.Status410Gone),
 
-                    StreetNameStatusPreventsRejectionException => new ApiException("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.", StatusCodes.Status409Conflict),
+                    StreetNameStatusPreventsRetiringException => new ApiException("Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.", StatusCodes.Status409Conflict),
 
                     MunicipalityHasUnexpectedStatusException _ => CreateValidationException(
                         "StraatnaamGemeenteInGebruik",
