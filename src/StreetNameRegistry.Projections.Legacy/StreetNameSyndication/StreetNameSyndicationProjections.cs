@@ -309,6 +309,14 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 }, ct);
             });
 
+            When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
+                {
+                    UpdateNameByLanguage(streetNameNameV2, message.Message.StreetNameNames);
+                }, ct);
+            });
+
             When<Envelope<MunicipalityNisCodeWasChanged>>(async (context, message, ct) =>
             {
                 var persistentLocalIds = context

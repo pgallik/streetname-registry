@@ -41,7 +41,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             // Act
             var result = (AcceptedWithETagResult)await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                MockPassingRequestValidator<StreetNameRetireRequest>(),
                 ResponseOptions,
                 new StreetNameRetireRequest
                 {
@@ -65,7 +65,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             //Act
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                MockPassingRequestValidator<StreetNameRetireRequest>(),
                 ResponseOptions,
                 new StreetNameRetireRequest
                 {
@@ -92,7 +92,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             //Act
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                MockPassingRequestValidator<StreetNameRetireRequest>(),
                 ResponseOptions,
                 new StreetNameRetireRequest
                 {
@@ -119,7 +119,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             //Act
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                MockPassingRequestValidator<StreetNameRetireRequest>(),
                 ResponseOptions,
                 new StreetNameRetireRequest
                 {
@@ -146,7 +146,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             //Act
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
-                MockPassingRetireValidator<StreetNameRetireRequest>(),
+                MockPassingRequestValidator<StreetNameRetireRequest>(),
                 ResponseOptions,
                 new StreetNameRetireRequest
                 {

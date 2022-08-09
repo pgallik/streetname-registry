@@ -10,15 +10,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using MediatR;
     using Municipality;
-    using Municipality.Commands;
 
-    public class StreetNameRetireHandler : BusHandler, IRequestHandler<StreetNameRetireRequest, ETagResponse>
+    public class StreetNameCorrectNamesHandler : BusHandler, IRequestHandler<StreetNameCorrectNamesRequest, ETagResponse>
     {
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IMunicipalities _municipalities;
         private readonly IdempotencyContext _idempotencyContext;
 
-        public StreetNameRetireHandler(
+        public StreetNameCorrectNamesHandler(
             ICommandHandlerResolver bus,
             BackOfficeContext backOfficeContext,
             IMunicipalities municipalities,
@@ -29,14 +28,15 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers
             _idempotencyContext = idempotencyContext;
         }
 
-        public async Task<ETagResponse> Handle(StreetNameRetireRequest request, CancellationToken cancellationToken)
+        public async Task<ETagResponse> Handle(StreetNameCorrectNamesRequest request, CancellationToken cancellationToken)
         {
             var persistentLocalId = new PersistentLocalId(request.PersistentLocalId);
 
             var municipalityId =
                 await _backOfficeContext.GetMunicipalityIdByPersistentLocalId(request.PersistentLocalId);
 
-            var cmd = new RetireStreetName(municipalityId, persistentLocalId, CreateFakeProvenance());
+            var cmd = request.ToCommand(municipalityId, CreateFakeProvenance());
+
             await IdempotentCommandHandlerDispatch(_idempotencyContext, cmd.CreateCommandId(), cmd, request.Metadata, cancellationToken);
 
             var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, persistentLocalId, cancellationToken);

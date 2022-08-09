@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Municipality
 {
     using System;
+    using System.Linq;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using DataStructures;
@@ -37,6 +38,7 @@ namespace StreetNameRegistry.Municipality
             Register<StreetNameWasApproved>(When);
             Register<StreetNameWasRejected>(When);
             Register<StreetNameWasRetiredV2>(When);
+            Register<StreetNameNamesWereCorrected>(When);
         }
 
         private void When(StreetNameWasMigratedToMunicipality @event)
@@ -78,6 +80,16 @@ namespace StreetNameRegistry.Municipality
             Status = StreetNameStatus.Retired;
             _lastEvent = @event;
         }
+
+        private void When(StreetNameNamesWereCorrected @event)
+        {
+            foreach (var streetNameName in @event.StreetNameNames)
+            {
+                Names.AddOrUpdate(streetNameName.Language, streetNameName.Name);
+            }
+            _lastEvent = @event;
+        }
+
 
         public void Approve()
         {
@@ -137,6 +149,31 @@ namespace StreetNameRegistry.Municipality
             }
 
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
+        }
+
+        public void CorrectNames(Names names)
+        {
+            if (IsRemoved)
+            {
+                throw new StreetNameWasRemovedException(PersistentLocalId);
+            }
+
+            var validStatuses = new[] { StreetNameStatus.Proposed, StreetNameStatus.Current };
+
+            if (!validStatuses.Contains(Status))
+            {
+                throw new StreetNameStatusPreventsCorrectingStreetNameNameException(PersistentLocalId);
+            }
+
+            var correctedNames = new Names(
+                names.Where(name => !Names.HasMatch(name.Language, name.Name)));
+
+            if (!correctedNames.Any())
+            {
+                return;
+            }
+
+            Apply(new StreetNameNamesWereCorrected(_municipalityId, PersistentLocalId, correctedNames));
         }
 
         public void RestoreSnapshot(MunicipalityId municipalityId, StreetNameData streetNameData)

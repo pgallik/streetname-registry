@@ -58,6 +58,15 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }, ct);
             });
 
+            When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameExtract(message.Message.PersistentLocalId, x =>
+                {
+                    UpdateStraatnm(x, message.Message.StreetNameNames);
+                    UpdateVersie(x, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameWasMigratedToMunicipality>>(async (context, message, ct) =>
             {
                 var streetNameExtractItemV2 = new StreetNameExtractItemV2

@@ -108,6 +108,19 @@ namespace StreetNameRegistry.Tests.BackOffice
             DispatchArrangeCommand(approveCommand);
         }
 
+        protected void CorrectStreetNameName(
+            MunicipalityId municipalityId,
+            Names streetNameNames,
+            PersistentLocalId persistentLocalId,
+            Provenance provenance)
+        {
+            var correctStreetNameNameCommand = new CorrectStreetNameNames(
+                municipalityId,
+                persistentLocalId,
+                streetNameNames, provenance);
+            DispatchArrangeCommand(correctStreetNameNameCommand);
+        }
+
         protected void SetMunicipalityToCurrent(MunicipalityId municipalityId)
         {
             var setMunicipalityToCurrent = new SetMunicipalityToCurrent(

@@ -137,5 +137,12 @@ namespace StreetNameRegistry.Producer.Extensions
 
         public static Contracts.StreetNameWasRetiredV2 ToContract(this StreetNameWasRetiredV2 message) =>
             new Contracts.StreetNameWasRetiredV2(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
+
+        public static Contracts.StreetNameNamesWereCorrected ToContract(this StreetNameNamesWereCorrected message) =>
+            new Contracts.StreetNameNamesWereCorrected(
+                message.MunicipalityId.ToString("D"),
+                message.PersistentLocalId,
+                message.StreetNameNames.ToDictionary(x => x.Language.ToString(), x => x.Name),
+                message.Provenance.ToContract());
     }
 }

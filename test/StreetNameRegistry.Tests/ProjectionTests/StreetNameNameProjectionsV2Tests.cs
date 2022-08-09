@@ -141,6 +141,43 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
+        public async Task WhenStreetNameNamesWereCorrected_ThenStreetNameNamesWereCorrected()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameNamesWereCorrected = new StreetNameNamesWereCorrected(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId),
+                new Names(
+                    new[]
+                    {
+                        new StreetNameName("Kapelstraat", Language.Dutch),
+                        new StreetNameName("Rue de la chapelle", Language.French),
+                        new StreetNameName("Kapellenstraate", Language.German),
+                        new StreetNameName("Chapel street", Language.English)
+                    }));
+            ((ISetProvenance)streetNameNamesWereCorrected).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(streetNameWasProposedV2, streetNameNamesWereCorrected)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
+                    expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
+                    expectedStreetName.Removed.Should().BeFalse();
+                    expectedStreetName.Status.Should().Be(StreetNameStatus.Proposed);
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameNamesWereCorrected.Provenance.Timestamp);
+                    expectedStreetName.NameDutch.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereCorrected.StreetNameNames, Language.Dutch));
+                    expectedStreetName.NameFrench.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereCorrected.StreetNameNames, Language.French));
+                    expectedStreetName.NameGerman.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereCorrected.StreetNameNames, Language.German));
+                    expectedStreetName.NameEnglish.Should().Be(DetermineExpectedNameForLanguage(streetNameNamesWereCorrected.StreetNameNames, Language.English));
+                });
+        }
+
+        [Fact]
         public async Task WhenMunicipalityNisCodeWasChanged_ThenMunicipalityNisCodeIsUpdatedAndLinkedStreetNamesHaveNewNisCode()
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));

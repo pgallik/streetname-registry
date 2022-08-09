@@ -94,6 +94,15 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
                     UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
                 }, ct);
             });
+
+            When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    UpdateNameByLanguage(streetNameHelperV2, new Names(message.Message.StreetNameNames));
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
         }
 
         private static void UpdateNameByLanguage(StreetNameHelperV2 entity, List<StreetNameName> streetNameNames)

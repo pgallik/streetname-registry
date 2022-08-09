@@ -9,7 +9,6 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetNameRegistry.StreetName.Events;
 
     [ConnectedProjectionName("WMS adressen")]
     [ConnectedProjectionDescription("Projectie die de straatnaam data voor het WMS adressenregister voorziet.")]
@@ -91,6 +90,15 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
                 await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
                 {
                     UpdateStatus(streetNameHelperV2, StreetNameStatus.Retired);
+                    UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
+            When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameHelper(message.Message.PersistentLocalId, streetNameHelperV2 =>
+                {
+                    UpdateNameByLanguage(streetNameHelperV2, message.Message.StreetNameNames);
                     UpdateVersionTimestamp(streetNameHelperV2, message.Message.Provenance.Timestamp);
                 }, ct);
             });

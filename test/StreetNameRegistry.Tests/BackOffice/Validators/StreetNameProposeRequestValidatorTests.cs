@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentValidation.TestHelper;
-    using Infrastructure;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Validators;
     using Xunit;

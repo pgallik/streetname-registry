@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
+    using Abstractions.Extensions;
     using Abstractions.Requests;
     using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
@@ -32,11 +33,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers
         {
             var persistentLocalId = new PersistentLocalId(request.PersistentLocalId);
 
-            var municipalityIdByPersistentLocalId = await _backOfficeContext
-                .MunicipalityIdByPersistentLocalId
-                .FindAsync(request.PersistentLocalId);
-
-            var municipalityId = new MunicipalityId(municipalityIdByPersistentLocalId.MunicipalityId);
+            var municipalityId =
+                await _backOfficeContext.GetMunicipalityIdByPersistentLocalId(request.PersistentLocalId);
 
             var cmd = new RejectStreetName(municipalityId, persistentLocalId, CreateFakeProvenance());
             await IdempotentCommandHandlerDispatch(_idempotencyContext, cmd.CreateCommandId(), cmd, request.Metadata, cancellationToken);

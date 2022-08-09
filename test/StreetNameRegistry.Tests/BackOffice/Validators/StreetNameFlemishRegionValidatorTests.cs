@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
     using System.Threading;
     using System.Threading.Tasks;
     using FluentAssertions;
-    using Infrastructure;
     using StreetNameRegistry.Api.BackOffice.Validators;
     using Xunit;
 

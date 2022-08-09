@@ -60,14 +60,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             return mockRequestValidator.Object;
         }
 
-        protected IValidator<TRequest> MockPassingRetireValidator<TRequest>()
-        {
-            var mockRequestValidator = new Mock<IValidator<TRequest>>();
-            mockRequestValidator.Setup(x => x.ValidateAsync(It.IsAny<TRequest>(), CancellationToken.None))
-                .Returns(Task.FromResult(new ValidationResult()));
-            return mockRequestValidator.Object;
-        }
-
         protected string GetStreetNamePuri(int persistentLocalId)
             => $"https://data.vlaanderen.be/id/gemeente/{persistentLocalId}";
 

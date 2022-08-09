@@ -55,7 +55,9 @@ namespace StreetNameRegistry.Municipality
 
         public void ApproveStreetName(PersistentLocalId persistentLocalId)
         {
-            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName) || streetName is null)
+            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
+
+            if (streetName is null)
             {
                 throw new StreetNameNotFoundException(persistentLocalId);
             }
@@ -70,7 +72,9 @@ namespace StreetNameRegistry.Municipality
 
         public void RejectStreetName(PersistentLocalId persistentLocalId)
         {
-            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName) || streetName is null)
+            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
+
+            if (streetName is null)
             {
                 throw new StreetNameNotFoundException(persistentLocalId);
             }
@@ -85,7 +89,9 @@ namespace StreetNameRegistry.Municipality
 
         public void RetireStreetName(PersistentLocalId persistentLocalId)
         {
-            if (!StreetNames.HasPersistentLocalId(persistentLocalId, out var streetName) || streetName is null)
+            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
+
+            if (streetName is null)
             {
                 throw new StreetNameNotFoundException(persistentLocalId);
             }
@@ -96,6 +102,33 @@ namespace StreetNameRegistry.Municipality
             }
 
             streetName.Retire();
+        }
+
+        public void CorrectStreetNameName(Names streetNameNames, PersistentLocalId persistentLocalId)
+        {
+            var streetName = StreetNames.FindByPersistentLocalId(persistentLocalId);
+
+            if (streetName is null)
+            {
+                throw new StreetNameNotFoundException(persistentLocalId);
+            }
+
+            foreach (var streetNameName in streetNameNames)
+            {
+                if (StreetNames.HasActiveStreetNameNameForOtherThan(streetNameName, persistentLocalId))
+                {
+                    throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
+                }
+
+                if (!_officialLanguages.Contains(streetNameName.Language)
+                    && !_facilityLanguages.Contains(streetNameName.Language))
+                {
+                    throw new StreetNameNameLanguageNotSupportedException(
+                        $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
+                }
+            }
+
+            streetName.CorrectNames(streetNameNames);
         }
 
         public void DefineOrChangeNisCode(NisCode nisCode)

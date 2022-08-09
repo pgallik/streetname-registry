@@ -452,5 +452,45 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     streetNameWasRetiredV2.Provenance)
             });
         }
+
+        [Fact]
+        public void StreetNameNamesWereCorrectedIsSavedInSnapshot()
+        {
+            var names = new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) });
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = Fixture.Create<StreetNameWasApproved>();
+            var streetNameNamesWereCorrected = new StreetNameNamesWereCorrected(
+                Fixture.Create<MunicipalityId>(),
+                Fixture.Create<PersistentLocalId>(), names);
+            ((ISetProvenance)streetNameNamesWereCorrected).SetProvenance(Fixture.Create<Provenance>());
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedV2,
+                streetNameWasApproved,
+                streetNameNamesWereCorrected
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(streetNameNamesWereCorrected.PersistentLocalId),
+                    StreetNameStatus.Current,
+                    names,
+                    new HomonymAdditions(),
+                    false,
+                    null,
+                    streetNameNamesWereCorrected.GetHash(),
+                    streetNameNamesWereCorrected.Provenance)
+            });
+        }
     }
 }
