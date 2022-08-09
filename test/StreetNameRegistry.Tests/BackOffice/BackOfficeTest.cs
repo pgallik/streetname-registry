@@ -1,12 +1,17 @@
 namespace StreetNameRegistry.Tests.BackOffice
 {
+    using System;
+    using System.Threading;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
+    using Moq;
     using Municipality;
     using Municipality.Commands;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using Testing;
+    using TicketingService.Abstractions;
     using Xunit.Abstractions;
 
     public class BackOfficeTest: StreetNameRegistryTest
@@ -46,6 +51,25 @@ namespace StreetNameRegistry.Tests.BackOffice
                 persistentLocalId,
                 provenance);
             DispatchArrangeCommand(proposeCommand);
+        }
+
+        protected Mock<ITicketingUrl> MockTicketingUrl()
+        {
+            var ticketingUrl = new Mock<ITicketingUrl>();
+            ticketingUrl.Setup(x => x.For(It.IsAny<Guid>())).Returns("");
+            return ticketingUrl;
+        }
+
+        protected Mock<ITicketing> MockTicketing(Action<ETagResponse> callback)
+        {
+            var ticketing = new Mock<ITicketing>();
+            ticketing.Setup(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None))
+                .Callback<Guid, TicketResult, CancellationToken>((_, ticketResult, _) =>
+                {
+                    callback((ETagResponse)ticketResult.Result);
+                });
+
+            return ticketing;
         }
 
         protected void AddOfficialLanguageFrench(MunicipalityId municipalityId)
