@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Municipality.Commands;
     using Newtonsoft.Json;
 
-
     [DataContract(Name = "VoorstelStraatnaam", Namespace = "")]
     public class SqsStreetNameProposeRequest : SqsRequest
     {
@@ -27,7 +26,6 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
         [DataMember(Name = "Straatnamen", Order = 2)]
         [JsonProperty(Required = Required.Always)]
         public Dictionary<Taal, string> Straatnamen { get; set; }
-
 
         /// <summary>
         /// Map to ProposeStreetName command

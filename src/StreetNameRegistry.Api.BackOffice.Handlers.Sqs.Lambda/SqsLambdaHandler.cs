@@ -34,13 +34,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             _bus = bus;
         }
 
-        protected abstract Task<string> Handle2(TRequest request, CancellationToken cancellationToken);
+        protected abstract Task<string> InnerHandle(TRequest request, CancellationToken cancellationToken);
 
         public async Task<IResult> Handle(TRequest request, CancellationToken cancellationToken)
         {
             await _ticketing.Pending(request.TicketId, cancellationToken);
 
-            var etag = await Handle2(request, cancellationToken);
+            var etag = await InnerHandle(request, cancellationToken);
 
             await _ticketing.Complete(request.TicketId, new TicketResult(new ETagResponse(etag)), cancellationToken);
 
