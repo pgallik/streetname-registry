@@ -34,7 +34,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             _municipalities = municipalities;
         }
 
-        protected override async Task<string> Handle2(SqsStreetNameProposeRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsStreetNameProposeRequest request, CancellationToken cancellationToken)
         {
             var persistentLocalId = _persistentLocalIdGenerator.GenerateNextPersistentLocalId();
             var municipalityId = new MunicipalityId(new Guid(request.MessageGroupId));

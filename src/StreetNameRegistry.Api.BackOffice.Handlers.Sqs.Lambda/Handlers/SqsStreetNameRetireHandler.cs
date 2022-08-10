@@ -27,7 +27,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             _idempotencyContext = idempotencyContext;
         }
 
-        protected override async Task<string> Handle2(SqsStreetNameRetireRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsStreetNameRetireRequest request, CancellationToken cancellationToken)
         {
             var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId));
             var streetNamePersistentLocalId = new PersistentLocalId(request.PersistentLocalId);
