@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.3.1...v3.4.0) (2022-08-11)
+
+
+### Features
+
+* add missing projection tests ([85e8389](https://github.com/informatievlaanderen/streetname-registry/commit/85e83898412b4e090ff180bd13e913610771b3d8))
+
 ## [3.3.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.3.0...v3.3.1) (2022-08-10)
 
 
