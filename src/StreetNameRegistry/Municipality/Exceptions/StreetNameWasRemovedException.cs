@@ -2,11 +2,11 @@ namespace StreetNameRegistry.Municipality.Exceptions
 {
     public class StreetNameWasRemovedException : StreetNameRegistryException
     {
-        public int PersistentLocalId { get; }
+        public PersistentLocalId PersistentLocalId { get; }
 
         public StreetNameWasRemovedException() { }
 
-        public StreetNameWasRemovedException(int persistentLocalId)
+        public StreetNameWasRemovedException(PersistentLocalId persistentLocalId)
         {
             PersistentLocalId = persistentLocalId;
         }
