@@ -1,3 +1,10 @@
+# [3.6.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.5.0...v3.6.0) (2022-08-12)
+
+
+### Features
+
+* return http status 202 instead of 204 for success ([761b037](https://github.com/informatievlaanderen/streetname-registry/commit/761b037853c78830a24cb6141924afce66d06a77))
+
 # [3.5.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.4.0...v3.5.0) (2022-08-12)
 
 
