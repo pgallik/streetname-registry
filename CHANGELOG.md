@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.4.0...v3.5.0) (2022-08-12)
+
+
+### Features
+
+* refactor exception properties to value objects ([117667e](https://github.com/informatievlaanderen/streetname-registry/commit/117667efa7ebf7ef43e1c1248145530720531066))
+
 # [3.4.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.3.1...v3.4.0) (2022-08-11)
 
 
