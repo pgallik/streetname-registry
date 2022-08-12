@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.6.0...v3.7.0) (2022-08-12)
+
+
+### Features
+
+* streetname name was corrected ([f89554b](https://github.com/informatievlaanderen/streetname-registry/commit/f89554b75dada4c6e758e5d8763f9d749a465a76))
+
 # [3.6.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.5.0...v3.6.0) (2022-08-12)
 
 
