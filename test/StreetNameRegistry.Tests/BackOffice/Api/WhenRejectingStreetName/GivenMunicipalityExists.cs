@@ -39,9 +39,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             MockMediatorResponse<StreetNameRejectRequest, ETagResponse>(new ETagResponse("hash"));
 
             // Act
-            var result = (NoContentWithETagResult)await Controller.Reject(
+            var result = (AcceptedWithETagResult)await Controller.Reject(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameRejectRequest>(),
+                ResponseOptions,
                 new StreetNameRejectRequest
                 {
                     PersistentLocalId = persistentLocalId,
@@ -65,6 +66,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             Func<Task> act = async () => await Controller.Reject(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameRejectRequest>(),
+                ResponseOptions,
                 new StreetNameRejectRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
@@ -91,6 +93,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             Func<Task> act = async () => await Controller.Reject(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameRejectRequest>(),
+                ResponseOptions,
                 new StreetNameRejectRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
@@ -117,6 +120,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             Func<Task> act = async () => await Controller.Reject(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameRejectRequest>(),
+                ResponseOptions,
                 new StreetNameRejectRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
@@ -143,6 +147,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             Func<Task> act = async () => await Controller.Reject(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameRejectRequest>(),
+                ResponseOptions,
                 new StreetNameRejectRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)

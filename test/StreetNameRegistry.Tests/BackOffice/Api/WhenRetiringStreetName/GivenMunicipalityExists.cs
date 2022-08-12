@@ -39,9 +39,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             MockMediatorResponse<StreetNameRetireRequest, ETagResponse>(new ETagResponse("hash"));
 
             // Act
-            var result = (NoContentWithETagResult)await Controller.Retire(
+            var result = (AcceptedWithETagResult)await Controller.Retire(
                 MockValidIfMatchValidator(),
                 MockPassingRetireValidator<StreetNameRetireRequest>(),
+                ResponseOptions,
                 new StreetNameRetireRequest
                 {
                     PersistentLocalId = persistentLocalId,
@@ -65,6 +66,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
                 MockPassingRetireValidator<StreetNameRetireRequest>(),
+                ResponseOptions,
                 new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
@@ -91,6 +93,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
                 MockPassingRetireValidator<StreetNameRetireRequest>(),
+                ResponseOptions,
                 new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
@@ -117,6 +120,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
                 MockPassingRetireValidator<StreetNameRetireRequest>(),
+                ResponseOptions,
                 new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)
@@ -143,6 +147,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
             Func<Task> act = async () => await Controller.Retire(
                 MockValidIfMatchValidator(),
                 MockPassingRetireValidator<StreetNameRetireRequest>(),
+                ResponseOptions,
                 new StreetNameRetireRequest
                 {
                     PersistentLocalId = new PersistentLocalId(456)

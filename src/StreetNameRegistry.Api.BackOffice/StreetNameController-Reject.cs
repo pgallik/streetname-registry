@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -11,8 +12,10 @@ namespace StreetNameRegistry.Api.BackOffice
     using FluentValidation;
     using FluentValidation.Results;
     using Infrastructure;
+    using Infrastructure.Options;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using Municipality;
     using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
@@ -22,13 +25,13 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <summary>
         /// Keur een straatnaam af.
         /// </summary>
-        /// <param name="request"></param>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="validator"></param>
+        /// <param name="options"></param>
+        /// <param name="request"></param>
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="202">Aanvraag tot afkeuring wordt reeds verwerkt.</response>
-        /// <response code="204">Als de straatnaam afgekeurd is.</response>
         /// <response code="409">Als de straatnaam status niet 'voorgesteld' is.</response>
         /// <response code="412">Als de If-Match header niet overeenkomt met de laatste ETag.</response>
         /// <returns></returns>
@@ -44,6 +47,7 @@ namespace StreetNameRegistry.Api.BackOffice
         public async Task<IActionResult> Reject(
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromServices] IValidator<StreetNameRejectRequest> validator,
+            [FromServices] IOptions<ResponseOptions> options,
             [FromRoute] StreetNameRejectRequest request,
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
             CancellationToken cancellationToken = default)
@@ -60,7 +64,9 @@ namespace StreetNameRegistry.Api.BackOffice
                 request.Metadata = GetMetadata();
                 var response = await _mediator.Send(request, cancellationToken);
 
-                return new NoContentWithETagResult(response.LastEventHash);
+                return new AcceptedWithETagResult(
+                    new Uri(string.Format(options.Value.DetailUrl, request.PersistentLocalId)),
+                    response.LastEventHash);
             }
             catch (IdempotencyException)
             {
