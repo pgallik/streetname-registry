@@ -5,7 +5,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentAssertions;
@@ -41,9 +40,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             MockMediatorResponse<StreetNameCorrectNamesRequest, ETagResponse>(new ETagResponse("hash"));
 
             // Act
-            var result = (NoContentWithETagResult)await Controller.CorrectStreetNameNames(
+            var result = (AcceptedWithETagResult)await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
+                ResponseOptions,
                 persistentLocalId,
                 new StreetNameCorrectNamesRequest
                 {
@@ -72,6 +72,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
+                ResponseOptions,
                 new PersistentLocalId(456),
                 new StreetNameCorrectNamesRequest
                 {
@@ -103,6 +104,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
+                ResponseOptions,
                 new PersistentLocalId(456),
                 new StreetNameCorrectNamesRequest
                 {
@@ -134,6 +136,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
+                ResponseOptions,
                 new PersistentLocalId(456),
                 new StreetNameCorrectNamesRequest
                 {
@@ -167,6 +170,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
+                ResponseOptions,
                 new PersistentLocalId(456),
                 new StreetNameCorrectNamesRequest
                 {
@@ -197,6 +201,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
+                ResponseOptions,
                 new PersistentLocalId(456),
                 new StreetNameCorrectNamesRequest
                 {

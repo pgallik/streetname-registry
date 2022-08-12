@@ -12,8 +12,10 @@ namespace StreetNameRegistry.Api.BackOffice
     using FluentValidation;
     using FluentValidation.Results;
     using Infrastructure;
+    using Infrastructure.Options;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using Municipality;
     using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
@@ -23,20 +25,19 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <summary>
         /// Corrigeer een straatnaam - straatnaam.
         /// </summary>
-        /// <param name="persistentLocalId"></param>
-        /// <param name="request"></param>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="validator"></param>
+        /// <param name="options"></param>
+        /// <param name="persistentLocalId"></param>
+        /// <param name="request"></param>
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="202">Aanvraag tot correctie wordt reeds verwerkt.</response>
-        /// <response code="204">Als de straatnaam gecorrigeerd is.</response>
         /// <response code="400">Als de straatnaam status niet 'voorgesteld' of 'inGebruik' is.</response>
         /// <response code="412">Als de If-Match header niet overeenkomt met de laatste ETag.</response>
         /// <returns></returns>
         [HttpPost("{persistentLocalId}/acties/corrigeren/straatnaam")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -45,6 +46,7 @@ namespace StreetNameRegistry.Api.BackOffice
         public async Task<IActionResult> CorrectStreetNameNames(
             [FromServices] IIfMatchHeaderValidator ifMatchHeaderValidator,
             [FromServices] IValidator<StreetNameCorrectNamesRequest> validator,
+            [FromServices] IOptions<ResponseOptions> options,
             [FromRoute] int persistentLocalId,
             [FromBody] StreetNameCorrectNamesRequest request,
             [FromHeader(Name = "If-Match")] string? ifMatchHeaderValue,
@@ -64,7 +66,9 @@ namespace StreetNameRegistry.Api.BackOffice
                 request.Metadata = GetMetadata();
                 var response = await _mediator.Send(request, cancellationToken);
 
-                return new NoContentWithETagResult(response.LastEventHash);
+                return new AcceptedWithETagResult(
+                    new Uri(string.Format(options.Value.DetailUrl, request.PersistentLocalId)),
+                    response.LastEventHash);
             }
             catch (IdempotencyException)
             {
