@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                 .FindAsync((int)streetNamePersistentLocalId);
             if (municipalityIdByPersistentLocalId is null)
             {
-                throw new StreetNameNotFoundException();
+                throw new StreetNameIsNotFoundException();
             }
 
             var municipalityId = new MunicipalityId(municipalityIdByPersistentLocalId.MunicipalityId);

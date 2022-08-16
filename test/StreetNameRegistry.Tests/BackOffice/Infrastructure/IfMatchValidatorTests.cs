@@ -97,7 +97,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
             Func<Task> act = async() => await sut.IsValid(string.Empty, streetNamePersistentLocalId, CancellationToken.None);
 
             // Assert
-            act.Should().ThrowAsync<StreetNameNotFoundException>();
+            act.Should().ThrowAsync<StreetNameIsNotFoundException>();
         }
     }
 }

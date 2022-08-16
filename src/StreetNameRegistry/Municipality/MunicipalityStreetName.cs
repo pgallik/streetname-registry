@@ -95,7 +95,7 @@ namespace StreetNameRegistry.Municipality
         {
             if (IsRemoved)
             {
-                throw new StreetNameWasRemovedException(PersistentLocalId);
+                throw new StreetNameIsRemovedException(PersistentLocalId);
             }
 
             if (Status == StreetNameStatus.Current)
@@ -105,7 +105,7 @@ namespace StreetNameRegistry.Municipality
 
             if (Status != StreetNameStatus.Proposed)
             {
-                throw new StreetNameStatusPreventsApprovalException(PersistentLocalId);
+                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
             }
 
             Apply(new StreetNameWasApproved(_municipalityId, PersistentLocalId));
@@ -115,7 +115,7 @@ namespace StreetNameRegistry.Municipality
         {
             if (IsRemoved)
             {
-                throw new StreetNameWasRemovedException(PersistentLocalId);
+                throw new StreetNameIsRemovedException(PersistentLocalId);
             }
 
             if (Status == StreetNameStatus.Rejected)
@@ -125,7 +125,7 @@ namespace StreetNameRegistry.Municipality
 
             if (Status != StreetNameStatus.Proposed)
             {
-                throw new StreetNameStatusPreventsRejectionException(PersistentLocalId);
+                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
             }
 
             Apply(new StreetNameWasRejected(_municipalityId, PersistentLocalId));
@@ -135,7 +135,7 @@ namespace StreetNameRegistry.Municipality
         {
             if (IsRemoved)
             {
-                throw new StreetNameWasRemovedException(PersistentLocalId);
+                throw new StreetNameIsRemovedException(PersistentLocalId);
             }
 
             if (Status == StreetNameStatus.Retired)
@@ -145,7 +145,7 @@ namespace StreetNameRegistry.Municipality
 
             if (Status != StreetNameStatus.Current)
             {
-                throw new StreetNameStatusPreventsRetiringException(PersistentLocalId);
+                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
             }
 
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
@@ -155,14 +155,14 @@ namespace StreetNameRegistry.Municipality
         {
             if (IsRemoved)
             {
-                throw new StreetNameWasRemovedException(PersistentLocalId);
+                throw new StreetNameIsRemovedException(PersistentLocalId);
             }
 
             var validStatuses = new[] { StreetNameStatus.Proposed, StreetNameStatus.Current };
 
             if (!validStatuses.Contains(Status))
             {
-                throw new StreetNameStatusPreventsCorrectingStreetNameNameException(PersistentLocalId);
+                throw new StreetNameHasInvalidStatusException(PersistentLocalId);
             }
 
             var correctedNames = new Names(

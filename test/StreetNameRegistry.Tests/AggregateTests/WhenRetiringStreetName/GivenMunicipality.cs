@@ -59,11 +59,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringStreetName
             Assert(new Scenario()
                 .Given(_streamId, municipalityWasImported)
                 .When(command)
-                .Throws(new StreetNameNotFoundException(command.PersistentLocalId)));
+                .Throws(new StreetNameIsNotFoundException(command.PersistentLocalId)));
         }
 
         [Fact]
-        public void ThenStreetNameWasRemovedExceptionWasThrown()
+        public void ThenStreetNameIsRemovedExceptionWasThrown()
         {
             var command = Fixture.Create<RetireStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -99,11 +99,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringStreetName
                     municipalityBecameCurrent,
                     removedStreetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new StreetNameWasRemovedException(command.PersistentLocalId)));
+                .Throws(new StreetNameIsRemovedException(command.PersistentLocalId)));
         }
 
         [Fact]
-        public void WithMunicipalityStatusRetired_ThenMunicipalityHasUnexpectedStatusExceptionWasThrown()
+        public void WithMunicipalityStatusRetired_ThenMunicipalityHasInvalidStatusExceptionWasThrown()
         {
             var command = Fixture.Create<RetireStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -138,13 +138,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringStreetName
                     Fixture.Create<MunicipalityWasRetired>(),
                     streetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new MunicipalityHasUnexpectedStatusException()));
+                .Throws(new MunicipalityHasInvalidStatusException()));
         }
 
         [Theory]
         [InlineData(StreetNameStatus.Proposed)]
         [InlineData(StreetNameStatus.Rejected)]
-        public void ThenStreetNameStatusPreventsRetiringExceptionWasThrown(StreetNameStatus status)
+        public void ThenStreetNameHasInvalidStatusExceptionWasThrown(StreetNameStatus status)
         {
             var command = Fixture.Create<RetireStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -179,7 +179,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringStreetName
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     streetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new StreetNameStatusPreventsRetiringException(command.PersistentLocalId)));
+                .Throws(new StreetNameHasInvalidStatusException(command.PersistentLocalId)));
         }
 
         [Fact]

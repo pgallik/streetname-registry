@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Extensions
 
             if (municipalityIdByPersistentLocalId is null)
             {
-                throw new StreetNameNotFoundException();
+                throw new StreetNameIsNotFoundException();
             }
 
             return new MunicipalityId(municipalityIdByPersistentLocalId.MunicipalityId);

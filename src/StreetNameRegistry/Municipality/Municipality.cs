@@ -24,7 +24,7 @@ namespace StreetNameRegistry.Municipality
         {
             if (MunicipalityStatus == MunicipalityStatus.Retired)
             {
-                throw new MunicipalityHasUnexpectedStatusException($"Municipality with id '{_municipalityId}' was retired");
+                throw new MunicipalityHasInvalidStatusException($"Municipality with id '{_municipalityId}' was retired");
             }
 
             foreach (var streetNameName in streetNameNames)
@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Municipality
                 if (!_officialLanguages.Contains(streetNameName.Language)
                     && !_facilityLanguages.Contains(streetNameName.Language))
                 {
-                    throw new StreetNameNameLanguageNotSupportedException(
+                    throw new StreetNameNameLanguageIsNotSupportedException(
                         $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
                 }
             }
@@ -46,7 +46,7 @@ namespace StreetNameRegistry.Municipality
             {
                 if (!streetNameNames.HasLanguage(language))
                 {
-                    throw new StreetNameMissingLanguageException($"The language '{language}' is missing.");
+                    throw new StreetNameIsMissingALanguageException($"The language '{language}' is missing.");
                 }
             }
 
@@ -59,12 +59,12 @@ namespace StreetNameRegistry.Municipality
 
             if (streetName is null)
             {
-                throw new StreetNameNotFoundException(persistentLocalId);
+                throw new StreetNameIsNotFoundException(persistentLocalId);
             }
 
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
-                throw new MunicipalityHasUnexpectedStatusException();
+                throw new MunicipalityHasInvalidStatusException();
             }
 
             streetName.Approve();
@@ -76,12 +76,12 @@ namespace StreetNameRegistry.Municipality
 
             if (streetName is null)
             {
-                throw new StreetNameNotFoundException(persistentLocalId);
+                throw new StreetNameIsNotFoundException(persistentLocalId);
             }
 
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
-                throw new MunicipalityHasUnexpectedStatusException();
+                throw new MunicipalityHasInvalidStatusException();
             }
 
             streetName.Reject();
@@ -93,12 +93,12 @@ namespace StreetNameRegistry.Municipality
 
             if (streetName is null)
             {
-                throw new StreetNameNotFoundException(persistentLocalId);
+                throw new StreetNameIsNotFoundException(persistentLocalId);
             }
 
             if (MunicipalityStatus != MunicipalityStatus.Current)
             {
-                throw new MunicipalityHasUnexpectedStatusException();
+                throw new MunicipalityHasInvalidStatusException();
             }
 
             streetName.Retire();
@@ -110,7 +110,7 @@ namespace StreetNameRegistry.Municipality
 
             if (streetName is null)
             {
-                throw new StreetNameNotFoundException(persistentLocalId);
+                throw new StreetNameIsNotFoundException(persistentLocalId);
             }
 
             foreach (var streetNameName in streetNameNames)
@@ -123,7 +123,7 @@ namespace StreetNameRegistry.Municipality
                 if (!_officialLanguages.Contains(streetNameName.Language)
                     && !_facilityLanguages.Contains(streetNameName.Language))
                 {
-                    throw new StreetNameNameLanguageNotSupportedException(
+                    throw new StreetNameNameLanguageIsNotSupportedException(
                         $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
                 }
             }
@@ -135,7 +135,7 @@ namespace StreetNameRegistry.Municipality
         {
             if (string.IsNullOrWhiteSpace(nisCode))
             {
-                throw new NoNisCodeException("NisCode of a municipality cannot be empty.");
+                throw new NoNisCodeHasNoValueException("NisCode of a municipality cannot be empty.");
             }
 
             if (nisCode != _nisCode)
