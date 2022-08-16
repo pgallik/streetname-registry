@@ -1,3 +1,10 @@
+## [3.7.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.7.1...v3.7.2) (2022-08-16)
+
+
+### Bug Fixes
+
+* replace 409 by 400 on reject and retire streetname ([5225097](https://github.com/informatievlaanderen/streetname-registry/commit/52250972650c846a3fc3c896b2cea0295db40587))
+
 ## [3.7.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.7.0...v3.7.1) (2022-08-12)
 
 
