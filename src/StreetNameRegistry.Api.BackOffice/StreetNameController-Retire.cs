@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <param name="ifMatchHeaderValue"></param>
         /// <param name="cancellationToken"></param>
         /// <response code="202">Aanvraag tot opheffing wordt reeds verwerkt.</response>
-        /// <response code="409">Als de straatnaam status niet 'inGebruik' is.</response>
+        /// <response code="400">Als de straatnaam status niet 'inGebruik' is.</response>
         /// <response code="412">Als de If-Match header niet overeenkomt met de laatste ETag.</response>
         /// <returns></returns>
         [HttpPost("{persistentLocalId}/acties/opheffen")]
@@ -80,7 +80,10 @@ namespace StreetNameRegistry.Api.BackOffice
 
                     StreetNameWasRemovedException => new ApiException("Verwijderde straatnaam.", StatusCodes.Status410Gone),
 
-                    StreetNameStatusPreventsRetiringException => new ApiException("Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.", StatusCodes.Status409Conflict),
+                    StreetNameStatusPreventsRetiringException => CreateValidationException(
+                        "StraatnaamVoorgesteldOfAfgekeurd",
+                        string.Empty,
+                        "Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'."),
 
                     MunicipalityHasUnexpectedStatusException _ => CreateValidationException(
                         "StraatnaamGemeenteInGebruik",

@@ -130,10 +130,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
             //Assert
             act
                 .Should()
-                .ThrowAsync<ApiException>()
+                .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.")
-                            && x.StatusCode == StatusCodes.Status409Conflict);
+                .Where(x => x.Message.Contains("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'."))
+                .Where(x => x.Errors.Single().ErrorCode == "StraatnaamInGebruikOfGehistoreerd");
         }
 
         [Fact]
