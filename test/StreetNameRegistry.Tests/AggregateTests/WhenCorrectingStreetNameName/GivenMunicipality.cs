@@ -73,11 +73,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
             Assert(new Scenario()
                 .Given(_streamId, municipalityWasImported)
                 .When(command)
-                .Throws(new StreetNameNotFoundException(command.PersistentLocalId)));
+                .Throws(new StreetNameIsNotFoundException(command.PersistentLocalId)));
         }
 
         [Fact]
-        public void ThenThrowsStreetNameWasRemovedException()
+        public void ThenThrowsStreetNameIsRemovedException()
         {
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId);
@@ -113,13 +113,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     municipalityBecameCurrent,
                     removedStreetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new StreetNameWasRemovedException(command.PersistentLocalId)));
+                .Throws(new StreetNameIsRemovedException(command.PersistentLocalId)));
         }
 
         [Theory]
         [InlineData(StreetNameStatus.Retired)]
         [InlineData(StreetNameStatus.Rejected)]
-        public void ThenThrowsStreetNameStatusPreventsCorrectingStreetNameNameException(StreetNameStatus status)
+        public void ThenThrowsStreetNameHasInvalidStatusExceptionException(StreetNameStatus status)
         {
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId);
@@ -154,7 +154,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     streetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new StreetNameStatusPreventsCorrectingStreetNameNameException(command.PersistentLocalId)));
+                .Throws(new StreetNameHasInvalidStatusException(command.PersistentLocalId)));
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     languageWasAdded,
                     Fixture.Create<StreetNameWasProposedV2>())
                 .When(command)
-                .Throws(new StreetNameNameLanguageNotSupportedException(
+                .Throws(new StreetNameNameLanguageIsNotSupportedException(
                     $"The language '{Language.Dutch}' is not an official or facility language of municipality '{_municipalityId}'.")));
         }
 

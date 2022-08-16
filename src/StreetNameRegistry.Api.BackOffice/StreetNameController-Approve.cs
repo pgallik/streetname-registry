@@ -70,13 +70,13 @@ namespace StreetNameRegistry.Api.BackOffice
             {
                 throw exception switch
                 {
-                    StreetNameNotFoundException => new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound),
+                    StreetNameIsNotFoundException => new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound),
 
-                    StreetNameWasRemovedException => new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone),
+                    StreetNameIsRemovedException => new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone),
 
-                    StreetNameStatusPreventsApprovalException => new ApiException("Straatnaam kan niet meer goedgekeurd worden.", StatusCodes.Status409Conflict),
+                    StreetNameHasInvalidStatusException => new ApiException("Straatnaam kan niet meer goedgekeurd worden.", StatusCodes.Status409Conflict),
 
-                    MunicipalityHasUnexpectedStatusException _ => CreateValidationException(
+                    MunicipalityHasInvalidStatusException _ => CreateValidationException(
                         "StraatnaamGemeenteInGebruik",
                         string.Empty,
                         "Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'."),

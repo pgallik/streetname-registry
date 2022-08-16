@@ -218,7 +218,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
         }
 
         [Fact]
-        public void WithMunicipalityRetired_ThenMunicipalityWasRetiredExceptionWasThrown()
+        public void WithMunicipalityRetired_ThenMunicipalityHasInvalidStatusExceptionWasThrown()
         {
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityWasRetired = Fixture.Create<MunicipalityWasRetired>();
@@ -232,7 +232,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityWasImported,
                     municipalityWasRetired)
                 .When(command)
-                .Throws(new MunicipalityHasUnexpectedStatusException($"Municipality with id '{_municipalityId}' was retired")));
+                .Throws(new MunicipalityHasInvalidStatusException($"Municipality with id '{_municipalityId}' was retired")));
         }
 
         [Fact]
@@ -256,7 +256,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityWasImported,
                     municipalityOfficialLanguageWasAdded)
                 .When(command)
-                .Throws(new StreetNameNameLanguageNotSupportedException($"The language '{Language.French}' is not an official or facility language of municipality '{_municipalityId}'.")));
+                .Throws(new StreetNameNameLanguageIsNotSupportedException($"The language '{Language.French}' is not an official or facility language of municipality '{_municipalityId}'.")));
         }
 
         [Fact]
@@ -280,7 +280,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityWasImported,
                     municipalityFacilityLanguageWasAdded)
                 .When(command)
-                .Throws(new StreetNameNameLanguageNotSupportedException($"The language '{Language.Dutch}' is not an official or facility language of municipality '{_municipalityId}'.")));
+                .Throws(new StreetNameNameLanguageIsNotSupportedException($"The language '{Language.Dutch}' is not an official or facility language of municipality '{_municipalityId}'.")));
         }
 
         [Fact]
@@ -307,7 +307,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     municipalityDutchOfficialLanguageWasAdded,
                     municipalityFacilityLanguageWasAdded)
                 .When(command)
-                .Throws(new StreetNameMissingLanguageException($"The language '{Language.Dutch}' is missing.")));
+                .Throws(new StreetNameIsMissingALanguageException($"The language '{Language.Dutch}' is missing.")));
         }
     }
 }

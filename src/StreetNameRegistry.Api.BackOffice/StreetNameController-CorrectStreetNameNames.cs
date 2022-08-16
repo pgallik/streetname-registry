@@ -83,16 +83,16 @@ namespace StreetNameRegistry.Api.BackOffice
                         nameof(request.Straatnamen),
                         $"Straatnaam '{nameExists.Name}' bestaat reeds in de gemeente."),
 
-                    StreetNameNotFoundException => new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound),
+                    StreetNameIsNotFoundException => new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound),
 
-                    StreetNameWasRemovedException => new ApiException("Verwijderde straatnaam.", StatusCodes.Status410Gone),
+                    StreetNameIsRemovedException => new ApiException("Verwijderde straatnaam.", StatusCodes.Status410Gone),
 
-                    StreetNameStatusPreventsCorrectingStreetNameNameException => CreateValidationException(
+                    StreetNameHasInvalidStatusException => CreateValidationException(
                         "StraatnaamGehistoreerdOfAfgekeurd",
                         String.Empty, 
                         "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'."),
 
-                    StreetNameNameLanguageNotSupportedException _ => CreateValidationException(
+                    StreetNameNameLanguageIsNotSupportedException _ => CreateValidationException(
                         "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal",
                         nameof(request.Straatnamen),
                         "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente."),

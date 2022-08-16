@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Municipality
         public NisCode(string nisCode) : base(nisCode)
         {
             if (string.IsNullOrWhiteSpace(nisCode))
-                throw new NoNisCodeException("NisCode of a municipality cannot be empty.");
+                throw new NoNisCodeHasNoValueException("NisCode of a municipality cannot be empty.");
         }
     }
 }

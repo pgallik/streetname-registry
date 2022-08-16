@@ -71,7 +71,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenChangingMunicipalityNisCod
                 .Given(_streamId,
                     Fixture.Create<MunicipalityWasImported>())
                 .When(command)
-                .Throws(new NoNisCodeException("NisCode of a municipality cannot be empty.")));
+                .Throws(new NoNisCodeHasNoValueException("NisCode of a municipality cannot be empty.")));
         }
 
         [Fact]

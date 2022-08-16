@@ -66,7 +66,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameNotFoundException());
+                .Throws(new StreetNameIsNotFoundException());
 
             //Act
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
@@ -98,7 +98,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameWasRemovedException());
+                .Throws(new StreetNameIsRemovedException());
 
             //Act
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
@@ -130,7 +130,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameStatusPreventsCorrectingStreetNameNameException());
+                .Throws(new StreetNameHasInvalidStatusException());
 
             //Act
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
@@ -195,7 +195,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameNameLanguageNotSupportedException(string.Empty));
+                .Throws(new StreetNameNameLanguageIsNotSupportedException(string.Empty));
 
             //Act
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(

@@ -77,7 +77,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameProposeRequest>(), CancellationToken.None))
-                .Throws(new MunicipalityHasUnexpectedStatusException(string.Empty));
+                .Throws(new MunicipalityHasInvalidStatusException(string.Empty));
 
             Func<Task> act = async () => await Controller.Propose(
                 ResponseOptions,
@@ -105,7 +105,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameProposeRequest>(), CancellationToken.None))
-                .Throws(new StreetNameNameLanguageNotSupportedException(string.Empty));
+                .Throws(new StreetNameNameLanguageIsNotSupportedException(string.Empty));
 
             Func<Task> act = async () => await Controller.Propose(
                 ResponseOptions,
@@ -133,7 +133,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameProposeRequest>(), CancellationToken.None))
-                .Throws(new StreetNameMissingLanguageException(string.Empty));
+                .Throws(new StreetNameIsMissingALanguageException(string.Empty));
 
             Func<Task> act = async () => await Controller.Propose(
                 ResponseOptions,

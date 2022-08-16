@@ -77,17 +77,17 @@ namespace StreetNameRegistry.Api.BackOffice
                         nameof(request.Straatnamen),
                         $"Straatnaam '{nameExists.Name}' bestaat reeds in de gemeente."),
 
-                    MunicipalityHasUnexpectedStatusException _ => CreateValidationException(
+                    MunicipalityHasInvalidStatusException _ => CreateValidationException(
                         "StraatnaamGemeenteGehistoreerd",
                         nameof(request.GemeenteId),
                         "De gemeente is gehistoreerd."),
 
-                    StreetNameNameLanguageNotSupportedException _ => CreateValidationException(
+                    StreetNameNameLanguageIsNotSupportedException _ => CreateValidationException(
                         "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal",
                         nameof(request.Straatnamen),
                         "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente."),
 
-                    StreetNameMissingLanguageException _ => CreateValidationException(
+                    StreetNameIsMissingALanguageException _ => CreateValidationException(
                         "StraatnaamOntbreektOfficieleOfFaciliteitenTaal",
                         nameof(request.Straatnamen),
                         "In 'Straatnamen' ontbreekt een officiële of faciliteitentaal."),

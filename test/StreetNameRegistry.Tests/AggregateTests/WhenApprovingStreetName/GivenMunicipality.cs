@@ -1,21 +1,20 @@
 namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
 {
+    using System.Collections.Generic;
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
-    using Municipality;
-    using Testing;
-    using Xunit.Abstractions;
     using global::AutoFixture;
+    using Municipality;
     using Municipality.Commands;
-    using Xunit;
     using Municipality.Events;
     using Municipality.Exceptions;
-    using System.Collections.Generic;
-    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using StreetName.Events;
+    using Testing;
+    using Xunit;
+    using Xunit.Abstractions;
 
     public class GivenMunicipality : StreetNameRegistryTest
     {
@@ -48,7 +47,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         }
 
         [Fact]
-        public void ThenStreetNameNotFoundExceptionWasThrown()
+        public void ThenStreetNameIsNotFoundExceptionWasThrown()
         {
             var command = Fixture.Create<ApproveStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -59,11 +58,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
             Assert(new Scenario()
                 .Given(_streamId, municipalityWasImported)
                 .When(command)
-                .Throws(new StreetNameNotFoundException(command.PersistentLocalId)));
+                .Throws(new StreetNameIsNotFoundException(command.PersistentLocalId)));
         }
 
         [Fact]
-        public void ThenStreetNameWasRemovedExceptionWasThrown()
+        public void ThenStreetNameIsRemovedExceptionWasThrown()
         {
             var command = Fixture.Create<ApproveStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -99,11 +98,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                     municipalityBecameCurrent,
                     streetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new StreetNameWasRemovedException(command.PersistentLocalId)));
+                .Throws(new StreetNameIsRemovedException(command.PersistentLocalId)));
         }
 
         [Fact]
-        public void WithMunicipalityStatusRetired_ThenMunicipalityHasUnexpectedStatusExceptionWasThrown()
+        public void WithMunicipalityStatusRetired_ThenMunicipalityHasInvalidStatusExceptionWasThrown()
         {
             var command = Fixture.Create<ApproveStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -138,13 +137,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                     Fixture.Create<MunicipalityWasRetired>(),
                     streetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new MunicipalityHasUnexpectedStatusException()));
+                .Throws(new MunicipalityHasInvalidStatusException()));
         }
 
         [Theory]
         [InlineData(StreetNameStatus.Rejected)]
         [InlineData(StreetNameStatus.Retired)]
-        public void ThenStreetNameStatusPreventsApprovalExceptionWasThrown(StreetNameStatus status)
+        public void ThenStreetNameHasInvalidStatusExceptionWasThrown(StreetNameStatus status)
         {
             var command = Fixture.Create<ApproveStreetName>()
                 .WithMunicipalityId(_municipalityId);
@@ -179,7 +178,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     streetNameMigratedToMunicipality)
                 .When(command)
-                .Throws(new StreetNameStatusPreventsApprovalException(command.PersistentLocalId)));
+                .Throws(new StreetNameHasInvalidStatusException(command.PersistentLocalId)));
         }
 
         [Fact]

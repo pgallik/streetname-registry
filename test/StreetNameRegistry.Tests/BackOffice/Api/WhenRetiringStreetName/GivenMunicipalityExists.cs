@@ -60,7 +60,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
-                .Throws(new StreetNameNotFoundException());
+                .Throws(new StreetNameIsNotFoundException());
 
             //Act
             Func<Task> act = async () => await Controller.Retire(
@@ -87,7 +87,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
-                .Throws(new StreetNameWasRemovedException());
+                .Throws(new StreetNameIsRemovedException());
 
             //Act
             Func<Task> act = async () => await Controller.Retire(
@@ -114,7 +114,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
-                .Throws(new StreetNameStatusPreventsRetiringException());
+                .Throws(new StreetNameHasInvalidStatusException());
 
             //Act
             Func<Task> act = async () => await Controller.Retire(
@@ -141,7 +141,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
         {
             MockMediator
                 .Setup(x => x.Send(It.IsAny<StreetNameRetireRequest>(), CancellationToken.None))
-                .Throws(new MunicipalityHasUnexpectedStatusException());
+                .Throws(new MunicipalityHasInvalidStatusException());
 
             //Act
             Func<Task> act = async () => await Controller.Retire(
