@@ -67,5 +67,31 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
                 .WithErrorMessage($"Maximum lengte van een straatnaam in 'nl' is 60 tekens. U heeft momenteel {streetName.Length} tekens.")
                 .WithErrorCode(StreetNameMaxLengthValidator.Code);
         }
+
+        [Fact]
+        public void GivenStreetNamesIsNull_ThenReturnsExpectedMessage()
+        {
+            var result = _validator.TestValidate(new StreetNameCorrectNamesRequest
+            {
+                Straatnamen = null
+            });
+
+            result.ShouldHaveValidationErrorFor(nameof(StreetNameCorrectNamesRequest.Straatnamen))
+                .WithErrorCode("OntbrekendeVerzoekBodyValidatie")
+                .WithErrorMessage("De body van het verzoek mag niet leeg.");
+        }
+
+        [Fact]
+        public void GivenEmptyStreetNamesList_ThenReturnsExpectedMessage()
+        {
+            var result = _validator.TestValidate(new StreetNameCorrectNamesRequest
+            {
+                Straatnamen = new Dictionary<Taal, string>()
+            });
+
+            result.ShouldHaveValidationErrorFor(nameof(StreetNameCorrectNamesRequest.Straatnamen))
+                .WithErrorCode("OntbrekendeVerzoekBodyValidatie")
+                .WithErrorMessage("De body van het verzoek mag niet leeg.");
+        }
     }
 }
