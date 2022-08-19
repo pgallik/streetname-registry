@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using Microsoft.Extensions.Options;
     using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
+    using Validators;
 
     public partial class StreetNameController
     {
@@ -73,24 +74,24 @@ namespace StreetNameRegistry.Api.BackOffice
                 throw exception switch
                 {
                     StreetNameNameAlreadyExistsException nameExists => CreateValidationException(
-                        "StraatnaamBestaatReedsInGemeente",
+                        ValidationErrorCodes.StreetName.StreetNameAlreadyExists,
                         nameof(request.Straatnamen),
-                        $"Straatnaam '{nameExists.Name}' bestaat reeds in de gemeente."),
+                        ValidationErrorMessages.StreetName.StreetNameAlreadyExists(nameExists.Name)),
 
                     MunicipalityHasInvalidStatusException _ => CreateValidationException(
-                        "StraatnaamGemeenteGehistoreerd",
+                        ValidationErrorCodes.Municipality.MunicipalityHasInvalidStatus,
                         nameof(request.GemeenteId),
-                        "De gemeente is gehistoreerd."),
+                        ValidationErrorMessages.Municipality.MunicipalityHasInvalidStatus),
 
                     StreetNameNameLanguageIsNotSupportedException _ => CreateValidationException(
-                        "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal",
+                        ValidationErrorCodes.StreetName.StreetNameNameLanguageIsNotSupported,
                         nameof(request.Straatnamen),
-                        "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente."),
+                        ValidationErrorMessages.StreetName.StreetNameNameLanguageIsNotSupported),
 
                     StreetNameIsMissingALanguageException _ => CreateValidationException(
-                        "StraatnaamOntbreektOfficieleOfFaciliteitenTaal",
+                        ValidationErrorCodes.StreetName.StreetNameIsMissingALanguage,
                         nameof(request.Straatnamen),
-                        "In 'Straatnamen' ontbreekt een officiële of faciliteitentaal."),
+                        ValidationErrorMessages.StreetName.StreetNameIsMissingALanguage),
 
                     _ => new ValidationException(new List<ValidationFailure>
                         {new ValidationFailure(string.Empty, exception.Message)})

@@ -102,7 +102,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .Should()
                 .ThrowAsync<ApiException>()
                 .Result
-                .Where(x => x.Message.Contains("Straatnaam verwijderd")
+                .Where(x => x.Message.Contains("Verwijderde straatnaam")
                             && x.StatusCode == StatusCodes.Status410Gone);
         }
 
