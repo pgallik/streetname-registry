@@ -1,3 +1,10 @@
+# [3.8.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.7.3...v3.8.0) (2022-08-19)
+
+
+### Features
+
+* validate streetname correction has atleast one language specified ([03e5a0a](https://github.com/informatievlaanderen/streetname-registry/commit/03e5a0ad1715e74eead4badfa02716039bc1a8b8))
+
 ## [3.7.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.7.2...v3.7.3) (2022-08-16)
 
 ## [3.7.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.7.1...v3.7.2) (2022-08-16)
