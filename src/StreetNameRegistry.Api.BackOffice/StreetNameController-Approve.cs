@@ -16,6 +16,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using Municipality;
     using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
+    using Validators;
 
     public partial class StreetNameController
     {
@@ -70,16 +71,16 @@ namespace StreetNameRegistry.Api.BackOffice
             {
                 throw exception switch
                 {
-                    StreetNameIsNotFoundException => new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound),
+                    StreetNameIsNotFoundException => new ApiException(ValidationErrorMessages.StreetName.StreetNameNotFound, StatusCodes.Status404NotFound),
 
-                    StreetNameIsRemovedException => new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone),
+                    StreetNameIsRemovedException => new ApiException(ValidationErrorMessages.StreetName.StreetNameIsRemoved, StatusCodes.Status410Gone),
 
-                    StreetNameHasInvalidStatusException => new ApiException("Straatnaam kan niet meer goedgekeurd worden.", StatusCodes.Status409Conflict),
+                    StreetNameHasInvalidStatusException => new ApiException(ValidationErrorMessages.StreetName.StreetNameCannotBeApproved, StatusCodes.Status409Conflict),
 
                     MunicipalityHasInvalidStatusException _ => CreateValidationException(
-                        "StraatnaamGemeenteInGebruik",
+                        ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent,
                         string.Empty,
-                        "Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'."),
+                        ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent),
 
                     _ => new ValidationException(new List<ValidationFailure>
                     {
