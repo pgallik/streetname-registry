@@ -119,7 +119,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
         [Theory]
         [InlineData(StreetNameStatus.Retired)]
         [InlineData(StreetNameStatus.Rejected)]
-        public void ThenThrowsStreetNameHasInvalidStatusExceptionException(StreetNameStatus status)
+        public void ThenThrowsStreetNameHasInvalidStatusException(StreetNameStatus status)
         {
             var command = Fixture.Create<CorrectStreetNameNames>()
                 .WithMunicipalityId(_municipalityId);
@@ -153,6 +153,37 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
                     municipalityWasImported,
                     Fixture.Create<MunicipalityBecameCurrent>(),
                     streetNameMigratedToMunicipality)
+                .When(command)
+                .Throws(new StreetNameHasInvalidStatusException(command.PersistentLocalId)));
+        }
+
+        [Fact]
+        public void WithDuplicateNameAndRejectedStatus_ThenThrowsStreetNameHasInvalidStatusException()
+        {
+            var streetNameNames = new Names(new[] { new StreetNameName("Kapelstraat", Language.Dutch) });
+            var command = Fixture.Create<CorrectStreetNameNames>()
+                .WithMunicipalityId(_municipalityId)
+                .WithStreetNameName(streetNameNames.First());
+
+            var languageWasAdded = new MunicipalityOfficialLanguageWasAdded(_municipalityId, Language.Dutch);
+            ((ISetProvenance)languageWasAdded).SetProvenance(Fixture.Create<Provenance>());
+
+            var streetNameWasProposedV2 = new StreetNameWasProposedV2(
+                _municipalityId,
+                new NisCode("abc"),
+                streetNameNames,
+                new PersistentLocalId(123));
+            ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
+
+            // Act, assert
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityWasImported>(),
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    languageWasAdded,
+                    Fixture.Create<StreetNameWasProposedV2>(),
+                    streetNameWasProposedV2,
+                    Fixture.Create<StreetNameWasRejected>())
                 .When(command)
                 .Throws(new StreetNameHasInvalidStatusException(command.PersistentLocalId)));
         }

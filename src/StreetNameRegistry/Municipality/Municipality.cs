@@ -27,20 +27,7 @@ namespace StreetNameRegistry.Municipality
                 throw new MunicipalityHasInvalidStatusException($"Municipality with id '{_municipalityId}' was retired");
             }
 
-            foreach (var streetNameName in streetNameNames)
-            {
-                if (StreetNames.HasActiveStreetNameName(streetNameName))
-                {
-                    throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
-                }
-
-                if (!_officialLanguages.Contains(streetNameName.Language)
-                    && !_facilityLanguages.Contains(streetNameName.Language))
-                {
-                    throw new StreetNameNameLanguageIsNotSupportedException(
-                        $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
-                }
-            }
+            GuardStreetNameNames(streetNameNames, persistentLocalId);
 
             foreach (var language in _officialLanguages.Concat(_facilityLanguages))
             {
@@ -113,9 +100,14 @@ namespace StreetNameRegistry.Municipality
                 throw new StreetNameIsNotFoundException(persistentLocalId);
             }
 
+            streetName.CorrectNames(streetNameNames, GuardStreetNameNames);
+        }
+
+        private void GuardStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
+        {
             foreach (var streetNameName in streetNameNames)
             {
-                if (StreetNames.HasActiveStreetNameNameForOtherThan(streetNameName, persistentLocalId))
+                if (StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId))
                 {
                     throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
                 }
@@ -127,8 +119,6 @@ namespace StreetNameRegistry.Municipality
                         $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
                 }
             }
-
-            streetName.CorrectNames(streetNameNames);
         }
 
         public void DefineOrChangeNisCode(NisCode nisCode)

@@ -151,7 +151,7 @@ namespace StreetNameRegistry.Municipality
             Apply(new StreetNameWasRetiredV2(_municipalityId, PersistentLocalId));
         }
 
-        public void CorrectNames(Names names)
+        public void CorrectNames(Names names, Action<Names, PersistentLocalId> guardStreetNameNames)
         {
             if (IsRemoved)
             {
@@ -164,6 +164,8 @@ namespace StreetNameRegistry.Municipality
             {
                 throw new StreetNameHasInvalidStatusException(PersistentLocalId);
             }
+
+            guardStreetNameNames(names, PersistentLocalId);
 
             var correctedNames = new Names(
                 names.Where(name => !Names.HasMatch(name.Language, name.Name)));

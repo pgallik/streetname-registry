@@ -7,19 +7,13 @@ namespace StreetNameRegistry.Municipality
     {
         public bool HasPersistentLocalId(PersistentLocalId persistentLocalId)
             => this.Any(x => x.PersistentLocalId == persistentLocalId);
-        
-        public bool HasActiveStreetNameName(StreetNameName streetNameName)
-            => this.Any(x => !x.IsRemoved
-                && !x.IsRetired
-                && !x.IsRejected
-                && x.Names.HasMatch(streetNameName.Language, streetNameName.Name));
 
-        public bool HasActiveStreetNameNameForOtherThan(StreetNameName streetNameName, PersistentLocalId persistentLocalId)
+        public bool HasActiveStreetNameName(StreetNameName streetNameName, PersistentLocalId existingStreetNamePersistentLocalId)
             => this.Any(x => !x.IsRemoved
                              && !x.IsRetired
                              && !x.IsRejected
                              && x.Names.HasMatch(streetNameName.Language, streetNameName.Name)
-                             && x.PersistentLocalId != persistentLocalId);
+                             && x.PersistentLocalId != existingStreetNamePersistentLocalId);
 
         public MunicipalityStreetName? FindByPersistentLocalId(PersistentLocalId persistentLocalId)
             => this.SingleOrDefault(x => x.PersistentLocalId == persistentLocalId);
