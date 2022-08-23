@@ -1,3 +1,10 @@
+## [3.8.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.1...v3.8.2) (2022-08-23)
+
+
+### Bug Fixes
+
+* status code docs ([e6b9e34](https://github.com/informatievlaanderen/streetname-registry/commit/e6b9e3402bb90327ce1060d4a3fa12bbbca54c5b))
+
 ## [3.8.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.0...v3.8.1) (2022-08-19)
 
 # [3.8.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.7.3...v3.8.0) (2022-08-19)
