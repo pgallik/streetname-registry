@@ -23,22 +23,25 @@ namespace StreetNameRegistry.Api.Legacy.Convertors
             }
         }
 
-        public static StreetNameRegistry.Municipality.StreetNameStatus ConvertToMunicipalityStreetNameStatus(this StraatnaamStatus? status)
+        public static Municipality.StreetNameStatus ConvertToMunicipalityStreetNameStatus(this StraatnaamStatus? status)
             => ConvertToMunicipalityStreetNameStatus(status ?? StraatnaamStatus.InGebruik);
 
-        public static StreetNameRegistry.Municipality.StreetNameStatus ConvertToMunicipalityStreetNameStatus(this StraatnaamStatus status)
+        public static Municipality.StreetNameStatus ConvertToMunicipalityStreetNameStatus(this StraatnaamStatus status)
         {
             switch (status)
             {
                 default:
                 case StraatnaamStatus.InGebruik:
-                    return StreetNameRegistry.Municipality.StreetNameStatus.Current;
+                    return Municipality.StreetNameStatus.Current;
 
                 case StraatnaamStatus.Gehistoreerd:
-                    return StreetNameRegistry.Municipality.StreetNameStatus.Retired;
+                    return Municipality.StreetNameStatus.Retired;
 
                 case StraatnaamStatus.Voorgesteld:
-                    return StreetNameRegistry.Municipality.StreetNameStatus.Proposed;
+                    return Municipality.StreetNameStatus.Proposed;
+
+                case StraatnaamStatus.Afgekeurd:
+                    return Municipality.StreetNameStatus.Rejected;
             }
         }
     }

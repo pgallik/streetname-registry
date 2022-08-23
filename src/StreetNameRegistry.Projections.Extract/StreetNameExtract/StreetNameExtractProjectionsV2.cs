@@ -4,7 +4,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
@@ -13,7 +12,6 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetName.Events;
 
     [ConnectedProjectionName("Extract straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen extract voorziet.")]
