@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
     using Municipality.Commands;
     using Municipality.Events;
     using Municipality.Exceptions;
-    using StreetName.Events;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -70,6 +69,24 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
                     streetNameWasProposed)
                 .When(command)
                 .Throws(new StreetNameNameAlreadyExistsException(streetNameName.Name)));
+        }
+
+        [Fact]
+        public void WithExistingPersistentLocalId_ThenThrowsStreetNamePersistentLocalIdAlreadyExistsException()
+        {
+            var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
+            var streetNameWasProposed = Fixture.Create<StreetNameWasProposedV2>();
+
+            var command = Fixture.Create<ProposeStreetName>()
+                .WithMunicipalityId(_municipalityId)
+                .WithPersistentLocalId(new PersistentLocalId(streetNameWasProposed.PersistentLocalId));
+
+            Assert(new Scenario()
+                .Given(_streamId,
+                    municipalityWasImported,
+                    streetNameWasProposed)
+                .When(command)
+                .Throws(new StreetNamePersistentLocalIdAlreadyExistsException()));
         }
 
         [Fact]

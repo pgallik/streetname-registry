@@ -27,6 +27,11 @@ namespace StreetNameRegistry.Municipality
                 throw new MunicipalityHasInvalidStatusException($"Municipality with id '{_municipalityId}' was retired");
             }
 
+            if (StreetNames.HasPersistentLocalId(persistentLocalId))
+            {
+                throw new StreetNamePersistentLocalIdAlreadyExistsException();
+            }
+
             GuardStreetNameNames(streetNameNames, persistentLocalId);
 
             foreach (var language in _officialLanguages.Concat(_facilityLanguages))

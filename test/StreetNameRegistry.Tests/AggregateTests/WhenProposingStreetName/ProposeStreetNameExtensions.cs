@@ -21,5 +21,10 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
         {
             return new ProposeStreetName(command.MunicipalityId, names, command.PersistentLocalId, command.Provenance);
         }
+
+        public static ProposeStreetName WithPersistentLocalId(this ProposeStreetName command, PersistentLocalId persistentLocalId)
+        {
+            return new ProposeStreetName(command.MunicipalityId, command.StreetNameNames, persistentLocalId, command.Provenance);
+        }
     }
 }
