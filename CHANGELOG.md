@@ -1,3 +1,11 @@
+## [3.8.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.2...v3.8.3) (2022-08-23)
+
+
+### Bug Fixes
+
+* correct street name change order of validations ([f227404](https://github.com/informatievlaanderen/streetname-registry/commit/f227404fe3c2193b72afa417b82e91cf6a72983d))
+* propose streetname validate on existing persistent local id ([437cc7a](https://github.com/informatievlaanderen/streetname-registry/commit/437cc7a406cb04d428e3aa9db8066d898d42f8ee))
+
 ## [3.8.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.1...v3.8.2) (2022-08-23)
 
 
