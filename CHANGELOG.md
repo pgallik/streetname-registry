@@ -1,3 +1,10 @@
+## [3.8.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.3...v3.8.4) (2022-08-23)
+
+
+### Bug Fixes
+
+* add missing mapping for street name status Rejected ([b6d5e58](https://github.com/informatievlaanderen/streetname-registry/commit/b6d5e5815eab625b81b5c3bcd9a8e8692c4d50ff))
+
 ## [3.8.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.2...v3.8.3) (2022-08-23)
 
 
