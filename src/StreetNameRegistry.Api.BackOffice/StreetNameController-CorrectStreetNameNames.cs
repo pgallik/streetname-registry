@@ -24,7 +24,7 @@ namespace StreetNameRegistry.Api.BackOffice
     public partial class StreetNameController
     {
         /// <summary>
-        /// Corrigeer een straatnaam - straatnaam.
+        /// Corrigeer de straatnaam van een straatnaam.
         /// </summary>
         /// <param name="ifMatchHeaderValidator"></param>
         /// <param name="validator"></param>
@@ -90,7 +90,7 @@ namespace StreetNameRegistry.Api.BackOffice
 
                     StreetNameHasInvalidStatusException => CreateValidationException(
                         ValidationErrorCodes.StreetName.StreetNameCannotBeCorrected,
-                        String.Empty, 
+                        String.Empty,
                         ValidationErrorMessages.StreetName.StreetNameHasInvalidStatus),
 
                     StreetNameNameLanguageIsNotSupportedException _ => CreateValidationException(
