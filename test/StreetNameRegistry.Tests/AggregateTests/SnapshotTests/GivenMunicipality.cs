@@ -50,7 +50,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                 new Names(Fixture.Create<Dictionary<Language, string>>()),
                 Fixture.Create<PersistentLocalId>());
             ((ISetProvenance)existingStreetNameWasProposed).SetProvenance(provenance);
-            
+
             var proposeNewStreetName = new ProposeStreetName(
                 Fixture.Create<MunicipalityId>(),
                 new Names(new List<StreetNameName>
@@ -113,12 +113,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
 
         private static SnapshotContainer Build(
             MunicipalitySnapshot snapshot,
-            long position,
+            long streamVersion,
             JsonSerializerSettings serializerSettings)
         {
             return new SnapshotContainer
             {
-                Info = new SnapshotInfo { Position = position, Type = nameof(MunicipalitySnapshot) },
+                Info = new SnapshotInfo { StreamVersion = streamVersion, Type = nameof(MunicipalitySnapshot) },
                 Data = JsonConvert.SerializeObject(snapshot, serializerSettings)
             };
         }
