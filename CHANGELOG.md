@@ -1,3 +1,10 @@
+## [3.8.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.4...v3.8.5) (2022-08-24)
+
+
+### Bug Fixes
+
+* snapshotting ([6e8373f](https://github.com/informatievlaanderen/streetname-registry/commit/6e8373fbfc02dff1e60c9c22a87735c97141c821))
+
 ## [3.8.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.3...v3.8.4) (2022-08-23)
 
 
