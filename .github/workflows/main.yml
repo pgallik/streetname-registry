@@ -173,15 +173,15 @@ jobs:
         SEMVER: ${{ env.RELEASE_VERSION }}
         WORKSPACE: ${{ github.workspace }}
 
-    - name: Package Lambda functions        
-      if: env.RELEASE_VERSION != 'none'
-      shell: bash
-      run: |
-        echo Zip lambda functions
-        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        zip -r lambda.zip .
-        popd
+#    - name: Package Lambda functions        
+#      if: env.RELEASE_VERSION != 'none'
+#      shell: bash
+#      run: |
+#        echo Zip lambda functions
+#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        zip -r lambda.zip .
+#        popd
         
     # Deployment of Lambda functions must be done from the Test environment
 #    - name: Deploy Lambda functions to Test
