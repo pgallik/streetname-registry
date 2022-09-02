@@ -74,7 +74,7 @@ jobs:
       run: |
         dotnet tool restore
         dotnet paket install
-        dotnet build --no-rsstore StreetNameRegistry.sln
+        dotnet build --no-logo --no-restore StreetNameRegistry.sln
         
     - name: Sonar end build & analyze
       if: env.RELEASE_VERSION != 'none'
@@ -87,4 +87,4 @@ jobs:
 
     - name: Test
       shell: bash
-      run: dotnet test --no-build StreetNameRegistry.sln
+      run: dotnet test --no-logo --no-build StreetNameRegistry.sln
