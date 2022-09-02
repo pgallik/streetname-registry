@@ -20,9 +20,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
         {
             messageMetadata.Logger?.LogInformation($"Handling message {messageData?.GetType().Name}");
 
-            var sqsLambdaRequest = messageData as SqsLambdaRequest;
-
-            if (sqsLambdaRequest is null)
+            if (messageData is not SqsLambdaRequest sqsLambdaRequest)
             {
                 throw new InvalidOperationException($"Unable to cast {nameof(messageData)} as {nameof(sqsLambdaRequest)}.");
             }
@@ -32,24 +30,24 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             // TODO: uncomment after initial lambda testing
             //switch (sqsLambdaRequest)
             //{
-            //    // Building
-
-            //    case SqsPlanBuildingRequest sqsPlanBuildingRequest:
-            //        await _mediator.Send(sqsPlanBuildingRequest, cancellationToken);
+            //    case SqsLambdaStreetNameApproveRequest request:
+            //        await _mediator.Send(request, cancellationToken);
             //        break;
 
-            //    case SqsPlaceBuildingUnderConstructionRequest sqsPlaceBuildingUnderConstructionRequest:
-            //        await _mediator.Send(sqsPlaceBuildingUnderConstructionRequest, cancellationToken);
+            //    case SqsLambdaStreetNameCorrectNamesRequest request:
+            //        await _mediator.Send(request, cancellationToken);
             //        break;
 
-            //    case SqsRealizeBuildingRequest sqsRealizeBuildingRequest:
-            //        await _mediator.Send(sqsRealizeBuildingRequest, cancellationToken);
+            //    case SqsLambdaStreetNameProposeRequest request:
+            //        await _mediator.Send(request, cancellationToken);
             //        break;
 
-            //    // BuildingUnit
+            //    case SqsLambdaStreetNameRejectRequest request:
+            //        await _mediator.Send(request, cancellationToken);
+            //        break;
 
-            //    case SqsPlanBuildingUnitRequest sqsPlanBuildingUnitRequest:
-            //        await _mediator.Send(sqsPlanBuildingUnitRequest, cancellationToken);
+            //    case SqsLambdaStreetNameRetireRequest request:
+            //        await _mediator.Send(request, cancellationToken);
             //        break;
             //}
         }

@@ -48,6 +48,8 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Projector"
     "StreetNameRegistry.Api.BackOffice"
     "StreetNameRegistry.Api.BackOffice.Abstractions"
+    "StreetNameRegistry.Api.BackOffice.Handlers.Sqs"
+    "StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda"
     "StreetNameRegistry.Api.Legacy"
     "StreetNameRegistry.Api.Oslo"
     "StreetNameRegistry.Api.Extract"
