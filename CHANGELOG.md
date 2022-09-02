@@ -1,3 +1,12 @@
+## [3.8.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.6...v3.8.7) (2022-09-02)
+
+
+### Bug Fixes
+
+* change MessageHandler & build scripts ([06720a6](https://github.com/informatievlaanderen/streetname-registry/commit/06720a6809927d23555361b6d2c859c34dd4ff40))
+* duplicate items on publish ([aae6600](https://github.com/informatievlaanderen/streetname-registry/commit/aae6600d4e4f5cca05a6b46f4301095843ae1034))
+* duplicate items on publish ([e781c55](https://github.com/informatievlaanderen/streetname-registry/commit/e781c55fabbb38963a998ef3b67121e23fa7558a))
+
 ## [3.8.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.5...v3.8.6) (2022-09-02)
 
 ## [3.8.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.4...v3.8.5) (2022-08-24)
