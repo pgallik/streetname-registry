@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -59,18 +60,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
                 {
                     etag = result;
                 }).Object,
-                MockTicketingUrl().Object,
                 Container.Resolve<ICommandHandlerResolver>(),
                 Container.Resolve<IMunicipalities>(),
                 _idempotencyContext);
 
             //Act
-            await handler.Handle(new SqsStreetNameApproveRequest
+            await handler.Handle(new SqsLambdaStreetNameApproveRequest
             {
-                PersistentLocalId = streetNamePersistentLocalId,
+                Request = new StreetNameBackOfficeApproveRequest { PersistentLocalId = streetNamePersistentLocalId },
                 MessageGroupId = municipalityId
-            },
-                CancellationToken.None);
+            }, CancellationToken.None);
 
             //Assert
             var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 4, 1); //3 = version of stream (zero based)

@@ -2,35 +2,34 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Municipality;
     using Municipality.Commands;
+    using Requests;
     using TicketingService.Abstractions;
     using MunicipalityId = Municipality.MunicipalityId;
 
-    public class SqsStreetNameApproveHandler : SqsLambdaHandler<SqsStreetNameApproveRequest>
+    public class SqsStreetNameApproveHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
     {
         private readonly IMunicipalities _municipalities;
         private readonly IdempotencyContext _idempotencyContext;
 
         public SqsStreetNameApproveHandler(
             ITicketing ticketing,
-            ITicketingUrl ticketingUrl,
             ICommandHandlerResolver bus,
             IMunicipalities municipalities,
             IdempotencyContext idempotencyContext)
-            : base(ticketing, ticketingUrl, bus)
+            : base(ticketing, bus)
         {
             _municipalities = municipalities;
             _idempotencyContext = idempotencyContext;
         }
 
-        protected override async Task<string> InnerHandle(SqsStreetNameApproveRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameApproveRequest request, CancellationToken cancellationToken)
         {
             var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId));
-            var streetNamePersistentLocalId = new PersistentLocalId(request.PersistentLocalId);
+            var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
             var cmd = new ApproveStreetName(
                 municipalityId,

@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
+﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -11,9 +11,8 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Newtonsoft.Json;
 
     [DataContract(Name = "CorrigerenStraatnaamNamen", Namespace = "")]
-    public class SqsStreetNameCorrectNamesRequest : SqsRequest
-    {
-        /// <summary>
+    public class StreetNameBackOfficeCorrectNamesRequest
+    {/// <summary>
         /// De unieke en persistente identificator van de straat.
         /// </summary>
         [DataMember(Name = "PersistentLocalId", Order = 0)]
@@ -32,7 +31,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
         /// <returns>CorrectStreetNameNames.</returns>
         public CorrectStreetNameNames ToCommand(MunicipalityId municipalityId, Provenance provenance)
         {
-            var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, x.Key.ToLanguage())));
+            var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, TaalMapper.ToLanguage(x.Key))));
             return new CorrectStreetNameNames(municipalityId, new PersistentLocalId(PersistentLocalId), names, provenance);
         }
     }

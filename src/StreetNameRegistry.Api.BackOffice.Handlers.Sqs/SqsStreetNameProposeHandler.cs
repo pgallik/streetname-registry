@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
     using Consumer;
     using Microsoft.EntityFrameworkCore;
+    using Requests;
     using TicketingService.Abstractions;
 
     public class SqsStreetNameProposeHandler : SqsHandler<SqsStreetNameProposeRequest>
@@ -26,7 +27,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
 
         protected override string WithGroupId(SqsStreetNameProposeRequest request)
         {
-            var identifier = request.GemeenteId
+            var identifier = request.Request.GemeenteId
                 .AsIdentifier()
                 .Map(IdentifierMappings.MunicipalityNisCode);
 

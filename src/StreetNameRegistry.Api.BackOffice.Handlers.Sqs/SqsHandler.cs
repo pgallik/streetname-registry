@@ -7,12 +7,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
     using MediatR;
     using Microsoft.AspNetCore.Http;
+    using Requests;
     using TicketingService.Abstractions;
     using static Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple.Sqs;
     using static Microsoft.AspNetCore.Http.Results;
 
-    public abstract class SqsHandler<TRequest> : IRequestHandler<TRequest, IResult>
-        where TRequest : SqsRequest
+    public abstract class SqsHandler<TSqsRequest> : IRequestHandler<TSqsRequest, IResult>
+        where TSqsRequest : SqsRequest
     {
         private readonly SqsOptions _sqsOptions;
         private readonly ITicketing _ticketing;
@@ -28,22 +29,21 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
             _ticketingUrl = ticketingUrl;
         }
 
-        protected abstract string WithGroupId(TRequest request);
+        protected abstract string WithGroupId(TSqsRequest request);
 
-        public async Task<IResult> Handle(TRequest request, CancellationToken cancellationToken)
+        public async Task<IResult> Handle(TSqsRequest request, CancellationToken cancellationToken)
         {
             var ticketId = await _ticketing.CreateTicket(nameof(StreetNameRegistry), cancellationToken);
             request.TicketId = ticketId;
 
             var groupId = WithGroupId(request);
-            request.MessageGroupId = groupId;
 
             if (string.IsNullOrEmpty(groupId))
             {
                 throw new InvalidOperationException("No groupId.");
             }
 
-            _ = await CopyToQueue(_sqsOptions, SqsQueueName.Value, request, new SqsQueueOptions { MessageGroupId = request.MessageGroupId }, cancellationToken);
+            _ = await CopyToQueue(_sqsOptions, SqsQueueName.Value, request, new SqsQueueOptions { MessageGroupId = groupId }, cancellationToken);
 
             //_logger.LogDebug($"Request sent to queue {SqsQueueName.Value}");
 

@@ -2,37 +2,35 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Municipality;
-    using Municipality.Commands;
+    using Requests;
     using TicketingService.Abstractions;
     using MunicipalityId = Municipality.MunicipalityId;
 
-    public class SqsStreetNameCorrectNamesHandler : SqsLambdaHandler<SqsStreetNameCorrectNamesRequest>
+    public class SqsStreetNameCorrectNamesHandler : SqsLambdaHandler<SqsLambdaStreetNameCorrectNamesRequest>
     {
         private readonly IMunicipalities _municipalities;
         private readonly IdempotencyContext _idempotencyContext;
 
         public SqsStreetNameCorrectNamesHandler(
             ITicketing ticketing,
-            ITicketingUrl ticketingUrl,
             ICommandHandlerResolver bus,
             IMunicipalities municipalities,
             IdempotencyContext idempotencyContext)
-            : base(ticketing, ticketingUrl, bus)
+            : base(ticketing, bus)
         {
             _municipalities = municipalities;
             _idempotencyContext = idempotencyContext;
         }
 
-        protected override async Task<string> InnerHandle(SqsStreetNameCorrectNamesRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameCorrectNamesRequest request, CancellationToken cancellationToken)
         {
             var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId));
-            var streetNamePersistentLocalId = new PersistentLocalId(request.PersistentLocalId);
+            var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
-            var cmd = request.ToCommand(
+            var cmd = request.Request.ToCommand(
                 municipalityId,
                 CreateFakeProvenance());
 

@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -53,21 +54,20 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             _backOfficeContext.SaveChanges();
 
             ETagResponse? etag = null;
-            
+
             var handler = new SqsStreetNameRejectHandler(
                 MockTicketing(result =>
                 {
                     etag = result;
                 }).Object,
-                MockTicketingUrl().Object,
                 Container.Resolve<ICommandHandlerResolver>(),
                 Container.Resolve<IMunicipalities>(),
                 _idempotencyContext);
 
             //Act
-            await handler.Handle(new SqsStreetNameRejectRequest
+            await handler.Handle(new SqsLambdaStreetNameRejectRequest
             {
-                PersistentLocalId = streetNamePersistentLocalId,
+                Request = new StreetNameBackOfficeRejectRequest { PersistentLocalId = streetNamePersistentLocalId },
                 MessageGroupId = municipalityId
             }, CancellationToken.None);
 

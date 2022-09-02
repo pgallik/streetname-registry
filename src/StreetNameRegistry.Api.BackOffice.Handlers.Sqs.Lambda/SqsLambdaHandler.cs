@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
     using System.Runtime.Serialization;
     using System.Security.Cryptography;
     using System.Text;
-    using Abstractions.Requests;
     using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
@@ -14,29 +13,26 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Municipality;
+    using Requests;
     using TicketingService.Abstractions;
-    using static Microsoft.AspNetCore.Http.Results;
 
-    public abstract class SqsLambdaHandler<TRequest> : IRequestHandler<TRequest, IResult>
-        where TRequest : SqsRequest
+    public abstract class SqsLambdaHandler<TSqsLambdaRequest> : IRequestHandler<TSqsLambdaRequest>
+        where TSqsLambdaRequest : SqsLambdaRequest
     {
         private readonly ITicketing _ticketing;
-        private readonly ITicketingUrl _ticketingUrl;
         private readonly ICommandHandlerResolver _bus;
 
         protected SqsLambdaHandler(
             ITicketing ticketing,
-            ITicketingUrl ticketingUrl,
             ICommandHandlerResolver bus)
         {
             _ticketing = ticketing;
-            _ticketingUrl = ticketingUrl;
             _bus = bus;
         }
 
-        protected abstract Task<string> InnerHandle(TRequest request, CancellationToken cancellationToken);
+        protected abstract Task<string> InnerHandle(TSqsLambdaRequest request, CancellationToken cancellationToken);
 
-        public async Task<IResult> Handle(TRequest request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(TSqsLambdaRequest request, CancellationToken cancellationToken)
         {
             await _ticketing.Pending(request.TicketId, cancellationToken);
 
@@ -44,8 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 
             await _ticketing.Complete(request.TicketId, new TicketResult(new ETagResponse(etag)), cancellationToken);
 
-            var location = _ticketingUrl.For(request.TicketId);
-            return Accepted(location);
+            return Unit.Value;
         }
 
         protected async Task<long> IdempotentCommandHandlerDispatch(
@@ -100,8 +95,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 
         protected async Task<string> GetStreetNameHash(
             IMunicipalities municipalityRepository,
-            StreetNameRegistry.Municipality.MunicipalityId municipalityId,
-            StreetNameRegistry.Municipality.PersistentLocalId persistentLocalId,
+            MunicipalityId municipalityId,
+            PersistentLocalId persistentLocalId,
             CancellationToken cancellationToken)
         {
             var muniAggregate =

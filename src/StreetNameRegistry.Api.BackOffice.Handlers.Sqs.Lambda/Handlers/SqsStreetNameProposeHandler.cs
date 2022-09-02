@@ -4,14 +4,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
-    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Lambda;
     using Municipality;
+    using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameProposeHandler : SqsLambdaHandler<SqsStreetNameProposeRequest>
+    public class SqsStreetNameProposeHandler : SqsLambdaHandler<SqsLambdaStreetNameProposeRequest>
     {
         private readonly IPersistentLocalIdGenerator _persistentLocalIdGenerator;
         private readonly IdempotencyContext _idempotencyContext;
@@ -20,13 +20,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 
         public SqsStreetNameProposeHandler(
             ITicketing ticketing,
-            ITicketingUrl ticketingUrl,
             ICommandHandlerResolver bus,
             IPersistentLocalIdGenerator persistentLocalIdGenerator,
             IdempotencyContext idempotencyContext,
             BackOfficeContext backOfficeContext,
             IMunicipalities municipalities
-            ) : base(ticketing, ticketingUrl, bus)
+            ) : base(ticketing, bus)
         {
             _persistentLocalIdGenerator = persistentLocalIdGenerator;
             _idempotencyContext = idempotencyContext;
@@ -34,12 +33,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             _municipalities = municipalities;
         }
 
-        protected override async Task<string> InnerHandle(SqsStreetNameProposeRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameProposeRequest request, CancellationToken cancellationToken)
         {
             var persistentLocalId = _persistentLocalIdGenerator.GenerateNextPersistentLocalId();
             var municipalityId = new MunicipalityId(new Guid(request.MessageGroupId));
 
-            var cmd = request.ToCommand(
+            var cmd = request.Request.ToCommand(
                 municipalityId,
                 CreateFakeProvenance(),
                 persistentLocalId);

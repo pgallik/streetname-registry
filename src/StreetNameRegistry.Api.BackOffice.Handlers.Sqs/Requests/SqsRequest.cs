@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests
 {
     using System;
     using System.Collections.Generic;
@@ -11,10 +11,6 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
         [JsonIgnore]
         public IDictionary<string, object> Metadata { get; set; }
 
-        [JsonIgnore]
-        public string? MessageGroupId { get; set; }
-
-        [JsonIgnore]
         public Guid TicketId { get; set; }
     }
 }

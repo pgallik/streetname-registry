@@ -17,6 +17,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -57,7 +58,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 {
                     etag = result;
                 }).Object,
-                MockTicketingUrl().Object,
                 Container.Resolve<ICommandHandlerResolver>(),
                 mockPersistentLocalIdGenerator.Object,
                 _idempotencyContext,
@@ -65,13 +65,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 Container.Resolve<IMunicipalities>());
 
             //Act
-            await handler.Handle(new SqsStreetNameProposeRequest
+            await handler.Handle(new SqsLambdaStreetNameProposeRequest
             {
-                GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
-                Straatnamen = new Dictionary<Taal, string>
+                Request = new StreetNameBackOfficeProposeRequest
                 {
-                    { Taal.NL, "Rodekruisstraat" },
-                    { Taal.FR, "Rue de la Croix-Rouge" }
+                    GemeenteId = $"https://data.vlaanderen.be/id/gemeente/{municipalityLatestItem.NisCode}",
+                    Straatnamen = new Dictionary<Taal, string>
+                    {
+                        { Taal.NL, "Rodekruisstraat" },
+                        { Taal.FR, "Rue de la Croix-Rouge" }
+                    }
                 },
                 MessageGroupId = municipalityId
             }, CancellationToken.None);

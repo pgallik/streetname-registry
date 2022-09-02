@@ -2,8 +2,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
     using MediatR;
+    using Requests;
 
     public class MessageHandler : IMessageHandler
     {
@@ -17,8 +19,18 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
         public async Task HandleMessage(object? messageData, MessageMetadata messageMetadata, CancellationToken cancellationToken)
         {
             messageMetadata.Logger?.LogInformation($"Handling message {messageData?.GetType().Name}");
+
+            var sqsLambdaRequest = messageData as SqsLambdaRequest;
+
+            if (sqsLambdaRequest is null)
+            {
+                throw new InvalidOperationException($"Unable to cast {nameof(messageData)} as {nameof(sqsLambdaRequest)}.");
+            }
+
+            sqsLambdaRequest.MessageGroupId = messageMetadata.MessageGroupId;
+
             // TODO: uncomment after initial lambda testing
-            //switch (messageData)
+            //switch (sqsLambdaRequest)
             //{
             //    // Building
 

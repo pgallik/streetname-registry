@@ -1,6 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
-    public class SqsStreetNameApproveRequest : SqsRequest
+    public class StreetNameBackOfficeRejectRequest
     {
         public int PersistentLocalId { get; set; }
     }

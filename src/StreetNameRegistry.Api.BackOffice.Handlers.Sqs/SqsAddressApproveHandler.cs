@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     using Abstractions;
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
+    using Requests;
     using TicketingService.Abstractions;
 
     public class SqsStreetNameApproveHandler : SqsHandler<SqsStreetNameApproveRequest>
@@ -23,7 +24,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
         {
             var municipalityIdByPersistentLocalId = _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
-                .Find(request.PersistentLocalId);
+                .Find(request.Request.PersistentLocalId);
 
             return municipalityIdByPersistentLocalId.ToString();
         }

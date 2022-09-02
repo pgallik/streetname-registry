@@ -1,14 +1,11 @@
 namespace StreetNameRegistry.Api.BackOffice
 {
     using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api;
     using FluentValidation;
     using FluentValidation.Results;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Municipality;
 
     [ApiVersion("2.0")]
     [AdvertiseApiVersions("2.0")]

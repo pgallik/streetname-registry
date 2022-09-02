@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using Municipality;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -61,19 +62,21 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 {
                     etag = result;
                 }).Object,
-                MockTicketingUrl().Object,
                 Container.Resolve<ICommandHandlerResolver>(),
                 Container.Resolve<IMunicipalities>(),
                 _idempotencyContext);
 
             //Act
-            await handler.Handle(new SqsStreetNameCorrectNamesRequest()
+            await handler.Handle(new SqsLambdaStreetNameCorrectNamesRequest()
             {
-                PersistentLocalId = streetNamePersistentLocalId,
-                Straatnamen = new Dictionary<Taal, string>
+                Request = new StreetNameBackOfficeCorrectNamesRequest
                 {
-                    { Taal.NL, "Rodekruisstraat" },
-                    { Taal.FR, "Rue de la Croix-Rouge" }
+                    PersistentLocalId = streetNamePersistentLocalId,
+                    Straatnamen = new Dictionary<Taal, string>
+                    {
+                        { Taal.NL, "Rodekruisstraat" },
+                        { Taal.FR, "Rue de la Croix-Rouge" }
+                    }
                 },
                 MessageGroupId = municipalityId
             }, CancellationToken.None);

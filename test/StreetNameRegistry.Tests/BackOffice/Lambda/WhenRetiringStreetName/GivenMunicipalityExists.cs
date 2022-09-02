@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -63,15 +64,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
                 {
                     etag = result;
                 }).Object,
-                MockTicketingUrl().Object,
                 Container.Resolve<ICommandHandlerResolver>(),
                 Container.Resolve<IMunicipalities>(),
                 _idempotencyContext);
 
             //Act
-            await handler.Handle(new SqsStreetNameRetireRequest
+            await handler.Handle(new SqsLambdaStreetNameRetireRequest
             {
-                PersistentLocalId = streetNamePersistentLocalId,
+                Request = new StreetNameBackOfficeRetireRequest { PersistentLocalId = streetNamePersistentLocalId },
                 MessageGroupId = municipalityId
             }, CancellationToken.None);
 

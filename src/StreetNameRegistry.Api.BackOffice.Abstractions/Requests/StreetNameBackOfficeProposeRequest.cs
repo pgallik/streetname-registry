@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
+﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Newtonsoft.Json;
 
     [DataContract(Name = "VoorstelStraatnaam", Namespace = "")]
-    public class SqsStreetNameProposeRequest : SqsRequest
+    public class StreetNameBackOfficeProposeRequest
     {
         /// <summary>
         /// De unieke en persistente identificator van de gemeente die de straatnaam toekent.
@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
         /// <returns>ProposeStreetName.</returns>
         public ProposeStreetName ToCommand(MunicipalityId municipalityId, Provenance provenance, PersistentLocalId persistentLocalId)
         {
-            var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, x.Key.ToLanguage())));
+            var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, TaalMapper.ToLanguage(x.Key))));
             return new ProposeStreetName(municipalityId, names, persistentLocalId, provenance);
         }
     }

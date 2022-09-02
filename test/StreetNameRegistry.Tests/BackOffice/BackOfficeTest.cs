@@ -53,13 +53,6 @@ namespace StreetNameRegistry.Tests.BackOffice
             DispatchArrangeCommand(proposeCommand);
         }
 
-        protected Mock<ITicketingUrl> MockTicketingUrl()
-        {
-            var ticketingUrl = new Mock<ITicketingUrl>();
-            ticketingUrl.Setup(x => x.For(It.IsAny<Guid>())).Returns("");
-            return ticketingUrl;
-        }
-
         protected Mock<ITicketing> MockTicketing(Action<ETagResponse> callback)
         {
             var ticketing = new Mock<ITicketing>();
