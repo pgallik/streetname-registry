@@ -1,3 +1,10 @@
+## [3.8.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.7...v3.8.8) (2022-09-02)
+
+
+### Bug Fixes
+
+* comment lambda packaging ([1b6b324](https://github.com/informatievlaanderen/streetname-registry/commit/1b6b3249b32a1abdf43401126186ba3719ad49e9))
+
 ## [3.8.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.6...v3.8.7) (2022-09-02)
 
 
