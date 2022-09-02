@@ -71,7 +71,7 @@ jobs:
 
     - name: Build
       shell: bash
-      run: dotnet build
+      run: dotnet build StreetNameRegistry.sln
         
     - name: Sonar end build & analyze
       if: env.RELEASE_VERSION != 'none'
@@ -84,4 +84,4 @@ jobs:
 
     - name: Test
       shell: bash
-      run: dotnet test
+      run: dotnet test StreetNameRegistry.sln
