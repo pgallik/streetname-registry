@@ -1,11 +1,10 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Abstractions.Convertors;
-    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
-    using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
     using Consumer;
     using Microsoft.EntityFrameworkCore;
     using Requests;
@@ -13,19 +12,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
 
     public class SqsStreetNameProposeHandler : SqsHandler<SqsStreetNameProposeRequest>
     {
+        private const string Action = "ProposeStreetName";
         private readonly ConsumerContext _consumerContext;
 
         public SqsStreetNameProposeHandler(
-            SqsOptions sqsOptions,
+            ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
             ConsumerContext consumerContext)
-            : base(sqsOptions, ticketing, ticketingUrl)
+            : base(sqsQueue, ticketing, ticketingUrl)
         {
             _consumerContext = consumerContext;
         }
 
-        protected override string WithGroupId(SqsStreetNameProposeRequest request)
+        protected override string? WithAggregateId(SqsStreetNameProposeRequest request)
         {
             var identifier = request.Request.GemeenteId
                 .AsIdentifier()
@@ -35,12 +35,22 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
                 .AsNoTracking()
                 .SingleOrDefault(item => item.NisCode == identifier.Value);
 
-            if (municipality == null)
-            {
-                throw new InvalidOperationException();
-            }
+            return municipality?.MunicipalityId.ToString();
+        }
 
-            return municipality.MunicipalityId.ToString();
+        protected override string WithDeduplicationId(string aggregateId, SqsStreetNameProposeRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameProposeRequest sqsRequest)
+        {
+            return new Dictionary<string, string>
+            {
+                { RegistryKey, nameof(StreetNameRegistry) },
+                { ActionKey, Action },
+                { AggregateIdKey, aggregateId }
+            };
         }
     }
 }

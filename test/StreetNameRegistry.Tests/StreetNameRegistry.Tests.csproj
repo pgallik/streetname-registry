@@ -9,10 +9,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.csproj" />
+    <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice.Handlers.Sqs\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Legacy\StreetNameRegistry.Projections.Legacy.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
     <ProjectReference Include="..\..\src\StreetNameRegistry\StreetNameRegistry.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BackOffice\Sqs\" />
   </ItemGroup>
 
   <Import Project="..\..\.paket\Paket.Restore.targets" />

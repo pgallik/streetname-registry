@@ -1,6 +1,8 @@
 namespace StreetNameRegistry.Tests.Testing
 {
     using System.Collections.Generic;
+    using Api.BackOffice.Handlers.Sqs.Lambda;
+    using Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac;
@@ -33,7 +35,8 @@ namespace StreetNameRegistry.Tests.Testing
 
             builder
                 .RegisterModule(new CommandHandlingModule(configuration))
-                .RegisterModule(new SqlStreamStoreModule());
+                .RegisterModule(new SqlStreamStoreModule())
+                .RegisterModule(new SqsLambdaHandlersModule());
 
             builder.RegisterModule(new SqlSnapshotStoreModule());
 

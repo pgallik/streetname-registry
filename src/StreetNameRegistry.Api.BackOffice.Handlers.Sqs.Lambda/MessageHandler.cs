@@ -2,10 +2,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
     using MediatR;
     using Requests;
+    using Sqs.Requests;
 
     public class MessageHandler : IMessageHandler
     {
@@ -20,36 +20,60 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
         {
             messageMetadata.Logger?.LogInformation($"Handling message {messageData?.GetType().Name}");
 
-            if (messageData is not SqsLambdaRequest sqsLambdaRequest)
+            if (messageData is not SqsRequest sqsRequest)
             {
-                throw new InvalidOperationException($"Unable to cast {nameof(messageData)} as {nameof(sqsLambdaRequest)}.");
+                // TODO: the message should not be retried by the Lambda.
+                throw new InvalidOperationException($"Unable to cast {nameof(messageData)} as {nameof(sqsRequest)}.");
             }
 
-            sqsLambdaRequest.MessageGroupId = messageMetadata.MessageGroupId;
-
             // TODO: uncomment after initial lambda testing
-            //switch (sqsLambdaRequest)
-            //{
-            //    case SqsLambdaStreetNameApproveRequest request:
-            //        await _mediator.Send(request, cancellationToken);
-            //        break;
-
-            //    case SqsLambdaStreetNameCorrectNamesRequest request:
-            //        await _mediator.Send(request, cancellationToken);
-            //        break;
-
-            //    case SqsLambdaStreetNameProposeRequest request:
-            //        await _mediator.Send(request, cancellationToken);
-            //        break;
-
-            //    case SqsLambdaStreetNameRejectRequest request:
-            //        await _mediator.Send(request, cancellationToken);
-            //        break;
-
-            //    case SqsLambdaStreetNameRetireRequest request:
-            //        await _mediator.Send(request, cancellationToken);
-            //        break;
-            //}
+            // switch (sqsRequest)
+            // {
+            //     case SqsStreetNameApproveRequest request:
+            //         await _mediator.Send(new SqsLambdaStreetNameApproveRequest
+            //         {
+            //             Request = request.Request,
+            //             TicketId = request.TicketId,
+            //             MessageGroupId = messageMetadata.MessageGroupId
+            //         }, cancellationToken);
+            //         break;
+            //
+            //     case SqsStreetNameCorrectNamesRequest request:
+            //         await _mediator.Send(new SqsLambdaStreetNameCorrectNamesRequest
+            //         {
+            //             Request = request.Request,
+            //             TicketId = request.TicketId,
+            //             MessageGroupId = messageMetadata.MessageGroupId
+            //         }, cancellationToken);
+            //         break;
+            //
+            //     case SqsStreetNameProposeRequest request:
+            //         await _mediator.Send(new SqsLambdaStreetNameProposeRequest
+            //         {
+            //             Request = request.Request,
+            //             TicketId = request.TicketId,
+            //             MessageGroupId = messageMetadata.MessageGroupId
+            //         }, cancellationToken);
+            //         break;
+            //
+            //     case SqsStreetNameRejectRequest request:
+            //         await _mediator.Send(new SqsLambdaStreetNameRejectRequest
+            //         {
+            //             Request = request.Request,
+            //             TicketId = request.TicketId,
+            //             MessageGroupId = messageMetadata.MessageGroupId
+            //         }, cancellationToken);
+            //         break;
+            //
+            //     case SqsStreetNameRetireRequest request:
+            //         await _mediator.Send(new SqsLambdaStreetNameRetireRequest
+            //         {
+            //             Request = request.Request,
+            //             TicketId = request.TicketId,
+            //             MessageGroupId = messageMetadata.MessageGroupId
+            //         }, cancellationToken);
+            //         break;
+            // }
         }
     }
 }

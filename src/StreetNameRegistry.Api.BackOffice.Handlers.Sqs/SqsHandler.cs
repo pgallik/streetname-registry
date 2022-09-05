@@ -1,54 +1,60 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
 {
-    using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using Abstractions.Requests;
+    using Abstractions.Exceptions;
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
     using MediatR;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
     using Requests;
     using TicketingService.Abstractions;
-    using static Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple.Sqs;
-    using static Microsoft.AspNetCore.Http.Results;
 
-    public abstract class SqsHandler<TSqsRequest> : IRequestHandler<TSqsRequest, IResult>
+    public abstract class SqsHandler<TSqsRequest> : IRequestHandler<TSqsRequest, IActionResult>
         where TSqsRequest : SqsRequest
     {
-        private readonly SqsOptions _sqsOptions;
+        public const string ActionKey = "Action";
+        public const string RegistryKey = "Registry";
+        public const string AggregateIdKey = "AggregateId";
+        public const string ObjectIdKey = "ObjectId";
+
         private readonly ITicketing _ticketing;
         private readonly ITicketingUrl _ticketingUrl;
+        private readonly ISqsQueue _sqsQueue;
 
         protected SqsHandler(
-            SqsOptions sqsOptions,
+            ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl)
         {
-            _sqsOptions = sqsOptions;
+            _sqsQueue = sqsQueue;
             _ticketing = ticketing;
             _ticketingUrl = ticketingUrl;
         }
 
-        protected abstract string WithGroupId(TSqsRequest request);
+        protected abstract string? WithAggregateId(TSqsRequest request);
+        protected abstract string WithDeduplicationId(string aggregateId, TSqsRequest request);
+        protected abstract IDictionary<string, string> WithMetadata(string aggregateId, TSqsRequest sqsRequest);
 
-        public async Task<IResult> Handle(TSqsRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Handle(TSqsRequest request, CancellationToken cancellationToken)
         {
-            var ticketId = await _ticketing.CreateTicket(nameof(StreetNameRegistry), cancellationToken);
-            request.TicketId = ticketId;
+            var aggregateId = WithAggregateId(request);
 
-            var groupId = WithGroupId(request);
-
-            if (string.IsNullOrEmpty(groupId))
+            if (string.IsNullOrEmpty(aggregateId))
             {
-                throw new InvalidOperationException("No groupId.");
+                throw new AggregateIdNotFound();
             }
 
-            _ = await CopyToQueue(_sqsOptions, SqsQueueName.Value, request, new SqsQueueOptions { MessageGroupId = groupId }, cancellationToken);
+            var ticketId = await _ticketing.CreateTicket(WithMetadata(aggregateId, request), cancellationToken);
+            request.TicketId = ticketId;
+
+            _ = await _sqsQueue.Copy(request, new SqsQueueOptions { MessageGroupId = aggregateId }, cancellationToken);
 
             //_logger.LogDebug($"Request sent to queue {SqsQueueName.Value}");
 
             var location = _ticketingUrl.For(request.TicketId);
-            return Accepted(location);
+
+            return new AcceptedResult(location, null);
         }
     }
 }

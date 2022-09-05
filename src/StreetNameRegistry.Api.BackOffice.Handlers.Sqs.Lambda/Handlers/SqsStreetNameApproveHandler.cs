@@ -11,25 +11,26 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using TicketingService.Abstractions;
     using MunicipalityId = Municipality.MunicipalityId;
 
-    public class SqsStreetNameRejectHandler : SqsLambdaHandler<SqsLambdaStreetNameRejectRequest>
+    public class SqsStreetNameApproveHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
     {
         private readonly IMunicipalities _municipalities;
 
-        public SqsStreetNameRejectHandler(
+        public SqsStreetNameApproveHandler(
             ITicketing ticketing,
-            IMunicipalities municipalities,
-            IIdempotentCommandHandler idempotentCommandHandler)
+            IIdempotentCommandHandler idempotentCommandHandler,
+            IMunicipalities municipalities)
             : base(ticketing, idempotentCommandHandler)
         {
             _municipalities = municipalities;
         }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameRejectRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameApproveRequest request,
+            CancellationToken cancellationToken)
         {
             var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId));
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
-            var cmd = new RejectStreetName(
+            var cmd = new ApproveStreetName(
                 municipalityId,
                 streetNamePersistentLocalId,
                 CreateFakeProvenance());
@@ -40,7 +41,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 request.Metadata,
                 cancellationToken);
 
-            var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId, cancellationToken);
+            var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId,
+                cancellationToken);
 
             return lastEventHash;
         }
@@ -50,8 +52,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             return exception switch
             {
                 StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameCannotBeRejected,
-                    ValidationErrorCodes.StreetName.StreetNameCannotBeRejected),
+                    ValidationErrorMessages.StreetName.StreetNameCannotBeApproved,
+                    ValidationErrorCodes.StreetName.StreetNameCannotBeApproved),
                 MunicipalityHasInvalidStatusException => new TicketError(
                     ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent,
                     ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent),

@@ -11,7 +11,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
     using global::AutoFixture;
+    using Moq;
     using Municipality;
+    using Municipality.Exceptions;
     using SqlStreamStore;
     using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
@@ -19,6 +21,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
+    using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -60,9 +63,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
                 {
                     etag = result;
                 }).Object,
-                Container.Resolve<ICommandHandlerResolver>(),
                 Container.Resolve<IMunicipalities>(),
-                _idempotencyContext);
+                new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext));
 
             //Act
             await handler.Handle(new SqsLambdaStreetNameRejectRequest
@@ -74,6 +76,54 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             //Assert
             var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 4, 1); //3 = version of stream (zero based)
             stream.Messages.First().JsonMetadata.Should().Contain(etag.LastEventHash);
+        }
+
+        [Fact]
+        public async Task WhenStreetNameHasInvalidStatus_ThenTicketingErrorIsExpected()
+        {
+            var ticketing = new Mock<ITicketing>();
+
+            var sut = new SqsStreetNameRejectHandler(
+                ticketing.Object,
+                Mock.Of<IMunicipalities>(),
+                MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameRejectRequest
+            {
+                Request = new StreetNameBackOfficeRejectRequest(),
+                MessageGroupId = Guid.NewGuid().ToString(),
+                TicketId = Guid.NewGuid()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(It.IsAny<Guid>(),
+                    new TicketError("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.", "StraatnaamInGebruikOfGehistoreerd"), CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenMunicipalityHasInvalidStatus_ThenTicketingErrorIsExpected()
+        {
+            var ticketing = new Mock<ITicketing>();
+
+            var sut = new SqsStreetNameRejectHandler(
+                ticketing.Object,
+                Mock.Of<IMunicipalities>(),
+                MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object);
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameRejectRequest
+            {
+                Request = new StreetNameBackOfficeRejectRequest(),
+                MessageGroupId = Guid.NewGuid().ToString(),
+                TicketId = Guid.NewGuid()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(It.IsAny<Guid>(),
+                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.", "StraatnaamGemeenteInGebruik"), CancellationToken.None));
         }
     }
 }

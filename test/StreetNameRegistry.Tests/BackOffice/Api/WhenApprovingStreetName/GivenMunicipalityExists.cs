@@ -128,7 +128,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .Should()
                 .ThrowAsync<ApiException>()
                 .Result
-                .Where(x => x.Message.Contains("Straatnaam kan niet meer goedgekeurd worden.")
+                .Where(x => x.Message.Contains("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.")
                             && x.StatusCode == StatusCodes.Status409Conflict);
         }
 

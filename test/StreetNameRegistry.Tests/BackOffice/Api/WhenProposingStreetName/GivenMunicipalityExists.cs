@@ -12,7 +12,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
-    using Testing;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -97,7 +96,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .Result
-                .Where(x => x.Message.Contains("De gemeente is gehistoreerd."));
+                .Where(x => x.Message.Contains("De gemeente is gehistoreerd."));
         }
 
         [Fact]

@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.BackOffice
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Abstractions;
     using Abstractions.Exceptions;
     using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
@@ -16,7 +17,6 @@ namespace StreetNameRegistry.Api.BackOffice
     using Municipality;
     using Municipality.Exceptions;
     using Swashbuckle.AspNetCore.Filters;
-    using Validators;
 
     public partial class StreetNameController
     {
