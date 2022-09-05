@@ -1,3 +1,10 @@
+## [3.8.10](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.9...v3.8.10) (2022-09-05)
+
+
+### Bug Fixes
+
+* fix lambda destination in main.yml ([59abb7a](https://github.com/informatievlaanderen/streetname-registry/commit/59abb7a44f5228735a0afe9688f2f803e18b3d5f))
+
 ## [3.8.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.8...v3.8.9) (2022-09-05)
 
 
