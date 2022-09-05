@@ -1,13 +1,23 @@
 namespace StreetNameRegistry.Municipality.Exceptions
 {
     using System;
+    using System.Runtime.Serialization;
 
-    public class StreetNameNameLanguageIsNotSupportedException : StreetNameRegistryException
+    [Serializable]
+    public sealed class StreetNameNameLanguageIsNotSupportedException : StreetNameRegistryException
     {
         public StreetNameNameLanguageIsNotSupportedException() { }
 
-        public StreetNameNameLanguageIsNotSupportedException(string message) : base(message) { }
+        private StreetNameNameLanguageIsNotSupportedException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        { }
 
-        public StreetNameNameLanguageIsNotSupportedException(string message, Exception inner) : base(message, inner) { }
+        public StreetNameNameLanguageIsNotSupportedException(string message)
+            : base(message)
+        { }
+
+        public StreetNameNameLanguageIsNotSupportedException(string message, Exception inner)
+            : base(message, inner)
+        { }
     }
 }

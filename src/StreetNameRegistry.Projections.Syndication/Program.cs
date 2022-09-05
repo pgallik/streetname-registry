@@ -20,6 +20,9 @@ namespace StreetNameRegistry.Projections.Syndication
         private static readonly AutoResetEvent Closing = new AutoResetEvent(false);
         private static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
+        protected Program()
+        { }
+
         public static async Task Main(string[] args)
         {
             var ct = CancellationTokenSource.Token;
@@ -41,7 +44,7 @@ namespace StreetNameRegistry.Projections.Syndication
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{Environment.MachineName.ToLowerInvariant()}.json", optional: true, reloadOnChange: false)
                 .AddEnvironmentVariables()
-                .AddCommandLine(args ?? new string[0])
+                .AddCommandLine(args)
                 .Build();
 
             var container = ConfigureServices(configuration);
@@ -61,7 +64,7 @@ namespace StreetNameRegistry.Projections.Syndication
                                 ct);
 
                             await container
-                                .GetService<FeedProjector<SyndicationContext>>()
+                                .GetRequiredService<FeedProjector<SyndicationContext>>()
                                 .Register(BuildProjectionRunner(configuration, container))
                                 .Start(ct);
                         }
@@ -71,7 +74,7 @@ namespace StreetNameRegistry.Projections.Syndication
                             throw;
                         }
                     },
-                    DistributedLockOptions.LoadFromConfiguration(configuration) ?? DistributedLockOptions.Defaults,
+                    DistributedLockOptions.LoadFromConfiguration(configuration),
                     container.GetService<ILogger<Program>>()!);
             }
             catch (Exception e)
@@ -100,7 +103,7 @@ namespace StreetNameRegistry.Projections.Syndication
                 true,
                 container.GetService<ILogger<Program>>()!,
                 container.GetService<IRegistryAtomFeedReader>()!,
-                new MunicipalitySyndiciationProjections(),
+                new MunicipalitySyndicationProjections(),
                 new MunicipalityLatestProjections());
         }
 

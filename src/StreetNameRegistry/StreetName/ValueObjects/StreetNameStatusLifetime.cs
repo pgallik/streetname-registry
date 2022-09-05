@@ -6,9 +6,9 @@ namespace StreetNameRegistry.StreetName
 
     internal class StreetNameStatusLifetime : ValueObject<StreetNameStatusLifetime>, IComparable<StreetNameStatusLifetime>
     {
-        public int? StatusId { get; set; }
-        public StreetNameStatus? Status { get; set; }
-        public DateTimeOffset? BeginDateTime { get; set; }
+        public int? StatusId { get; }
+        public StreetNameStatus? Status { get; }
+        public DateTimeOffset? BeginDateTime { get; }
 
         public StreetNameStatusLifetime(StreetNameStatus status, int? statusId, DateTimeOffset? beginDateTime)
         {
@@ -17,17 +17,44 @@ namespace StreetNameRegistry.StreetName
             BeginDateTime = beginDateTime;
         }
 
+        public static bool operator <(StreetNameStatusLifetime? left, StreetNameStatusLifetime? right) => left?.CompareTo(right) < 0;
+
+        public static bool operator <=(StreetNameStatusLifetime? left, StreetNameStatusLifetime? right) => left?.CompareTo(right) <= 0;
+
+        public static bool operator >(StreetNameStatusLifetime? left, StreetNameStatusLifetime? right) => left?.CompareTo(right) > 0;
+
+        public static bool operator >=(StreetNameStatusLifetime? left, StreetNameStatusLifetime? right) => left?.CompareTo(right) >= 0;
+
         protected override IEnumerable<object> Reflect()
         {
-            yield return StatusId;
-            yield return Status;
-            yield return BeginDateTime;
+            if (StatusId != null)
+            {
+                yield return StatusId;
+            }
+
+            if (Status != null)
+            {
+                yield return Status;
+            }
+
+            if (BeginDateTime != null)
+            {
+                yield return BeginDateTime;
+            }
         }
 
-        public int CompareTo(StreetNameStatusLifetime other)
+        public int CompareTo(StreetNameStatusLifetime? other)
         {
-            if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
+            if (ReferenceEquals(this, other))
+            {
+                return 0;
+            }
+
+            if (ReferenceEquals(null, other))
+            {
+                return 1;
+            }
+
             return Nullable.Compare(BeginDateTime, other.BeginDateTime);
         }
     }

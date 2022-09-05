@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Api.CrabImport.CrabImport
             dynamic commandToProcess,
             IDictionary<string, object> metadata,
             int currentPosition,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             switch (commandToProcess)
             {

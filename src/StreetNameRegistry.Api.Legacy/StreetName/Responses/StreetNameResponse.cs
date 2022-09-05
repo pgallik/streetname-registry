@@ -60,14 +60,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
             StraatnaamStatus status,
             StraatnaamDetailGemeente gemeente,
             DateTimeOffset version,
-            string nameDutch = null,
-            string nameFrench = null,
-            string nameGerman = null,
-            string nameEnglish = null,
-            string homonymAdditionDutch = null,
-            string homonymAdditionFrench = null,
-            string homonymAdditionGerman = null,
-            string homonymAdditionEnglish = null)
+            string? nameDutch = null,
+            string? nameFrench = null,
+            string? nameGerman = null,
+            string? nameEnglish = null,
+            string? homonymAdditionDutch = null,
+            string? homonymAdditionFrench = null,
+            string? homonymAdditionGerman = null,
+            string? homonymAdditionEnglish = null)
         {
             Identificator = new StraatnaamIdentificator(naamruimte, persistentLocalId.ToString(), version);
             StraatnaamStatus = status;
@@ -75,10 +75,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
             var straatNamen = new List<GeografischeNaam>
             {
-                new GeografischeNaam(nameDutch, Taal.NL),
-                new GeografischeNaam(nameFrench, Taal.FR),
-                new GeografischeNaam(nameGerman, Taal.DE),
-                new GeografischeNaam(nameEnglish, Taal.EN)
+                new GeografischeNaam(nameDutch ?? string.Empty, Taal.NL),
+                new GeografischeNaam(nameFrench ?? string.Empty, Taal.FR),
+                new GeografischeNaam(nameGerman ?? string.Empty, Taal.DE),
+                new GeografischeNaam(nameEnglish ?? string.Empty, Taal.EN)
 
             };
 
@@ -86,10 +86,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
             var homoniemen = new List<GeografischeNaam>
             {
-                new GeografischeNaam(homonymAdditionDutch, Taal.NL),
-                new GeografischeNaam(homonymAdditionFrench, Taal.FR),
-                new GeografischeNaam(homonymAdditionGerman, Taal.DE),
-                new GeografischeNaam(homonymAdditionEnglish, Taal.EN)
+                new GeografischeNaam(homonymAdditionDutch ?? string.Empty, Taal.NL),
+                new GeografischeNaam(homonymAdditionFrench ?? string.Empty, Taal.FR),
+                new GeografischeNaam(homonymAdditionGerman ?? string.Empty, Taal.DE),
+                new GeografischeNaam(homonymAdditionEnglish ?? string.Empty, Taal.EN)
 
             };
 
@@ -139,14 +139,22 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
 
         public ProblemDetails GetExamples()
-            => new ProblemDetails
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext is null)
+            {
+                return new ProblemDetails();
+            }
+
+            return new ProblemDetails
             {
                 ProblemTypeUri = "urn:be.vlaanderen.basisregisters.api:streetname:not-found",
                 HttpStatus = StatusCodes.Status404NotFound,
                 Title = ProblemDetails.DefaultTitle,
                 Detail = "Onbestaande straatnaam.",
-                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(_httpContextAccessor.HttpContext)
+                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(httpContext)
             };
+        }
     }
 
     public class StreetNameGoneResponseExamples : IExamplesProvider<ProblemDetails>
@@ -163,13 +171,21 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
         }
 
         public ProblemDetails GetExamples()
-            => new ProblemDetails
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext is null)
+            {
+                return new ProblemDetails();
+            }
+
+            return new ProblemDetails
             {
                 ProblemTypeUri = "urn:be.vlaanderen.basisregisters.api:streetname:gone",
                 HttpStatus = StatusCodes.Status410Gone,
                 Title = ProblemDetails.DefaultTitle,
                 Detail = "Verwijderde straatnaam.",
-                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(_httpContextAccessor.HttpContext)
+                ProblemInstanceUri = _problemDetailsHelper.GetInstanceUri(httpContext)
             };
+        }
     }
 }

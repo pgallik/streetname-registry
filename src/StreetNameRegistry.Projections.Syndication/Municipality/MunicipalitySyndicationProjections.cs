@@ -7,9 +7,9 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Syndication;
 
-    public class MunicipalitySyndiciationProjections : AtomEntryProjectionHandlerModule<MunicipalityEvent, SyndicationContent<Gemeente>, SyndicationContext>
+    public class MunicipalitySyndicationProjections : AtomEntryProjectionHandlerModule<MunicipalityEvent, SyndicationContent<Gemeente>, SyndicationContext>
     {
-        public MunicipalitySyndiciationProjections()
+        public MunicipalitySyndicationProjections()
         {
             When(MunicipalityEvent.MunicipalityWasRegistered, AddSyndicationItemEntry);
             When(MunicipalityEvent.MunicipalityNisCodeWasDefined, AddSyndicationItemEntry);
@@ -48,10 +48,12 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
                 .AddAsync(municipalitySyndicationItem, ct);
         }
 
-        private static void UpdateNamesByGemeentenamen(MunicipalitySyndicationItem syndicationItem, IReadOnlyCollection<GeografischeNaam> gemeentenamen)
+        private static void UpdateNamesByGemeentenamen(MunicipalitySyndicationItem syndicationItem, IReadOnlyCollection<GeografischeNaam>? gemeentenamen)
         {
             if (gemeentenamen == null || !gemeentenamen.Any())
+            {
                 return;
+            }
 
             foreach (var naam in gemeentenamen)
             {

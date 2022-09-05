@@ -26,16 +26,22 @@ namespace StreetNameRegistry.StreetName
         public void AddOrUpdate(Language? language, string homonymAddition)
         {
             if (HasLanguage(language))
+            {
                 Update(language, homonymAddition);
+            }
             else
+            {
                 Add(language, homonymAddition);
+            }
         }
 
         public void Remove(Language? language)
         {
             var index = GetIndexByLanguage(language);
             if (index != -1)
+            {
                 RemoveAt(index);
+            }
         }
 
         public IDictionary<Language, string> ToDictionary() =>
@@ -46,7 +52,9 @@ namespace StreetNameRegistry.StreetName
         private void Update(Language? language, string homonymAddition)
         {
             if (!HasLanguage(language))
-                throw new IndexOutOfRangeException();
+            {
+                throw new InvalidOperationException("Index out of range");
+            }
 
             Remove(language);
             Add(language, homonymAddition);
@@ -55,7 +63,9 @@ namespace StreetNameRegistry.StreetName
         private void Add(Language? language, string homonymAddition)
         {
             if (HasLanguage(language))
-                throw new ApplicationException($"There is already a homonym addition present with language '{language}'");
+            {
+                throw new InvalidOperationException($"There is already a homonym addition present with language '{language}'");
+            }
 
             Add(new StreetNameHomonymAddition(homonymAddition, language));
         }

@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
 
     public class StreetNameDetailV2
     {
-        public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
+        public static readonly string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 
         public int PersistentLocalId { get; set; }
         public Guid MunicipalityId { get; set; }

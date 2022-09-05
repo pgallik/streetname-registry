@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
@@ -9,7 +10,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetName.Events;
     using StreetNameName = Municipality.StreetNameName;
 
     [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
@@ -103,7 +103,11 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameNameV2
                     .Union(context.StreetNameNamesV2.Where(s => s.MunicipalityId == message.Message.MunicipalityId));
 
                 foreach (var streetName in streetNames)
+                {
                     streetName.NisCode = message.Message.NisCode;
+                }
+
+                await Task.Yield();
             });
         }
 

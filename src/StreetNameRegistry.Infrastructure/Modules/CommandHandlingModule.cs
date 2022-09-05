@@ -18,7 +18,7 @@ namespace StreetNameRegistry.Infrastructure.Modules
         public CommandHandlingModule(IConfiguration configuration)
             => _configuration = configuration;
 
-        protected override void Load(ContainerBuilder containerBuilder)
+        protected override void Load(ContainerBuilder builder)
         {
             var value = _configuration[SnapshotIntervalKey] ?? "50";
             var snapshotInterval = Convert.ToInt32(value);
@@ -29,23 +29,23 @@ namespace StreetNameRegistry.Infrastructure.Modules
                 snapshotStrategy = IntervalStrategy.SnapshotEvery(snapshotInterval);
             }
 
-            containerBuilder
+            builder
                 .Register(c => new MunicipalityFactory(snapshotStrategy))
                 .As<IMunicipalityFactory>();
 
-            containerBuilder
+            builder
                 .RegisterModule<RepositoriesModule>();
 
-            containerBuilder
+            builder
                 .RegisterType<ConcurrentUnitOfWork>()
                 .InstancePerLifetimeScope();
 
-            containerBuilder
+            builder
                 .RegisterEventstreamModule(_configuration);
 
-            CommandHandlerModules.Register(containerBuilder);
+            CommandHandlerModules.Register(builder);
 
-            containerBuilder
+            builder
                 .RegisterType<CommandHandlerResolver>()
                 .As<ICommandHandlerResolver>();
         }

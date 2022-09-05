@@ -26,9 +26,13 @@ namespace StreetNameRegistry.StreetName
         public void AddOrUpdate(Language? language, string name)
         {
             if (HasLanguage(language))
+            {
                 Update(language, name);
+            }
             else
+            {
                 Add(language, name);
+            }
         }
 
         public IDictionary<Language, string> ToDictionary() =>
@@ -39,7 +43,9 @@ namespace StreetNameRegistry.StreetName
         private void Update(Language? language, string name)
         {
             if (!HasLanguage(language))
-                throw new IndexOutOfRangeException();
+            {
+                throw new InvalidOperationException("Index out of range");
+            }
 
             Remove(language);
             Add(language, name);
@@ -48,7 +54,9 @@ namespace StreetNameRegistry.StreetName
         private void Add(Language? language, string name)
         {
             if (HasLanguage(language))
-                throw new ApplicationException($"Already name present with language {language}");
+            {
+                throw new InvalidOperationException($"Already name present with language {language}");
+            }
 
             Add(new StreetNameName(name, language));
         }
@@ -57,7 +65,9 @@ namespace StreetNameRegistry.StreetName
         {
             var index = GetIndexByLanguage(language);
             if (index != -1)
+            {
                 RemoveAt(index);
+            }
         }
 
         private int GetIndexByLanguage(Language? language)

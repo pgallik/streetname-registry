@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Api.BackOffice;
     using Api.BackOffice.Abstractions;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
@@ -30,6 +29,9 @@ namespace StreetNameRegistry.Migrator.StreetName.Infrastructure
     {
         private static readonly AutoResetEvent Closing = new AutoResetEvent(false);
         private static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+
+        protected Program()
+        { }
 
         public static async Task Main(string[] args)
         {

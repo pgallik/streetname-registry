@@ -1,14 +1,24 @@
 namespace StreetNameRegistry.Municipality.Exceptions
 {
     using System;
+    using System.Runtime.Serialization;
 
-    public class MunicipalityHasInvalidStatusException : StreetNameRegistryException
+    [Serializable]
+    public sealed class MunicipalityHasInvalidStatusException : StreetNameRegistryException
     {
         public MunicipalityHasInvalidStatusException()
         { }
 
-        public MunicipalityHasInvalidStatusException(string message) : base(message) { }
+        private MunicipalityHasInvalidStatusException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        { }
 
-        public MunicipalityHasInvalidStatusException(string message, Exception inner) : base(message, inner) { }
+        public MunicipalityHasInvalidStatusException(string message)
+            : base(message)
+        { }
+
+        public MunicipalityHasInvalidStatusException(string message, Exception inner)
+            : base(message, inner)
+        { }
     }
 }

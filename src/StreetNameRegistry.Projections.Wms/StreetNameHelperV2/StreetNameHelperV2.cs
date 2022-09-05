@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
         public bool Removed { get; set; }
 
 
-        public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
+        public static readonly string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
         private DateTimeOffset VersionTimestampAsDateTimeOffset { get; set; }
 
         public Instant Version
@@ -53,7 +53,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
         {
             builder.ToTable(TableName, Schema.Wms)
                 .HasKey(x => x.PersistentLocalId)
-                .IsClustered(true);
+                .IsClustered();
 
             builder.Property(x=> x.PersistentLocalId)
                 .ValueGeneratedNever();

@@ -50,7 +50,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
     [ApiExplorerSettings(GroupName = "Straatnamen")]
     public class StreetNameController : ApiController
     {
-        private UseProjectionsV2Toggle _useProjectionsV2Toggle;
+        private readonly UseProjectionsV2Toggle _useProjectionsV2Toggle;
 
         public StreetNameController(UseProjectionsV2Toggle useProjectionsV2Toggle)
         {
@@ -93,10 +93,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                     .SingleOrDefaultAsync(x => x.PersistentLocalId == persistentLocalId, cancellationToken);
 
                 if (streetNameV2 == null)
+                {
                     throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
+                }
 
                 if (streetNameV2.Removed)
+                {
                     throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
+                }
 
                 var gemeenteV2 = await GetStraatnaamDetailGemeente(syndicationContext, streetNameV2.NisCode, responseOptions.Value.GemeenteDetailUrl,cancellationToken);
                 var streetNameResponse = new StreetNameResponse(
@@ -125,10 +129,14 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 .SingleOrDefaultAsync(x => x.PersistentLocalId == persistentLocalId, cancellationToken);
 
             if (streetName == null)
+            {
                 throw new ApiException("Onbestaande straatnaam.", StatusCodes.Status404NotFound);
+            }
 
             if (streetName.Removed)
+            {
                 throw new ApiException("Straatnaam verwijderd.", StatusCodes.Status410Gone);
+            }
 
             var gemeente = await GetStraatnaamDetailGemeente(syndicationContext, streetName.NisCode, responseOptions.Value.GemeenteDetailUrl, cancellationToken);
 
@@ -306,7 +314,9 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (lastFeedUpdate == default)
+            {
                 lastFeedUpdate = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            }
 
             var pagedStreetNames =
                 new StreetNameSyndicationQuery(
@@ -346,8 +356,10 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             [FromBody] BosaStreetNameRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (Request.ContentLength.HasValue && Request.ContentLength > 0 && request == null)
+            if (Request.ContentLength.HasValue && Request.ContentLength > 0 && request is null)
+            {
                 return Ok(new StreetNameBosaResponse());
+            }
 
             if (_useProjectionsV2Toggle.FeatureEnabled)
             {
@@ -374,7 +386,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             return Ok(streetNameBosaResponse);
         }
 
-        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)
+        private static GeografischeNaam? GetGeografischeNaamByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -404,7 +416,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             }
         }
 
-        private static GeografischeNaam GetGeografischeNaamByTaal(StreetNameListItemV2 item, Municipality.Language? taal)
+        private static GeografischeNaam? GetGeografischeNaamByTaal(StreetNameListItemV2 item, Municipality.Language? taal)
         {
             switch (taal)
             {
@@ -434,7 +446,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             }
         }
 
-        private static GeografischeNaam GetHomoniemToevoegingByTaal(StreetNameListItem item, Language? taal)
+        private static GeografischeNaam? GetHomoniemToevoegingByTaal(StreetNameListItem item, Language? taal)
         {
             switch (taal)
             {
@@ -464,7 +476,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             }
         }
 
-        private static GeografischeNaam GetHomoniemToevoegingByTaal(StreetNameListItemV2 item, Municipality.Language? taal)
+        private static GeografischeNaam? GetHomoniemToevoegingByTaal(StreetNameListItemV2 item, Municipality.Language? taal)
         {
             switch (taal)
             {
@@ -502,8 +514,8 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
         {
             var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
-            using (var xmlWriter = XmlWriter.Create(sw,
-                new XmlWriterSettings {Async = true, Indent = true, Encoding = sw.Encoding}))
+            await using (var xmlWriter = XmlWriter.Create(sw, 
+                             new XmlWriterSettings {Async = true, Indent = true, Encoding = sw.Encoding}))
             {
                 var formatter = new AtomFormatter(null, xmlWriter.Settings) {UseCDATA = true};
                 var writer = new AtomFeedWriter(xmlWriter, null, formatter);
@@ -518,14 +530,17 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                     ? streetNames.Max(s => s.Position) + 1
                     : (long?) null;
 
-                var nextUri = BuildNextSyncUri(pagedStreetNames.PaginationInfo.Limit, nextFrom,
-                    syndicationConfiguration["NextUri"]);
+                var nextUri = BuildNextSyncUri(pagedStreetNames.PaginationInfo.Limit, nextFrom, syndicationConfiguration["NextUri"]);
                 if (nextUri != null)
+                {
                     await writer.Write(new SyndicationLink(nextUri, GrArAtomLinkTypes.Next));
+                }
 
                 foreach (var streetName in streetNames)
+                {
                     await writer.WriteStreetName(responseOptions, formatter, syndicationConfiguration["Category"],
                         streetName);
+                }
 
                 xmlWriter.Flush();
             }
@@ -533,7 +548,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             return sw.ToString();
         }
 
-        private static Uri BuildNextUri(PaginationInfo paginationInfo, string nextUrlBase)
+        private static Uri? BuildNextUri(PaginationInfo paginationInfo, string nextUrlBase)
         {
             var offset = paginationInfo.Offset;
             var limit = paginationInfo.Limit;
@@ -543,7 +558,7 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
                 : null;
         }
 
-        private static Uri BuildNextSyncUri(int limit, long? from, string nextUrlBase)
+        private static Uri? BuildNextSyncUri(int limit, long? from, string nextUrlBase)
         {
             return from.HasValue
                 ? new Uri(string.Format(nextUrlBase, from, limit))
@@ -573,8 +588,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName
             switch (municipality.PrimaryLanguage)
             {
                 default:
-                case null:
-                case Taal.NL:
                     return new KeyValuePair<Taal, string>(Taal.NL, municipality.NameDutch);
                 case Taal.FR:
                     return new KeyValuePair<Taal, string>(Taal.FR, municipality.NameFrench);

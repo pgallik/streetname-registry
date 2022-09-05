@@ -10,7 +10,9 @@ namespace StreetNameRegistry.StreetName
         public Provenance CreateFrom(object provenanceHolder, StreetName aggregate)
         {
             if (!(provenanceHolder is IHasCrabProvenance crabProvenance))
-                throw new ApplicationException($"Cannot create provenance from {provenanceHolder.GetType().Name}");
+            {
+                throw new InvalidOperationException($"Cannot create provenance from {provenanceHolder.GetType().Name}");
+            }
 
             return CreateFrom(
                 aggregate.LastModificationBasedOnCrab,
@@ -27,7 +29,9 @@ namespace StreetNameRegistry.StreetName
         public Provenance CreateFrom(object provenanceHolder, StreetName aggregate)
         {
             if (provenanceHolder is not IHasCommandProvenance provenance)
-                throw new ApplicationException($"Cannot create provenance from {provenanceHolder.GetType().Name}");
+            {
+                throw new InvalidOperationException($"Cannot create provenance from {provenanceHolder.GetType().Name}");
+            }
 
             return provenance.Provenance;
         }

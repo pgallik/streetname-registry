@@ -11,16 +11,12 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Xunit;
     using Xunit.Abstractions;
 
-    public class MunicipalityAtomEntryProjectionsTests : SyndicationProjectionTest<SyndicationContext, MunicipalityEvent, SyndicationContent<Gemeente>, MunicipalitySyndiciationProjections>
+    public class MunicipalityAtomEntryProjectionsTests : SyndicationProjectionTest<SyndicationContext, MunicipalityEvent, SyndicationContent<Gemeente>, MunicipalitySyndicationProjections>
     {
         public MunicipalityAtomEntryProjectionsTests(ITestOutputHelper output) : base(output)
-        {
-        }
+        { }
 
-        protected override SyndicationContext CreateContext(DbContextOptions<SyndicationContext> options)
-        {
-            return new SyndicationContext(options);
-        }
+        protected override SyndicationContext CreateContext(DbContextOptions<SyndicationContext> options) => new SyndicationContext(options);
 
         [Theory]
         [InlineData(MunicipalityEvent.MunicipalityWasRegistered)]
@@ -45,7 +41,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                     var entry = await context.FindAsync<MunicipalitySyndicationItem>(id, (long)position);
 
                     entry.Should().NotBeNull();
-                    entry.MunicipalityId.Should().Be(id);
+                    entry!.MunicipalityId.Should().Be(id);
                     entry.Position.Should().Be(position);
                 });
         }

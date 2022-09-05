@@ -1,7 +1,5 @@
 namespace StreetNameRegistry.Projections.Wfs.StreetName
 {
-    using System;
-    using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using StreetNameRegistry.StreetName.Events;
@@ -270,34 +268,6 @@ namespace StreetNameRegistry.Projections.Wfs.StreetName
             });
         }
 
-        private static void UpdateNameByLanguage(StreetNameHelper entity, List<StreetNameName> streetNameNames)
-        {
-            foreach (var streetNameName in streetNameNames)
-            {
-                switch (streetNameName.Language)
-                {
-                    case Language.Dutch:
-                        entity.NameDutch = streetNameName.Name;
-                        break;
-
-                    case Language.French:
-                        entity.NameFrench = streetNameName.Name;
-                        break;
-
-                    case Language.German:
-                        entity.NameGerman = streetNameName.Name;
-                        break;
-
-                    case Language.English:
-                        entity.NameEnglish = streetNameName.Name;
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(streetNameName), streetNameName, null);
-                }
-            }
-        }
-
         private static void UpdateNameByLanguage(StreetNameHelper entity, Language? language, string name)
         {
             switch (language)
@@ -320,10 +290,12 @@ namespace StreetNameRegistry.Projections.Wfs.StreetName
             }
         }
 
-        private static void UpdateHomonymAdditionByLanguage(StreetNameHelper entity, Language? language, string homonymAddition)
+        private static void UpdateHomonymAdditionByLanguage(StreetNameHelper? entity, Language? language, string homonymAddition)
         {
             if (entity == null)
+            {
                 return;
+            }
 
             switch (language)
             {

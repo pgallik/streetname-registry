@@ -31,23 +31,23 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             _loggerFactory = loggerFactory;
         }
 
-        protected override void Load(ContainerBuilder containerBuilder)
+        protected override void Load(ContainerBuilder builder)
         {
             var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
 
-            containerBuilder
+            builder
                 .RegisterModule(new DataDogModule(_configuration));
 
-            containerBuilder
+            builder
                 .RegisterType<ProblemDetailsHelper>()
                 .AsSelf();
 
-            containerBuilder
+            builder
                 .RegisterType<IfMatchHeaderValidator>()
                 .As<IIfMatchHeaderValidator>()
                 .AsSelf();
 
-                containerBuilder.RegisterModule(new IdempotencyModule(
+                builder.RegisterModule(new IdempotencyModule(
                 _services,
                 _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
                     .ConnectionString,
@@ -55,19 +55,19 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 new IdempotencyTableInfo(Schema.Import),
                 _loggerFactory));
 
-            containerBuilder.RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly,
+            builder.RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly,
                 eventSerializerSettings));
 
-            containerBuilder.RegisterModule(new EnvelopeModule());
-            containerBuilder.RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory));
-            containerBuilder.RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory));
-            containerBuilder.RegisterModule(new MediatRModule());
+            builder.RegisterModule(new EnvelopeModule());
+            builder.RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory));
+            builder.RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory));
+            builder.RegisterModule(new MediatRModule());
 
-            containerBuilder.RegisterModule(new CommandHandlingModule(_configuration));
-            containerBuilder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
-            containerBuilder.RegisterSnapshotModule(_configuration);
+            builder.RegisterModule(new CommandHandlingModule(_configuration));
+            builder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));
+            builder.RegisterSnapshotModule(_configuration);
 
-            containerBuilder.Populate(_services);
+            builder.Populate(_services);
         }
     }
 }

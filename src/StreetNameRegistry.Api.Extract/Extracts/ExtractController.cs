@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     [ApiExplorerSettings(GroupName = "Extract")]
     public class ExtractController : ApiController
     {
-        public static string ZipName = "Straatnaam";
+        public static readonly string ZipName = "Straatnaam";
 
         /// <summary>
         /// Vraag een dump van het volledige register op.

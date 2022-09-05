@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 
     public class StreetNameListItem
     {
-        public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
+        public static readonly string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 
         public int? PersistentLocalId { get; set; }
         public Guid StreetNameId { get; set; }
@@ -94,7 +94,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
             builder.HasIndex(p => p.PersistentLocalId)
                 .IsUnique()
                 .HasFilter($"([{nameof(StreetNameListItem.PersistentLocalId)}] IS NOT NULL)")
-                .HasDatabaseName($"IX_StreetNameList_PersistentLocalId_1")
+                .HasDatabaseName("IX_StreetNameList_PersistentLocalId_1")
                 .IsClustered(false);
 
             builder.HasIndex(x => x.NisCode);

@@ -1,14 +1,27 @@
 namespace StreetNameRegistry.Municipality.Exceptions
 {
-    public class StreetNameIsNotFoundException : StreetNameRegistryException
+    using System;
+    using System.Runtime.Serialization;
+
+    [Serializable]
+    public sealed class StreetNameIsNotFoundException : StreetNameRegistryException
     {
         public PersistentLocalId PersistentLocalId { get; }
 
-        public StreetNameIsNotFoundException() { }
+        public StreetNameIsNotFoundException()
+        {
+            PersistentLocalId = new PersistentLocalId(-1);
+        }
 
         public StreetNameIsNotFoundException(PersistentLocalId persistentLocalId)
         {
             PersistentLocalId = persistentLocalId;
+        }
+
+        private StreetNameIsNotFoundException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            PersistentLocalId = new PersistentLocalId(-1);
         }
     }
 }

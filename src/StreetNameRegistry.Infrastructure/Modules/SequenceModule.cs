@@ -9,33 +9,25 @@ namespace StreetNameRegistry.Infrastructure.Modules
 
     public class SequenceModule : Module
     {
-        private readonly IConfiguration _configuration;
-        private readonly IServiceCollection _services;
-        private readonly ILoggerFactory _loggerFactory;
-
         public SequenceModule(
             IConfiguration configuration,
             IServiceCollection services,
             ILoggerFactory loggerFactory)
         {
-            _configuration = configuration;
-            _services = services;
-            _loggerFactory = loggerFactory;
+            var projectionsConnectionString = configuration.GetConnectionString("Sequences");
 
-            var projectionsConnectionString = _configuration.GetConnectionString("Sequences");
-
-            _services
+            services
                 .AddDbContext<SequenceContext>(options => options
-                    .UseLoggerFactory(_loggerFactory)
+                    .UseLoggerFactory(loggerFactory)
                     .UseSqlServer(projectionsConnectionString, sqlServerOptions => sqlServerOptions
                             .EnableRetryOnFailure()
                             .MigrationsHistoryTable(MigrationTables.Sequence, Schema.Sequence)
                     ));
         }
 
-        protected override void Load(ContainerBuilder containerBuilder)
+        protected override void Load(ContainerBuilder builder)
         {
-            containerBuilder
+            builder
                 .RegisterType<SqlPersistentLocalIdGenerator>()
                 .As<IPersistentLocalIdGenerator>();
         }

@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore;
     using Municipality;
@@ -221,17 +222,17 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                     ct);
             });
 
-            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
 
-            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
 
             #endregion
 
@@ -340,7 +341,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             });
         }
 
-        private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, string name, Language? language)
+        private static void UpdateNameByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, string? name, Language? language)
         {
             switch (language)
             {
@@ -375,7 +376,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             }
         }
 
-        private static void UpdateHomonymAdditionByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, string homonymAddition, Language? language)
+        private static void UpdateHomonymAdditionByLanguage(StreetNameSyndicationItem streetNameSyndicationItem, string? homonymAddition, Language? language)
         {
             switch (language)
             {
@@ -394,7 +395,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
             }
         }
 
-        private static void DoNothing() { }
+        private static async Task DoNothing()
+        {
+            await Task.Yield();
+        }
 
         private static void UpdateStatus(StreetNameSyndicationItem syndicationItem, StreetNameStatus status)
             => syndicationItem.Status = status;

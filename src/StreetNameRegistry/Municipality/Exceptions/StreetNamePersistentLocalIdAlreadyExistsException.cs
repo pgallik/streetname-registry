@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Municipality.Exceptions
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class StreetNamePersistentLocalIdAlreadyExistsException : StreetNameRegistryException
+    public sealed class StreetNamePersistentLocalIdAlreadyExistsException : StreetNameRegistryException
     {
         public StreetNamePersistentLocalIdAlreadyExistsException()
         { }

@@ -59,10 +59,12 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
             }
         }
 
-        private static void UpdateNamesByGemeentenamen(MunicipalityLatestItem syndicationItem, IReadOnlyCollection<GeografischeNaam> gemeentenamen)
+        private static void UpdateNamesByGemeentenamen(MunicipalityLatestItem syndicationItem, IReadOnlyCollection<GeografischeNaam>? gemeentenamen)
         {
             if (gemeentenamen == null || !gemeentenamen.Any())
+            {
                 return;
+            }
 
             foreach (var naam in gemeentenamen)
             {

@@ -4,8 +4,8 @@ namespace StreetNameRegistry.Municipality
 
     public readonly struct MunicipalityStatus
     {
-        public static MunicipalityStatus Current = new MunicipalityStatus("Current");
-        public static MunicipalityStatus Retired = new MunicipalityStatus("Retired");
+        public static readonly MunicipalityStatus Current = new MunicipalityStatus("Current");
+        public static readonly MunicipalityStatus Retired = new MunicipalityStatus("Retired");
 
         public string Status { get; }
 

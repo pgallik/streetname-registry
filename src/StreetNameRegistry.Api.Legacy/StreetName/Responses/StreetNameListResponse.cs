@@ -102,8 +102,6 @@ namespace StreetNameRegistry.Api.Legacy.StreetName.Responses
 
         public StreetNameListResponse GetExamples()
         {
-            var rnd = new Random();
-
             var streetNameSamples = new List<StreetNameListItemResponse>
                 {
                     new StreetNameListItemResponse(

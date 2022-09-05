@@ -10,7 +10,6 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Municipality;
     using Municipality.Events;
     using Projections.Legacy.StreetNameNameV2;
-    using StreetName.Events;
     using Xunit;
 
     public class StreetNameNameProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameNameProjectionsV2>
@@ -36,7 +35,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId));
                     expectedStreetName.Should().NotBeNull();
-                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName!.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
@@ -65,7 +64,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId));
                     expectedStreetName.Should().NotBeNull();
-                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName!.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
@@ -94,7 +93,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId));
                     expectedStreetName.Should().NotBeNull();
-                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName!.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
@@ -127,7 +126,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId));
                     expectedStreetName.Should().NotBeNull();
-                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName!.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
@@ -164,7 +163,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                 {
                     var expectedStreetName = (await ct.FindAsync<StreetNameNameV2>(streetNameWasProposedV2.PersistentLocalId));
                     expectedStreetName.Should().NotBeNull();
-                    expectedStreetName.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName!.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
                     expectedStreetName.NisCode.Should().Be(streetNameWasProposedV2.NisCode);
                     expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
                     expectedStreetName.Removed.Should().BeFalse();
@@ -182,13 +181,13 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
             var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
-            var streetNameWasProposedV2_2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasProposedV2Another = _fixture.Create<StreetNameWasProposedV2>();
             var municipalityNisCodeWasChanged = _fixture.Create<MunicipalityNisCodeWasChanged>();
 
             await Sut
                 .Given(
                     streetNameWasProposedV2,
-                    streetNameWasProposedV2_2,
+                    streetNameWasProposedV2Another,
                     municipalityNisCodeWasChanged)
                 .Then(async ct =>
                 {
@@ -199,10 +198,11 @@ namespace StreetNameRegistry.Tests.ProjectionTests
                         .Distinct()
                         .Should()
                         .BeEquivalentTo(new List<string> { municipalityNisCodeWasChanged.NisCode });
+                    await Task.Yield();
                 });
         }
 
-        private string DetermineExpectedNameForLanguage(IEnumerable<StreetNameName> streetNameNames, Language language)
+        private string? DetermineExpectedNameForLanguage(IEnumerable<StreetNameName> streetNameNames, Language language)
         {
             return streetNameNames.SingleOrDefault(x => x.Language == language)?.Name;
         }

@@ -1,6 +1,6 @@
 namespace StreetNameRegistry.Infrastructure
 {
-    public class Schema
+    public static class Schema
     {
         public const string Default = "StreetNameRegistry";
         public const string Import = "StreetNameRegistryImport";
@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Infrastructure
         public const string Producer = "StreetNameRegistryProducer";
     }
 
-    public class MigrationTables
+    public static class MigrationTables
     {
         public const string Legacy = "__EFMigrationsHistoryLegacy";
         public const string Extract = "__EFMigrationsHistoryExtract";

@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Projections.Legacy.StreetNameName
 {
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Common;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
@@ -221,24 +222,24 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
                     ct);
             });
 
-            When<Envelope<StreetNameHomonymAdditionWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameHomonymAdditionWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameHomonymAdditionWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameHomonymAdditionWasDefined>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameHomonymAdditionWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameHomonymAdditionWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameHomonymAdditionWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameHomonymAdditionWasDefined>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
 
-            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
         }
 
-        private static void UpdateNameByLanguage(StreetNameName streetNameName, Language? language, string name)
+        private static void UpdateNameByLanguage(StreetNameName streetNameName, Language? language, string? name)
         {
             switch (language)
             {
@@ -268,6 +269,9 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
         private static void UpdateVersionTimestamp(StreetNameName streetNameName, Instant versionTimestamp)
             => streetNameName.VersionTimestamp = versionTimestamp;
 
-        private static void DoNothing() { }
+        private static async Task DoNothing()
+        {
+            await Task.Yield();
+        }
     }
 }

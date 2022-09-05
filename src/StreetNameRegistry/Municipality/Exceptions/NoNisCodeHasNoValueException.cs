@@ -1,13 +1,24 @@
 namespace StreetNameRegistry.Municipality.Exceptions
 {
     using System;
+    using System.Runtime.Serialization;
 
-    public class NoNisCodeHasNoValueException : StreetNameRegistryException
+    [Serializable]
+    public sealed class NoNisCodeHasNoValueException : StreetNameRegistryException
     {
-        public NoNisCodeHasNoValueException() { }
+        public NoNisCodeHasNoValueException()
+        { }
+        
+        private NoNisCodeHasNoValueException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        { }
 
-        public NoNisCodeHasNoValueException(string message) : base(message) { }
+        public NoNisCodeHasNoValueException(string message)
+            : base(message)
+        { }
 
-        public NoNisCodeHasNoValueException(string message, Exception inner) : base(message, inner) { }
+        public NoNisCodeHasNoValueException(string message, Exception inner)
+            : base(message, inner)
+        { }
     }
 }

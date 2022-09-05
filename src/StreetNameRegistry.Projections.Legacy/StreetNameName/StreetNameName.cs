@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
 
     public class StreetNameName
     {
-        public static string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
+        public static readonly string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 
         public Guid StreetNameId { get; set; }
         public int PersistentLocalId { get; set; }
@@ -40,7 +40,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
             set => VersionTimestampAsDateTimeOffset = value.ToDateTimeOffset();
         }
 
-        public string GetNameValueByLanguage(Language language)
+        public string? GetNameValueByLanguage(Language language)
         {
             switch (language)
             {

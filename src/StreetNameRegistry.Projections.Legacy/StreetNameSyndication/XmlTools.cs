@@ -12,7 +12,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
     public static class XmlTools
     {
-        private static readonly Type[] WriteTypes = {
+        private static readonly Type[] WriteTypes =
+        {
             typeof(string),
             typeof(DateTime),
             typeof(Enum),
@@ -28,7 +29,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         /// <summary>
         /// Preferred way to exclude properties
         /// </summary>
-        private static readonly Type[] ExcludeTypes = {
+        private static readonly Type[] ExcludeTypes =
+        {
             typeof(Application),
             typeof(Modification)
         };
@@ -36,7 +38,8 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         /// <summary>
         /// Alternative way if property is a primitive type or included in WriteTypes.
         /// </summary>
-        private static readonly string[] ExcludePropertyNames = {
+        private static readonly string[] ExcludePropertyNames =
+        {
             "Operator"
         };
 
@@ -46,21 +49,24 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
         private static bool IsExcludedPropertyName(this string propertyName) => ExcludePropertyNames.Contains(propertyName);
 
-        public static XElement ToXml(this object input) => input.ToXml(null);
+        public static XElement? ToXml(this object? input) => input.ToXml(null);
 
-        public static XElement ToXml(this object input, string element, int? arrayIndex = null, string arrayName = null)
+        public static XElement? ToXml(this object? input, string? element, int? arrayIndex = null, string? arrayName = null)
         {
             if (input == null)
+            {
                 return null;
+            }
 
             if (string.IsNullOrEmpty(element))
             {
                 var name = input.GetType().Name;
+                var elementValue = arrayIndex != null
+                    ? arrayName + "_" + arrayIndex
+                    : name;
                 element = name.Contains("AnonymousType")
                     ? "Object"
-                    : arrayIndex != null
-                        ? arrayName + "_" + arrayIndex
-                        : name;
+                    : elementValue;
             }
 
             element = XmlConvert.EncodeName(element);
@@ -73,9 +79,10 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                            let pType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType
                            let name = XmlConvert.EncodeName(prop.Name)
                            let val = pType.IsArray ? "array" : prop.GetValue(input, null)
+                           let elementValue = pType.IsSimpleType() ? new XElement(name, GetValue(val)) : val.ToXml(name) 
                            let value = pType.IsEnumerable()
                                ? GetEnumerableElements(prop, (IEnumerable)prop.GetValue(input, null))
-                               : pType.IsSimpleType() ? new XElement(name, GetValue(val)) : val.ToXml(name)
+                               : elementValue
                            where value != null && !pType.IsExcludedType() && !name.IsExcludedPropertyName()
                            select value;
 
@@ -107,8 +114,13 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
         public static bool IsEnumerable(this Type type) => typeof(IEnumerable).IsAssignableFrom(type) && !FlatternTypes.Contains(type);
 
-        private static XElement GetEnumerableElements(PropertyInfo info, IEnumerable input)
+        private static XElement? GetEnumerableElements(PropertyInfo? info, IEnumerable? input)
         {
+            if (info is null || input is null)
+            {
+                return null;
+            }
+
             var name = XmlConvert.EncodeName(info.Name);
 
             var rootElement = new XElement(name);

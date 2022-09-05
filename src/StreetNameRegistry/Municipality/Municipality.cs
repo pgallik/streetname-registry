@@ -253,7 +253,7 @@ namespace StreetNameRegistry.Municipality
         #region Metadata
         protected override void BeforeApplyChange(object @event)
         {
-            new EventMetadataContext(new Dictionary<string, object>());
+            _ = new EventMetadataContext(new Dictionary<string, object>());
             base.BeforeApplyChange(@event);
         }
 

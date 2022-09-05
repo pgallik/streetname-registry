@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.Extract.Extracts
 {
+    using System;
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.Api.Extract;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
@@ -10,8 +11,7 @@ namespace StreetNameRegistry.Api.Extract.Extracts
     using Projections.Syndication;
     using System.Linq;
 
-
-    public class StreetNameRegistryExtractBuilder
+    public static class StreetNameRegistryExtractBuilder
     {
         public static IEnumerable<ExtractFile> CreateStreetNameFiles(ExtractContext context,
             SyndicationContext syndicationContext)

@@ -128,17 +128,17 @@ namespace StreetNameRegistry.Projections.LastChangedList
                 await GetLastChangedRecordsAndUpdatePosition(message.Message.StreetNameId.ToString(), message.Position, context, ct);
             });
 
-            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
 
-            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
 
             #endregion
 
@@ -184,10 +184,22 @@ namespace StreetNameRegistry.Projections.LastChangedList
 
         private static void RebuildKeyAndUri(IEnumerable<LastChangedRecord>? attachedRecords, int persistentLocalId)
         {
+            if (attachedRecords == null)
+            {
+                return;
+            }
+
             foreach (var record in attachedRecords)
             {
-                record.CacheKey = string.Format(record.CacheKey, persistentLocalId);
-                record.Uri = string.Format(record.Uri, persistentLocalId);
+                if (record.CacheKey != null)
+                {
+                    record.CacheKey = string.Format(record.CacheKey, persistentLocalId);
+                }
+
+                if (record.Uri != null)
+                {
+                    record.Uri = string.Format(record.Uri, persistentLocalId);
+                }
             }
         }
 
@@ -196,9 +208,9 @@ namespace StreetNameRegistry.Projections.LastChangedList
             var shortenedAcceptType = acceptType.ToString().ToLowerInvariant();
             return acceptType switch
             {
-                AcceptType.Json => string.Format("legacy/streetname:{{0}}.{1}", identifier, shortenedAcceptType),
-                AcceptType.Xml => string.Format("legacy/streetname:{{0}}.{1}", identifier, shortenedAcceptType),
-                AcceptType.JsonLd => string.Format("oslo/streetname:{{0}}.{1}", identifier, shortenedAcceptType),
+                AcceptType.Json => $"legacy/streetname:{{0}}.{shortenedAcceptType}",
+                AcceptType.Xml => $"legacy/streetname:{{0}}.{shortenedAcceptType}",
+                AcceptType.JsonLd => $"oslo/streetname:{{0}}.{shortenedAcceptType}",
                 _ => throw new NotImplementedException($"Cannot build CacheKey for type {typeof(AcceptType)}")
             };
         }
@@ -207,13 +219,16 @@ namespace StreetNameRegistry.Projections.LastChangedList
         {
             return acceptType switch
             {
-                AcceptType.Json => string.Format("/v1/straatnamen/{{0}}", identifier),
-                AcceptType.Xml => string.Format("/v1/straatnamen/{{0}}", identifier),
-                AcceptType.JsonLd => string.Format("/v2/straatnamen/{{0}}", identifier),
+                AcceptType.Json => "/v1/straatnamen/{0}",
+                AcceptType.Xml => "/v1/straatnamen/{0}",
+                AcceptType.JsonLd => "/v2/straatnamen/{0}",
                 _ => throw new NotImplementedException($"Cannot build Uri for type {typeof(AcceptType)}")
             };
         }
 
-        private static void DoNothing() { }
+        private static async Task DoNothing()
+        {
+            await Task.Yield();
+        }
     }
 }

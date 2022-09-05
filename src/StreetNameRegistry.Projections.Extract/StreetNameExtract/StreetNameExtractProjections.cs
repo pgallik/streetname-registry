@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using StreetName.Events;
     using System;
     using System.Text;
+    using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Extracts;
     using Microsoft.Extensions.Options;
     using StreetName;
@@ -190,6 +191,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             {
                 var streetName = await context.StreetNameExtract.FindAsync(message.Message.StreetNameId, cancellationToken: ct);
 
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (streetName != null) // it's possible that streetname is already removed
                 {
                     UpdateStatus(streetName, null);
@@ -273,6 +275,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
             {
                 var streetName = await context.StreetNameExtract.FindAsync(message.Message.StreetNameId, cancellationToken: ct);
 
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (streetName != null) // it's possible that streetname is already removed
                 {
                     streetName.Complete = false;
@@ -280,20 +283,20 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }
             });
 
-            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNamePrimaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrected>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasCorrectedToCleared>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameSecondaryLanguageWasDefined>>(async (context, message, ct) => await DoNothing());
 
-            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
-            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => DoNothing());
+            When<Envelope<StreetNameWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
+            When<Envelope<StreetNameStatusWasImportedFromCrab>>(async (context, message, ct) => await DoNothing());
         }
 
-        private void UpdateHomoniemtv(StreetNameExtractItem streetName, Language? language, string homonymAddition)
+        private void UpdateHomoniemtv(StreetNameExtractItem streetName, Language? language, string? homonymAddition)
             => UpdateRecord(streetName, record =>
             {
                 switch (language)
@@ -318,7 +321,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }
             });
 
-        private void UpdateStraatnm(StreetNameExtractItem streetName, Language? language, string name)
+        private void UpdateStraatnm(StreetNameExtractItem streetName, Language? language, string? name)
             => UpdateRecord(streetName, record =>
             {
                 switch (language)
@@ -343,7 +346,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
                 }
             });
 
-        private void UpdateStatus(StreetNameExtractItem streetName, string status)
+        private void UpdateStatus(StreetNameExtractItem streetName, string? status)
             => UpdateRecord(streetName, record => record.status.Value = status);
 
         private void UpdateId(StreetNameExtractItem streetName, int id)
@@ -359,13 +362,19 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
         private void UpdateRecord(StreetNameExtractItem municipality, Action<StreetNameDbaseRecord> updateFunc)
         {
             var record = new StreetNameDbaseRecord();
-            record.FromBytes(municipality.DbaseRecord, _encoding);
+            if (municipality.DbaseRecord != null)
+            {
+                record.FromBytes(municipality.DbaseRecord, _encoding);
 
-            updateFunc(record);
+                updateFunc(record);
+            }
 
             municipality.DbaseRecord = record.ToBytes(_encoding);
         }
 
-        private static void DoNothing() { }
+        private static async Task DoNothing()
+        {
+            await Task.Yield();
+        }
     }
 }

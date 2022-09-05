@@ -6,6 +6,9 @@ namespace StreetNameRegistry.Producer.Infrastructure
 
     public class Program
     {
+        protected Program()
+        { }
+
         public static void Main(string[] args)
             => Run(new ProgramOptions
                 {
@@ -24,8 +27,7 @@ namespace StreetNameRegistry.Producer.Infrastructure
                     },
                     MiddlewareHooks =
                     {
-                        ConfigureDistributedLock =
-                            configuration => DistributedLockOptions.LoadFromConfiguration(configuration)
+                        ConfigureDistributedLock = DistributedLockOptions.LoadFromConfiguration
                     }
                 });
 
