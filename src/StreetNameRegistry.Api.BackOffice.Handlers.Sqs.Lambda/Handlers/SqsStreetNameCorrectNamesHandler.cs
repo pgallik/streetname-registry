@@ -2,9 +2,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.CommandHandling;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Abstractions;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Municipality;
+    using Municipality.Exceptions;
     using Requests;
     using TicketingService.Abstractions;
     using MunicipalityId = Municipality.MunicipalityId;
@@ -12,20 +13,18 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     public class SqsStreetNameCorrectNamesHandler : SqsLambdaHandler<SqsLambdaStreetNameCorrectNamesRequest>
     {
         private readonly IMunicipalities _municipalities;
-        private readonly IdempotencyContext _idempotencyContext;
 
         public SqsStreetNameCorrectNamesHandler(
             ITicketing ticketing,
-            ICommandHandlerResolver bus,
             IMunicipalities municipalities,
-            IdempotencyContext idempotencyContext)
-            : base(ticketing, bus)
+            IIdempotentCommandHandler idempotentCommandHandler)
+            : base(ticketing, idempotentCommandHandler)
         {
             _municipalities = municipalities;
-            _idempotencyContext = idempotencyContext;
         }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameCorrectNamesRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameCorrectNamesRequest request,
+            CancellationToken cancellationToken)
         {
             var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId));
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
@@ -34,16 +33,33 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 municipalityId,
                 CreateFakeProvenance());
 
-            await IdempotentCommandHandlerDispatch(
-                _idempotencyContext,
+            await IdempotentCommandHandler.Dispatch(
                 cmd.CreateCommandId(),
                 cmd,
                 request.Metadata,
                 cancellationToken);
 
-            var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId, cancellationToken);
+            var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId,
+                cancellationToken);
 
             return lastEventHash;
+        }
+
+        protected override TicketError? HandleDomainException(DomainException exception)
+        {
+            return exception switch
+            {
+                StreetNameNameAlreadyExistsException nameExists => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameAlreadyExists(nameExists.Name),
+                    ValidationErrorCodes.StreetName.StreetNameAlreadyExists),
+                StreetNameHasInvalidStatusException => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameCannotBeCorrected,
+                    ValidationErrorCodes.StreetName.StreetNameCannotBeCorrected),
+                StreetNameNameLanguageIsNotSupportedException _ => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameNameLanguageIsNotSupported,
+                    ValidationErrorCodes.StreetName.StreetNameNameLanguageIsNotSupported),
+                _ => null
+            };
         }
     }
 }

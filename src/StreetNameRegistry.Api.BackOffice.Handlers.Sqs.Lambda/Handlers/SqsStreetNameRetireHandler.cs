@@ -2,10 +2,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.CommandHandling;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Abstractions;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Municipality;
     using Municipality.Commands;
+    using Municipality.Exceptions;
     using Requests;
     using TicketingService.Abstractions;
     using MunicipalityId = Municipality.MunicipalityId;
@@ -13,17 +14,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     public class SqsStreetNameRetireHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
     {
         private readonly IMunicipalities _municipalities;
-        private readonly IdempotencyContext _idempotencyContext;
 
         public SqsStreetNameRetireHandler(
             ITicketing ticketing,
-            ICommandHandlerResolver bus,
             IMunicipalities municipalities,
-            IdempotencyContext idempotencyContext)
-            : base(ticketing, bus)
+            IIdempotentCommandHandler idempotentCommandHandler)
+            : base(ticketing, idempotentCommandHandler)
         {
             _municipalities = municipalities;
-            _idempotencyContext = idempotencyContext;
         }
 
         protected override async Task<string> InnerHandle(SqsLambdaStreetNameRetireRequest request, CancellationToken cancellationToken)
@@ -36,8 +34,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 streetNamePersistentLocalId,
                 CreateFakeProvenance());
 
-            await IdempotentCommandHandlerDispatch(
-                _idempotencyContext,
+            await IdempotentCommandHandler.Dispatch(
                 cmd.CreateCommandId(),
                 cmd,
                 request.Metadata,
@@ -46,6 +43,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId, cancellationToken);
 
             return lastEventHash;
+        }
+
+        protected override TicketError? HandleDomainException(DomainException exception)
+        {
+            return exception switch
+            {
+                StreetNameHasInvalidStatusException => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameCannotBeRetired,
+                    ValidationErrorCodes.StreetName.StreetNameCannotBeRetired),
+                MunicipalityHasInvalidStatusException => new TicketError(
+                    ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent,
+                    ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent),
+                _ => null
+            };
         }
     }
 }

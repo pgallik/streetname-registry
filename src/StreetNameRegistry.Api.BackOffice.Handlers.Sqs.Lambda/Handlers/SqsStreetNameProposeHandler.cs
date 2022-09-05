@@ -4,31 +4,28 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
-    using Be.Vlaanderen.Basisregisters.CommandHandling;
-    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Lambda;
     using Municipality;
+    using Municipality.Exceptions;
     using Requests;
     using TicketingService.Abstractions;
 
     public class SqsStreetNameProposeHandler : SqsLambdaHandler<SqsLambdaStreetNameProposeRequest>
     {
         private readonly IPersistentLocalIdGenerator _persistentLocalIdGenerator;
-        private readonly IdempotencyContext _idempotencyContext;
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IMunicipalities _municipalities;
 
         public SqsStreetNameProposeHandler(
             ITicketing ticketing,
-            ICommandHandlerResolver bus,
             IPersistentLocalIdGenerator persistentLocalIdGenerator,
-            IdempotencyContext idempotencyContext,
+            IIdempotentCommandHandler idempotentCommandHandler,
             BackOfficeContext backOfficeContext,
             IMunicipalities municipalities
-            ) : base(ticketing, bus)
+            ) : base(ticketing, idempotentCommandHandler)
         {
             _persistentLocalIdGenerator = persistentLocalIdGenerator;
-            _idempotencyContext = idempotencyContext;
             _backOfficeContext = backOfficeContext;
             _municipalities = municipalities;
         }
@@ -43,8 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 CreateFakeProvenance(),
                 persistentLocalId);
 
-            await IdempotentCommandHandlerDispatch(
-                _idempotencyContext,
+            await IdempotentCommandHandler.Dispatch(
                 cmd.CreateCommandId(),
                 cmd,
                 request.Metadata,
@@ -59,6 +55,26 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             var streetNameHash = await GetStreetNameHash(_municipalities, municipalityId, persistentLocalId, cancellationToken);
 
             return streetNameHash;
+        }
+
+        protected override TicketError? HandleDomainException(DomainException exception)
+        {
+            return exception switch
+            {
+                StreetNameNameAlreadyExistsException nameExists => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameAlreadyExists(nameExists.Name),
+                    ValidationErrorCodes.StreetName.StreetNameAlreadyExists),
+                MunicipalityHasInvalidStatusException => new TicketError(
+                    ValidationErrorMessages.Municipality.MunicipalityHasInvalidStatus,
+                    ValidationErrorCodes.Municipality.MunicipalityHasInvalidStatus),
+                StreetNameNameLanguageIsNotSupportedException _ => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameNameLanguageIsNotSupported,
+                    ValidationErrorCodes.StreetName.StreetNameNameLanguageIsNotSupported),
+                StreetNameIsMissingALanguageException _ => new TicketError(
+                    ValidationErrorMessages.StreetName.StreetNameIsMissingALanguage,
+                    ValidationErrorCodes.StreetName.StreetNameIsMissingALanguage),
+                _ => null
+            };
         }
     }
 }

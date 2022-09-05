@@ -11,7 +11,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
     using global::AutoFixture;
+    using Moq;
     using Municipality;
+    using Municipality.Exceptions;
     using SqlStreamStore;
     using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
@@ -19,6 +21,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
+    using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
 
@@ -45,7 +48,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
             AddOfficialLanguageDutch(municipalityId);
             ProposeStreetName(
                 municipalityId,
-                new Names(new Dictionary<Language, string>{{Language.Dutch, "Bremt"}}),
+                new Names(new Dictionary<Language, string> { { Language.Dutch, "Bremt" } }),
                 streetNamePersistentLocalId,
                 provenance);
 
@@ -55,25 +58,74 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
 
             ETagResponse? etag = null;
 
+            var ticketing = MockTicketing(result => { etag = result; });
+
             var handler = new SqsStreetNameApproveHandler(
-                MockTicketing(result =>
-                {
-                    etag = result;
-                }).Object,
-                Container.Resolve<ICommandHandlerResolver>(),
-                Container.Resolve<IMunicipalities>(),
-                _idempotencyContext);
+                ticketing.Object,
+                new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
+                Container.Resolve<IMunicipalities>());
 
             //Act
             await handler.Handle(new SqsLambdaStreetNameApproveRequest
             {
                 Request = new StreetNameBackOfficeApproveRequest { PersistentLocalId = streetNamePersistentLocalId },
-                MessageGroupId = municipalityId
+                MessageGroupId = municipalityId,
+                TicketId = Guid.NewGuid()
             }, CancellationToken.None);
 
             //Assert
-            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 4, 1); //3 = version of stream (zero based)
+            var stream = await Container.Resolve<IStreamStore>()
+                .ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 4,
+                    1); //3 = version of stream (zero based)
             stream.Messages.First().JsonMetadata.Should().Contain(etag.LastEventHash);
+        }
+
+        [Fact]
+        public async Task WhenStreetNameHasInvalidStatus_ThenTicketingErrorIsExpected()
+        {
+            var ticketing = new Mock<ITicketing>();
+
+            var sut = new SqsStreetNameApproveHandler(
+                ticketing.Object,
+                MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object,
+                Mock.Of<IMunicipalities>());
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameApproveRequest
+            {
+                Request = new StreetNameBackOfficeApproveRequest(),
+                MessageGroupId = Guid.NewGuid().ToString(),
+                TicketId = Guid.NewGuid()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(It.IsAny<Guid>(),
+                    new TicketError("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.", "StraatnaamGehistoreerdOfAfgekeurd"), CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenMunicipalityHasInvalidStatus_ThenTicketingErrorIsExpected()
+        {
+            var ticketing = new Mock<ITicketing>();
+
+            var sut = new SqsStreetNameApproveHandler(
+                ticketing.Object,
+                MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object,
+                Mock.Of<IMunicipalities>());
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameApproveRequest
+            {
+                Request = new StreetNameBackOfficeApproveRequest(),
+                MessageGroupId = Guid.NewGuid().ToString(),
+                TicketId = Guid.NewGuid()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(It.IsAny<Guid>(),
+                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.", "StraatnaamGemeenteInGebruik"), CancellationToken.None));
         }
     }
 }

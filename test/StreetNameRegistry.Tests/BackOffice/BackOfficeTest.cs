@@ -1,6 +1,7 @@
 namespace StreetNameRegistry.Tests.BackOffice
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
@@ -10,6 +11,7 @@ namespace StreetNameRegistry.Tests.BackOffice
     using Municipality;
     using Municipality.Commands;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using Testing;
     using TicketingService.Abstractions;
     using Xunit.Abstractions;
@@ -37,6 +39,28 @@ namespace StreetNameRegistry.Tests.BackOffice
                 Fixture.Create<RetirementDate>(),
                 Fixture.Create<Provenance>());
             DispatchArrangeCommand(retireMunicipality);
+        }
+
+        protected Mock<IIdempotentCommandHandler> MockExceptionIdempotentCommandHandler<TException>()
+            where TException : Exception, new()
+        {
+            var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
+            idempotentCommandHandler
+                .Setup(x => x.Dispatch(It.IsAny<Guid>(), It.IsAny<object>(),
+                    It.IsAny<IDictionary<string, object>>(), CancellationToken.None))
+                .Throws<TException>();
+            return idempotentCommandHandler;
+        }
+
+        protected Mock<IIdempotentCommandHandler> MockExceptionIdempotentCommandHandler<TException>(Func<TException> exceptionFactory)
+            where TException : Exception, new()
+        {
+            var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
+            idempotentCommandHandler
+                .Setup(x => x.Dispatch(It.IsAny<Guid>(), It.IsAny<object>(),
+                    It.IsAny<IDictionary<string, object>>(), CancellationToken.None))
+                .Throws(exceptionFactory());
+            return idempotentCommandHandler;
         }
 
         protected void ProposeStreetName(

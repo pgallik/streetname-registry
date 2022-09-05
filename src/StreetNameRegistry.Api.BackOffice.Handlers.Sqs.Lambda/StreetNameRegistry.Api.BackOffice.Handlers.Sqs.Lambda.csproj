@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice.Abstractions\StreetNameRegistry.Api.BackOffice.Abstractions.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice.Handlers.Sqs\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.csproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
