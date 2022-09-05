@@ -1,3 +1,16 @@
+## [3.8.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.8...v3.8.9) (2022-09-05)
+
+
+### Bug Fixes
+
+* add --no-restore & --no-build ([d21ca1f](https://github.com/informatievlaanderen/streetname-registry/commit/d21ca1f78ce43f0680fd5e6899f4ef1216099b3e))
+* add paket install ([eb7d0ce](https://github.com/informatievlaanderen/streetname-registry/commit/eb7d0cec8672d6f21e5f45e0a50af157772c5666))
+* add repo name ([2dc1f25](https://github.com/informatievlaanderen/streetname-registry/commit/2dc1f25b72df769a6772bb429299f62496dcee5c))
+* fix typo ([631ac7c](https://github.com/informatievlaanderen/streetname-registry/commit/631ac7cfefca2b75e1d45df57d192202a3624b56))
+* remove --no-logo ([25d8fa6](https://github.com/informatievlaanderen/streetname-registry/commit/25d8fa6954800fab6b35cb230ee26a25a3e9f237))
+* rename from CI2 to Build ([4dc4ae6](https://github.com/informatievlaanderen/streetname-registry/commit/4dc4ae632409cd9b01701a4cb21b02d5efccee17))
+* sonar issues ([1eba90a](https://github.com/informatievlaanderen/streetname-registry/commit/1eba90a937212f012b086dd864a36a59ed057f2e))
+
 ## [3.8.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.7...v3.8.8) (2022-09-02)
 
 
