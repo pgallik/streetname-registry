@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             var ticketId = await _ticketing.CreateTicket(WithMetadata(aggregateId, request), cancellationToken);
             request.TicketId = ticketId;
 
-            _ = await _sqsQueue.Copy(request, new SqsQueueOptions { MessageGroupId = aggregateId, /*MessageDeduplicationId = WithDeduplicationId(aggregateId, request)*/ }, cancellationToken);
+            _ = await _sqsQueue.Copy(request, new SqsQueueOptions { MessageGroupId = aggregateId }, cancellationToken);
 
             //_logger.LogDebug($"Request sent to queue {SqsQueueName.Value}");
 
