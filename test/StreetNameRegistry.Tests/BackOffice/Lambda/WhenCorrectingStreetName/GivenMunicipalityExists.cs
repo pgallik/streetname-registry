@@ -21,6 +21,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using Municipality;
     using Municipality.Exceptions;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using TicketingService.Abstractions;
     using Xunit;
@@ -162,6 +163,50 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                     new TicketError(
                         "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente.",
                         "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal"), CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
+        {
+            var ticketing = new Mock<ITicketing>();
+            var municipalityId = new MunicipalityId(Guid.NewGuid());
+            var streetNamePersistentLocalId = new PersistentLocalId(456);
+            var provenance = Fixture.Create<Provenance>();
+
+            ImportMunicipality(municipalityId, new NisCode("23002"));
+            SetMunicipalityToCurrent(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            ProposeStreetName(
+                municipalityId,
+                new Names(new Dictionary<Language, string> { { Language.Dutch, "Bremt" } }),
+                streetNamePersistentLocalId,
+                provenance);
+
+            var municipalities = Container.Resolve<IMunicipalities>();
+            var sut = new SqsStreetNameCorrectNamesHandler(
+                ticketing.Object,
+                municipalities,
+                MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);
+
+            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameCorrectNamesRequest
+            {
+                Request = new StreetNameBackOfficeCorrectNamesRequest
+                {
+                    PersistentLocalId = streetNamePersistentLocalId,
+                    Straatnamen = new Dictionary<Taal, string>()
+                },
+                MessageGroupId = municipalityId.ToString(),
+                TicketId = Guid.NewGuid()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Complete(It.IsAny<Guid>(),
+                    new TicketResult(new ETagResponse(municipality.GetStreetNameHash(streetNamePersistentLocalId))),
+                    CancellationToken.None));
         }
     }
 }

@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
+    using Abstractions.Exceptions;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Municipality;
     using Municipality.Commands;
@@ -34,15 +35,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 streetNamePersistentLocalId,
                 CreateFakeProvenance());
 
-            await IdempotentCommandHandler.Dispatch(
-                cmd.CreateCommandId(),
-                cmd,
-                request.Metadata,
-                cancellationToken);
+            try
+            {
+                await IdempotentCommandHandler.Dispatch(
+                    cmd.CreateCommandId(),
+                    cmd,
+                    request.Metadata,
+                    cancellationToken);
+            }
+            catch (IdempotencyException)
+            {
+                // Idempotent: Do Nothing return last etag
+            }
 
-            var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId, cancellationToken);
-
-            return lastEventHash;
+            return await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId, cancellationToken);
         }
 
         protected override TicketError? HandleDomainException(DomainException exception)

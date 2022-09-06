@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
     using System.Threading;
     using System.Threading.Tasks;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
@@ -17,6 +18,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
     using SqlStreamStore;
     using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
@@ -62,8 +64,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
 
             var handler = new SqsStreetNameApproveHandler(
                 ticketing.Object,
-                new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
-                Container.Resolve<IMunicipalities>());
+                Container.Resolve<IMunicipalities>(),
+                new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext));
 
             //Act
             await handler.Handle(new SqsLambdaStreetNameApproveRequest
@@ -87,8 +89,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
 
             var sut = new SqsStreetNameApproveHandler(
                 ticketing.Object,
-                MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object,
-                Mock.Of<IMunicipalities>());
+                Mock.Of<IMunicipalities>(),
+                MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
 
             // Act
             await sut.Handle(new SqsLambdaStreetNameApproveRequest
@@ -111,8 +113,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
 
             var sut = new SqsStreetNameApproveHandler(
                 ticketing.Object,
-                MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object,
-                Mock.Of<IMunicipalities>());
+                Mock.Of<IMunicipalities>(),
+                MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object);
 
             // Act
             await sut.Handle(new SqsLambdaStreetNameApproveRequest
@@ -126,6 +128,49 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenApprovingStreetName
             ticketing.Verify(x =>
                 x.Error(It.IsAny<Guid>(),
                     new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.", "StraatnaamGemeenteInGebruik"), CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
+        {
+            var ticketing = new Mock<ITicketing>();
+            var municipalityId = new MunicipalityId(Guid.NewGuid());
+            var streetNamePersistentLocalId = new PersistentLocalId(456);
+            var provenance = Fixture.Create<Provenance>();
+
+            ImportMunicipality(municipalityId, new NisCode("23002"));
+            SetMunicipalityToCurrent(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            ProposeStreetName(
+                municipalityId,
+                new Names(new Dictionary<Language, string> { { Language.Dutch, "Bremt" } }),
+                streetNamePersistentLocalId,
+                provenance);
+
+            var municipalities = Container.Resolve<IMunicipalities>();
+            var sut = new SqsStreetNameApproveHandler(
+                ticketing.Object,
+                municipalities,
+                MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);
+
+            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameApproveRequest
+            {
+                Request = new StreetNameBackOfficeApproveRequest
+                {
+                    PersistentLocalId = streetNamePersistentLocalId
+                },
+                MessageGroupId = municipalityId.ToString(),
+                TicketId = Guid.NewGuid()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Complete(It.IsAny<Guid>(),
+                    new TicketResult(new ETagResponse(municipality.GetStreetNameHash(streetNamePersistentLocalId))),
+                    CancellationToken.None));
         }
     }
 }

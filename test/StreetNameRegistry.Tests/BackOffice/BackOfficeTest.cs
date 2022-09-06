@@ -53,7 +53,7 @@ namespace StreetNameRegistry.Tests.BackOffice
         }
 
         protected Mock<IIdempotentCommandHandler> MockExceptionIdempotentCommandHandler<TException>(Func<TException> exceptionFactory)
-            where TException : Exception, new()
+            where TException : Exception
         {
             var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
             idempotentCommandHandler

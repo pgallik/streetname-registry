@@ -32,7 +32,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
         }
 
         protected abstract string? WithAggregateId(TSqsRequest request);
-        protected abstract string WithDeduplicationId(string aggregateId, TSqsRequest request);
         protected abstract IDictionary<string, string> WithMetadata(string aggregateId, TSqsRequest sqsRequest);
 
         public async Task<LocationResult> Handle(TSqsRequest request, CancellationToken cancellationToken)

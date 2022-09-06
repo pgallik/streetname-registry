@@ -30,11 +30,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
 
-        protected override string WithDeduplicationId(string aggregateId, SqsStreetNameRejectRequest request)
-        {
-            throw new System.NotImplementedException();
-        }
-
         protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameRejectRequest sqsRequest)
         {
             return new Dictionary<string, string>

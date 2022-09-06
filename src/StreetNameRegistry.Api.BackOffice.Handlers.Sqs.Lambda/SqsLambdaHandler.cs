@@ -49,11 +49,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
                     new TicketError("", ""),
                     cancellationToken);
             }
-            catch (IdempotencyException)
-            {
-                // Complete ticket with eTagResponse?
-                // Deduplication should handle this...
-            }
             catch (DomainException exception)
             {
                 var ticketError = exception switch
