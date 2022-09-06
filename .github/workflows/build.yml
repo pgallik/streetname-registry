@@ -38,7 +38,7 @@ jobs:
       shell: bash
       run: dotnet --info
 
-    -name: Restore packages
+    - name: Restore packages
       shell: bash
       run: |
         dotnet tool restore
