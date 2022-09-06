@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
     using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Testing;
     using TicketingService.Abstractions;
@@ -65,8 +66,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
             };
 
             // Act
-            var result = (AcceptedResult)await sut.Handle(
-                sqsRequest, CancellationToken.None);
+            var result = await sut.Handle(sqsRequest, CancellationToken.None);
 
             // Assert
             sqsRequest.TicketId.Should().Be(ticketId);

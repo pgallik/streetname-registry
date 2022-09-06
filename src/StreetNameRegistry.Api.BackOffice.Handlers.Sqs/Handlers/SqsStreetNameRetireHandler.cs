@@ -1,17 +1,17 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
 {
     using System.Collections.Generic;
     using Abstractions;
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameApproveHandler : SqsHandler<SqsStreetNameApproveRequest>
+    public class SqsStreetNameRetireHandler : SqsHandler<SqsStreetNameRetireRequest>
     {
-        public const string Action = "ApproveStreetName";
+        public const string Action = "RetireStreetName";
 
         private readonly BackOfficeContext _backOfficeContext;
 
-        public SqsStreetNameApproveHandler(
+        public SqsStreetNameRetireHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
             _backOfficeContext = backOfficeContext;
         }
 
-        protected override string? WithAggregateId(SqsStreetNameApproveRequest request)
+        protected override string? WithAggregateId(SqsStreetNameRetireRequest request)
         {
             var municipalityIdByPersistentLocalId = _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
@@ -30,12 +30,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
 
-        protected override string WithDeduplicationId(string aggregateId, SqsStreetNameApproveRequest request)
+        protected override string WithDeduplicationId(string aggregateId, SqsStreetNameRetireRequest request)
         {
             throw new System.NotImplementedException();
         }
 
-        protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameApproveRequest sqsRequest)
+        protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameRetireRequest sqsRequest)
         {
             return new Dictionary<string, string>
             {

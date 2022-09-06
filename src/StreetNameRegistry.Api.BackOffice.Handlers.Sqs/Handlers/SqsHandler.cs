@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
 {
     using System.Collections.Generic;
     using System.Threading;
@@ -6,11 +6,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     using Abstractions.Exceptions;
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
     using MediatR;
-    using Microsoft.AspNetCore.Mvc;
     using Requests;
     using TicketingService.Abstractions;
 
-    public abstract class SqsHandler<TSqsRequest> : IRequestHandler<TSqsRequest, IActionResult>
+    public abstract class SqsHandler<TSqsRequest> : IRequestHandler<TSqsRequest, LocationResult>
         where TSqsRequest : SqsRequest
     {
         public const string ActionKey = "Action";
@@ -36,7 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
         protected abstract string WithDeduplicationId(string aggregateId, TSqsRequest request);
         protected abstract IDictionary<string, string> WithMetadata(string aggregateId, TSqsRequest sqsRequest);
 
-        public async Task<IActionResult> Handle(TSqsRequest request, CancellationToken cancellationToken)
+        public async Task<LocationResult> Handle(TSqsRequest request, CancellationToken cancellationToken)
         {
             var aggregateId = WithAggregateId(request);
 
@@ -48,13 +47,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
             var ticketId = await _ticketing.CreateTicket(WithMetadata(aggregateId, request), cancellationToken);
             request.TicketId = ticketId;
 
-            _ = await _sqsQueue.Copy(request, new SqsQueueOptions { MessageGroupId = aggregateId }, cancellationToken);
+            _ = await _sqsQueue.Copy(request, new SqsQueueOptions { MessageGroupId = aggregateId, /*MessageDeduplicationId = WithDeduplicationId(aggregateId, request)*/ }, cancellationToken);
 
             //_logger.LogDebug($"Request sent to queue {SqsQueueName.Value}");
 
             var location = _ticketingUrl.For(request.TicketId);
 
-            return new AcceptedResult(location, null);
+            return new LocationResult(location);
         }
     }
 }

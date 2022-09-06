@@ -74,6 +74,9 @@ nuget Be.Vlaanderen.Basisregisters.GrAr.Legacy 17.20.1
 nuget Be.Vlaanderen.Basisregisters.GrAr.Provenance 17.20.1
 nuget Be.Vlaanderen.Basisregisters.GrAr.Extracts 17.20.1
 
+nuget Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple 4.3.0
+nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple 4.3.0
+
 nuget Be.Vlaanderen.Basisregisters.Shaperon 9.0.1
 
 nuget Be.Vlaanderen.Basisregisters.TicketingService.Abstractions 1.6.0
@@ -86,9 +89,6 @@ nuget Microsoft.Extensions.Configuration.FileExtensions 6.0.0
 nuget Microsoft.Extensions.Configuration.Json 6.0.0
 nuget Microsoft.Extensions.DependencyInjection 6.0.0
 nuget MediatR.Extensions.Microsoft.DependencyInjection 10.0.1
-
-nuget Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple 4.2.3
-nuget Be.Vlaanderen.Basisregisters.MessageHandling.Kafka.Simple 4.2.3
 
 // .NET CLASSIC STUFF
 nuget EntityFramework 6.4.4

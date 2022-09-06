@@ -1,17 +1,17 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
 {
     using System.Collections.Generic;
     using Abstractions;
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameCorrectNamesHandler : SqsHandler<SqsStreetNameCorrectNamesRequest>
+    public class SqsStreetNameApproveHandler : SqsHandler<SqsStreetNameApproveRequest>
     {
-        public const string Action = "CorrectStreetNameName";
+        public const string Action = "ApproveStreetName";
 
         private readonly BackOfficeContext _backOfficeContext;
 
-        public SqsStreetNameCorrectNamesHandler(
+        public SqsStreetNameApproveHandler(
             ISqsQueue sqsQueue,
             ITicketing ticketing,
             ITicketingUrl ticketingUrl,
@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
             _backOfficeContext = backOfficeContext;
         }
 
-        protected override string? WithAggregateId(SqsStreetNameCorrectNamesRequest request)
+        protected override string? WithAggregateId(SqsStreetNameApproveRequest request)
         {
             var municipalityIdByPersistentLocalId = _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
@@ -30,12 +30,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
 
-        protected override string WithDeduplicationId(string aggregateId, SqsStreetNameCorrectNamesRequest request)
+        protected override string WithDeduplicationId(string aggregateId, SqsStreetNameApproveRequest request)
         {
             throw new System.NotImplementedException();
         }
 
-        protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameCorrectNamesRequest sqsRequest)
+        protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameApproveRequest sqsRequest)
         {
             return new Dictionary<string, string>
             {

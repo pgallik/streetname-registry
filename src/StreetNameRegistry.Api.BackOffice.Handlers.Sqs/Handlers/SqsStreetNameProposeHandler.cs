@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
 {
     using System;
     using System.Collections.Generic;
