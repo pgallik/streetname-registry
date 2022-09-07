@@ -55,13 +55,13 @@ namespace StreetNameRegistry.Api.BackOffice
             {
                 if (_useSqsToggle.FeatureEnabled)
                 {
-                    var sqsRequest = new SqsStreetNameProposeRequest
-                    {
-                        Request = request,
-                        Metadata = GetMetadata(),
-                        ProvenanceData = new ProvenanceData(CreateFakeProvenance())
-                    };
-                    var result = await _mediator.Send(sqsRequest, cancellationToken);
+                    var result = await _mediator.Send(
+                        new SqsStreetNameProposeRequest
+                        {
+                            Request = request,
+                            Metadata = GetMetadata(),
+                            ProvenanceData = new ProvenanceData(CreateFakeProvenance())
+                        }, cancellationToken);
 
                     return Accepted(result.LocationAsUri);
                 }

@@ -5,148 +5,71 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentAssertions;
     using FluentValidation;
-    using Microsoft.AspNetCore.Http;
+    using global::AutoFixture;
+    using Microsoft.AspNetCore.Mvc;
     using Moq;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
-    using Municipality.Exceptions;
+    using NodaTime;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Xunit;
     using Xunit.Abstractions;
-    using MunicipalityId = Municipality.MunicipalityId;
-    using PersistentLocalId = Municipality.PersistentLocalId;
 
     public class GivenMunicipalityExists : BackOfficeApiTest<StreetNameController>
     {
-        private readonly TestBackOfficeContext _backOfficeContext;
-
-        public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
-        {
-            _backOfficeContext = new FakeBackOfficeContextFactory().CreateDbContext(Array.Empty<string>());
-        }
+        public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper, useSqs: true)
+        { }
 
         [Fact]
-        public async Task ThenMediatorSends_StreetNameCorrectNamesRequest()
+        public async Task ThenAcceptedWithLocationIsReturned()
         {
-            var municipalityId = new MunicipalityId(Guid.NewGuid());
-            var persistentLocalId = new PersistentLocalId(456);
+            var expectedLocationResult = new LocationResult(Fixture.Create<Uri>().ToString());
+            MockMediatorResponse<SqsStreetNameCorrectNamesRequest, LocationResult>(expectedLocationResult);
 
-            _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityId);
+            var request = new StreetNameCorrectNamesRequest
+            {
+                Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } }
+            };
 
-            MockMediatorResponse<StreetNameCorrectNamesRequest, ETagResponse>(new ETagResponse("hash"));
-
-            // Act
-            var result = (AcceptedWithETagResult)await Controller.CorrectStreetNameNames(
+            var result = (AcceptedResult) await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
                 ResponseOptions,
-                persistentLocalId,
-                new StreetNameCorrectNamesRequest
-                {
-                    Straatnamen = new Dictionary<Taal, string>
-                    {
-                        {Taal.NL, "Rodekruisstraat"},
-                        {Taal.FR, "Rue de la Croix-Rouge"}
-                    }
-                },
-                ifMatchHeaderValue: null,
+                123,
+                request,
+                ifMatchHeaderValue: string.Empty,
                 CancellationToken.None);
 
             // Assert
-            MockMediator.Verify(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None));
-            result.ETag.Should().Be("hash");
+            MockMediator.Verify(x =>
+                x.Send(
+                    It.Is<SqsStreetNameCorrectNamesRequest>(sqsRequest =>
+                        sqsRequest.Request == request &&
+                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue), // Just to verify that ProvenanceData has been populated.
+                    CancellationToken.None));
+            result.Location.Should().Be(expectedLocationResult.Location);
         }
 
         [Fact]
-        public void WhenStreetNameIsNotFound_ThenBadRequestIsExpected()
+        public void WithAggregateIdIsNotFound_ThenThrowsValidationException()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameIsNotFoundException());
+                .Setup(x => x.Send(It.IsAny<SqsStreetNameCorrectNamesRequest>(), CancellationToken.None))
+                .Throws(new AggregateIdIsNotFoundException());
 
-            //Act
             Func<Task> act = async () => await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
                 ResponseOptions,
-                new PersistentLocalId(456),
-                new StreetNameCorrectNamesRequest
-                {
-                    Straatnamen = new Dictionary<Taal, string>
-                    {
-                        {Taal.NL, "Rodekruisstraat"},
-                        {Taal.FR, "Rue de la Croix-Rouge"}
-                    }
-                },
-                null);
-
-            //Assert
-            act
-                .Should()
-                .ThrowAsync<ApiException>()
-                .Result
-                .Where(x => x.Message.Contains("Onbestaande straatnaam")
-                            && x.StatusCode == StatusCodes.Status404NotFound);
-        }
-
-        [Fact]
-        public void WhenStreetNameIsRemoved_ThenBadRequestIsExpected()
-        {
-            MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameIsRemovedException());
-
-            //Act
-            Func<Task> act = async () => await Controller.CorrectStreetNameNames(
-                MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
-                ResponseOptions,
-                new PersistentLocalId(456),
-                new StreetNameCorrectNamesRequest
-                {
-                    Straatnamen = new Dictionary<Taal, string>
-                    {
-                        {Taal.NL, "Rodekruisstraat"},
-                        {Taal.FR, "Rue de la Croix-Rouge"}
-                    }
-                },
-                null);
-
-            //Assert
-            act
-                .Should()
-                .ThrowAsync<ApiException>()
-                .Result
-                .Where(x => x.Message.Contains("Verwijderde straatnaam")
-                            && x.StatusCode == StatusCodes.Status410Gone);
-        }
-
-        [Fact]
-        public void WhenStreetNameIsNotInStatusProposedOrCurrent_ThenBadRequestIsExpected()
-        {
-            MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameHasInvalidStatusException());
-
-            //Act
-            Func<Task> act = async () => await Controller.CorrectStreetNameNames(
-                MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
-                ResponseOptions,
-                new PersistentLocalId(456),
-                new StreetNameCorrectNamesRequest
-                {
-                    Straatnamen = new Dictionary<Taal, string>
-                    {
-                        {Taal.NL, "Rodekruisstraat"},
-                        {Taal.FR, "Rue de la Croix-Rouge"}
-                    }
-                },
-                null);
+                123,
+                new StreetNameCorrectNamesRequest(),
+                string.Empty,
+                CancellationToken.None);
 
             //Assert
             act
@@ -154,71 +77,24 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
                 .ThrowAsync<ValidationException>()
                 .Result
                 .Where(x =>
-                    x.Errors.Any(error =>
-                        error.ErrorCode == "StraatnaamGehistoreerdOfAfgekeurd"
-                        && error.ErrorMessage.Equals("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.")));
+                    x.Errors.Any(e => e.ErrorCode == "code"
+                                      && e.ErrorMessage.Contains("message")));
         }
 
         [Fact]
-        public void WithOneOfStraatnamenAlreadyExists_ThenBadRequestIsExpected()
+        public async Task WithIfMatchHeaderValueMismatch_ThenReturnsPreconditionFailedResult()
         {
-            MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameNameAlreadyExistsException("teststraat"));
-
-            //Act
-            Func<Task> act = async () => await Controller.CorrectStreetNameNames(
-                MockValidIfMatchValidator(),
+            var result = await Controller.CorrectStreetNameNames(
+                MockValidIfMatchValidator(false),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
                 ResponseOptions,
-                new PersistentLocalId(456),
-                new StreetNameCorrectNamesRequest
-                {
-                    Straatnamen = new Dictionary<Taal, string>
-                    {
-                        {Taal.NL, "Rodekruisstraat"},
-                        {Taal.FR, "Rue de la Croix-Rouge"}
-                    }
-                },
-                null);
+                123,
+                new StreetNameCorrectNamesRequest(),
+                string.Empty,
+                CancellationToken.None);
 
             //Assert
-            act
-                .Should()
-                .ThrowAsync<ValidationException>()
-                .Result
-                .Where(x => x.Message.Contains("Straatnaam 'teststraat' bestaat reeds in de gemeente."));
-        }
-
-        [Fact]
-        public void WithNotSupportedLanguage_ThenBadRequestIsExpected()
-        {
-            MockMediator
-                .Setup(x => x.Send(It.IsAny<StreetNameCorrectNamesRequest>(), CancellationToken.None))
-                .Throws(new StreetNameNameLanguageIsNotSupportedException(string.Empty));
-
-            //Act
-            Func<Task> act = async () => await Controller.CorrectStreetNameNames(
-                MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
-                ResponseOptions,
-                new PersistentLocalId(456),
-                new StreetNameCorrectNamesRequest
-                {
-                    Straatnamen = new Dictionary<Taal, string>
-                    {
-                        {Taal.NL, "Rodekruisstraat"},
-                        {Taal.FR, "Rue de la Croix-Rouge"}
-                    }
-                },
-                null);
-
-            //Assert
-            act
-                .Should()
-                .ThrowAsync<ValidationException>()
-                .Result
-                .Where(x => x.Message.Contains("'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente."));
+            result.Should().BeOfType<PreconditionFailedResult>();
         }
     }
 }

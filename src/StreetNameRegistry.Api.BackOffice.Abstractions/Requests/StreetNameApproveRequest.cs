@@ -5,10 +5,8 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Newtonsoft.Json;
     using Response;
 
-    public class StreetNameApproveRequest : IRequest<ETagResponse>
+    public class StreetNameApproveRequest : StreetNameBackOfficeApproveRequest, IRequest<ETagResponse>
     {
-        public int PersistentLocalId { get; set; }
-
         [JsonIgnore]
         public IDictionary<string, object> Metadata { get; set; }
     }

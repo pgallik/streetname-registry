@@ -44,12 +44,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
                 .Returns(Task.FromResult(response));
         }
 
-        protected IIfMatchHeaderValidator MockValidIfMatchValidator()
+        protected IIfMatchHeaderValidator MockValidIfMatchValidator(bool result = true)
         {
             var mockIfMatchHeaderValidator = new Mock<IIfMatchHeaderValidator>();
-            mockIfMatchHeaderValidator.Setup(x =>
-                    x.IsValid(It.IsAny<string>(), It.IsAny<PersistentLocalId>(), CancellationToken.None))
-                .Returns(Task.FromResult(true));
+            mockIfMatchHeaderValidator
+                .Setup(x => x.IsValid(It.IsAny<string>(), It.IsAny<PersistentLocalId>(), CancellationToken.None))
+                .Returns(Task.FromResult(result));
             return mockIfMatchHeaderValidator.Object;
         }
 

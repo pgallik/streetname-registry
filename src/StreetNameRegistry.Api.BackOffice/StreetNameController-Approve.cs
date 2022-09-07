@@ -9,8 +9,10 @@ namespace StreetNameRegistry.Api.BackOffice
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentValidation;
     using FluentValidation.Results;
+    using Handlers.Sqs.Requests;
     using Infrastructure;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -58,10 +60,31 @@ namespace StreetNameRegistry.Api.BackOffice
                     return new PreconditionFailedResult();
                 }
 
+                if (_useSqsToggle.FeatureEnabled)
+                {
+                    var result = await _mediator.Send(
+                        new SqsStreetNameApproveRequest
+                        {
+                            Request = request,
+                            Metadata = GetMetadata(),
+                            ProvenanceData = new ProvenanceData(CreateFakeProvenance())
+                        }, cancellationToken);
+
+                    return Accepted(result.LocationAsUri);
+                }
+
                 request.Metadata = GetMetadata();
                 var response = await _mediator.Send(request, cancellationToken);
 
                 return new NoContentWithETagResult(response.LastEventHash);
+            }
+            catch (AggregateIdIsNotFoundException)
+            {
+                // todo: change this?
+                throw CreateValidationException(
+                    "code",
+                    string.Empty,
+                    "message");
             }
             catch (IdempotencyException)
             {
