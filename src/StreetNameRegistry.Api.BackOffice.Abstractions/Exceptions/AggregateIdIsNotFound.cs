@@ -2,6 +2,6 @@
 {
     using System;
 
-    public class AggregateIdNotFound : Exception
+    public class AggregateIdIsNotFound : Exception
     { }
 }
