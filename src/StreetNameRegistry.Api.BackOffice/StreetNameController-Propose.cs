@@ -10,8 +10,10 @@ namespace StreetNameRegistry.Api.BackOffice
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentValidation;
     using FluentValidation.Results;
+    using Handlers.Sqs.Requests;
     using Infrastructure.Options;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -36,7 +38,8 @@ namespace StreetNameRegistry.Api.BackOffice
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string", "De url van de voorgestelde straatnaam.")]
+        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string",
+            "De url van de voorgestelde straatnaam.")]
         [SwaggerRequestExample(typeof(StreetNameProposeRequest), typeof(StreetNameProposeRequestExamples))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]
@@ -50,12 +53,33 @@ namespace StreetNameRegistry.Api.BackOffice
 
             try
             {
+                if (_useSqsToggle.FeatureEnabled)
+                {
+                    var sqsRequest = new SqsStreetNameProposeRequest
+                    {
+                        Request = request,
+                        Metadata = GetMetadata(),
+                        ProvenanceData = new ProvenanceData(CreateFakeProvenance())
+                    };
+                    var result = await _mediator.Send(sqsRequest, cancellationToken);
+
+                    return Accepted(result.LocationAsUri);
+                }
+
                 request.Metadata = GetMetadata();
                 var response = await _mediator.Send(request, cancellationToken);
 
                 return new CreatedWithLastObservedPositionAsETagResult(
                     new Uri(string.Format(options.Value.DetailUrl, response.PersistentLocalId)),
                     response.LastEventHash);
+            }
+            catch (AggregateIdIsNotFoundException)
+            {
+                // todo: change this?
+                throw CreateValidationException(
+                    "code",
+                    string.Empty,
+                    "message");
             }
             catch (AggregateNotFoundException)
             {
@@ -94,7 +118,7 @@ namespace StreetNameRegistry.Api.BackOffice
                         ValidationErrorMessages.StreetName.StreetNameIsMissingALanguage),
 
                     _ => new ValidationException(new List<ValidationFailure>
-                        {new ValidationFailure(string.Empty, exception.Message)})
+                        { new ValidationFailure(string.Empty, exception.Message) })
                 };
             }
         }

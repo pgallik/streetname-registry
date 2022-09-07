@@ -28,12 +28,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
         protected IOptions<ResponseOptions> ResponseOptions { get; }
         protected Mock<IMediator> MockMediator { get; }
 
-        public BackOfficeApiTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public BackOfficeApiTest(ITestOutputHelper testOutputHelper, bool useSqs = false) : base(testOutputHelper)
         {
             ResponseOptions = Options.Create(Fixture.Create<ResponseOptions>());
             ResponseOptions.Value.DetailUrl = DetailUrl;
             MockMediator = new Mock<IMediator>();
-            Controller = CreateApiBusControllerWithUser();
+            Controller = CreateApiBusControllerWithUser(useSqs);
         }
 
         protected void MockMediatorResponse<TRequest, TResponse>(TResponse response)
@@ -64,9 +64,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
         protected string GetStreetNamePuri(int persistentLocalId)
             => $"https://data.vlaanderen.be/id/gemeente/{persistentLocalId}";
 
-        public TController CreateApiBusControllerWithUser(string username="John Doe")
+        public TController CreateApiBusControllerWithUser(bool useSqs, string username = "John Doe")
         {
-            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, new UseSqsToggle(false)) as TController;
+            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, new UseSqsToggle(useSqs)) as TController;
 
             var claims = new List<Claim>()
             {

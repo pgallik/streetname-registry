@@ -40,7 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
 
             if (string.IsNullOrEmpty(aggregateId))
             {
-                throw new AggregateIdIsNotFound();
+                throw new AggregateIdIsNotFoundException();
             }
 
             var ticketId = await _ticketing.CreateTicket(WithTicketMetadata(aggregateId, request), cancellationToken);

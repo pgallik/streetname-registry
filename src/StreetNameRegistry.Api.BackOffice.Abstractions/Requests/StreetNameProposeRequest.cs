@@ -3,7 +3,6 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Convertors;
     using MediatR;
@@ -12,24 +11,9 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Newtonsoft.Json;
     using Response;
 
-
     [DataContract(Name = "VoorstelStraatnaam", Namespace = "")]
-    public class StreetNameProposeRequest : IRequest<PersistentLocalIdETagResponse>
+    public class StreetNameProposeRequest : StreetNameBackOfficeProposeRequest, IRequest<PersistentLocalIdETagResponse>
     {
-        /// <summary>
-        /// De unieke en persistente identificator van de gemeente die de straatnaam toekent.
-        /// </summary>
-        [DataMember(Name = "GemeenteId", Order = 1)]
-        [JsonProperty(Required = Required.Always)]
-        public string GemeenteId { get; set; }
-
-        /// <summary>
-        /// De straatnaam in elke officiële taal en faciliteitentaal van de gemeente.
-        /// </summary>
-        [DataMember(Name = "Straatnamen", Order = 2)]
-        [JsonProperty(Required = Required.Always)]
-        public Dictionary<Taal, string> Straatnamen { get; set; }
-
         [JsonIgnore]
         public IDictionary<string, object> Metadata { get; set; }
 

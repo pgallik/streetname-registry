@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Consumer;
+    using Handlers.Sqs;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -47,7 +48,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .As<IIfMatchHeaderValidator>()
                 .AsSelf();
 
-                builder.RegisterModule(new IdempotencyModule(
+            builder.RegisterModule(new IdempotencyModule(
                 _services,
                 _configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
                     .ConnectionString,
@@ -62,6 +63,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             builder.RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory));
             builder.RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory));
             builder.RegisterModule(new MediatRModule());
+            builder.RegisterModule(new SqsHandlersModule());
+            builder.RegisterModule(new TicketingModule(_configuration, _services));
 
             builder.RegisterModule(new CommandHandlingModule(_configuration));
             builder.RegisterModule(new ConsumerModule(_configuration, _services, _loggerFactory));

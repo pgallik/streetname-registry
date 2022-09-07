@@ -97,7 +97,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
             // Assert
             act
                 .Should()
-                .ThrowAsync<AggregateIdIsNotFound>();
+                .ThrowAsync<AggregateIdIsNotFoundException>();
         }
     }
 }

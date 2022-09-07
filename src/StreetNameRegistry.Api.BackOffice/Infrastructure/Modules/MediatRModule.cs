@@ -3,6 +3,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using System.Reflection;
     using Autofac;
     using Handlers;
+    using Handlers.Sqs.Handlers;
     using MediatR;
     using Module = Autofac.Module;
 
@@ -23,6 +24,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             });
 
             builder.RegisterAssemblyTypes(typeof(StreetNameProposeHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(SqsStreetNameProposeHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
         }
     }
 }

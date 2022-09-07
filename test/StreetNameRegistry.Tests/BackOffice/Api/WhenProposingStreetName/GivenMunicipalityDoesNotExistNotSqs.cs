@@ -5,29 +5,29 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentAssertions;
     using FluentValidation;
     using Moq;
+    using Municipality;
     using StreetNameRegistry.Api.BackOffice;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityDoesNotExist : BackOfficeApiTest<StreetNameController>
+    public class GivenMunicipalityDoesNotExistNotSqs : BackOfficeApiTest<StreetNameController>
     {
-        public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper, useSqs: true)
+        public GivenMunicipalityDoesNotExistNotSqs(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 
         [Fact]
-        public void ThenAggregateIdIsNotFound()
+        public void ThenAggregateIsNotFound()
         {
             MockMediator
-                .Setup(x => x.Send(It.IsAny<SqsStreetNameProposeRequest>(), CancellationToken.None))
-                .Throws(new AggregateIdIsNotFoundException());
+                .Setup(x => x.Send(It.IsAny<StreetNameProposeRequest>(), CancellationToken.None))
+                .Throws(new AggregateNotFoundException("123", typeof(Municipality)));
 
             Func<Task> act = async () => await Controller.Propose(
                 ResponseOptions,
@@ -41,7 +41,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
                         {Taal.FR, "Rue de la Croix-Rouge"}
                     }
                 }, CancellationToken.None);
-
             //Assert
             act
                 .Should()
