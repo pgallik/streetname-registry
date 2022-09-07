@@ -24,7 +24,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 
         protected abstract Task<string> InnerHandle(TSqsLambdaRequest request, CancellationToken cancellationToken);
 
-        protected abstract TicketError? HandleDomainException(DomainException exception);
+        protected abstract TicketError? MapDomainException(DomainException exception);
 
         public async Task<Unit> Handle(TSqsLambdaRequest request, CancellationToken cancellationToken)
         {
@@ -39,13 +39,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                     new TicketResult(new ETagResponse(etag)),
                     cancellationToken);
             }
-            catch (AggregateNotFoundException)
-            {
-                await _ticketing.Error(
-                    request.TicketId,
-                    new TicketError("", ""),
-                    cancellationToken);
-            }
             catch (DomainException exception)
             {
                 var ticketError = exception switch
@@ -56,7 +49,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                     StreetNameIsRemovedException => new TicketError(
                         ValidationErrorMessages.StreetName.StreetNameIsRemoved,
                         ValidationErrorCodes.StreetName.StreetNameIsRemoved),
-                    _ => HandleDomainException(exception)
+                    _ => MapDomainException(exception)
                 };
 
                 ticketError ??= new TicketError(exception.Message, "");

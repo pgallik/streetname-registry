@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             return await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId, cancellationToken);
         }
 
-        protected override TicketError? HandleDomainException(DomainException exception)
+        protected override TicketError? MapDomainException(DomainException exception)
         {
             return exception switch
             {

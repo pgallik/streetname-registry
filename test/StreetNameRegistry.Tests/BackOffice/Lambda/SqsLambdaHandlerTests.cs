@@ -75,38 +75,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         }
 
         [Fact]
-        public async Task WhenAggregateNotFoundException_ThenTicketingErrorIsExpected()
-        {
-            var ticketing = new Mock<ITicketing>();
-
-            var sqsLambdaRequest = new SqsLambdaStreetNameProposeRequest
-            {
-                Request = new StreetNameBackOfficeProposeRequest(),
-                MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid(),
-                Metadata = new Dictionary<string, object>(),
-                Provenance = Fixture.Create<Provenance>()
-            };
-
-            var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
-            idempotentCommandHandler
-                .Setup(x => x.Dispatch(It.IsAny<Guid>(), It.IsAny<object>(),
-                    It.IsAny<IDictionary<string, object>>(), CancellationToken.None))
-                .Throws(new AggregateNotFoundException("dummy", typeof(string)));
-
-            var sut = new FakeLambdaHandler(
-                ticketing.Object,
-                idempotentCommandHandler.Object);
-
-            await sut.Handle(sqsLambdaRequest, CancellationToken.None);
-
-            //Assert
-            ticketing.Verify(x =>
-                x.Error(sqsLambdaRequest.TicketId, new TicketError("", ""), CancellationToken.None));
-            ticketing.Verify(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None), Times.Never);
-        }
-
-        [Fact]
         public async Task WhenStreetNameIsRemovedException_ThenTicketingErrorIsExpected()
         {
             var ticketing = new Mock<ITicketing>();
@@ -150,7 +118,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             return Task.FromResult("eTag");
         }
 
-        protected override TicketError? HandleDomainException(DomainException exception)
+        protected override TicketError? MapDomainException(DomainException exception)
         {
             throw new System.NotImplementedException();
         }

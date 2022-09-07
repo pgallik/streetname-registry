@@ -55,7 +55,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             return streetNameHash;
         }
 
-        protected override TicketError? HandleDomainException(DomainException exception)
+        protected override TicketError? MapDomainException(DomainException exception)
         {
             return exception switch
             {
