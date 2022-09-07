@@ -22,7 +22,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 
             if (messageData is not SqsRequest sqsRequest)
             {
-                // TODO: the message should not be retried by the Lambda.
+                // TODO: the message should not be retried by the Lambda ->
+                // Don't throw? Complete ticket?
                 throw new InvalidOperationException($"Unable to cast {nameof(messageData)} as {nameof(sqsRequest)}.");
             }
 
@@ -34,7 +35,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
-            //             MessageGroupId = messageMetadata.MessageGroupId
+            //             MessageGroupId = messageMetadata.MessageGroupId,
+            //             Metadata = request.Metadata,
+            //             Provenance = request.ProvenanceData.ToProvenance()
             //         }, cancellationToken);
             //         break;
             //
@@ -43,7 +46,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
-            //             MessageGroupId = messageMetadata.MessageGroupId
+            //             MessageGroupId = messageMetadata.MessageGroupId,
+            //             Metadata = request.Metadata,
+            //             Provenance = request.ProvenanceData.ToProvenance()
             //         }, cancellationToken);
             //         break;
             //
@@ -52,7 +57,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
-            //             MessageGroupId = messageMetadata.MessageGroupId
+            //             MessageGroupId = messageMetadata.MessageGroupId,
+            //             Metadata = request.Metadata,
+            //             Provenance = request.ProvenanceData.ToProvenance()
             //         }, cancellationToken);
             //         break;
             //
@@ -61,7 +68,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
-            //             MessageGroupId = messageMetadata.MessageGroupId
+            //             MessageGroupId = messageMetadata.MessageGroupId,
+            //             Metadata = request.Metadata,
+            //             Provenance = request.ProvenanceData.ToProvenance()
             //         }, cancellationToken);
             //         break;
             //
@@ -70,7 +79,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
-            //             MessageGroupId = messageMetadata.MessageGroupId
+            //             MessageGroupId = messageMetadata.MessageGroupId,
+            //             Metadata = request.Metadata,
+            //             Provenance = request.ProvenanceData.ToProvenance()
             //         }, cancellationToken);
             //         break;
             // }

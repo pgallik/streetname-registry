@@ -10,6 +10,8 @@ namespace StreetNameRegistry.Tests.BackOffice
     using Moq;
     using Municipality;
     using Municipality.Commands;
+    using Newtonsoft.Json;
+    using NodaTime;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using Testing;
@@ -77,13 +79,15 @@ namespace StreetNameRegistry.Tests.BackOffice
             DispatchArrangeCommand(proposeCommand);
         }
 
-        protected Mock<ITicketing> MockTicketing(Action<ETagResponse> callback)
+        protected Mock<ITicketing> MockTicketing(Action<ETagResponse> ticketingCompleteCallback)
         {
             var ticketing = new Mock<ITicketing>();
-            ticketing.Setup(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None))
+            ticketing
+                .Setup(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None))
                 .Callback<Guid, TicketResult, CancellationToken>((_, ticketResult, _) =>
                 {
-                    callback((ETagResponse)ticketResult.Result);
+                    var eTagResponse = JsonConvert.DeserializeObject<ETagResponse>(ticketResult.ResultAsJson!)!;
+                    ticketingCompleteCallback(eTagResponse);
                 });
 
             return ticketing;

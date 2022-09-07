@@ -24,15 +24,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             _municipalities = municipalities;
         }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameCorrectNamesRequest request,
-            CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameCorrectNamesRequest request, CancellationToken cancellationToken)
         {
-            var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId));
+            var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId!));
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
-            var cmd = request.Request.ToCommand(
-                municipalityId,
-                CreateFakeProvenance());
+            var cmd = request.ToCommand(
+                municipalityId);
 
             try
             {

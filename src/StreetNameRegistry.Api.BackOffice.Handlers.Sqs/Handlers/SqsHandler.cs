@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
         }
 
         protected abstract string? WithAggregateId(TSqsRequest request);
-        protected abstract IDictionary<string, string> WithMetadata(string aggregateId, TSqsRequest sqsRequest);
+        protected abstract IDictionary<string, string> WithTicketMetadata(string aggregateId, TSqsRequest sqsRequest);
 
         public async Task<LocationResult> Handle(TSqsRequest request, CancellationToken cancellationToken)
         {
@@ -43,12 +43,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
                 throw new AggregateIdNotFound();
             }
 
-            var ticketId = await _ticketing.CreateTicket(WithMetadata(aggregateId, request), cancellationToken);
+            var ticketId = await _ticketing.CreateTicket(WithTicketMetadata(aggregateId, request), cancellationToken);
             request.TicketId = ticketId;
 
             _ = await _sqsQueue.Copy(request, new SqsQueueOptions { MessageGroupId = aggregateId }, cancellationToken);
-
-            //_logger.LogDebug($"Request sent to queue {SqsQueueName.Value}");
 
             var location = _ticketingUrl.For(request.TicketId);
 

@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Abstractions.Convertors;
@@ -38,7 +37,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             return municipality?.MunicipalityId.ToString();
         }
 
-        protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameProposeRequest sqsRequest)
+        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, SqsStreetNameProposeRequest sqsRequest)
         {
             return new Dictionary<string, string>
             {

@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
 
-        protected override IDictionary<string, string> WithMetadata(string aggregateId, SqsStreetNameRetireRequest sqsRequest)
+        protected override IDictionary<string, string> WithTicketMetadata(string aggregateId, SqsStreetNameRetireRequest sqsRequest)
         {
             return new Dictionary<string, string>
             {

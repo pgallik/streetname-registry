@@ -5,13 +5,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.Api.ETag;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
+    using global::AutoFixture;
     using Moq;
-    using Municipality;
     using Municipality.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using TicketingService.Abstractions;
@@ -34,7 +33,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             {
                 Request = new StreetNameBackOfficeProposeRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             };
 
             var sut = new FakeLambdaHandler(
@@ -56,7 +57,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             {
                 Request = new StreetNameBackOfficeProposeRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             };
 
             var sut = new FakeLambdaHandler(
@@ -80,7 +83,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             {
                 Request = new StreetNameBackOfficeProposeRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             };
 
             var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
@@ -110,7 +115,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             {
                 Request = new StreetNameBackOfficeProposeRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             };
 
             var sut = new FakeLambdaHandler(

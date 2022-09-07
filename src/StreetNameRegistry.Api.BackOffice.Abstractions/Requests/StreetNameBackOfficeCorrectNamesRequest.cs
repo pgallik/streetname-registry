@@ -1,13 +1,8 @@
 ﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Runtime.Serialization;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Convertors;
-    using Municipality;
-    using Municipality.Commands;
     using Newtonsoft.Json;
 
     [DataContract(Name = "CorrigerenStraatnaamNamen", Namespace = "")]
@@ -24,15 +19,5 @@
         [DataMember(Name = "Straatnamen", Order = 1)]
         [JsonProperty(Required = Required.Always)]
         public Dictionary<Taal, string> Straatnamen { get; set; }
-
-        /// <summary>
-        /// Map to CorrectStreetNameNames command
-        /// </summary>
-        /// <returns>CorrectStreetNameNames.</returns>
-        public CorrectStreetNameNames ToCommand(MunicipalityId municipalityId, Provenance provenance)
-        {
-            var names = new Names(Straatnamen.Select(x => new StreetNameName(x.Value, TaalMapper.ToLanguage(x.Key))));
-            return new CorrectStreetNameNames(municipalityId, new PersistentLocalId(PersistentLocalId), names, provenance);
-        }
     }
 }

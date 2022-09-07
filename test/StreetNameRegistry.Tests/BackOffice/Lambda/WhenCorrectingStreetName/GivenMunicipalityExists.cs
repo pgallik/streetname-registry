@@ -41,6 +41,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
         [Fact]
         public async Task ThenStreetNameNamesWereCorrected()
         {
+            // Arrange
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
             var provenance = Fixture.Create<Provenance>();
@@ -57,10 +58,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
 
             await _backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(
                 new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
-            _backOfficeContext.SaveChanges();
+            await _backOfficeContext.SaveChangesAsync();
 
-            ETagResponse? etag = null;
-
+            var etag = new ETagResponse(string.Empty);
             var handler = new SqsStreetNameCorrectNamesHandler(
                 MockTicketing(result =>
                 {
@@ -81,17 +81,21 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                         { Taal.FR, "Rue de la Croix-Rouge" }
                     }
                 },
-                MessageGroupId = municipalityId
+                MessageGroupId = municipalityId,
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
-            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 5, 1); //3 = version of stream (zero based)
+            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 5, 1);
             stream.Messages.First().JsonMetadata.Should().Contain(etag.LastEventHash);
         }
 
         [Fact]
         public async Task WhenStreetNameNameAlreadyExistsException_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var streetname = "Bremt";
@@ -106,18 +110,23 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             {
                 Request = new StreetNameBackOfficeCorrectNamesRequest{ Straatnamen = new Dictionary<Taal, string>() },
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError($"Straatnaam '{streetname}' bestaat reeds in de gemeente.", "StraatnaamBestaatReedsInGemeente"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError($"Straatnaam '{streetname}' bestaat reeds in de gemeente.", "StraatnaamBestaatReedsInGemeente"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenStreetNameHasInvalidStatusException_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameCorrectNamesHandler(
@@ -130,18 +139,25 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             {
                 Request = new StreetNameBackOfficeCorrectNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.", "StraatnaamGehistoreerdOfAfgekeurd"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError(
+                        "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.",
+                        "StraatnaamGehistoreerdOfAfgekeurd"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenStreetNameNameLanguageIsNotSupportedException_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameCorrectNamesHandler(
@@ -154,20 +170,25 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             {
                 Request = new StreetNameBackOfficeCorrectNamesRequest { Straatnamen = new Dictionary<Taal, string>() },
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
+                x.Error(
+                    It.IsAny<Guid>(),
                     new TicketError(
                         "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente.",
-                        "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal"), CancellationToken.None));
+                        "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
@@ -199,12 +220,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                     Straatnamen = new Dictionary<Taal, string>()
                 },
                 MessageGroupId = municipalityId.ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Complete(It.IsAny<Guid>(),
+                x.Complete(
+                    It.IsAny<Guid>(),
                     new TicketResult(new ETagResponse(municipality.GetStreetNameHash(streetNamePersistentLocalId))),
                     CancellationToken.None));
         }

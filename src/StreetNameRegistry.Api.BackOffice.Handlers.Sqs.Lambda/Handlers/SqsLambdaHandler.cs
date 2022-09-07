@@ -1,15 +1,12 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
-    using Abstractions;
-    using Abstractions.Exceptions;
-    using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
-    using Handlers;
     using MediatR;
+    using Abstractions;
+    using Abstractions.Response;
+    using Requests;
     using Municipality;
     using Municipality.Exceptions;
-    using Requests;
     using TicketingService.Abstractions;
 
     public abstract class SqsLambdaHandler<TSqsLambdaRequest> : IRequestHandler<TSqsLambdaRequest>
@@ -70,8 +67,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
                     cancellationToken);
             }
 
-            // Other exceptions are not caught, and thus will be retried.
-
             return Unit.Value;
         }
 
@@ -85,18 +80,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
                 await municipalityRepository.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
             var streetNameHash = municipality.GetStreetNameHash(persistentLocalId);
             return streetNameHash;
-        }
-
-        protected Provenance CreateFakeProvenance()
-        {
-            return new Provenance(
-                NodaTime.SystemClock.Instance.GetCurrentInstant(),
-                Application.BuildingRegistry,
-                new Reason(""), // TODO: TBD
-                new Operator(""), // TODO: from claims
-                Modification.Insert,
-                Organisation.DigitaalVlaanderen // TODO: from claims
-            );
         }
     }
 }

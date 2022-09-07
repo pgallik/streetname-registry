@@ -8,7 +8,7 @@
     using Be.Vlaanderen.Basisregisters.Utilities.HexByteConvertor;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
+    using Abstractions.Exceptions;
 
     public class IdempotentCommandHandler : IIdempotentCommandHandler
     {

@@ -40,6 +40,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
         [Fact]
         public async Task ThenStreetNameWasRetired()
         {
+            // Arrange
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
             var provenance = Fixture.Create<Provenance>();
@@ -49,7 +50,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             AddOfficialLanguageDutch(municipalityId);
             ProposeStreetName(
                 municipalityId,
-                new Names(new Dictionary<Language, string>{{Language.Dutch, "Bremt"}}),
+                new Names(new Dictionary<Language, string> { { Language.Dutch, "Bremt" } }),
                 streetNamePersistentLocalId,
                 provenance);
             ApproveStreetName(
@@ -58,15 +59,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
 
             await _backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(
                 new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
-            _backOfficeContext.SaveChanges();
+            await _backOfficeContext.SaveChangesAsync();
 
-            ETagResponse? etag = null;
-
+            var etag = new ETagResponse(string.Empty);
             var handler = new SqsStreetNameRetireHandler(
-                MockTicketing(result =>
-                {
-                    etag = result;
-                }).Object,
+                MockTicketing(result => { etag = result; }).Object,
                 Container.Resolve<IMunicipalities>(),
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext));
 
@@ -74,16 +71,22 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             await handler.Handle(new SqsLambdaStreetNameRetireRequest
             {
                 Request = new StreetNameBackOfficeRetireRequest { PersistentLocalId = streetNamePersistentLocalId },
-                MessageGroupId = municipalityId
+                MessageGroupId = municipalityId,
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
-            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 5, 1); //3 = version of stream (zero based)
+            var stream = await Container.Resolve<IStreamStore>()
+                .ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 5, 1);
             stream.Messages.First().JsonMetadata.Should().Contain(etag.LastEventHash);
         }
-         [Fact]
+
+        [Fact]
         public async Task WhenStreetNameHasInvalidStatus_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameRetireHandler(
@@ -96,18 +99,23 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             {
                 Request = new StreetNameBackOfficeRetireRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError("Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.", "StraatnaamVoorgesteldOfAfgekeurd"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError("Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.", "StraatnaamVoorgesteldOfAfgekeurd"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenMunicipalityHasInvalidStatus_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameRetireHandler(
@@ -120,18 +128,25 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             {
                 Request = new StreetNameBackOfficeRetireRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.", "StraatnaamGemeenteInGebruik"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError(
+                        "Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.",
+                        "StraatnaamGemeenteInGebruik"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
@@ -152,7 +167,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
                 municipalities,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);
 
-            var municipality = await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
+            var municipality =
+                await municipalities.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None);
 
             // Act
             await sut.Handle(new SqsLambdaStreetNameRetireRequest
@@ -162,12 +178,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
                     PersistentLocalId = streetNamePersistentLocalId
                 },
                 MessageGroupId = municipalityId.ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Complete(It.IsAny<Guid>(),
+                x.Complete(
+                    It.IsAny<Guid>(),
                     new TicketResult(new ETagResponse(municipality.GetStreetNameHash(streetNamePersistentLocalId))),
                     CancellationToken.None));
         }

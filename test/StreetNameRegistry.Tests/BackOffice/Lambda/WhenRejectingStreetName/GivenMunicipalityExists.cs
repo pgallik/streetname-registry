@@ -40,6 +40,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
         [Fact]
         public async Task ThenStreetNameWasRejected()
         {
+            // Arrange
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
             var provenance = Fixture.Create<Provenance>();
@@ -55,10 +56,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
 
             await _backOfficeContext.MunicipalityIdByPersistentLocalId.AddAsync(
                 new MunicipalityIdByPersistentLocalId(streetNamePersistentLocalId, municipalityId));
-            _backOfficeContext.SaveChanges();
+            await _backOfficeContext.SaveChangesAsync();
 
-            ETagResponse? etag = null;
-
+            var etag = new ETagResponse(string.Empty);
             var handler = new SqsStreetNameRejectHandler(
                 MockTicketing(result =>
                 {
@@ -71,7 +71,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             await handler.Handle(new SqsLambdaStreetNameRejectRequest
             {
                 Request = new StreetNameBackOfficeRejectRequest { PersistentLocalId = streetNamePersistentLocalId },
-                MessageGroupId = municipalityId
+                MessageGroupId = municipalityId,
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
@@ -82,6 +85,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
         [Fact]
         public async Task WhenStreetNameHasInvalidStatus_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameRejectHandler(
@@ -94,18 +98,23 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             {
                 Request = new StreetNameBackOfficeRejectRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.", "StraatnaamInGebruikOfGehistoreerd"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError("Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.", "StraatnaamInGebruikOfGehistoreerd"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenMunicipalityHasInvalidStatus_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameRejectHandler(
@@ -118,18 +127,23 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             {
                 Request = new StreetNameBackOfficeRejectRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.", "StraatnaamGemeenteInGebruik"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError("Deze actie is enkel toegestaan binnen gemeenten met status 'inGebruik'.", "StraatnaamGemeenteInGebruik"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenIdempotencyException_ThenTicketingCompleteIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
@@ -160,12 +174,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
                     PersistentLocalId = streetNamePersistentLocalId
                 },
                 MessageGroupId = municipalityId.ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Complete(It.IsAny<Guid>(),
+                x.Complete(
+                    It.IsAny<Guid>(),
                     new TicketResult(new ETagResponse(municipality.GetStreetNameHash(streetNamePersistentLocalId))),
                     CancellationToken.None));
         }

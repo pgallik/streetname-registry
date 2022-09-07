@@ -9,7 +9,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
+    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
+    using global::AutoFixture;
     using Moq;
     using Municipality;
     using Municipality.Exceptions;
@@ -53,13 +55,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             AddOfficialLanguageDutch(municipalityId);
             AddOfficialLanguageFrench(municipalityId);
 
-            ETagResponse? etag = null;
-
+            var etag = new ETagResponse(string.Empty);
             var handler = new SqsStreetNameProposeHandler(
-                MockTicketing(result =>
-                {
-                    etag = result;
-                }).Object,
+                MockTicketing(result => { etag = result; }).Object,
                 mockPersistentLocalIdGenerator.Object,
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
                 _backOfficeContext,
@@ -77,22 +75,28 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                         { Taal.FR, "Rue de la Croix-Rouge" }
                     }
                 },
-                MessageGroupId = municipalityId
+                MessageGroupId = municipalityId,
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
-            var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 3, 1); //3 = version of stream (zero based)
+            var stream = await Container.Resolve<IStreamStore>()
+                .ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 3,
+                    1); //3 = version of stream (zero based)
             stream.Messages.First().JsonMetadata.Should().Contain(etag.LastEventHash);
 
-            var municipalityIdByPersistentLocalId = await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(expectedLocation);
+            var municipalityIdByPersistentLocalId =
+                await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(expectedLocation);
             municipalityIdByPersistentLocalId.Should().NotBeNull();
             municipalityIdByPersistentLocalId.MunicipalityId.Should().Be(municipalityLatestItem.MunicipalityId);
         }
 
-
         [Fact]
         public async Task WhenStreetNameNameAlreadyExistsException_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var streetname = "Bremt";
@@ -100,7 +104,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var sut = new SqsStreetNameProposeHandler(
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
-                MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname)).Object,
+                MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname))
+                    .Object,
                 _backOfficeContext,
                 Mock.Of<IMunicipalities>());
 
@@ -109,18 +114,24 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             {
                 Request = new StreetNameBackOfficeProposeRequest { Straatnamen = new Dictionary<Taal, string>() },
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError($"Straatnaam '{streetname}' bestaat reeds in de gemeente.", "StraatnaamBestaatReedsInGemeente"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError($"Straatnaam '{streetname}' bestaat reeds in de gemeente.",
+                        "StraatnaamBestaatReedsInGemeente"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenMunicipalityHasInvalidStatusException_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameProposeHandler(
@@ -135,18 +146,23 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             {
                 Request = new StreetNameBackOfficeProposeRequest { Straatnamen = new Dictionary<Taal, string>() },
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
-                    new TicketError("De gemeente is gehistoreerd.", "StraatnaamGemeenteGehistoreerd"), CancellationToken.None));
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError("De gemeente is gehistoreerd.", "StraatnaamGemeenteGehistoreerd"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenStreetNameNameLanguageIsNotSupportedException_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameProposeHandler(
@@ -161,7 +177,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             {
                 Request = new StreetNameBackOfficeProposeRequest { Straatnamen = new Dictionary<Taal, string>() },
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
@@ -169,12 +187,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
                 x.Error(It.IsAny<Guid>(),
                     new TicketError(
                         "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente.",
-                        "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal"), CancellationToken.None));
+                        "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal"),
+                    CancellationToken.None));
         }
 
         [Fact]
         public async Task WhenStreetNameIsMissingALanguageException_ThenTicketingErrorIsExpected()
         {
+            // Arrange
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameProposeHandler(
@@ -189,15 +209,19 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             {
                 Request = new StreetNameBackOfficeProposeRequest { Straatnamen = new Dictionary<Taal, string>() },
                 MessageGroupId = Guid.NewGuid().ToString(),
-                TicketId = Guid.NewGuid()
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
             }, CancellationToken.None);
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(It.IsAny<Guid>(),
+                x.Error(
+                    It.IsAny<Guid>(),
                     new TicketError(
                         "In 'Straatnamen' ontbreekt een officiële of faciliteitentaal.",
-                        "StraatnaamOntbreektOfficieleOfFaciliteitenTaal"), CancellationToken.None));
+                        "StraatnaamOntbreektOfficieleOfFaciliteitenTaal"),
+                    CancellationToken.None));
         }
     }
 }

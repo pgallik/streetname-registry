@@ -5,7 +5,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using System.Threading.Tasks;
     using Abstractions;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Lambda;
     using Municipality;
     using Municipality.Exceptions;
     using Requests;
@@ -33,11 +32,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
         protected override async Task<string> InnerHandle(SqsLambdaStreetNameProposeRequest request, CancellationToken cancellationToken)
         {
             var persistentLocalId = _persistentLocalIdGenerator.GenerateNextPersistentLocalId();
-            var municipalityId = new MunicipalityId(new Guid(request.MessageGroupId));
+            var municipalityId = new MunicipalityId(new Guid(request.MessageGroupId!));
 
-            var cmd = request.Request.ToCommand(
+            var cmd = request.ToCommand(
                 municipalityId,
-                CreateFakeProvenance(),
                 persistentLocalId);
 
             await IdempotentCommandHandler.Dispatch(

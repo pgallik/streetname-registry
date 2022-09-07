@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Abstractions.Exceptions;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Municipality;
-    using Municipality.Commands;
     using Municipality.Exceptions;
     using Requests;
     using TicketingService.Abstractions;
@@ -25,16 +24,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             _municipalities = municipalities;
         }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameApproveRequest request,
-            CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameApproveRequest request, CancellationToken cancellationToken)
         {
-            var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId));
+            var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId!));
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
-            var cmd = new ApproveStreetName(
+            var cmd = request.ToCommand(
                 municipalityId,
-                streetNamePersistentLocalId,
-                CreateFakeProvenance());
+                streetNamePersistentLocalId);
 
             try
             {
