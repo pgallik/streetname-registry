@@ -1,8 +1,8 @@
-namespace StreetNameRegistry.Api.Legacy.Infrastructure.Configuration
+namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Configuration
 {
     public class FeatureToggleOptions
     {
         public const string ConfigurationKey = "FeatureToggles";
-        public bool UseProjectionsV2 { get; set; }
+        public bool UseSqs { get; set; }
     }
 }

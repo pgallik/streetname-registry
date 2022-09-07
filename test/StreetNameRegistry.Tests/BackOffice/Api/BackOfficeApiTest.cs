@@ -15,6 +15,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using Municipality;
     using StreetNameRegistry.Api.BackOffice;
     using StreetNameRegistry.Api.BackOffice.Infrastructure;
+    using StreetNameRegistry.Api.BackOffice.Infrastructure.FeatureToggles;
     using StreetNameRegistry.Api.BackOffice.Infrastructure.Options;
     using Testing;
     using Xunit.Abstractions;
@@ -65,7 +66,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
 
         public TController CreateApiBusControllerWithUser(string username="John Doe")
         {
-            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object) as TController;
+            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, new UseSqsToggle(false)) as TController;
 
             var claims = new List<Claim>()
             {

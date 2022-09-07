@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Configuration;
+    using FeatureToggles;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -18,6 +19,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
     using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Modules;
     using Options;
@@ -100,7 +102,10 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                     }
                 }
                 .EnableJsonErrorActionFilterOption())
-                .Configure<ResponseOptions>(_configuration);
+                .Configure<ResponseOptions>(_configuration)
+                .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
+                .AddSingleton(c =>
+                    new UseSqsToggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseSqs));
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new ApiModule(_configuration, services, _loggerFactory));

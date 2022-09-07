@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.Legacy.Infrastructure.FeatureToggles
+namespace StreetNameRegistry.Api.BackOffice.Infrastructure.FeatureToggles
 {
     using FeatureToggle;
 
