@@ -22,9 +22,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 
             if (messageData is not SqsRequest sqsRequest)
             {
-                // TODO: the message should not be retried by the Lambda ->
-                // Don't throw? Complete ticket?
-                throw new InvalidOperationException($"Unable to cast {nameof(messageData)} as {nameof(sqsRequest)}.");
+                messageMetadata.Logger?.LogInformation($"Unable to cast {nameof(messageData)} as {nameof(sqsRequest)}.");
+                return;
             }
 
             // TODO: uncomment after initial lambda testing
