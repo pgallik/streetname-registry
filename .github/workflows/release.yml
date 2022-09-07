@@ -136,8 +136,8 @@ jobs:
 #      shell: bash
 #      run: |
 #        echo Zip lambda functions
-#        echo zip -r lambda.zip /home/runner/work/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        pushd /home/runner/work/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
 #        zip -r lambda.zip .
 #        popd
         
@@ -147,8 +147,12 @@ jobs:
 #      shell: bash
 #      run: |
 #        echo Deploy Lambda functions to Test
-#        echo aws s3 cp /home/runner/work/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
-#        aws s3 cp /home/runner/work/streetname-registry/dist/streetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux/lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        echo DEBUG ls -a /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        ls -a /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        popd    
 
     - name: Configure AWS credentials (Staging)
       if: env.RELEASE_VERSION != 'none'
@@ -206,8 +210,10 @@ jobs:
 #      shell: bash
 #      run: |
 #        #echo Deploy Lambda functions to Staging
+#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
 #        #echo aws s3 cp lambda.zip s3://s3-vbr-staging-basisregisters-lam-sr-sqsbackofficehandlerfunction
 #        #aws s3 cp lambda.zip s3://s3-vbr-staging-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        #popd
 
     - name: Configure AWS credentials (Production)
       if: env.RELEASE_VERSION != 'none'
@@ -260,13 +266,15 @@ jobs:
         SEMVER: ${{ env.RELEASE_VERSION }}
         WORKSPACE: ${{ github.workspace }}
 
- #   - name: Deploy Lambda functions to Production
- #     if: env.RELEASE_VERSION != 'none'
- #     shell: bash
- #     run: |
- #       #echo Deploy Lambda functions to Production
- #       #echo aws s3 cp lambda.zip s3://s3-vbr-production-basisregisters-lam-sr-sqsbackofficehandlerfunction
- #       #aws s3 cp lambda.zip s3://s3-vbr-production-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#    - name: Deploy Lambda functions to Production
+#      if: env.RELEASE_VERSION != 'none'
+#      shell: bash
+#      run: |
+#        #echo Deploy Lambda functions to Production
+#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        #echo aws s3 cp lambda.zip s3://s3-vbr-production-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        #aws s3 cp lambda.zip s3://s3-vbr-production-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        #popd    
         
     - name: Publish to NuGet
       if: env.RELEASE_VERSION != 'none'
