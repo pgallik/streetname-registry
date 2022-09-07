@@ -25,7 +25,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
         {
             var municipalityIdByPersistentLocalId = _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
-                .Find(request.Request.PersistentLocalId);
+                .Find(request.PersistentLocalId);
 
             return municipalityIdByPersistentLocalId?.MunicipalityId.ToString();
         }
@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
                 { RegistryKey, nameof(StreetNameRegistry) },
                 { ActionKey, Action },
                 { AggregateIdKey, aggregateId },
-                { ObjectIdKey, sqsRequest.Request.PersistentLocalId.ToString() }
+                { ObjectIdKey, sqsRequest.PersistentLocalId.ToString() }
             };
         }
     }

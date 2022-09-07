@@ -14,15 +14,8 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Response;
 
     [DataContract(Name = "CorrigerenStraatnaamNamen", Namespace = "")]
-    public class StreetNameCorrectNamesRequest : IRequest<ETagResponse>
+    public class StreetNameCorrectNamesRequest : StreetNameBackOfficeCorrectNamesRequest, IRequest<ETagResponse>
     {
-        /// <summary>
-        /// De straatnaam in elke officiële taal en faciliteitentaal van de gemeente.
-        /// </summary>
-        [DataMember(Name = "Straatnamen", Order = 1)]
-        [JsonProperty(Required = Required.Always)]
-        public Dictionary<Taal, string> Straatnamen { get; set; }
-
         [JsonIgnore]
         public int PersistentLocalId { get; set; }
 

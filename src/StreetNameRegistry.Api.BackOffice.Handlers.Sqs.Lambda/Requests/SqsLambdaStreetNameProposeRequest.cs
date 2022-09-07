@@ -5,7 +5,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests
     using Municipality;
     using Municipality.Commands;
 
-    public class SqsLambdaStreetNameProposeRequest : SqsLambdaRequest, IHasBackOfficeRequest<StreetNameBackOfficeProposeRequest>
+    public class SqsLambdaStreetNameProposeRequest :
+        SqsLambdaRequest,
+        IHasBackOfficeRequest<StreetNameBackOfficeProposeRequest>
     {
         public StreetNameBackOfficeProposeRequest Request { get; set; }
 
@@ -14,14 +16,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests
         /// </summary>
         /// <returns>ProposeStreetName.</returns>
         public ProposeStreetName ToCommand(
-            MunicipalityId municipalityId,
             PersistentLocalId persistentLocalId)
         {
             var names = new Names(
                 Request.Straatnamen.Select(x => new StreetNameName(x.Value, TaalMapper.ToLanguage(x.Key))));
 
             return new ProposeStreetName(
-                municipalityId,
+                MunicipalityId,
                 names,
                 persistentLocalId,
                 Provenance);

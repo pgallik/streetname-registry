@@ -7,12 +7,7 @@
 
     [DataContract(Name = "CorrigerenStraatnaamNamen", Namespace = "")]
     public class StreetNameBackOfficeCorrectNamesRequest
-    {/// <summary>
-        /// De unieke en persistente identificator van de straat.
-        /// </summary>
-        [DataMember(Name = "PersistentLocalId", Order = 0)]
-        public int PersistentLocalId { get; set; }
-
+    {
         /// <summary>
         /// De straatnaam in elke officiële taal en faciliteitentaal van de gemeente.
         /// </summary>

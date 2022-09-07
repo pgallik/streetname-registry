@@ -3,7 +3,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using MediatR;
     using Abstractions;
+    using Abstractions.Exceptions;
     using Abstractions.Response;
+    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Requests;
     using Municipality;
     using Municipality.Exceptions;
@@ -14,11 +16,16 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
         where TSqsLambdaRequest : SqsLambdaRequest
     {
         private readonly ITicketing _ticketing;
+        private readonly IMunicipalities _municipalities;
 
         protected IIdempotentCommandHandler IdempotentCommandHandler { get; }
 
-        protected SqsLambdaHandler(ITicketing ticketing, IIdempotentCommandHandler idempotentCommandHandler)
+        protected SqsLambdaHandler(
+            IMunicipalities municipalities,
+            ITicketing ticketing,
+            IIdempotentCommandHandler idempotentCommandHandler)
         {
+            _municipalities = municipalities;
             _ticketing = ticketing;
             IdempotentCommandHandler = idempotentCommandHandler;
         }
@@ -31,6 +38,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
         {
             try
             {
+                await ValidateIfMatchHeaderValue(request, cancellationToken);
+
                 await _ticketing.Pending(request.TicketId, cancellationToken);
 
                 var etag = string.Empty;
@@ -39,6 +48,13 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 await _ticketing.Complete(
                     request.TicketId,
                     new TicketResult(new ETagResponse(etag)),
+                    cancellationToken);
+            }
+            catch (IfMatchHeaderValueMismatchException)
+            {
+                await _ticketing.Error(
+                    request.TicketId,
+                    new TicketError("Als de If-Match header niet overeenkomt met de laatste ETag.", "PreconditionFailed"),
                     cancellationToken);
             }
             catch (DomainException exception)
@@ -65,6 +81,24 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             return Unit.Value;
         }
 
+        private async Task ValidateIfMatchHeaderValue(TSqsLambdaRequest request, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(request.IfMatchHeaderValue) || request is not IHasStreetNamePersistentLocalId id)
+                return;
+
+            var latestEventHash = await GetStreetNameHash(
+                request.MunicipalityId,
+                new PersistentLocalId(id.StreetNamePersistentLocalId),
+                cancellationToken);
+
+            var lastHashTag = new ETag(ETagType.Strong, latestEventHash);
+
+            if (request.IfMatchHeaderValue != lastHashTag.ToString())
+            {
+                throw new IfMatchHeaderValueMismatchException();
+            }
+        }
+
         private async Task Retry(int numRetries, Func<Task> action)
         {
             var polly = Policy
@@ -75,13 +109,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
         }
 
         protected async Task<string> GetStreetNameHash(
-            IMunicipalities municipalityRepository,
             MunicipalityId municipalityId,
             PersistentLocalId persistentLocalId,
             CancellationToken cancellationToken)
         {
-            var municipality =
-                await municipalityRepository.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
+            var municipality = await _municipalities.GetAsync(new MunicipalityStreamId(municipalityId), cancellationToken);
             var streetNameHash = municipality.GetStreetNameHash(persistentLocalId);
             return streetNameHash;
         }

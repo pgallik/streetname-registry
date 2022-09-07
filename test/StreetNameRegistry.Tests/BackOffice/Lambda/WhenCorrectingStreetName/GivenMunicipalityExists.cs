@@ -70,11 +70,11 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext));
 
             //Act
-            await handler.Handle(new SqsLambdaStreetNameCorrectNamesRequest()
+            await handler.Handle(new SqsLambdaStreetNameCorrectNamesRequest
             {
+                StreetNamePersistentLocalId = streetNamePersistentLocalId,
                 Request = new StreetNameBackOfficeCorrectNamesRequest
                 {
-                    PersistentLocalId = streetNamePersistentLocalId,
                     Straatnamen = new Dictionary<Taal, string>
                     {
                         { Taal.NL, "Rodekruisstraat" },
@@ -214,9 +214,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Act
             await sut.Handle(new SqsLambdaStreetNameCorrectNamesRequest
             {
+                StreetNamePersistentLocalId = streetNamePersistentLocalId,
                 Request = new StreetNameBackOfficeCorrectNamesRequest
                 {
-                    PersistentLocalId = streetNamePersistentLocalId,
                     Straatnamen = new Dictionary<Taal, string>()
                 },
                 MessageGroupId = municipalityId.ToString(),

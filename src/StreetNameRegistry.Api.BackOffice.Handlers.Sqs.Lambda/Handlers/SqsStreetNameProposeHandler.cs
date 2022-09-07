@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
@@ -14,7 +13,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     {
         private readonly IPersistentLocalIdGenerator _persistentLocalIdGenerator;
         private readonly BackOfficeContext _backOfficeContext;
-        private readonly IMunicipalities _municipalities;
 
         public SqsStreetNameProposeHandler(
             ITicketing ticketing,
@@ -22,21 +20,17 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             IIdempotentCommandHandler idempotentCommandHandler,
             BackOfficeContext backOfficeContext,
             IMunicipalities municipalities
-            ) : base(ticketing, idempotentCommandHandler)
+            ) : base(municipalities, ticketing, idempotentCommandHandler)
         {
             _persistentLocalIdGenerator = persistentLocalIdGenerator;
             _backOfficeContext = backOfficeContext;
-            _municipalities = municipalities;
         }
 
         protected override async Task<string> InnerHandle(SqsLambdaStreetNameProposeRequest request, CancellationToken cancellationToken)
         {
             var persistentLocalId = _persistentLocalIdGenerator.GenerateNextPersistentLocalId();
-            var municipalityId = new MunicipalityId(new Guid(request.MessageGroupId!));
 
-            var cmd = request.ToCommand(
-                municipalityId,
-                persistentLocalId);
+            var cmd = request.ToCommand(persistentLocalId);
 
             await IdempotentCommandHandler.Dispatch(
                 cmd.CreateCommandId(),
@@ -47,10 +41,10 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             // Insert PersistentLocalId with MunicipalityId
             await _backOfficeContext
                 .MunicipalityIdByPersistentLocalId
-                .AddAsync(new MunicipalityIdByPersistentLocalId(persistentLocalId, municipalityId), cancellationToken);
+                .AddAsync(new MunicipalityIdByPersistentLocalId(persistentLocalId, request.MunicipalityId), cancellationToken);
             await _backOfficeContext.SaveChangesAsync(cancellationToken);
 
-            var streetNameHash = await GetStreetNameHash(_municipalities, municipalityId, persistentLocalId, cancellationToken);
+            var streetNameHash = await GetStreetNameHash(request.MunicipalityId, persistentLocalId, cancellationToken);
 
             return streetNameHash;
         }

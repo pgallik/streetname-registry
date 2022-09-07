@@ -60,9 +60,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
 
             var sqsRequest = new SqsStreetNameCorrectNamesRequest
             {
+                PersistentLocalId = Fixture.Create<PersistentLocalId>(),
                 Request = new StreetNameBackOfficeCorrectNamesRequest
                 {
-                    PersistentLocalId = Fixture.Create<PersistentLocalId>(),
                     Straatnamen = new Dictionary<Taal, string>()
                     {
                         { Taal.NL, "Boskapelstraat" }

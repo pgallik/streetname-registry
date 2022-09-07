@@ -4,11 +4,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Autofac;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
     using Moq;
+    using Municipality;
     using Municipality.Exceptions;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
@@ -29,9 +32,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             var ticketing = new Mock<ITicketing>();
             var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
 
-            var sqsLambdaRequest = new SqsLambdaStreetNameProposeRequest
+            var sqsLambdaRequest = new SqsLambdaStreetNameApproveRequest
             {
-                Request = new StreetNameBackOfficeProposeRequest(),
+                Request = new StreetNameBackOfficeApproveRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object>(),
@@ -39,13 +42,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             };
 
             var sut = new FakeLambdaHandler(
+                Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 idempotentCommandHandler.Object);
 
             await sut.Handle(sqsLambdaRequest, CancellationToken.None);
 
             ticketing.Verify(x => x.Pending(sqsLambdaRequest.TicketId, CancellationToken.None), Times.Once);
-            ticketing.Verify(x => x.Complete(sqsLambdaRequest.TicketId, new TicketResult(new ETagResponse("eTag")), CancellationToken.None), Times.Once);
+            ticketing.Verify(
+                x => x.Complete(sqsLambdaRequest.TicketId, new TicketResult(new ETagResponse("eTag")),
+                    CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -53,9 +59,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         {
             var ticketing = new Mock<ITicketing>();
 
-            var sqsLambdaRequest = new SqsLambdaStreetNameProposeRequest
+            var sqsLambdaRequest = new SqsLambdaStreetNameApproveRequest
             {
-                Request = new StreetNameBackOfficeProposeRequest(),
+                Request = new StreetNameBackOfficeApproveRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object>(),
@@ -63,6 +69,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             };
 
             var sut = new FakeLambdaHandler(
+                Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler<StreetNameIsNotFoundException>().Object);
 
@@ -70,8 +77,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(sqsLambdaRequest.TicketId, new TicketError("Onbestaande straatnaam.", "OnbestaandeStraatnaam"), CancellationToken.None));
-            ticketing.Verify(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None), Times.Never);
+                x.Error(sqsLambdaRequest.TicketId, new TicketError("Onbestaande straatnaam.", "OnbestaandeStraatnaam"),
+                    CancellationToken.None));
+            ticketing.Verify(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None),
+                Times.Never);
         }
 
         [Fact]
@@ -79,9 +88,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         {
             var ticketing = new Mock<ITicketing>();
 
-            var sqsLambdaRequest = new SqsLambdaStreetNameProposeRequest
+            var sqsLambdaRequest = new SqsLambdaStreetNameApproveRequest
             {
-                Request = new StreetNameBackOfficeProposeRequest(),
+                Request = new StreetNameBackOfficeApproveRequest(),
                 MessageGroupId = Guid.NewGuid().ToString(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object>(),
@@ -89,6 +98,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             };
 
             var sut = new FakeLambdaHandler(
+                Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler<StreetNameIsRemovedException>().Object);
 
@@ -96,18 +106,96 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             //Assert
             ticketing.Verify(x =>
-                x.Error(sqsLambdaRequest.TicketId, new TicketError("Verwijderde straatnaam.", "VerwijderdeStraatnaam"), CancellationToken.None));
-            ticketing.Verify(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None), Times.Never);
+                x.Error(sqsLambdaRequest.TicketId, new TicketError("Verwijderde straatnaam.", "VerwijderdeStraatnaam"),
+                    CancellationToken.None));
+            ticketing.Verify(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task WhenIfMatchHeaderValueIsMismatch_ThenTicketingErrorIsExpected()
+        {
+            // Arrange
+            var ticketing = new Mock<ITicketing>();
+            var municipalityId = new MunicipalityId(Guid.NewGuid());
+            var streetNamePersistentLocalId = new PersistentLocalId(456);
+
+            ImportMunicipality(municipalityId, new NisCode("23002"));
+            SetMunicipalityToCurrent(municipalityId);
+            AddOfficialLanguageDutch(municipalityId);
+            ProposeStreetName(
+                municipalityId,
+                new Names(new Dictionary<Language, string> { { Language.Dutch, "Bremt" } }),
+                streetNamePersistentLocalId,
+                Fixture.Create<Provenance>());
+
+            var sut = new FakeLambdaHandler(
+                Container.Resolve<IMunicipalities>(),
+                ticketing.Object,
+                MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);
+
+            // Act
+            await sut.Handle(new SqsLambdaStreetNameApproveRequest
+            {
+                IfMatchHeaderValue = "Outdated",
+                Request = new StreetNameBackOfficeApproveRequest
+                {
+                    PersistentLocalId = streetNamePersistentLocalId
+                },
+                MessageGroupId = municipalityId.ToString(),
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
+            }, CancellationToken.None);
+
+            //Assert
+            ticketing.Verify(x =>
+                x.Error(
+                    It.IsAny<Guid>(),
+                    new TicketError("Als de If-Match header niet overeenkomt met de laatste ETag.", "PreconditionFailed"),
+                    CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task WhenNoIfMatchHeaderValueIsPresent_ThenInnerHandleIsCalled()
+        {
+            var idempotentCommandHandler = new Mock<IIdempotentCommandHandler>();
+
+            var sqsLambdaRequest = new SqsLambdaStreetNameApproveRequest
+            {
+                IfMatchHeaderValue = string.Empty,
+                Request = new StreetNameBackOfficeApproveRequest(),
+                MessageGroupId = Guid.NewGuid().ToString(),
+                TicketId = Guid.NewGuid(),
+                Metadata = new Dictionary<string, object>(),
+                Provenance = Fixture.Create<Provenance>()
+            };
+
+            var sut = new FakeLambdaHandler(
+                Mock.Of<IMunicipalities>(),
+                Mock.Of<ITicketing>(),
+                idempotentCommandHandler.Object);
+
+            await sut.Handle(sqsLambdaRequest, CancellationToken.None);
+
+            //Assert
+            idempotentCommandHandler
+                .Verify(x =>
+                    x.Dispatch(It.IsAny<Guid>(), It.IsAny<object>(), It.IsAny<IDictionary<string, object>>(), new CancellationToken()),
+                    Times.Once);
         }
     }
 
-    public class FakeLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameProposeRequest>
+    public class FakeLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
     {
-        public FakeLambdaHandler(ITicketing ticketing, IIdempotentCommandHandler idempotentCommandHandler) : base(ticketing, idempotentCommandHandler)
+        public FakeLambdaHandler(
+            IMunicipalities municipalities, ITicketing ticketing, IIdempotentCommandHandler idempotentCommandHandler)
+            : base(municipalities, ticketing, idempotentCommandHandler)
         {
         }
 
-        protected override Task<string> InnerHandle(SqsLambdaStreetNameProposeRequest request, CancellationToken cancellationToken)
+        protected override Task<string> InnerHandle(SqsLambdaStreetNameApproveRequest request,
+            CancellationToken cancellationToken)
         {
             IdempotentCommandHandler.Dispatch(
                 Guid.NewGuid(),
@@ -120,7 +208,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
         protected override TicketError? MapDomainException(DomainException exception)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

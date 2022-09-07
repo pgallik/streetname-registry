@@ -9,29 +9,21 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Municipality.Exceptions;
     using Requests;
     using TicketingService.Abstractions;
-    using MunicipalityId = Municipality.MunicipalityId;
 
     public class SqsStreetNameRetireHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
     {
-        private readonly IMunicipalities _municipalities;
-
         public SqsStreetNameRetireHandler(
             ITicketing ticketing,
             IMunicipalities municipalities,
             IIdempotentCommandHandler idempotentCommandHandler)
-            : base(ticketing, idempotentCommandHandler)
-        {
-            _municipalities = municipalities;
-        }
+            : base(municipalities, ticketing, idempotentCommandHandler)
+        { }
 
         protected override async Task<string> InnerHandle(SqsLambdaStreetNameRetireRequest request, CancellationToken cancellationToken)
         {
-            var municipalityId = new MunicipalityId(Guid.Parse(request.MessageGroupId!));
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
-            var cmd = request.ToCommand(
-                municipalityId,
-                streetNamePersistentLocalId);
+            var cmd = request.ToCommand(streetNamePersistentLocalId);
 
             try
             {
@@ -46,7 +38,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 // Idempotent: Do Nothing return last etag
             }
 
-            return await GetStreetNameHash(_municipalities, municipalityId, streetNamePersistentLocalId, cancellationToken);
+            return await GetStreetNameHash(request.MunicipalityId, streetNamePersistentLocalId, cancellationToken);
         }
 
         protected override TicketError? MapDomainException(DomainException exception)
