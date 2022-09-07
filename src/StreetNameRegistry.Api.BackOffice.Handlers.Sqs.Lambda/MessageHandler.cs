@@ -2,6 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Autofac;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
     using MediatR;
     using Requests;
@@ -9,11 +10,11 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 
     public class MessageHandler : IMessageHandler
     {
-        private readonly IMediator _mediator;
+        private readonly IContainer _container;
 
-        public MessageHandler(IMediator mediator)
+        public MessageHandler(IContainer container)
         {
-            _mediator = mediator;
+            _container = container;
         }
 
         public async Task HandleMessage(object? messageData, MessageMetadata messageMetadata, CancellationToken cancellationToken)
@@ -26,11 +27,14 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
                 return;
             }
 
+            await using var lifetimeScope = _container.BeginLifetimeScope();
+            var mediator = lifetimeScope.Resolve<IMediator>();
+
             // TODO: uncomment after initial lambda testing
             // switch (sqsRequest)
             // {
             //     case SqsStreetNameApproveRequest request:
-            //         await _mediator.Send(new SqsLambdaStreetNameApproveRequest
+            //         await mediator.Send(new SqsLambdaStreetNameApproveRequest
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
@@ -41,7 +45,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         break;
             //
             //     case SqsStreetNameCorrectNamesRequest request:
-            //         await _mediator.Send(new SqsLambdaStreetNameCorrectNamesRequest
+            //         await mediator.Send(new SqsLambdaStreetNameCorrectNamesRequest
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
@@ -52,7 +56,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         break;
             //
             //     case SqsStreetNameProposeRequest request:
-            //         await _mediator.Send(new SqsLambdaStreetNameProposeRequest
+            //         await mediator.Send(new SqsLambdaStreetNameProposeRequest
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
@@ -63,7 +67,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         break;
             //
             //     case SqsStreetNameRejectRequest request:
-            //         await _mediator.Send(new SqsLambdaStreetNameRejectRequest
+            //         await mediator.Send(new SqsLambdaStreetNameRejectRequest
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
@@ -74,7 +78,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             //         break;
             //
             //     case SqsStreetNameRetireRequest request:
-            //         await _mediator.Send(new SqsLambdaStreetNameRetireRequest
+            //         await mediator.Send(new SqsLambdaStreetNameRetireRequest
             //         {
             //             Request = request.Request,
             //             TicketId = request.TicketId,
