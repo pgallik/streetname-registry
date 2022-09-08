@@ -15,8 +15,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
+    using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
@@ -44,6 +46,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sut = new FakeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 idempotentCommandHandler.Object);
@@ -72,6 +75,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sut = new FakeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler<StreetNameIsNotFoundException>().Object);
@@ -102,6 +106,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sut = new FakeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler<StreetNameIsRemovedException>().Object);
@@ -135,6 +140,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sut = new FakeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 Container.Resolve<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);
@@ -178,6 +184,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sut = new FakeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 Mock.Of<IMunicipalities>(),
                 Mock.Of<ITicketing>(),
                 idempotentCommandHandler.Object);
@@ -196,11 +203,13 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     {
         public FakeLambdaHandler(
             IConfiguration configuration,
+            ICustomRetryPolicy retryPolicy,
             IMunicipalities municipalities,
             ITicketing ticketing,
             IIdempotentCommandHandler idempotentCommandHandler)
             : base(
                 configuration,
+                retryPolicy,
                 municipalities,
                 ticketing,
                 idempotentCommandHandler)

@@ -1,22 +1,23 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
-    using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using MediatR;
     using Abstractions;
     using Abstractions.Exceptions;
     using Abstractions.Response;
+    using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
+    using MediatR;
     using Microsoft.Extensions.Configuration;
-    using Requests;
     using Municipality;
     using Municipality.Exceptions;
-    using Polly;
+    using Requests;
+    using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
     public abstract class SqsLambdaHandler<TSqsLambdaRequest> : IRequestHandler<TSqsLambdaRequest>
         where TSqsLambdaRequest : SqsLambdaRequest
     {
         private readonly ITicketing _ticketing;
+        private readonly ICustomRetryPolicy _retryPolicy;
         private readonly IMunicipalities _municipalities;
 
         protected IIdempotentCommandHandler IdempotentCommandHandler { get; }
@@ -24,10 +25,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 
         protected SqsLambdaHandler(
             IConfiguration configuration,
+            ICustomRetryPolicy retryPolicy,
             IMunicipalities municipalities,
             ITicketing ticketing,
             IIdempotentCommandHandler idempotentCommandHandler)
         {
+            _retryPolicy = retryPolicy;
             _municipalities = municipalities;
             _ticketing = ticketing;
             IdempotentCommandHandler = idempotentCommandHandler;
@@ -52,7 +55,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 await _ticketing.Pending(request.TicketId, cancellationToken);
 
                 ETagResponse? etag = null;
-                await Retry(3, async () => etag = await InnerHandle(request, cancellationToken));
+
+                await _retryPolicy.Retry(async () => etag = await InnerHandle(request, cancellationToken));
 
                 await _ticketing.Complete(
                     request.TicketId,
@@ -106,15 +110,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             {
                 throw new IfMatchHeaderValueMismatchException();
             }
-        }
-
-        private async Task Retry(int numRetries, Func<Task> action)
-        {
-            var polly = Policy
-                .Handle<Exception>()
-                .RetryAsync(numRetries);
-
-            await polly.ExecuteAsync(async () => await action());
         }
 
         protected async Task<string> GetStreetNameHash(

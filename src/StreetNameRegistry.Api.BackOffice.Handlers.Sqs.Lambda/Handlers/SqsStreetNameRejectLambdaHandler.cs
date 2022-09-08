@@ -10,17 +10,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Municipality;
     using Municipality.Exceptions;
     using Requests;
+    using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
     public class SqsStreetNameRejectLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameRejectRequest>
     {
         public SqsStreetNameRejectLambdaHandler(
             IConfiguration configuration,
+            ICustomRetryPolicy retryPolicy,
             ITicketing ticketing,
             IMunicipalities municipalities,
             IIdempotentCommandHandler idempotentCommandHandler)
             : base(
                 configuration,
+                retryPolicy,
                 municipalities,
                 ticketing,
                 idempotentCommandHandler)

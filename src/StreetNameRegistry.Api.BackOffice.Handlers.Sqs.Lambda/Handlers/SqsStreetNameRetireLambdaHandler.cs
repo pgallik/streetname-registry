@@ -6,21 +6,25 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Abstractions.Exceptions;
     using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
     using Requests;
+    using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
     public class SqsStreetNameRetireLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
     {
         public SqsStreetNameRetireLambdaHandler(
             IConfiguration configuration,
+            ICustomRetryPolicy retryPolicy,
             ITicketing ticketing,
             IMunicipalities municipalities,
             IIdempotentCommandHandler idempotentCommandHandler)
             : base(
                 configuration,
+                retryPolicy,
                 municipalities,
                 ticketing,
                 idempotentCommandHandler)

@@ -13,11 +13,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Consumer;
     using Infrastructure;
-    using Infrastructure.Modules;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using StreetNameRegistry.Infrastructure;
+    using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
 
     public class SqsBackOfficeHandlerFunction : FunctionBase
@@ -38,7 +39,15 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 
             services.AddHttpProxyTicketing(configuration.GetSection("TicketingService")["BaseUrl"]);
 
+            // RETRY POLICY
+            var maxRetryCount = int.Parse(configuration.GetSection("RetryPolicy")["MaxRetryCount"]);
+            var startingDelaySeconds = int.Parse(configuration.GetSection("RetryPolicy")["StartingRetryDelaySeconds"]);
+
+            var lambdaHandlerRetryPolicy = new LambdaHandlerRetryPolicy(maxRetryCount, startingDelaySeconds);
+            builder.RegisterInstance(lambdaHandlerRetryPolicy).As<ICustomRetryPolicy>();
+
             var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
+
             builder
                 .RegisterModule(new DataDogModule(configuration))
                 .RegisterModule<EnvelopeModule>()
