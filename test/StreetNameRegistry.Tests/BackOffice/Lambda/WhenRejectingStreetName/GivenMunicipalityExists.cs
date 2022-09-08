@@ -62,6 +62,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());
             var handler = new SqsStreetNameRejectLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 MockTicketing(result =>
                 {
                     etag = result;
@@ -92,6 +93,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
 
             var sut = new SqsStreetNameRejectLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
@@ -122,6 +124,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
 
             var sut = new SqsStreetNameRejectLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object);
@@ -165,6 +168,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
             var municipalities = Container.Resolve<IMunicipalities>();
             var sut = new SqsStreetNameRejectLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 municipalities,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);

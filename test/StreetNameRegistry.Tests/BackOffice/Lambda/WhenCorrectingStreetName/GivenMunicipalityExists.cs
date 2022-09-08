@@ -64,6 +64,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());
             var handler = new SqsStreetNameCorrectNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 MockTicketing(result =>
                 {
                     etag = result;
@@ -104,6 +105,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
 
             var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname)).Object);
@@ -134,6 +136,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
 
             var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
@@ -166,6 +169,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
 
             var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object);
@@ -211,6 +215,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             var municipalities = Container.Resolve<IMunicipalities>();
             var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 municipalities,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);

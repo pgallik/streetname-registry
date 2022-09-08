@@ -59,6 +59,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var etag = new ETagResponse(string.Empty, Fixture.Create<string>());
             var handler = new SqsStreetNameProposeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 MockTicketing(result => { etag = result; }).Object,
                 mockPersistentLocalIdGenerator.Object,
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
@@ -105,6 +106,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
 
             var sut = new SqsStreetNameProposeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname))
@@ -139,6 +141,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
 
             var sut = new SqsStreetNameProposeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object,
@@ -171,6 +174,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
 
             var sut = new SqsStreetNameProposeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object,
@@ -204,6 +208,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
 
             var sut = new SqsStreetNameProposeLambdaHandler(
                 Container.Resolve<IConfiguration>(),
+                new FakeRetryPolicy(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameIsMissingALanguageException>().Object,

@@ -9,6 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Municipality;
     using Municipality.Exceptions;
     using Requests;
+    using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
     public class SqsStreetNameProposeLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameProposeRequest>
@@ -18,6 +19,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 
         public SqsStreetNameProposeLambdaHandler(
             IConfiguration configuration,
+            ICustomRetryPolicy retryPolicy,
             ITicketing ticketing,
             IPersistentLocalIdGenerator persistentLocalIdGenerator,
             IIdempotentCommandHandler idempotentCommandHandler,
@@ -25,6 +27,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             IMunicipalities municipalities)
             : base(
                 configuration,
+                retryPolicy,
                 municipalities,
                 ticketing,
                 idempotentCommandHandler)
