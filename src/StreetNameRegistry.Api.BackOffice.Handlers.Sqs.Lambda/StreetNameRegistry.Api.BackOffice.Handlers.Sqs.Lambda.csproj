@@ -15,6 +15,12 @@
     <!-- Error NETSDK1152: https://docs.microsoft.com/en-us/dotnet/core/compatibility/sdk/6.0/duplicate-files-in-output -->
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+    <Content Include="appsettings.*.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice.Abstractions\StreetNameRegistry.Api.BackOffice.Abstractions.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice.Handlers.Sqs\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.csproj" />

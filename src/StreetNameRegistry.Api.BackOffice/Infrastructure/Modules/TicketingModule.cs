@@ -24,14 +24,15 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
+            var baseUrl = _configuration.GetSection(TicketingServiceConfigKey)["BaseUrl"];
             builder
-                .Register(c => new TicketingUrl(_configuration.GetSection(TicketingServiceConfigKey)["BaseUrl"]))
+                .Register(c => new TicketingUrl(baseUrl))
                 .As<ITicketingUrl>()
                 .SingleInstance();
 
             _services
                 .AddHttpClient()
-                .AddHttpProxyTicketing();
+                .AddHttpProxyTicketing(baseUrl);
         }
     }
 }

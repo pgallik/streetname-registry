@@ -37,8 +37,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             var tempProvider = services.BuildServiceProvider();
             var loggerFactory = tempProvider.GetRequiredService<ILoggerFactory>();
 
-            services.AddHttpClient();
-            services.AddHttpProxyTicketing();
+            services.AddHttpProxyTicketing(configuration.GetSection("TicketingService")["BaseUrl"]);
 
             var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
             builder
