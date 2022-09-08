@@ -67,7 +67,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenCorrectingStreetNameN
 
             //Assert
             var stream = await Container.Resolve<IStreamStore>().ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 4, 1); //3 = version of stream (zero based)
-            stream.Messages.First().JsonMetadata.Should().Contain(response.LastEventHash);
+            stream.Messages.First().JsonMetadata.Should().Contain(response.ETag);
         }
     }
 }

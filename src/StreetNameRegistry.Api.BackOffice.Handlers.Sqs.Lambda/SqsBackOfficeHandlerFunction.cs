@@ -12,7 +12,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Consumer;
-    using Handlers;
     using Infrastructure;
     using Infrastructure.Modules;
     using MediatR;

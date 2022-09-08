@@ -12,6 +12,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
     using global::AutoFixture;
+    using Microsoft.Extensions.Configuration;
     using Moq;
     using Municipality;
     using Municipality.Exceptions;
@@ -55,8 +56,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             AddOfficialLanguageDutch(municipalityId);
             AddOfficialLanguageFrench(municipalityId);
 
-            var etag = new ETagResponse(string.Empty);
+            var etag = new ETagResponse(string.Empty, Fixture.Create<string>());
             var handler = new SqsStreetNameProposeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 MockTicketing(result => { etag = result; }).Object,
                 mockPersistentLocalIdGenerator.Object,
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
@@ -85,7 +87,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var stream = await Container.Resolve<IStreamStore>()
                 .ReadStreamBackwards(new StreamId(new MunicipalityStreamId(municipalityId)), 3,
                     1); //3 = version of stream (zero based)
-            stream.Messages.First().JsonMetadata.Should().Contain(etag.LastEventHash);
+            stream.Messages.First().JsonMetadata.Should().Contain(etag.ETag);
 
             var municipalityIdByPersistentLocalId =
                 await _backOfficeContext.MunicipalityIdByPersistentLocalId.FindAsync(expectedLocation);
@@ -102,6 +104,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var streetname = "Bremt";
 
             var sut = new SqsStreetNameProposeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname))
@@ -135,6 +138,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameProposeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object,
@@ -166,6 +170,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameProposeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object,
@@ -198,6 +203,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             var ticketing = new Mock<ITicketing>();
 
             var sut = new SqsStreetNameProposeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameIsMissingALanguageException>().Object,

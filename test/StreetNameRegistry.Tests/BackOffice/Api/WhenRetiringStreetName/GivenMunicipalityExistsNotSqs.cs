@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
 
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityId);
 
-            MockMediatorResponse<StreetNameRetireRequest, ETagResponse>(new ETagResponse("hash"));
+            MockMediatorResponse<StreetNameRetireRequest, ETagResponse>(new ETagResponse("location", "hash"));
 
             // Act
             var result = (AcceptedWithETagResult)await Controller.Retire(

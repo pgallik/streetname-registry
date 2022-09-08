@@ -4,7 +4,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using System.Threading.Tasks;
     using Abstractions;
     using Abstractions.Exceptions;
+    using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
     using Requests;
@@ -13,16 +15,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     public class SqsStreetNameRetireLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
     {
         public SqsStreetNameRetireLambdaHandler(
+            IConfiguration configuration,
             ITicketing ticketing,
             IMunicipalities municipalities,
             IIdempotentCommandHandler idempotentCommandHandler)
-            : base(municipalities, ticketing, idempotentCommandHandler)
+            : base(
+                configuration,
+                municipalities,
+                ticketing,
+                idempotentCommandHandler)
         { }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameRetireRequest request, CancellationToken cancellationToken)
+        protected override async Task<ETagResponse> InnerHandle(SqsLambdaStreetNameRetireRequest request, CancellationToken cancellationToken)
         {
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
-
             var cmd = request.ToCommand(streetNamePersistentLocalId);
 
             try
@@ -38,7 +44,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 // Idempotent: Do Nothing return last etag
             }
 
-            return await GetStreetNameHash(request.MunicipalityId, streetNamePersistentLocalId, cancellationToken);
+            var lastHash = await GetStreetNameHash(request.MunicipalityId, streetNamePersistentLocalId, cancellationToken);
+            return new ETagResponse(string.Format(DetailUrlFormat, streetNamePersistentLocalId), lastHash);
         }
 
         protected override TicketError? MapDomainException(DomainException exception)

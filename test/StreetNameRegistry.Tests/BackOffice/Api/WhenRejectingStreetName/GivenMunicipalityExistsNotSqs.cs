@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
 
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityId);
 
-            MockMediatorResponse<StreetNameRejectRequest, ETagResponse>(new ETagResponse("hash"));
+            MockMediatorResponse<StreetNameRejectRequest, ETagResponse>(new ETagResponse("location", "hash"));
 
             // Act
             var result = (AcceptedWithETagResult)await Controller.Reject(

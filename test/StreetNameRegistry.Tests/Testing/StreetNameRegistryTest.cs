@@ -1,7 +1,6 @@
 namespace StreetNameRegistry.Tests.Testing
 {
     using System.Collections.Generic;
-    using Api.BackOffice.Handlers.Sqs.Lambda;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.AggregateSource.SqlStreamStore.Autofac;
@@ -17,7 +16,8 @@ namespace StreetNameRegistry.Tests.Testing
     public class StreetNameRegistryTest : AutofacBasedTest
     {
         protected Fixture Fixture { get; }
-
+        protected string ConfigDetailUrl => "http://base/{0}";
+        
         protected JsonSerializerSettings EventSerializerSettings { get; } = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
         public StreetNameRegistryTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -28,9 +28,15 @@ namespace StreetNameRegistry.Tests.Testing
         protected override void ConfigureCommandHandling(ContainerBuilder builder)
         {
             var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:Events", "x" } })
-                .AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:Snapshots", "x" } })
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "ConnectionStrings:Events", "x" },
+                    { "ConnectionStrings:Snapshots", "x" },
+                    { "DetailUrl", ConfigDetailUrl }
+                })
                 .Build();
+
+            builder.Register((a) => (IConfiguration)configuration);
 
             builder
                 .RegisterModule(new CommandHandlingModule(configuration))
@@ -47,6 +53,7 @@ namespace StreetNameRegistry.Tests.Testing
             var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
             builder.RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings));
         }
-        public string GetSnapshotIdentifier(string identifier) => $"{identifier}-snapshots";
+
+        protected string FormatDetailUrl(object o) => string.Format(ConfigDetailUrl, o);
     }
 }

@@ -40,7 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers
             await IdempotentCommandHandlerDispatch(_idempotencyContext, cmd.CreateCommandId(), cmd, request.Metadata, cancellationToken);
 
             var lastEventHash = await GetStreetNameHash(_municipalities, municipalityId, persistentLocalId, cancellationToken);
-            return new ETagResponse(lastEventHash);
+            return new ETagResponse(string.Empty, lastEventHash);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace StreetNameRegistry.Api.BackOffice
                 request.Metadata = GetMetadata();
                 var response = await _mediator.Send(request, cancellationToken);
 
-                return new NoContentWithETagResult(response.LastEventHash);
+                return new NoContentWithETagResult(response.ETag);
             }
             catch (AggregateIdIsNotFoundException)
             {

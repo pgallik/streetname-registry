@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
 
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(persistentLocalId, municipalityId);
 
-            MockMediatorResponse<StreetNameCorrectNamesRequest, ETagResponse>(new ETagResponse("hash"));
+            MockMediatorResponse<StreetNameCorrectNamesRequest, ETagResponse>(new ETagResponse("location", "hash"));
 
             // Act
             var result = (AcceptedWithETagResult)await Controller.CorrectStreetNameNames(

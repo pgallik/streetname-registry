@@ -8,6 +8,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
+    using Microsoft.Extensions.Configuration;
     using Moq;
     using Municipality;
     using Municipality.Exceptions;
@@ -34,7 +35,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             var sqsLambdaRequest = new SqsLambdaStreetNameApproveRequest
             {
-                Request = new StreetNameBackOfficeApproveRequest(),
+                Request = new StreetNameBackOfficeApproveRequest{ PersistentLocalId = 1 },
                 MessageGroupId = Guid.NewGuid().ToString(),
                 TicketId = Guid.NewGuid(),
                 Metadata = new Dictionary<string, object>(),
@@ -42,6 +43,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             };
 
             var sut = new FakeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 idempotentCommandHandler.Object);
@@ -50,8 +52,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 
             ticketing.Verify(x => x.Pending(sqsLambdaRequest.TicketId, CancellationToken.None), Times.Once);
             ticketing.Verify(
-                x => x.Complete(sqsLambdaRequest.TicketId, new TicketResult(new ETagResponse("eTag")),
-                    CancellationToken.None), Times.Once);
+                x => x.Complete(sqsLambdaRequest.TicketId,
+                    new TicketResult(new ETagResponse("bla", "etag")), CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -69,6 +71,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             };
 
             var sut = new FakeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler<StreetNameIsNotFoundException>().Object);
@@ -98,6 +101,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             };
 
             var sut = new FakeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 Mock.Of<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler<StreetNameIsRemovedException>().Object);
@@ -130,6 +134,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                 Fixture.Create<Provenance>());
 
             var sut = new FakeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 Container.Resolve<IMunicipalities>(),
                 ticketing.Object,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);
@@ -172,6 +177,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
             };
 
             var sut = new FakeLambdaHandler(
+                Container.Resolve<IConfiguration>(),
                 Mock.Of<IMunicipalities>(),
                 Mock.Of<ITicketing>(),
                 idempotentCommandHandler.Object);
@@ -189,12 +195,18 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     public class FakeLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
     {
         public FakeLambdaHandler(
-            IMunicipalities municipalities, ITicketing ticketing, IIdempotentCommandHandler idempotentCommandHandler)
-            : base(municipalities, ticketing, idempotentCommandHandler)
-        {
-        }
+            IConfiguration configuration,
+            IMunicipalities municipalities,
+            ITicketing ticketing,
+            IIdempotentCommandHandler idempotentCommandHandler)
+            : base(
+                configuration,
+                municipalities,
+                ticketing,
+                idempotentCommandHandler)
+        { }
 
-        protected override Task<string> InnerHandle(SqsLambdaStreetNameApproveRequest request,
+        protected override Task<ETagResponse> InnerHandle(SqsLambdaStreetNameApproveRequest request,
             CancellationToken cancellationToken)
         {
             IdempotentCommandHandler.Dispatch(
@@ -203,7 +215,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
                 new Dictionary<string, object>(),
                 cancellationToken);
 
-            return Task.FromResult("eTag");
+            return Task.FromResult(new ETagResponse("bla", "etag"));
         }
 
         protected override TicketError? MapDomainException(DomainException exception)

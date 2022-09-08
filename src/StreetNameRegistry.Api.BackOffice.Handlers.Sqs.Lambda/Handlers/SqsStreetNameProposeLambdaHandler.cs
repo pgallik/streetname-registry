@@ -3,7 +3,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions;
+    using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
     using Requests;
@@ -15,18 +17,23 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
         private readonly BackOfficeContext _backOfficeContext;
 
         public SqsStreetNameProposeLambdaHandler(
+            IConfiguration configuration,
             ITicketing ticketing,
             IPersistentLocalIdGenerator persistentLocalIdGenerator,
             IIdempotentCommandHandler idempotentCommandHandler,
             BackOfficeContext backOfficeContext,
-            IMunicipalities municipalities
-            ) : base(municipalities, ticketing, idempotentCommandHandler)
+            IMunicipalities municipalities)
+            : base(
+                configuration,
+                municipalities,
+                ticketing,
+                idempotentCommandHandler)
         {
             _persistentLocalIdGenerator = persistentLocalIdGenerator;
             _backOfficeContext = backOfficeContext;
         }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameProposeRequest request, CancellationToken cancellationToken)
+        protected override async Task<ETagResponse> InnerHandle(SqsLambdaStreetNameProposeRequest request, CancellationToken cancellationToken)
         {
             var persistentLocalId = _persistentLocalIdGenerator.GenerateNextPersistentLocalId();
 
@@ -44,9 +51,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
                 .AddAsync(new MunicipalityIdByPersistentLocalId(persistentLocalId, request.MunicipalityId), cancellationToken);
             await _backOfficeContext.SaveChangesAsync(cancellationToken);
 
-            var streetNameHash = await GetStreetNameHash(request.MunicipalityId, persistentLocalId, cancellationToken);
-
-            return streetNameHash;
+            var lastHash = await GetStreetNameHash(request.MunicipalityId, persistentLocalId, cancellationToken);
+            return new ETagResponse(string.Format(DetailUrlFormat, persistentLocalId), lastHash);
         }
 
         protected override TicketError? MapDomainException(DomainException exception)
