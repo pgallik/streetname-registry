@@ -26,7 +26,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRejectingStreetName
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityExists : BackOfficeTest
+    public class GivenMunicipalityExists : BackOfficeLambdaTest
     {
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;

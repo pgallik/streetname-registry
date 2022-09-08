@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.BackOffice
+namespace StreetNameRegistry.Tests.BackOffice.Lambda
 {
     using System;
     using System.Collections.Generic;
@@ -11,36 +11,22 @@ namespace StreetNameRegistry.Tests.BackOffice
     using Municipality;
     using Municipality.Commands;
     using Newtonsoft.Json;
-    using NodaTime;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using Testing;
     using TicketingService.Abstractions;
     using Xunit.Abstractions;
 
-    public class BackOfficeTest: StreetNameRegistryTest
+    public abstract class BackOfficeLambdaTest : StreetNameRegistryTest
     {
-        public BackOfficeTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
-        {
-        }
+        protected BackOfficeLambdaTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        { }
 
-       public void DispatchArrangeCommand<T> (T command) where T : IHasCommandProvenance
+        public void DispatchArrangeCommand<T>(T command) where T : IHasCommandProvenance
         {
             using var scope = Container.BeginLifetimeScope();
             var bus = scope.Resolve<ICommandHandlerResolver>();
             bus.Dispatch(command.CreateCommandId(), command);
-        }
-
-        protected string GetStreetNamePuri(int persistentLocalId)
-            => $"https://data.vlaanderen.be/id/gemeente/{persistentLocalId}";
-
-        protected void RetireMunicipality(MunicipalityId municipalityId)
-        {
-            var retireMunicipality = new RetireMunicipality(
-                municipalityId,
-                Fixture.Create<RetirementDate>(),
-                Fixture.Create<Provenance>());
-            DispatchArrangeCommand(retireMunicipality);
         }
 
         protected Mock<IIdempotentCommandHandler> MockExceptionIdempotentCommandHandler<TException>()
@@ -65,6 +51,20 @@ namespace StreetNameRegistry.Tests.BackOffice
             return idempotentCommandHandler;
         }
 
+        protected Mock<ITicketing> MockTicketing(Action<ETagResponse> ticketingCompleteCallback)
+        {
+            var ticketing = new Mock<ITicketing>();
+            ticketing
+                .Setup(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None))
+                .Callback<Guid, TicketResult, CancellationToken>((_, ticketResult, _) =>
+                {
+                    var eTagResponse = JsonConvert.DeserializeObject<ETagResponse>(ticketResult.ResultAsJson!)!;
+                    ticketingCompleteCallback(eTagResponse);
+                });
+
+            return ticketing;
+        }
+
         protected void ProposeStreetName(
             MunicipalityId municipalityId,
             Names streetNameNames,
@@ -79,18 +79,13 @@ namespace StreetNameRegistry.Tests.BackOffice
             DispatchArrangeCommand(proposeCommand);
         }
 
-        protected Mock<ITicketing> MockTicketing(Action<ETagResponse> ticketingCompleteCallback)
+        protected void RetireMunicipality(MunicipalityId municipalityId)
         {
-            var ticketing = new Mock<ITicketing>();
-            ticketing
-                .Setup(x => x.Complete(It.IsAny<Guid>(), It.IsAny<TicketResult>(), CancellationToken.None))
-                .Callback<Guid, TicketResult, CancellationToken>((_, ticketResult, _) =>
-                {
-                    var eTagResponse = JsonConvert.DeserializeObject<ETagResponse>(ticketResult.ResultAsJson!)!;
-                    ticketingCompleteCallback(eTagResponse);
-                });
-
-            return ticketing;
+            var retireMunicipality = new RetireMunicipality(
+                municipalityId,
+                Fixture.Create<RetirementDate>(),
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(retireMunicipality);
         }
 
         protected void AddOfficialLanguageFrench(MunicipalityId municipalityId)

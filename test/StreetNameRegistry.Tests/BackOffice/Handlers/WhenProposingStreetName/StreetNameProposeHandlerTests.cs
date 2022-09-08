@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
     using Xunit;
     using Xunit.Abstractions;
 
-    public class StreetNameProposeHandlerTests : BackOfficeTest
+    public class StreetNameProposeHandlerTests : BackOfficeHandlerTest
     {
         private readonly TestConsumerContext _consumerContext;
         private readonly TestBackOfficeContext _backOfficeContext;

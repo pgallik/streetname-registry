@@ -8,7 +8,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
     using FluentAssertions;
     using global::AutoFixture;
-    using Microsoft.AspNetCore.Mvc;
     using Moq;
     using Municipality;
     using StreetNameRegistry.Api.BackOffice.Abstractions;

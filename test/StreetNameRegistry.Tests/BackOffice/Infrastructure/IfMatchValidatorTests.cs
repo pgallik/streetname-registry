@@ -1,21 +1,25 @@
 namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Autofac;
+    using Be.Vlaanderen.Basisregisters.AggregateSource.Snapshotting;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
     using global::AutoFixture;
+    using Moq;
     using Municipality;
     using Municipality.Events;
     using Municipality.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Infrastructure;
+    using Testing;
     using Xunit;
     using Xunit.Abstractions;
 
-    public class IfMatchValidatorTests : BackOfficeTest
+    public class IfMatchValidatorTests : StreetNameRegistryTest
     {
         private readonly TestBackOfficeContext _backOfficeContext;
 
@@ -28,26 +32,30 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
         public async Task IfMatchHeaderValid_ShouldReturnTrue()
         {
             var municipalityId = new MunicipalityId(Guid.NewGuid());
+            var nisCode = Fixture.Create<NisCode>();
             var streetNamePersistentLocalId = new PersistentLocalId(456);
-            var niscode = new NisCode("23002");
-            var streetNames = new Names();
-            var provenance = Fixture.Create<Provenance>();
-
-            ImportMunicipality(municipalityId, niscode);
-            ProposeStreetName(municipalityId, streetNames, streetNamePersistentLocalId, provenance);
+            var streetNameWasProposedV2 = new StreetNameWasProposedV2(municipalityId, nisCode, Fixture.Create<Names>(), streetNamePersistentLocalId);
+            ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
 
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(streetNamePersistentLocalId, municipalityId);
+            var municipalities = new Mock<IMunicipalities>();
+            municipalities.Setup(x => x.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None))
+                .ReturnsAsync(() =>
+                {
+                    var municipality = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
 
-            var lastEvent = new StreetNameWasProposedV2(
-                municipalityId,
-                niscode,
-                streetNames,
-                streetNamePersistentLocalId);
-            ((ISetProvenance)lastEvent).SetProvenance(provenance);
+                    municipality.Initialize(new List<object>
+                    {
+                        new MunicipalityWasImported(municipalityId, nisCode),
+                        streetNameWasProposedV2
+                    });
 
-            var expectedEtag = new ETag(ETagType.Strong, lastEvent.GetHash());
+                    return municipality;
+                });
 
-            var sut = new IfMatchHeaderValidator(_backOfficeContext, Container.Resolve<IMunicipalities>());
+            var expectedEtag = new ETag(ETagType.Strong, streetNameWasProposedV2.GetHash());
+
+            var sut = new IfMatchHeaderValidator(_backOfficeContext, municipalities.Object);
 
             // Act
             var result = await sut.IsValid(expectedEtag.ToString(), streetNamePersistentLocalId, CancellationToken.None);
@@ -61,16 +69,28 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
         {
             var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
-            var niscode = new NisCode("23002");
-            var streetNames = new Names();
-            var provenance = Fixture.Create<Provenance>();
+            var nisCode = new NisCode("23002");
 
-            ImportMunicipality(municipalityId, niscode);
-            ProposeStreetName(municipalityId, streetNames, streetNamePersistentLocalId, provenance);
+            var municipalities = new Mock<IMunicipalities>();
+            municipalities.Setup(x => x.GetAsync(new MunicipalityStreamId(municipalityId), CancellationToken.None))
+                .ReturnsAsync(() =>
+                {
+                    var municipality = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
+                    var streetNameWasProposedV2 = new StreetNameWasProposedV2(municipalityId, nisCode, Fixture.Create<Names>(), streetNamePersistentLocalId);
+                    ((ISetProvenance)streetNameWasProposedV2).SetProvenance(Fixture.Create<Provenance>());
+
+                    municipality.Initialize(new List<object>
+                    {
+                        new MunicipalityWasImported(municipalityId, nisCode),
+                        streetNameWasProposedV2
+                    });
+
+                    return municipality;
+                });
 
             _backOfficeContext.AddMunicipalityIdByPersistentLocalIdToFixture(streetNamePersistentLocalId, municipalityId);
 
-            var sut = new IfMatchHeaderValidator(_backOfficeContext, Container.Resolve<IMunicipalities>());
+            var sut = new IfMatchHeaderValidator(_backOfficeContext, municipalities.Object);
 
             // Act
             var result = await sut.IsValid("NON MATCHING ETAG", streetNamePersistentLocalId, CancellationToken.None);
@@ -82,22 +102,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
         [Fact]
         public async Task WhenMunicipalityIdNotFoundForStreetName_ShouldThrowStreetNameNotFoundException()
         {
-            var municipalityId = new MunicipalityId(Guid.NewGuid());
             var streetNamePersistentLocalId = new PersistentLocalId(456);
-            var niscode = new NisCode("23002");
-            var streetNames = new Names();
-            var provenance = Fixture.Create<Provenance>();
-
-            ImportMunicipality(municipalityId, niscode);
-            ProposeStreetName(municipalityId, streetNames, streetNamePersistentLocalId, provenance);
-
             var sut = new IfMatchHeaderValidator(_backOfficeContext, Container.Resolve<IMunicipalities>());
 
             // Act
             Func<Task> act = async() => await sut.IsValid(string.Empty, streetNamePersistentLocalId, CancellationToken.None);
 
             // Assert
-            act.Should().ThrowAsync<StreetNameIsNotFoundException>();
+            await act.Should().ThrowAsync<StreetNameIsNotFoundException>();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenCorrectingStreetNameN
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityExists : BackOfficeTest
+    public class GivenMunicipalityExists : BackOfficeHandlerTest
     {
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;

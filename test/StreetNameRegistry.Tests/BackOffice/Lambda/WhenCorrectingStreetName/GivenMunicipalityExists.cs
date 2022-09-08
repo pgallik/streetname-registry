@@ -13,21 +13,21 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
     using FluentAssertions;
     using global::AutoFixture;
     using Moq;
+    using Municipality;
+    using Municipality.Exceptions;
     using SqlStreamStore;
     using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
+    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
-    using Municipality;
-    using Municipality.Exceptions;
-    using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
     using TicketingService.Abstractions;
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityExists : BackOfficeTest
+    public class GivenMunicipalityExists : BackOfficeLambdaTest
     {
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;

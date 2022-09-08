@@ -25,7 +25,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
     using Xunit;
     using Xunit.Abstractions;
 
-    public class SqsStreetNameProposeHandlerTests : BackOfficeTest
+    public class SqsStreetNameProposeHandlerTests : BackOfficeLambdaTest
     {
         private readonly TestConsumerContext _consumerContext;
         private readonly TestBackOfficeContext _backOfficeContext;

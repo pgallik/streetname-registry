@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using Xunit;
     using Xunit.Abstractions;
 
-    public class SqsLambdaHandlerTests : BackOfficeTest
+    public class SqsLambdaHandlerTests : BackOfficeLambdaTest
     {
         public SqsLambdaHandlerTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {

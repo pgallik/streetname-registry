@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.BackOffice.Handlers
+namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenApprovingStreetName
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using FluentAssertions;
+    using global::AutoFixture;
     using Municipality;
     using SqlStreamStore;
     using SqlStreamStore.Streams;
@@ -17,10 +18,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers;
     using Xunit;
-    using global::AutoFixture;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityExists : BackOfficeTest
+    public class GivenMunicipalityExists : BackOfficeHandlerTest
     {
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;
