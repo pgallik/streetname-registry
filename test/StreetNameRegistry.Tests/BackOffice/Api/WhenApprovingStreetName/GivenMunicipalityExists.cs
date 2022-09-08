@@ -1,12 +1,10 @@
 namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.Api.ETag;
-    using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentAssertions;
     using FluentValidation;
     using global::AutoFixture;
@@ -30,15 +28,17 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         public async Task ThenAcceptedWithLocationIsReturned()
         {
             var expectedLocationResult = new LocationResult(Fixture.Create<Uri>());
-            MockMediatorResponse<SqsStreetNameApproveRequest, LocationResult>(expectedLocationResult);
+            var expectedIfMatchHeader = Fixture.Create<string>();
 
+            MockMediatorResponse<SqsStreetNameApproveRequest, LocationResult>(expectedLocationResult);
             var request = new StreetNameApproveRequest { PersistentLocalId = 123 };
+            
 
             var result = (AcceptedResult)await Controller.Approve(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameApproveRequest>(),
                 request,
-                ifMatchHeaderValue: string.Empty,
+                ifMatchHeaderValue: expectedIfMatchHeader,
                 CancellationToken.None);
 
             // Assert
@@ -46,9 +46,10 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 x.Send(
                     It.Is<SqsStreetNameApproveRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
-                        sqsRequest.ProvenanceData.Timestamp !=
-                        Instant.MinValue), // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.IfMatchHeaderValue == expectedIfMatchHeader),
                     CancellationToken.None));
+
             result.Location.Should().Be(expectedLocationResult.Location.ToString());
         }
 

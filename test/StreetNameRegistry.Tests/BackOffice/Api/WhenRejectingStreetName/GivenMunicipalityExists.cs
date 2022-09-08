@@ -28,6 +28,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
         public async Task ThenAcceptedWithLocationIsReturned()
         {
             var expectedLocationResult = new LocationResult(Fixture.Create<Uri>());
+            var expectedIfMatchHeader = Fixture.Create<string>();
             MockMediatorResponse<SqsStreetNameRejectRequest, LocationResult>(expectedLocationResult);
 
             var request = new StreetNameRejectRequest { PersistentLocalId = 123 };
@@ -37,7 +38,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
                 MockPassingRequestValidator<StreetNameRejectRequest>(),
                 ResponseOptions,
                 request,
-                ifMatchHeaderValue: string.Empty,
+                ifMatchHeaderValue: expectedIfMatchHeader,
                 CancellationToken.None);
 
             // Assert
@@ -45,8 +46,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
                 x.Send(
                     It.Is<SqsStreetNameRejectRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
-                        sqsRequest.ProvenanceData.Timestamp !=
-                        Instant.MinValue), // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.IfMatchHeaderValue == expectedIfMatchHeader),
                     CancellationToken.None));
             result.Location.Should().Be(expectedLocationResult.Location.ToString());
         }

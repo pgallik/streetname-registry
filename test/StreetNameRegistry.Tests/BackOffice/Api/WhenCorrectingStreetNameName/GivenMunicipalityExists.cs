@@ -29,6 +29,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
         public async Task ThenAcceptedWithLocationIsReturned()
         {
             var expectedLocationResult = new LocationResult(Fixture.Create<Uri>());
+            var expectedIfMatchHeader = Fixture.Create<string>();
             MockMediatorResponse<SqsStreetNameCorrectNamesRequest, LocationResult>(expectedLocationResult);
 
             var request = new StreetNameCorrectNamesRequest
@@ -42,7 +43,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
                 ResponseOptions,
                 123,
                 request,
-                ifMatchHeaderValue: string.Empty,
+                ifMatchHeaderValue: expectedIfMatchHeader,
                 CancellationToken.None);
 
             // Assert
@@ -50,7 +51,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
                 x.Send(
                     It.Is<SqsStreetNameCorrectNamesRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
-                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue), // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
+                        sqsRequest.IfMatchHeaderValue == expectedIfMatchHeader),
                     CancellationToken.None));
             result.Location.Should().Be(expectedLocationResult.Location.ToString());
         }
