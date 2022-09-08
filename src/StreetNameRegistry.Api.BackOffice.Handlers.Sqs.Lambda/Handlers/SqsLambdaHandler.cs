@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Requests;
     using Municipality;
     using Municipality.Exceptions;
+    using Polly;
     using TicketingService.Abstractions;
 
     public abstract class SqsLambdaHandler<TSqsLambdaRequest> : IRequestHandler<TSqsLambdaRequest>
@@ -32,7 +33,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             {
                 await _ticketing.Pending(request.TicketId, cancellationToken);
 
-                var etag = await InnerHandle(request, cancellationToken);
+                var etag = string.Empty;
+                await Retry(3, async () => etag = await InnerHandle(request, cancellationToken));
 
                 await _ticketing.Complete(
                     request.TicketId,
@@ -61,6 +63,15 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             }
 
             return Unit.Value;
+        }
+
+        private async Task Retry(int numRetries, Func<Task> action)
+        {
+            var polly = Policy
+                .Handle<Exception>()        
+                .RetryAsync(numRetries);
+
+            await polly.ExecuteAsync(async () => await action());
         }
 
         protected async Task<string> GetStreetNameHash(
