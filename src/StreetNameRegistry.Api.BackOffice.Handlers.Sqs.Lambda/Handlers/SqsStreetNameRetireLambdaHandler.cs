@@ -10,20 +10,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameCorrectNamesHandler : SqsLambdaHandler<SqsLambdaStreetNameCorrectNamesRequest>
+    public class SqsStreetNameRetireLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
     {
-        public SqsStreetNameCorrectNamesHandler(
+        public SqsStreetNameRetireLambdaHandler(
             ITicketing ticketing,
             IMunicipalities municipalities,
             IIdempotentCommandHandler idempotentCommandHandler)
             : base(municipalities, ticketing, idempotentCommandHandler)
         { }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameCorrectNamesRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameRetireRequest request, CancellationToken cancellationToken)
         {
-            var streetNamePersistentLocalId = new PersistentLocalId(request.StreetNamePersistentLocalId);
+            var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
-            var cmd = request.ToCommand();
+            var cmd = request.ToCommand(streetNamePersistentLocalId);
 
             try
             {
@@ -45,15 +45,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
         {
             return exception switch
             {
-                StreetNameNameAlreadyExistsException nameExists => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameAlreadyExists(nameExists.Name),
-                    ValidationErrorCodes.StreetName.StreetNameAlreadyExists),
                 StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameCannotBeCorrected,
-                    ValidationErrorCodes.StreetName.StreetNameCannotBeCorrected),
-                StreetNameNameLanguageIsNotSupportedException _ => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameNameLanguageIsNotSupported,
-                    ValidationErrorCodes.StreetName.StreetNameNameLanguageIsNotSupported),
+                    ValidationErrorMessages.StreetName.StreetNameCannotBeRetired,
+                    ValidationErrorCodes.StreetName.StreetNameCannotBeRetired),
+                MunicipalityHasInvalidStatusException => new TicketError(
+                    ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent,
+                    ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent),
                 _ => null
             };
         }

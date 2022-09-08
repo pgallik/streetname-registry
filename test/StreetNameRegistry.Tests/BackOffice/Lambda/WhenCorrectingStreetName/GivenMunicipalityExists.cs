@@ -61,7 +61,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             await _backOfficeContext.SaveChangesAsync();
 
             var etag = new ETagResponse(string.Empty);
-            var handler = new SqsStreetNameCorrectNamesHandler(
+            var handler = new SqsStreetNameCorrectNamesLambdaHandler(
                 MockTicketing(result =>
                 {
                     etag = result;
@@ -100,7 +100,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
 
             var streetname = "Bremt";
 
-            var sut = new SqsStreetNameCorrectNamesHandler(
+            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname)).Object);
@@ -129,7 +129,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameCorrectNamesHandler(
+            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
@@ -160,7 +160,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameCorrectNamesHandler(
+            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object);
@@ -204,7 +204,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenCorrectingStreetName
                 provenance);
 
             var municipalities = Container.Resolve<IMunicipalities>();
-            var sut = new SqsStreetNameCorrectNamesHandler(
+            var sut = new SqsStreetNameCorrectNamesLambdaHandler(
                 ticketing.Object,
                 municipalities,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);

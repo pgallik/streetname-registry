@@ -27,7 +27,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
         [Fact]
         public async Task ThenAcceptedWithLocationIsReturned()
         {
-            var expectedLocationResult = new LocationResult(Fixture.Create<Uri>().ToString());
+            var expectedLocationResult = new LocationResult(Fixture.Create<Uri>());
             MockMediatorResponse<SqsStreetNameRejectRequest, LocationResult>(expectedLocationResult);
 
             var request = new StreetNameRejectRequest { PersistentLocalId = 123 };
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
                         sqsRequest.ProvenanceData.Timestamp !=
                         Instant.MinValue), // Just to verify that ProvenanceData has been populated.
                     CancellationToken.None));
-            result.Location.Should().Be(expectedLocationResult.Location);
+            result.Location.Should().Be(expectedLocationResult.Location.ToString());
         }
 
         [Fact]

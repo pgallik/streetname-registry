@@ -9,12 +9,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameProposeHandler : SqsLambdaHandler<SqsLambdaStreetNameProposeRequest>
+    public class SqsStreetNameProposeLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameProposeRequest>
     {
         private readonly IPersistentLocalIdGenerator _persistentLocalIdGenerator;
         private readonly BackOfficeContext _backOfficeContext;
 
-        public SqsStreetNameProposeHandler(
+        public SqsStreetNameProposeLambdaHandler(
             ITicketing ticketing,
             IPersistentLocalIdGenerator persistentLocalIdGenerator,
             IIdempotentCommandHandler idempotentCommandHandler,

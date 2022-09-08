@@ -10,9 +10,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameRejectHandler : SqsLambdaHandler<SqsLambdaStreetNameRejectRequest>
+    public class SqsStreetNameRejectLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameRejectRequest>
     {
-        public SqsStreetNameRejectHandler(
+        public SqsStreetNameRejectLambdaHandler(
             ITicketing ticketing,
             IMunicipalities municipalities,
             IIdempotentCommandHandler idempotentCommandHandler)

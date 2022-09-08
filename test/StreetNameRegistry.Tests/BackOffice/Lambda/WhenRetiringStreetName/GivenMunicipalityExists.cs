@@ -62,7 +62,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             await _backOfficeContext.SaveChangesAsync();
 
             var etag = new ETagResponse(string.Empty);
-            var handler = new SqsStreetNameRetireHandler(
+            var handler = new SqsStreetNameRetireLambdaHandler(
                 MockTicketing(result => { etag = result; }).Object,
                 Container.Resolve<IMunicipalities>(),
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext));
@@ -89,7 +89,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameRetireHandler(
+            var sut = new SqsStreetNameRetireLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<StreetNameHasInvalidStatusException>().Object);
@@ -118,7 +118,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameRetireHandler(
+            var sut = new SqsStreetNameRetireLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IMunicipalities>(),
                 MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object);
@@ -162,7 +162,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
                 provenance);
 
             var municipalities = Container.Resolve<IMunicipalities>();
-            var sut = new SqsStreetNameRetireHandler(
+            var sut = new SqsStreetNameRetireLambdaHandler(
                 ticketing.Object,
                 municipalities,
                 MockExceptionIdempotentCommandHandler(() => new IdempotencyException(string.Empty)).Object);

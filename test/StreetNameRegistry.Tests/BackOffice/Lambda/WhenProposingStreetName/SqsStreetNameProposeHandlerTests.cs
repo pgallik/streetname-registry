@@ -56,7 +56,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             AddOfficialLanguageFrench(municipalityId);
 
             var etag = new ETagResponse(string.Empty);
-            var handler = new SqsStreetNameProposeHandler(
+            var handler = new SqsStreetNameProposeLambdaHandler(
                 MockTicketing(result => { etag = result; }).Object,
                 mockPersistentLocalIdGenerator.Object,
                 new IdempotentCommandHandler(Container.Resolve<ICommandHandlerResolver>(), _idempotencyContext),
@@ -101,7 +101,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
 
             var streetname = "Bremt";
 
-            var sut = new SqsStreetNameProposeHandler(
+            var sut = new SqsStreetNameProposeLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler(() => new StreetNameNameAlreadyExistsException(streetname))
@@ -134,7 +134,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameProposeHandler(
+            var sut = new SqsStreetNameProposeLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<MunicipalityHasInvalidStatusException>().Object,
@@ -165,7 +165,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameProposeHandler(
+            var sut = new SqsStreetNameProposeLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameNameLanguageIsNotSupportedException>().Object,
@@ -197,7 +197,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenProposingStreetName
             // Arrange
             var ticketing = new Mock<ITicketing>();
 
-            var sut = new SqsStreetNameProposeHandler(
+            var sut = new SqsStreetNameProposeLambdaHandler(
                 ticketing.Object,
                 Mock.Of<IPersistentLocalIdGenerator>(),
                 MockExceptionIdempotentCommandHandler<StreetNameIsMissingALanguageException>().Object,

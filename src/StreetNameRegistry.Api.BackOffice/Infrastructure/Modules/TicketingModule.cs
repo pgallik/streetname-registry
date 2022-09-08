@@ -1,6 +1,5 @@
 namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 {
-    using Abstractions;
     using Autofac;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -30,9 +29,9 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
                 .As<ITicketingUrl>()
                 .SingleInstance();
 
-            builder.RegisterType<HttpProxyTicketing>().As<ITicketing>().InstancePerLifetimeScope();
-
-            _services.AddHttpClient();
+            _services
+                .AddHttpClient()
+                .AddHttpProxyTicketing();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
         [Fact]
         public async Task ThenAcceptedWithLocationIsReturned()
         {
-            var expectedLocationResult = new LocationResult(Fixture.Create<Uri>().ToString());
+            var expectedLocationResult = new LocationResult(Fixture.Create<Uri>());
             MockMediatorResponse<SqsStreetNameApproveRequest, LocationResult>(expectedLocationResult);
 
             var request = new StreetNameApproveRequest { PersistentLocalId = 123 };
@@ -49,7 +49,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                         sqsRequest.ProvenanceData.Timestamp !=
                         Instant.MinValue), // Just to verify that ProvenanceData has been populated.
                     CancellationToken.None));
-            result.Location.Should().Be(expectedLocationResult.Location);
+            result.Location.Should().Be(expectedLocationResult.Location.ToString());
         }
 
         [Fact]

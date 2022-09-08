@@ -72,7 +72,7 @@ namespace StreetNameRegistry.Api.BackOffice
                             ProvenanceData = new ProvenanceData(CreateFakeProvenance())
                         }, cancellationToken);
 
-                    return Accepted(result.LocationAsUri);
+                    return Accepted(result.Location);
                 }
 
                 request.Metadata = GetMetadata();

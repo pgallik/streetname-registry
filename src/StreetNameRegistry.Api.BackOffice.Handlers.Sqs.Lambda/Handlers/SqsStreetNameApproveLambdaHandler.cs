@@ -10,16 +10,16 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameRetireHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
+    public class SqsStreetNameApproveLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
     {
-        public SqsStreetNameRetireHandler(
+        public SqsStreetNameApproveLambdaHandler(
             ITicketing ticketing,
             IMunicipalities municipalities,
             IIdempotentCommandHandler idempotentCommandHandler)
             : base(municipalities, ticketing, idempotentCommandHandler)
         { }
 
-        protected override async Task<string> InnerHandle(SqsLambdaStreetNameRetireRequest request, CancellationToken cancellationToken)
+        protected override async Task<string> InnerHandle(SqsLambdaStreetNameApproveRequest request, CancellationToken cancellationToken)
         {
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
 
@@ -46,8 +46,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
             return exception switch
             {
                 StreetNameHasInvalidStatusException => new TicketError(
-                    ValidationErrorMessages.StreetName.StreetNameCannotBeRetired,
-                    ValidationErrorCodes.StreetName.StreetNameCannotBeRetired),
+                    ValidationErrorMessages.StreetName.StreetNameCannotBeApproved,
+                    ValidationErrorCodes.StreetName.StreetNameCannotBeApproved),
                 MunicipalityHasInvalidStatusException => new TicketError(
                     ValidationErrorMessages.Municipality.MunicipalityStatusNotCurrent,
                     ValidationErrorCodes.Municipality.MunicipalityStatusNotCurrent),

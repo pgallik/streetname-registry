@@ -35,9 +35,7 @@ namespace StreetNameRegistry.Tests.Testing
             builder
                 .RegisterModule(new CommandHandlingModule(configuration))
                 .RegisterModule(new SqlStreamStoreModule())
-                .RegisterModule(new SqsLambdaHandlersModule());
-
-            builder.RegisterModule(new SqlSnapshotStoreModule());
+                .RegisterModule(new SqlSnapshotStoreModule());
 
             builder
                 .Register(c => new MunicipalityFactory(Fixture.Create<ISnapshotStrategy>()))
