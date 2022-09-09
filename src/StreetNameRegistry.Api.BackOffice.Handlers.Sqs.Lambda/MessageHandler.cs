@@ -30,70 +30,68 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             await using var lifetimeScope = _container.BeginLifetimeScope();
             var mediator = lifetimeScope.Resolve<IMediator>();
 
-            // TODO: uncomment after initial lambda testing
-            //switch (sqsRequest)
-            //{
-            //    case SqsStreetNameApproveRequest request:
-            //        await _mediator.Send(new SqsLambdaStreetNameApproveRequest
-            //        {
-            //            Request = request.Request,
-            //            TicketId = request.TicketId,
-            //            MessageGroupId = messageMetadata.MessageGroupId,
-            //            IfMatchHeaderValue = request.IfMatchHeaderValue,
-            //            Metadata = request.Metadata,
-            //            Provenance = request.ProvenanceData.ToProvenance()
-            //        }, cancellationToken);
-            //        break;
+            switch (sqsRequest)
+            {
+                case SqsStreetNameApproveRequest request:
+                    await mediator.Send(new SqsLambdaStreetNameApproveRequest
+                    {
+                        Request = request.Request,
+                        TicketId = request.TicketId,
+                        MessageGroupId = messageMetadata.MessageGroupId!,
+                        IfMatchHeaderValue = request.IfMatchHeaderValue,
+                        Metadata = request.Metadata,
+                        Provenance = request.ProvenanceData.ToProvenance()
+                    }, cancellationToken);
+                    break;
 
-            //    case SqsStreetNameCorrectNamesRequest request:
-            //        await _mediator.Send(new SqsLambdaStreetNameCorrectNamesRequest
-            //        {
-            //            Request = request.Request,
-            //            StreetNamePersistentLocalId = request.PersistentLocalId,
-            //            TicketId = request.TicketId,
-            //            MessageGroupId = messageMetadata.MessageGroupId,
-            //            IfMatchHeaderValue = request.IfMatchHeaderValue,
-            //            Metadata = request.Metadata,
-            //            Provenance = request.ProvenanceData.ToProvenance()
-            //        }, cancellationToken);
-            //        break;
+                case SqsStreetNameCorrectNamesRequest request:
+                    await mediator.Send(new SqsLambdaStreetNameCorrectNamesRequest
+                    {
+                        Request = request.Request,
+                        StreetNamePersistentLocalId = request.PersistentLocalId,
+                        TicketId = request.TicketId,
+                        MessageGroupId = messageMetadata.MessageGroupId!,
+                        IfMatchHeaderValue = request.IfMatchHeaderValue,
+                        Metadata = request.Metadata,
+                        Provenance = request.ProvenanceData.ToProvenance()
+                    }, cancellationToken);
+                    break;
 
-            //    case SqsStreetNameProposeRequest request:
-            //        await _mediator.Send(new SqsLambdaStreetNameProposeRequest
-            //        {
-            //            Request = request.Request,
-            //            TicketId = request.TicketId,
-            //            MessageGroupId = messageMetadata.MessageGroupId,
-            //            IfMatchHeaderValue = request.IfMatchHeaderValue,
-            //            Metadata = request.Metadata,
-            //            Provenance = request.ProvenanceData.ToProvenance()
-            //        }, cancellationToken);
-            //        break;
+                case SqsStreetNameProposeRequest request:
+                    await mediator.Send(new SqsLambdaStreetNameProposeRequest
+                    {
+                        Request = request.Request,
+                        TicketId = request.TicketId,
+                        MessageGroupId = messageMetadata.MessageGroupId!,
+                        Metadata = request.Metadata,
+                        Provenance = request.ProvenanceData.ToProvenance()
+                    }, cancellationToken);
+                    break;
 
-            //    case SqsStreetNameRejectRequest request:
-            //        await _mediator.Send(new SqsLambdaStreetNameRejectRequest
-            //        {
-            //            Request = request.Request,
-            //            TicketId = request.TicketId,
-            //            MessageGroupId = messageMetadata.MessageGroupId,
-            //            IfMatchHeaderValue = request.IfMatchHeaderValue,
-            //            Metadata = request.Metadata,
-            //            Provenance = request.ProvenanceData.ToProvenance()
-            //        }, cancellationToken);
-            //        break;
+                case SqsStreetNameRejectRequest request:
+                    await mediator.Send(new SqsLambdaStreetNameRejectRequest
+                    {
+                        Request = request.Request,
+                        TicketId = request.TicketId,
+                        MessageGroupId = messageMetadata.MessageGroupId!,
+                        IfMatchHeaderValue = request.IfMatchHeaderValue,
+                        Metadata = request.Metadata,
+                        Provenance = request.ProvenanceData.ToProvenance()
+                    }, cancellationToken);
+                    break;
 
-            //    case SqsStreetNameRetireRequest request:
-            //        await _mediator.Send(new SqsLambdaStreetNameRetireRequest
-            //        {
-            //            Request = request.Request,
-            //            TicketId = request.TicketId,
-            //            MessageGroupId = messageMetadata.MessageGroupId,
-            //            IfMatchHeaderValue = request.IfMatchHeaderValue,
-            //            Metadata = request.Metadata,
-            //            Provenance = request.ProvenanceData.ToProvenance()
-            //        }, cancellationToken);
-            //        break;
-            //}
+                case SqsStreetNameRetireRequest request:
+                    await mediator.Send(new SqsLambdaStreetNameRetireRequest
+                    {
+                        Request = request.Request,
+                        TicketId = request.TicketId,
+                        MessageGroupId = messageMetadata.MessageGroupId!,
+                        IfMatchHeaderValue = request.IfMatchHeaderValue,
+                        Metadata = request.Metadata,
+                        Provenance = request.ProvenanceData.ToProvenance()
+                    }, cancellationToken);
+                    break;
+            }
         }
     }
 }

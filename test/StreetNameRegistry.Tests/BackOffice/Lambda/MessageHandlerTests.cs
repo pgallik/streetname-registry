@@ -1,0 +1,207 @@
+﻿namespace StreetNameRegistry.Tests.BackOffice.Lambda
+{
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Autofac;
+    using Be.Vlaanderen.Basisregisters.Aws.Lambda;
+    using global::AutoFixture;
+    using MediatR;
+    using Moq;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
+    using Testing;
+    using Xunit;
+    using Xunit.Abstractions;
+
+    public class MessageHandlerTests : StreetNameRegistryTest
+    {
+        public MessageHandlerTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        { }
+
+        [Fact]
+        public async Task WhenProcessingUnknownMessage_ThenNothingIsSent()
+        {
+            // Arrang
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<object>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            mediator.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task WhenProcessingSqsStreetNameProposeRequest_ThenSqsLambdaStreetNameProposeRequestIsSent()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<SqsStreetNameProposeRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            mediator
+                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameProposeRequest>(request =>
+                    request.TicketId == messageData.TicketId &&
+                    request.MessageGroupId == messageMetadata.MessageGroupId &&
+                    request.Request == messageData.Request &&
+                    request.IfMatchHeaderValue == null &&
+                    request.Provenance == messageData.ProvenanceData.ToProvenance() &&
+                    request.Metadata == messageData.Metadata
+                ), CancellationToken.None), Times.Once);
+        }
+
+        [Fact]
+        public async Task WhenProcessingSqsStreetNameApproveRequest_ThenSqsLambdaStreetNameApproveRequestIsSent()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<SqsStreetNameApproveRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            mediator
+                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameApproveRequest>(request =>
+                    request.TicketId == messageData.TicketId &&
+                    request.MessageGroupId == messageMetadata.MessageGroupId &&
+                    request.Request == messageData.Request &&
+                    request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
+                    request.Provenance == messageData.ProvenanceData.ToProvenance() &&
+                    request.Metadata == messageData.Metadata
+                ), CancellationToken.None), Times.Once);
+        }
+
+        [Fact]
+        public async Task WhenProcessingSqsStreetNameCorrectNamesRequest_ThenSqsLambdaStreetNameCorrectNamesRequestIsSent()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<SqsStreetNameCorrectNamesRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            mediator
+                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameCorrectNamesRequest>(request =>
+                    request.TicketId == messageData.TicketId &&
+                    request.MessageGroupId == messageMetadata.MessageGroupId &&
+                    request.Request == messageData.Request &&
+                    request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
+                    request.Provenance == messageData.ProvenanceData.ToProvenance() &&
+                    request.Metadata == messageData.Metadata &&
+                    request.StreetNamePersistentLocalId == messageData.PersistentLocalId
+                ), CancellationToken.None), Times.Once);
+        }
+
+        [Fact]
+        public async Task WhenProcessingSqsStreetNameRejectRequest_ThenSqsLambdaStreetNameRejectRequestIsSent()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<SqsStreetNameRejectRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            mediator
+                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameRejectRequest>(request =>
+                    request.TicketId == messageData.TicketId &&
+                    request.MessageGroupId == messageMetadata.MessageGroupId &&
+                    request.Request == messageData.Request &&
+                    request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
+                    request.Provenance == messageData.ProvenanceData.ToProvenance() &&
+                    request.Metadata == messageData.Metadata
+                ), CancellationToken.None), Times.Once);
+        }
+
+        [Fact]
+        public async Task WhenProcessingSqsStreetNameRetireRequest_ThenSqsLambdaStreetNameRetireRequestIsSent()
+        {
+            // Arrange
+            var mediator = new Mock<IMediator>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.Register(_ => mediator.Object);
+            var container = containerBuilder.Build();
+
+            var messageData = Fixture.Create<SqsStreetNameRetireRequest>();
+            var messageMetadata = new MessageMetadata { MessageGroupId = Fixture.Create<string>() };
+
+            var sut = new MessageHandler(container);
+
+            // Act
+            await sut.HandleMessage(
+                messageData,
+                messageMetadata,
+                CancellationToken.None);
+
+            // Assert
+            mediator
+                .Verify(x => x.Send(It.Is<SqsLambdaStreetNameRetireRequest>(request =>
+                    request.TicketId == messageData.TicketId &&
+                    request.MessageGroupId == messageMetadata.MessageGroupId &&
+                    request.Request == messageData.Request &&
+                    request.IfMatchHeaderValue == messageData.IfMatchHeaderValue &&
+                    request.Provenance == messageData.ProvenanceData.ToProvenance() &&
+                    request.Metadata == messageData.Metadata
+                ), CancellationToken.None), Times.Once);
+        }
+    }
+}
