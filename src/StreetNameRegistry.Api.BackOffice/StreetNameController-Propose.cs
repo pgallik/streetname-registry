@@ -33,13 +33,12 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <response code="201">Als de straatnaam voorgesteld is.</response>
         /// <response code="202">Als de straatnaam reeds voorgesteld is.</response>
         /// <returns></returns>
-        [HttpPost("voorgesteld")]
+        [HttpPost("acties/voorstellen")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string",
-            "De url van de voorgestelde straatnaam.")]
+        [SwaggerResponseHeader(StatusCodes.Status201Created, "location", "string", "De url van de voorgestelde straatnaam.")]
         [SwaggerRequestExample(typeof(StreetNameProposeRequest), typeof(StreetNameProposeRequestExamples))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestResponseExamples))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorResponseExamples))]

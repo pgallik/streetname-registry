@@ -35,7 +35,7 @@ namespace StreetNameRegistry.Api.BackOffice
         /// <response code="409">Als de straatnaam status niet 'voorgesteld' is.</response>
         /// <response code="412">Als de If-Match header niet overeenkomt met de laatste ETag.</response>
         /// <returns></returns>
-        [HttpPut("{persistentLocalId}/goedgekeurd")]
+        [HttpPost("{persistentLocalId}/acties/goedkeuren")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
