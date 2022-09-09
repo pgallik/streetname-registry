@@ -1,3 +1,32 @@
+# [3.9.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.11...v3.9.0) (2022-09-09)
+
+
+### Bug Fixes
+
+* add location to etag response ([3209e8e](https://github.com/informatievlaanderen/streetname-registry/commit/3209e8ec7c2531884901a398f5bbbde621a7f745))
+* bump ticketing / lambda packages ([b44eb77](https://github.com/informatievlaanderen/streetname-registry/commit/b44eb77c7e20399529ee08ed1d0a1863973c969b))
+* correct idempotency in lambda handlers ([421e4bd](https://github.com/informatievlaanderen/streetname-registry/commit/421e4bd9496606249239a2043f811c9176d44ca8))
+* first implementation of retries ([e43146f](https://github.com/informatievlaanderen/streetname-registry/commit/e43146f7982de46cfdb9cf102ceff71f05b00ec8))
+* revert make pr's trigger build ([b3f6c27](https://github.com/informatievlaanderen/streetname-registry/commit/b3f6c27d5ab1f786ed35ada1fc23e4a2aeb5067a))
+* separate restore packages ([f3b80ce](https://github.com/informatievlaanderen/streetname-registry/commit/f3b80ce0be202acc47ee7ba75bc02f6056b56023))
+* separate restore packages ([4dca151](https://github.com/informatievlaanderen/streetname-registry/commit/4dca1511b0ec42bfe5e4ae08a17e59014a219006))
+* set build.yml as CI workflow ([beb0860](https://github.com/informatievlaanderen/streetname-registry/commit/beb0860a767e2bf505794301c41d881625be944a))
+* set ifmatchheader on sqsrequest ([55fa162](https://github.com/informatievlaanderen/streetname-registry/commit/55fa162b86658579ccd58385417d1e525e990e5b))
+* ticketing registration ([dc7e16a](https://github.com/informatievlaanderen/streetname-registry/commit/dc7e16a64bf8813cee4677553900425aaa89433c))
+
+
+### Features
+
+* change routes for propose and approve ([884fd38](https://github.com/informatievlaanderen/streetname-registry/commit/884fd38a0bdcba9d20fb4bbba1da8f5a7f7969e0))
+* don't handle aggregatenotfoundexception in lambda ([c2e3491](https://github.com/informatievlaanderen/streetname-registry/commit/c2e3491b31f604b591f57295c957e38aaffc5e2a))
+* don't process message which can't be cast to sqsrequest ([eb030a9](https://github.com/informatievlaanderen/streetname-registry/commit/eb030a9fefdc0a84304ea7ed3a78fad5e47c21f5))
+* make other actions async ([f4ec62c](https://github.com/informatievlaanderen/streetname-registry/commit/f4ec62c18a7253d9b782f5dc438a185475c8a7d9))
+* make propose streetname async ([e710e38](https://github.com/informatievlaanderen/streetname-registry/commit/e710e380c375a0c55322fe578c872d3e570fe011))
+* passthrough SQS request metadata ([a07bed5](https://github.com/informatievlaanderen/streetname-registry/commit/a07bed55ccb84c77b771a129c5a101119386e34e))
+* use different service lifetimescope per message ([5cd58d8](https://github.com/informatievlaanderen/streetname-registry/commit/5cd58d87816360dc0bc39621f5abbc384d2cea49))
+* useSqs feature toggle ([3d60ba0](https://github.com/informatievlaanderen/streetname-registry/commit/3d60ba042570fc91fcb7231cdabeeade30c54fb1))
+* validate ifmatchheadervalue in lambdas ([46c11be](https://github.com/informatievlaanderen/streetname-registry/commit/46c11be7f278557f920c58242ff83afc34dcdb05))
+
 ## [3.8.11](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.10...v3.8.11) (2022-09-06)
 
 ## [3.8.10](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.9...v3.8.10) (2022-09-05)
