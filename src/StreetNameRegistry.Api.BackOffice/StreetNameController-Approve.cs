@@ -81,11 +81,10 @@ namespace StreetNameRegistry.Api.BackOffice
             }
             catch (AggregateIdIsNotFoundException)
             {
-                // todo: change this?
                 throw CreateValidationException(
-                    "code",
+                    string.Empty, // TODO: see GAWR-2883
                     string.Empty,
-                    "message");
+                    ValidationErrorMessages.StreetName.StreetNameIdInvalid(request.PersistentLocalId));
             }
             catch (IdempotencyException)
             {

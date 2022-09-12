@@ -74,19 +74,17 @@ namespace StreetNameRegistry.Api.BackOffice
             }
             catch (AggregateIdIsNotFoundException)
             {
-                // todo: change this?
                 throw CreateValidationException(
-                    "code",
+                    ValidationErrorCodes.StreetName.StreetNameMunicipalityUnknown,
                     string.Empty,
-                    "message");
+                    ValidationErrorMessages.StreetName.StreetNameMunicipalityUnknown(request.GemeenteId));
             }
             catch (AggregateNotFoundException)
             {
-                // todo: change this?
                 throw CreateValidationException(
-                    "code",
+                    ValidationErrorCodes.StreetName.StreetNameMunicipalityUnknown,
                     string.Empty,
-                    "message");
+                    ValidationErrorMessages.StreetName.StreetNameMunicipalityUnknown(request.GemeenteId));
             }
             catch (IdempotencyException)
             {

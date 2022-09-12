@@ -59,13 +59,17 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
                 .Setup(x => x.Send(It.IsAny<SqsStreetNameRejectRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
-            Func<Task> act = async () => await Controller.Reject(
-                MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameRejectRequest>(),
-                ResponseOptions,
-                new StreetNameRejectRequest { PersistentLocalId = 123 },
-                string.Empty,
-                CancellationToken.None);
+            var request = new StreetNameRejectRequest { PersistentLocalId = 123 };
+            Func<Task> act = async () =>
+            {
+                await Controller.Reject(
+                    MockValidIfMatchValidator(),
+                    MockPassingRequestValidator<StreetNameRejectRequest>(),
+                    ResponseOptions,
+                    request,
+                    string.Empty,
+                    CancellationToken.None);
+            };
 
             //Assert
             act
@@ -73,8 +77,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRejectingStreetName
                 .ThrowAsync<ValidationException>()
                 .Result
                 .Where(x =>
-                    x.Errors.Any(e => e.ErrorCode == "code"
-                                      && e.ErrorMessage.Contains("message")));
+                    x.Errors.Any(e =>
+                        e.ErrorCode == ""
+                        && e.ErrorMessage.Contains($"De waarde '{request.PersistentLocalId}' is ongeldig.")));
         }
 
         [Fact]

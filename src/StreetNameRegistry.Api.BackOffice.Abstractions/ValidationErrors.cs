@@ -19,6 +19,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
             public const string StreetNameCannotBeRetired = "StraatnaamVoorgesteldOfAfgekeurd";
             public const string StreetNameNameLanguageIsNotSupported = "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal";
             public const string StreetNameIsMissingALanguage = "StraatnaamOntbreektOfficieleOfFaciliteitenTaal";
+            public const string StreetNameMunicipalityUnknown = "StraatnaamGemeenteNietGekendValidatie";
         }
     }
     public static class ValidationErrorMessages
@@ -38,9 +39,11 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
             public const string StreetNameCannotBeRetired = "Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.";
             public const string StreetNameCannotBeRejected = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.";
             public static string StreetNameAlreadyExists(string name) => $"Straatnaam '{name}' bestaat reeds in de gemeente.";
+            public static string StreetNameIdInvalid(int persistentLocalId) => $"De waarde '{persistentLocalId}' is ongeldig.";
             public const string StreetNameHasInvalidStatus = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.";
             public const string StreetNameNameLanguageIsNotSupported = "'Straatnamen' kunnen enkel voorkomen in de officiële of faciliteitentaal van de gemeente.";
             public const string StreetNameIsMissingALanguage = "In 'Straatnamen' ontbreekt een officiële of faciliteitentaal.";
+            public static string StreetNameMunicipalityUnknown(string gemeenteId) => $"De gemeente '{gemeenteId}' is niet gekend in het gemeenteregister.";
         }
     }
 }

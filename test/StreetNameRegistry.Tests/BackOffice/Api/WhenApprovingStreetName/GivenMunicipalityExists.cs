@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
 
             MockMediatorResponse<SqsStreetNameApproveRequest, LocationResult>(expectedLocationResult);
             var request = new StreetNameApproveRequest { PersistentLocalId = 123 };
-            
+
 
             var result = (AcceptedResult)await Controller.Approve(
                 MockValidIfMatchValidator(),
@@ -60,12 +60,16 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .Setup(x => x.Send(It.IsAny<SqsStreetNameApproveRequest>(), CancellationToken.None))
                 .Throws(new AggregateIdIsNotFoundException());
 
-            Func<Task> act = async () => await Controller.Approve(
-                MockValidIfMatchValidator(),
-                MockPassingRequestValidator<StreetNameApproveRequest>(),
-                new StreetNameApproveRequest { PersistentLocalId = 123 },
-                string.Empty,
-                CancellationToken.None);
+            var request = new StreetNameApproveRequest { PersistentLocalId = 123 };
+            Func<Task> act = async () =>
+            {
+                await Controller.Approve(
+                    MockValidIfMatchValidator(),
+                    MockPassingRequestValidator<StreetNameApproveRequest>(),
+                    request,
+                    string.Empty,
+                    CancellationToken.None);
+            };
 
             //Assert
             act
@@ -73,8 +77,9 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
                 .ThrowAsync<ValidationException>()
                 .Result
                 .Where(x =>
-                    x.Errors.Any(e => e.ErrorCode == "code"
-                                      && e.ErrorMessage.Contains("message")));
+                    x.Errors.Any(e =>
+                        e.ErrorCode == ""
+                        && e.ErrorMessage.Contains($"De waarde '{request.PersistentLocalId}' is ongeldig.")));
         }
 
         [Fact]
