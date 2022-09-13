@@ -136,21 +136,30 @@ jobs:
       shell: bash
       run: |
         echo Zip lambda functions
-        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo pwd
+        pwd
+        #echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/
+        #ls -al /home/runner/work/streetname-registry/streetname-registry/dist/
+        #echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
+        #ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
+        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        cd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
         zip -r lambda.zip .
-        popd
+        #popd
         
-    # Deployment of Lambda functions must be done from the Test environment
-    - name: Deploy Lambda functions to Test
-      if: env.RELEASE_VERSION != 'none'
-      shell: bash
-      run: |
-        echo Deploy Lambda functions to Test
-        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
-        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
-        popd
+ #   # Deployment of Lambda functions must be done from the Test environment
+ #   - name: Deploy Lambda functions to Test
+ #     if: env.RELEASE_VERSION != 'none'
+ #     shell: bash
+ #     run: |
+ #       echo Deploy Lambda functions to Test
+ #       #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+ #       #echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
+ #       #aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
+ #       #popd    
 
     - name: Configure AWS credentials (Staging)
       if: env.RELEASE_VERSION != 'none'
@@ -203,15 +212,15 @@ jobs:
         SEMVER: ${{ env.RELEASE_VERSION }}
         WORKSPACE: ${{ github.workspace }}
 
-    - name: Deploy Lambda functions to Staging
-      if: env.RELEASE_VERSION != 'none'
-      shell: bash
-      run: |
-        #echo Deploy Lambda functions to Staging
-        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        #echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction
-        #aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction
-        #popd
+#    - name: Deploy Lambda functions to Staging
+#      if: env.RELEASE_VERSION != 'none'
+#      shell: bash
+#      run: |
+#        #echo Deploy Lambda functions to Staging
+#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        #echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        #aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        #popd
 
     - name: Configure AWS credentials (Production)
       if: env.RELEASE_VERSION != 'none'
