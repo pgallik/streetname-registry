@@ -1,3 +1,10 @@
+## [3.10.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.0...v3.10.1) (2022-09-13)
+
+
+### Bug Fixes
+
+* typo in lambda release ([600c1c5](https://github.com/informatievlaanderen/streetname-registry/commit/600c1c57341ddd43add8b4896144a827ce350534))
+
 # [3.10.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.9.0...v3.10.0) (2022-09-13)
 
 
