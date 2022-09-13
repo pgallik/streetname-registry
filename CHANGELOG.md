@@ -1,3 +1,16 @@
+# [3.10.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.9.0...v3.10.0) (2022-09-13)
+
+
+### Bug Fixes
+
+* deploy lambda functions to test & stg environments ([86c103c](https://github.com/informatievlaanderen/streetname-registry/commit/86c103c28c44cebc0e43f6fa4fe9883751c4f18e))
+
+
+### Features
+
+* AggregateIdIsNotFoundException error code and message ([900ef85](https://github.com/informatievlaanderen/streetname-registry/commit/900ef85359d52cd4e56cbc1c3e6b8fef8acab090))
+* configurable polly retry policy ([1f5a3ae](https://github.com/informatievlaanderen/streetname-registry/commit/1f5a3ae058b2733fa7fde6c3aafca67552edca52))
+
 # [3.9.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.8.11...v3.9.0) (2022-09-09)
 
 
