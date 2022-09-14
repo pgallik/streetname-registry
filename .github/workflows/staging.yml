@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version'     
+        description: 'Version'
         required: true
 
 jobs:
@@ -36,3 +36,5 @@ jobs:
         echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
         echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
         echo ${{ steps.awscurl-polling-action.outputs.final-message }}
+
+# Deployment of Lambda functions must be done from the Test environment
