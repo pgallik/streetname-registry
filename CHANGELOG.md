@@ -1,3 +1,14 @@
+## [3.10.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.2...v3.10.3) (2022-09-14)
+
+
+### Bug Fixes
+
+* add deploy test ([0078ac8](https://github.com/informatievlaanderen/streetname-registry/commit/0078ac82a2a0bb3969a0994bf688b25155124a25))
+* modify deploy test ([e35ac52](https://github.com/informatievlaanderen/streetname-registry/commit/e35ac529c34624fc43649d7bf6e7fa77f3cbcb60))
+* modify deploy test ([eaf0f5f](https://github.com/informatievlaanderen/streetname-registry/commit/eaf0f5fcf32e4e7a65b89aa35cb2e21b7e854f30))
+* update testje.yml ([f2eb478](https://github.com/informatievlaanderen/streetname-registry/commit/f2eb4789f29d5f460c96319022602d5702c60419))
+* update testje.yml ([21d2a9b](https://github.com/informatievlaanderen/streetname-registry/commit/21d2a9beba52e94fbd3ff9629d36e33f1c151e50))
+
 ## [3.10.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.1...v3.10.2) (2022-09-13)
 
 
