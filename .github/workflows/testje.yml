@@ -23,17 +23,30 @@ jobs:
     - name: Prepare file
       shell: bash
       run: |
+        echo pwd
+        pwd
         echo date > date.txt
         date > date.txt
         
-    # Deployment of Lambda functions must be done from the Test environment
-    - name: Deploy file to Test
-      shell: bash
-      run: |
-        echo Deploy file to Test
-        echo aws s3 cp date.txt s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
-        aws s3 cp date.txt s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
+    # Test is OK
+#    - name: Configure AWS credentials (Test)
+#      uses: aws-actions/configure-aws-credentials@v1
+#      with:
+#        aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
+#        aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
+#        aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
+#
+#    - name: Login to Amazon ECR (Test)
+#      uses: aws-actions/amazon-ecr-login@v1.5.1
+#
+#    - name: Deploy file to Test
+#      shell: bash
+#      run: |
+#        echo Deploy file to Test
+#        echo aws s3 cp date.txt s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
+#        aws s3 cp date.txt s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction
 
+    #Staging is not OK
     - name: Configure AWS credentials (Staging)
       uses: aws-actions/configure-aws-credentials@v1
       with:
