@@ -81,7 +81,9 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
             builder.Property(x => x.Status);
             builder.Property(x => x.Removed);
 
-            builder.HasIndex(x => x.Removed);
+            builder
+                .HasIndex(x => x.Removed)
+                .IncludeProperties(p => new { p.NisCode, p.PersistentLocalId });
             builder.HasIndex(x => x.MunicipalityId);
         }
     }
