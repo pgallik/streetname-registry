@@ -1,3 +1,17 @@
+## [3.10.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.3...v3.10.4) (2022-09-16)
+
+
+### Bug Fixes
+
+* call test.yml from release.yml ([89cf43f](https://github.com/informatievlaanderen/streetname-registry/commit/89cf43f994dd26de6d50606295fe946cdc368db3))
+* comment deployment to test ([402f0be](https://github.com/informatievlaanderen/streetname-registry/commit/402f0be916136de44d8aea03d12eb1d2ba4c81b6))
+* make test.yml callable from another workflow ([ca8d253](https://github.com/informatievlaanderen/streetname-registry/commit/ca8d2534937be05f69cd9b39f4fd928829f90b01))
+
+
+### Performance Improvements
+
+* add index wfs ([abc5004](https://github.com/informatievlaanderen/streetname-registry/commit/abc5004ae913bd73d141728fb640ae7282d303cd))
+
 ## [3.10.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.2...v3.10.3) (2022-09-14)
 
 
