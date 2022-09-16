@@ -325,3 +325,8 @@ jobs:
         JIRA_PREFIX: StreetName
         JIRA_PROJECT: GAWR
         JIRA_VERSION: ${{ env.RELEASE_VERSION }}
+
+  test: # deploy to TEST environment
+    uses: ./.github/workflows/test.yml
+    with:
+      version: env.RELEASE_VERSION
