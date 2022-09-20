@@ -1,3 +1,10 @@
+## [3.10.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.5...v3.10.6) (2022-09-20)
+
+
+### Bug Fixes
+
+* download & load images ([b1652fa](https://github.com/informatievlaanderen/streetname-registry/commit/b1652faf70e7a9e46f8f6a810388d60478d38e2b))
+
 ## [3.10.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.4...v3.10.5) (2022-09-20)
 
 
