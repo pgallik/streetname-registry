@@ -46,11 +46,7 @@ jobs:
     - name: Parse repository name
       run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
       shell: bash
-
-    - name: Print repository name
-      run: echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//"
-      shell: bash
-      
+      #REPOSITORY_NAME = streetname-registry
     - name: Setup Node.js
       uses: actions/setup-node@v3
 
@@ -360,91 +356,118 @@ jobs:
 #        NUGET_HOST: ${{ secrets.NUGET_HOST }}
 #        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 #
-#    - name: Publish to Confluence
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-confluence.sh
-#      env:
-#        CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-#        CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-#        CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-#
-#    - name: Create Jira Release
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
-#      env:
-#        CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-#        CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-#        CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-#        JIRA_PREFIX: StreetName
-#        JIRA_PROJECT: GAWR
-#        JIRA_VERSION: ${{ env.RELEASE_VERSION }}
 
 #  test: # deploy to TEST environment
 #    uses: ./.github/workflows/test.yml
 #    with:
 #      version: env.RELEASE_VERSION
 
-  publish_to_atlassian:
+#  publish_to_atlassian:
+#    if: needs.build.outputs.version != 'none'
+#    needs: build
+#    name: Publish to Atlassian
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v3
+#
+#      - name: Parse repository name
+#        run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
+#        shell: bash
+#
+#      - name: Cache Paket
+#        uses: actions/cache@v3
+#        env:
+#          cache-name: cache-paket
+#        with:
+#          path: packages
+#          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('paket.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-build-${{ env.cache-name }}-
+#
+#      - name: Cache Python
+#        uses: actions/cache@v3
+#        env:
+#          cache-name: cache-pip
+#        with:
+#          path: ~/.cache/pip
+#          key: ${{ runner.os }}-build-${{ env.cache-name }}
+#
+#      - name: Set up Python
+#        uses: actions/setup-python@v3
+#        with:
+#          python-version: '3.x'
+#
+#      - name: Install Python dependencies
+#        shell: bash
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install requests markdown argparse
+#
+#      - name: Publish to Confluence
+#        if: needs.build.outputs.version != 'none'
+#        shell: bash
+#        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-confluence.sh
+#        env:
+#          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
+#          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
+#          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
+#
+#      - name: Create Jira Release
+#        if: needs.build.outputs.version != 'none'
+#        shell: bash
+#        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
+#        env:
+#          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
+#          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
+#          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
+#          JIRA_PREFIX: Streetname
+#          JIRA_PROJECT: GAWR
+#          JIRA_VERSION: ${{ needs.build.outputs.version }}
+
+  push_images_to_test:
     if: needs.build.outputs.version != 'none'
     needs: build
-    name: Publish to Atlassian
+    name: Push images to Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Configure AWS credentials (Test)
+        if: needs.build.outputs.version != 'none'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.VBR_AWS_ACCESS_KEY_ID_TST }}
+          aws-secret-access-key: ${{ secrets.VBR_AWS_SECRET_ACCESS_KEY_TST }}
+          aws-region: ${{ secrets.VBR_AWS_REGION_PRD }}
 
-      - name: Parse repository name
-        run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
+      - name: Login to Amazon ECR (Test)
+        if: needs.build.outputs.version != 'none'
+        uses: aws-actions/amazon-ecr-login@v1.5.1
+
+      #
+      # Download artifacts
+      #
+      
+      - name: Download api-backoffice
+        uses: actions/download-artifact@v3
+        with:
+          name: api-backoffice
+          path: ~/
+
+      #
+      # Load artifacts
+      #
+      
+      - name: Load api-backoffice image
         shell: bash
+        run: docker image load -i ~/sr-api-backoffice-image.tar
 
-      - name: Cache Paket
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-paket
-        with:
-          path: packages
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('paket.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-
-      - name: Cache Python
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-pip
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.x'
-
-      - name: Install Python dependencies
+      - name: Push docker images to ECR Test
+        if: needs.build.outputs.version != 'none'
         shell: bash
         run: |
-          python -m pip install --upgrade pip
-          pip install requests markdown argparse
-
-      - name: Publish to Confluence
-        if: needs.build.outputs.version != 'none'
-        shell: bash
-        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-confluence.sh
+          echo $SEMVER
+          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER
         env:
-          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-
-      - name: Create Jira Release
-        if: needs.build.outputs.version != 'none'
-        shell: bash
-        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
-        env:
-          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-          JIRA_PREFIX: Association
-          JIRA_PROJECT: OR
-          JIRA_VERSION: ${{ needs.build.outputs.version }}
+          BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
+          SEMVER: ${{ needs.build.outputs.version }}
+          WORKSPACE: ${{ github.workspace }}
