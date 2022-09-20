@@ -1,3 +1,12 @@
+## [3.10.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.4...v3.10.5) (2022-09-20)
+
+
+### Bug Fixes
+
+* correct testje ([e024632](https://github.com/informatievlaanderen/streetname-registry/commit/e024632693c4b7456957763ea8d1a6d488306dfd))
+* rename testje ([bad685d](https://github.com/informatievlaanderen/streetname-registry/commit/bad685df3ecbe63241b2de6249d35dcb7eee3de0))
+* testje.yml ([70ae13b](https://github.com/informatievlaanderen/streetname-registry/commit/70ae13bf47df1ae1aa02ae5f6d6ce0c488f54f1d))
+
 ## [3.10.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.3...v3.10.4) (2022-09-16)
 
 
