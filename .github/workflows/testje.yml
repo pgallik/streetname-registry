@@ -8,11 +8,10 @@ jobs:
     if: github.repository_owner == 'Informatievlaanderen'
     name: Build
     runs-on: ubuntu-latest
-
     outputs:
       version: ${{ steps.set-version.outputs.version }}
 
-  steps:
+    steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
