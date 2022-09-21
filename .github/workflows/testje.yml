@@ -47,6 +47,7 @@ jobs:
       run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
       shell: bash
       #REPOSITORY_NAME = streetname-registry
+      
     - name: Setup Node.js
       uses: actions/setup-node@v3
 
@@ -351,7 +352,7 @@ jobs:
     steps:
       - name: Show version
         if: needs.build.outputs.version != 'none'
-        run: echo Version is: ${{ needs.build.outputs.version }}
+        run: echo Version is ${{ needs.build.outputs.version }}
       
       - name: Configure AWS credentials (Test)
         if: needs.build.outputs.version != 'none'
