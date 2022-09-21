@@ -1,3 +1,10 @@
+## [3.10.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.6...v3.10.7) (2022-09-21)
+
+
+### Bug Fixes
+
+* adjust testje.yml ([b7e8574](https://github.com/informatievlaanderen/streetname-registry/commit/b7e85749e6af875a19619f5e0f327c120fc8d88f))
+
 ## [3.10.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.5...v3.10.6) (2022-09-20)
 
 
