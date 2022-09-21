@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameBecameCurrent")]
     [EventDescription("De straatnaam kreeg status 'in gebruik'.")]
-    public class StreetNameBecameCurrent : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameBecameCurrent : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

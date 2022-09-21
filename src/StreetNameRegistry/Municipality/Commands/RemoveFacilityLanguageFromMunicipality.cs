@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Municipality.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    public class RemoveFacilityLanguageFromMunicipality : IHasCommandProvenance
+    public sealed class RemoveFacilityLanguageFromMunicipality : IHasCommandProvenance
     {
         private static readonly Guid Namespace = new Guid("8bb32674-a6bf-4b01-82ac-5a966952c821");
 

@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(Tag.Municipality)]
     [EventName(EventName)]
     [EventDescription("Er werd een faciliteitentaal verwijderd van de gemeente.")]
-    public class MunicipalityFacilityLanguageWasRemoved : IMunicipalityEvent
+    public sealed class MunicipalityFacilityLanguageWasRemoved : IMunicipalityEvent
     {
         public const string EventName = "MunicipalityFacilitiesLanguageWasRemoved"; // BE CAREFUL CHANGING THIS!!
 

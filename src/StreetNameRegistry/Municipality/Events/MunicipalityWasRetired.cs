@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(Tag.Municipality)]
     [EventName(EventName)]
     [EventDescription("De gemeente werd gehistoreerd.")]
-    public class MunicipalityWasRetired: IMunicipalityEvent
+    public sealed class MunicipalityWasRetired: IMunicipalityEvent
     {
         public const string EventName = "MunicipalityWasRetired"; // BE CAREFUL CHANGING THIS!!
 

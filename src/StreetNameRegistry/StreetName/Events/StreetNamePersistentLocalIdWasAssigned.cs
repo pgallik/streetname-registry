@@ -10,7 +10,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNamePersistentLocalIdentifierWasAssigned")]
     [EventDescription("De straatnaam kreeg een persistente lokale identificator toegekend.")]
-    public class StreetNamePersistentLocalIdWasAssigned : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNamePersistentLocalIdWasAssigned : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

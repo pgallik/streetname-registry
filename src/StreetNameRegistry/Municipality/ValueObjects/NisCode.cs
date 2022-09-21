@@ -3,7 +3,7 @@ namespace StreetNameRegistry.Municipality
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Exceptions;
 
-    public class NisCode : StringValueObject<NisCode>
+    public sealed class NisCode : StringValueObject<NisCode>
     {
         public NisCode(string nisCode) : base(nisCode)
         {

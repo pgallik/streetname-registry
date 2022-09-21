@@ -6,7 +6,7 @@ namespace StreetNameRegistry.StreetName.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    public class MarkStreetNameMigrated : IHasCommandProvenance
+    public sealed class MarkStreetNameMigrated : IHasCommandProvenance
     {
         private static readonly Guid Namespace = new Guid("b9233165-3c9f-4668-917d-375df3086842");
 

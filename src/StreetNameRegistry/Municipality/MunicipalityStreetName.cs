@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Municipality
     using Events;
     using Exceptions;
 
-    public class MunicipalityStreetName : Entity
+    public sealed class MunicipalityStreetName : Entity
     {
         private MunicipalityId _municipalityId;
         private IMunicipalityEvent _lastEvent;

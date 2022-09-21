@@ -3,7 +3,7 @@ namespace StreetNameRegistry.Municipality
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
-    public class StreetNameProvenanceFactory : IProvenanceFactory<Municipality>
+    public sealed class StreetNameProvenanceFactory : IProvenanceFactory<Municipality>
     {
         public bool CanCreateFrom<TCommand>() => typeof(IHasProvenance).IsAssignableFrom(typeof(TCommand));
 

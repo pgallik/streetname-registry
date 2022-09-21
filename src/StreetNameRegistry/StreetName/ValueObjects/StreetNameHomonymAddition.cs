@@ -3,7 +3,7 @@ namespace StreetNameRegistry.StreetName
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
 
-    public class StreetNameHomonymAddition : ValueObject<StreetNameHomonymAddition>
+    public sealed class StreetNameHomonymAddition : ValueObject<StreetNameHomonymAddition>
     {
         public string HomonymAddition { get; }
         public Language? Language { get; }

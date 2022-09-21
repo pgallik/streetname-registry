@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameNameWasCleared")]
     [EventDescription("De naam van de straatnaam (in een bepaalde taal) werd gewist.")]
-    public class StreetNameNameWasCleared : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameNameWasCleared : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

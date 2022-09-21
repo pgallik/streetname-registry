@@ -4,7 +4,7 @@ namespace StreetNameRegistry.StreetName
     using Municipality.Exceptions;
     using Newtonsoft.Json;
 
-    public class NisCode : StringValueObject<NisCode>
+    public sealed class NisCode : StringValueObject<NisCode>
     {
         public NisCode([JsonProperty("value")] string nisCode) : base(nisCode)
         {

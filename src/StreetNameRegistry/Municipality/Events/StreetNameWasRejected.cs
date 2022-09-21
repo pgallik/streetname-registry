@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync, EventTag.For.Edit)]
     [EventName(EventName)]
     [EventDescription("De straatnaam werd afgekeurd.")]
-    public class StreetNameWasRejected : IMunicipalityEvent
+    public sealed class StreetNameWasRejected : IMunicipalityEvent
     {
         public const string EventName = "StreetNameWasRejected"; // BE CAREFUL CHANGING THIS!!
 

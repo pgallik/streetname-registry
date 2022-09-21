@@ -3,7 +3,7 @@ namespace StreetNameRegistry.Municipality
     using System.Collections.Generic;
     using System.Linq;
 
-    public class MunicipalityStreetNames : List<MunicipalityStreetName>
+    public sealed class MunicipalityStreetNames : List<MunicipalityStreetName>
     {
         public bool HasPersistentLocalId(PersistentLocalId persistentLocalId)
             => this.Any(x => x.PersistentLocalId == persistentLocalId);

@@ -5,7 +5,7 @@ namespace StreetNameRegistry.StreetName
     using Be.Vlaanderen.Basisregisters.Crab;
     using Newtonsoft.Json;
 
-    public class StreetNameId : GuidValueObject<StreetNameId>
+    public sealed class StreetNameId : GuidValueObject<StreetNameId>
     {
         public static StreetNameId CreateFor(CrabStreetNameId crabStreetNameId)
             => new StreetNameId(crabStreetNameId.CreateDeterministicId());

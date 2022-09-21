@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Municipality.Commands
     using Be.Vlaanderen.Basisregisters.Utilities;
     using StreetName;
 
-    public class MigrateStreetNameToMunicipality : IHasCommandProvenance
+    public sealed class MigrateStreetNameToMunicipality : IHasCommandProvenance
     {
         private static readonly Guid Namespace = new Guid("48ec913b-d7ba-48ba-9705-a98e4533dd30");
 

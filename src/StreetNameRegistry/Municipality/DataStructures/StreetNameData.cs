@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Municipality.DataStructures
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Newtonsoft.Json;
 
-    public class StreetNameData
+    public sealed class StreetNameData
     {
         public int StreetNamePersistentLocalId { get; }
         public StreetNameStatus Status { get; }

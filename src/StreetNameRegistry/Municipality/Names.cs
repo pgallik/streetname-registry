@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Municipality
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Names : List<StreetNameName>
+    public sealed class Names : List<StreetNameName>
     {
         public Names()
         { }

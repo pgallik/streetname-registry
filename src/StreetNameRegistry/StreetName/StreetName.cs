@@ -10,7 +10,7 @@ namespace StreetNameRegistry.StreetName
     using Municipality.Commands;
     using NodaTime;
 
-    public partial class StreetName : AggregateRootEntity
+    public sealed partial class StreetName : AggregateRootEntity
     {
         public static readonly Func<StreetName> Factory = () => new StreetName();
 

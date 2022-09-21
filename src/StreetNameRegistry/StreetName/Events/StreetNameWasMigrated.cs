@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameWasMigrated")]
     [EventDescription("De straatnaam is gemigreerd naar de gemeente aggregate.")]
-    public class StreetNameWasMigrated : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameWasMigrated : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

@@ -3,7 +3,7 @@ namespace StreetNameRegistry.Municipality
     using System;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
 
-    public class MunicipalityId : GuidValueObject<MunicipalityId>
+    public sealed class MunicipalityId : GuidValueObject<MunicipalityId>
     {
         public static MunicipalityId CreateFor(string municipalityId)
             => new MunicipalityId(Guid.Parse(municipalityId));

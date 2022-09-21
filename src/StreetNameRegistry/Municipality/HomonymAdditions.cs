@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Municipality
     using System.Collections.Generic;
     using System.Linq;
 
-    public class HomonymAdditions : List<StreetNameHomonymAddition>
+    public sealed class HomonymAdditions : List<StreetNameHomonymAddition>
     {
         public HomonymAdditions()
         { }

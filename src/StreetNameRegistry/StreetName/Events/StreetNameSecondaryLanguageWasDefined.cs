@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Crab)]
     [EventName("StreetNameSecondaryLanguageWasDefined")]
     [EventDescription("De secundaire taal waarin de straatnaam beschikbaar is, werd bepaald.")]
-    public class StreetNameSecondaryLanguageWasDefined : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameSecondaryLanguageWasDefined : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

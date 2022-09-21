@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync)]
     [EventName(EventName)]
     [EventDescription("De NisCode van de gemeente werd gewijzigd.")]
-    public class MunicipalityNisCodeWasChanged: IMunicipalityEvent
+    public sealed class MunicipalityNisCodeWasChanged: IMunicipalityEvent
     {
         public const string EventName = "MunicipalityNisCodeWasChanged"; // BE CAREFUL CHANGING THIS!!
 

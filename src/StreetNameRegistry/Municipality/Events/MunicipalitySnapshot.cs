@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventName("MunicipalitySnapshot")]
     [EventSnapshot(nameof(SnapshotContainer) + "<MunicipalitySnapshot>", typeof(SnapshotContainer))]
     [EventDescription("Snapshot of Municipality with StreetNames")]
-    public class MunicipalitySnapshot
+    public sealed class MunicipalitySnapshot
     {
         public Guid MunicipalityId { get; }
         public string NisCode { get; }

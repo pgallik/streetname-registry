@@ -1,8 +1,7 @@
-using System.Runtime.Serialization;
-
 namespace StreetNameRegistry.Municipality.Exceptions
 {
     using System;
+    using System.Runtime.Serialization;
 
     [Serializable]
     public sealed class StreetNameIsRemovedException : StreetNameRegistryException

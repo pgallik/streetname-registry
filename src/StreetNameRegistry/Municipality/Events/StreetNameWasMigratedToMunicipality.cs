@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Municipality.Events
     [EventTags(EventTag.For.Sync, Tag.Migration)]
     [EventName(EventName)]
     [EventDescription("De straatnaam werd gemigreerd naar gemeente.")]
-    public class StreetNameWasMigratedToMunicipality : IMunicipalityEvent
+    public sealed class StreetNameWasMigratedToMunicipality : IMunicipalityEvent
     {
         public const string EventName = "StreetNameWasMigratedToMunicipality"; // BE CAREFUL CHANGING THIS!!
 

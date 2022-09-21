@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameBecameIncomplete")]
     [EventDescription("De straatnaam voldoet niet meer aan het informatiemodel (wegens niet volledig).")]
-    public class StreetNameBecameIncomplete : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameBecameIncomplete : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

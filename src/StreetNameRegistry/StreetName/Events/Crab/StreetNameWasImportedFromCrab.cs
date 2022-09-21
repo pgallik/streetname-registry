@@ -7,7 +7,7 @@ namespace StreetNameRegistry.StreetName.Events.Crab
 
     [EventName("StreetNameWasImportedFromCrab")]
     [EventDescription("Legacy event om tblStraatnaam en tblStraatnaam_hist te importeren.")]
-    public class StreetNameWasImportedFromCrab : IMessage
+    public sealed class StreetNameWasImportedFromCrab : IMessage
     {
         [EventPropertyDescription("CRAB-identificator van de straatnaam.")]
         public int StreetNameId { get; }

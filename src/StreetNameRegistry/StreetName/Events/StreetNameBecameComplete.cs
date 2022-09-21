@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameBecameComplete")]
     [EventDescription("De straatnaam voldoet aan het informatiemodel (wegens volledig).")]
-    public class StreetNameBecameComplete : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameBecameComplete : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

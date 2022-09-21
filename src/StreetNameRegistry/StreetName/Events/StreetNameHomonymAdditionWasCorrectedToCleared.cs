@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameHomonymAdditionWasCorrectedToCleared")]
     [EventDescription("De homoniemtoevoeging van de straatnaam werd gewist (via correctie).")]
-    public class StreetNameHomonymAdditionWasCorrectedToCleared : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameHomonymAdditionWasCorrectedToCleared : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

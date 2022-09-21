@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Municipality
     using Events;
     using Exceptions;
 
-    public partial class Municipality : AggregateRootEntity, ISnapshotable
+    public sealed partial class Municipality : AggregateRootEntity, ISnapshotable
     {
         public static Municipality Register(
             IMunicipalityFactory municipalityFactory,

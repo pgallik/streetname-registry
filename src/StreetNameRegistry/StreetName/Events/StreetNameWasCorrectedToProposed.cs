@@ -8,7 +8,7 @@ namespace StreetNameRegistry.StreetName.Events
     [EventTags(EventTag.For.Sync)]
     [EventName("StreetNameWasCorrectedToProposed")]
     [EventDescription("De straatnaam kreeg status 'voorgesteld' (via correctie).")]
-    public class StreetNameWasCorrectedToProposed : IHasStreetNameId, IHasProvenance, ISetProvenance
+    public sealed class StreetNameWasCorrectedToProposed : IHasStreetNameId, IHasProvenance, ISetProvenance
     {
         [EventPropertyDescription("Interne GUID van de straatnaam.")]
         public Guid StreetNameId { get; }

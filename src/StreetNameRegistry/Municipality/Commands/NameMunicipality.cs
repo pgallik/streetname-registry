@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Municipality.Commands
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Be.Vlaanderen.Basisregisters.Utilities;
 
-    public class NameMunicipality : IHasCommandProvenance
+    public sealed class NameMunicipality : IHasCommandProvenance
     {
         private static readonly Guid Namespace = new Guid("496f44dd-ae79-4e5f-93c0-c2b086143c09");
 

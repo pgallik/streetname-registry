@@ -3,7 +3,7 @@ namespace StreetNameRegistry.StreetName
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
 
-    public class CrabStreetNameProvenanceFactory : CrabProvenanceFactory, IProvenanceFactory<StreetName>
+    public sealed class CrabStreetNameProvenanceFactory : CrabProvenanceFactory, IProvenanceFactory<StreetName>
     {
         public bool CanCreateFrom<TCommand>() => typeof(IHasCrabProvenance).IsAssignableFrom(typeof(TCommand));
 
@@ -23,7 +23,7 @@ namespace StreetNameRegistry.StreetName
         }
     }
 
-    public class StreetNameLegacyProvenanceFactory : IProvenanceFactory<StreetName>
+    public sealed class StreetNameLegacyProvenanceFactory : IProvenanceFactory<StreetName>
     {
         public bool CanCreateFrom<TCommand>() => typeof(IHasProvenance).IsAssignableFrom(typeof(TCommand));
         public Provenance CreateFrom(object provenanceHolder, StreetName aggregate)

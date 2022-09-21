@@ -3,7 +3,7 @@ namespace StreetNameRegistry.Municipality
     using System.Collections.Generic;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
 
-    public class MunicipalityName : ValueObject<MunicipalityName>
+    public sealed class MunicipalityName : ValueObject<MunicipalityName>
     {
         public string Name { get; }
         public Language Language { get; }
