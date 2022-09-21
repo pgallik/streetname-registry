@@ -422,40 +422,40 @@ jobs:
         path: ~/
       
     - name: Download api-backoffice
-        uses: actions/download-artifact@v3
-        with:
-          name: api-backoffice
-          path: ~/
+      uses: actions/download-artifact@v3
+      with:
+        name: api-backoffice
+        path: ~/
       
-      - name: Download api-backoffice
-        uses: actions/download-artifact@v3
-        with:
-          name: api-backoffice
-          path: ~/
+    - name: Download api-backoffice
+      uses: actions/download-artifact@v3
+      with:
+        name: api-backoffice
+        path: ~/
       
-      - name: Download api-backoffice
-        uses: actions/download-artifact@v3
-        with:
-          name: api-backoffice
-          path: ~/
+    - name: Download api-backoffice
+      uses: actions/download-artifact@v3
+      with:
+        name: api-backoffice
+        path: ~/
       
-      - name: Download api-backoffice
-        uses: actions/download-artifact@v3
-        with:
-          name: api-backoffice
-          path: ~/
+    - name: Download api-backoffice
+      uses: actions/download-artifact@v3
+      with:
+        name: api-backoffice
+        path: ~/
       
-      - name: Download api-backoffice
-        uses: actions/download-artifact@v3
-        with:
-          name: api-backoffice
-          path: ~/
+    - name: Download api-backoffice
+      uses: actions/download-artifact@v3
+      with:
+        name: api-backoffice
+        path: ~/
       
-      - name: Download api-backoffice
-        uses: actions/download-artifact@v3
-        with:
-          name: api-backoffice
-          path: ~/
+    - name: Download api-backoffice
+      uses: actions/download-artifact@v3
+      with:
+        name: api-backoffice
+        path: ~/
       
     - name: Publish packages to GitHub
       shell: bash
