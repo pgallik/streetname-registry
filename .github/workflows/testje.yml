@@ -131,54 +131,66 @@ jobs:
     # Upload artifacts
     #
 
+    - name: Debug folders
+      shell: bash
+      run: |
+        echo ls -al /home/runner/work/streetname-registry/streetname-registry/
+        ls -al /home/runner/work/streetname-registry/streetname-registry/
+        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist
+        ls -al /home/runner/work/streetname-registry/streetname-registry/dist
+        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice
+        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice
+        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice/nuget
+        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice/nuget
+      
     - name: Upload NuGet package Api.BackOffice
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
         name: nuget-api-backoffice
-        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
+        path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
 
     - name: Upload NuGet package Api.BackOffice.Abstractions
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
         name: nuget-api-backoffice-abstractions
-        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
+        path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Abstractions/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
 
     - name: Upload NuGet package Api.Legacy
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
         name: nuget-api-legacy
-        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
+        path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.Legacy/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
 
     - name: Upload NuGet package Api.Oslo
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
         name: nuget-api-oslo
-        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
+        path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.Oslo/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
 
     - name: Upload NuGet package Api.Extract
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
         name: nuget-api-extract
-        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
+        path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.Extract/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
 
     - name: Upload NuGet package Api.CrabImport
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
         name: nuget-api-crab-import
-        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
+        path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.CrabImport/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
 
     - name: Upload NuGet package Projector
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
       with:
         name: nuget-projector
-        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
+        path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Projector/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
     
     - name: Upload api-backoffice artifact
       if: env.RELEASE_VERSION != 'none'
