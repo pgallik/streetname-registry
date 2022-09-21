@@ -743,7 +743,7 @@ jobs:
         if: needs.build.outputs.version != 'none'
         shell: bash
         run: |
-          echo $SEMVER
+          echo Version is $SEMVER
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/api-backoffice:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER"
@@ -775,7 +775,8 @@ jobs:
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/migrator-streetname:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER"
         env:
-          BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
+          BUILD_DOCKER_REGISTRY_TST: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
+          BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY }}
           SEMVER: ${{ needs.build.outputs.version }}
           WORKSPACE: ${{ github.workspace }}
           
@@ -788,7 +789,7 @@ jobs:
           
 #  deploy_to_staging:
 #    if: needs.build.outputs.version != 'none'
-#    needs: [push_images_to_staging, build]
+#    needs: [deploy_to_test, push_images_to_staging, build]
 #    uses: ./.github/workflows/staging.yml
 #    with:
 #      version: env.RELEASE_VERSION
