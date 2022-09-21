@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy.Gemeente;
 
     [DataContract(Name = "Gemeente", Namespace = "")]
-    public class Gemeente
+    public sealed class Gemeente
     {
         [DataMember(Name = "Id", Order = 1)]
         public Guid Id { get; set; }

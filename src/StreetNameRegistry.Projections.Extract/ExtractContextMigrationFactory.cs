@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Projections.Extract
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
 
-    public class ExtractContextMigrationFactory : RunnerDbContextMigrationFactory<ExtractContext>
+    public sealed class ExtractContextMigrationFactory : RunnerDbContextMigrationFactory<ExtractContext>
     {
         public ExtractContextMigrationFactory() :
             base("ExtractProjectionsAdmin", HistoryConfiguration)

@@ -36,7 +36,7 @@ namespace StreetNameRegistry.Projector.Syndication
         }
     }
 
-    public class SyndicationStatusResponse
+    public sealed class SyndicationStatusResponse
     {
         public string ProjectionName { get; set; }
         public long Position { get; set; }

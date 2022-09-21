@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Configuration
     /// <summary>
     /// Add headers to the response to prevent any caching.
     /// </summary>
-    public class AddNoCacheHeadersMiddleware
+    public sealed class AddNoCacheHeadersMiddleware
     {
         private readonly RequestDelegate _next;
 

@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetName
     using Be.Vlaanderen.Basisregisters.Utilities;
     using StreetNameRegistry.StreetName;
 
-    public class StreetNameHelper
+    public sealed class StreetNameHelper
     {
         public Guid StreetNameId { get; set; }
 
@@ -48,7 +48,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetName
         public string? VersionAsString { get; protected set; }
     }
 
-    public class StreetNameConfiguration : IEntityTypeConfiguration<StreetNameHelper>
+    public sealed class StreetNameConfiguration : IEntityTypeConfiguration<StreetNameHelper>
     {
         public const string TableName = "StreetNameHelper";
 

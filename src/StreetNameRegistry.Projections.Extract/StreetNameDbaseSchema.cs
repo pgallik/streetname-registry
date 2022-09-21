@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Projections.Extract
 {
     using Be.Vlaanderen.Basisregisters.Shaperon;
 
-    public class StreetNameDbaseSchema : DbaseSchema
+    public sealed class StreetNameDbaseSchema : DbaseSchema
     {
         public DbaseField id => Fields[0];
         public DbaseField straatnmid => Fields[1];

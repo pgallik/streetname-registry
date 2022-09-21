@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Projections.Wms
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
 
-    public class WmsContextMigrationFactory : RunnerDbContextMigrationFactory<WmsContext>
+    public sealed class WmsContextMigrationFactory : RunnerDbContextMigrationFactory<WmsContext>
     {
         public WmsContextMigrationFactory()
             : base("WmsProjectionsAdmin", HistoryConfiguration)

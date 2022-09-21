@@ -9,11 +9,10 @@ namespace StreetNameRegistry.Projections.Wfs.StreetNameHelperV2
     using Municipality;
     using Municipality.Events;
     using NodaTime;
-    using StreetNameRegistry.StreetName.Events;
 
     [ConnectedProjectionName("WFS adressen")]
     [ConnectedProjectionDescription("Projectie die de straatnaam data voor het WFS adressenregister voorziet.")]
-    public class StreetNameHelperV2Projections: ConnectedProjection<WfsContext>
+    public sealed class StreetNameHelperV2Projections: ConnectedProjection<WfsContext>
     {
         public StreetNameHelperV2Projections()
         {

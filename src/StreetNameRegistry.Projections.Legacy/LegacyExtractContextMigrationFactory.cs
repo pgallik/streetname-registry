@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Projections.Legacy
     using Infrastructure;
     using Microsoft.EntityFrameworkCore;
 
-    public class LegacyContextMigrationFactory : RunnerDbContextMigrationFactory<LegacyContext>
+    public sealed class LegacyContextMigrationFactory : RunnerDbContextMigrationFactory<LegacyContext>
     {
         public LegacyContextMigrationFactory()
             : base("LegacyProjectionsAdmin", HistoryConfiguration)

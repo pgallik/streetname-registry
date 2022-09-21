@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
     using NodaTime;
     using Municipality;
 
-    public class StreetNameHelperV2
+    public sealed class StreetNameHelperV2
     {
         public int PersistentLocalId { get; set; }
         public Guid MunicipalityId { get; set; }
@@ -45,7 +45,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
         public string? VersionAsString { get; protected set; }
     }
 
-    public class StreetNameConfiguration : IEntityTypeConfiguration<StreetNameHelperV2>
+    public sealed class StreetNameConfiguration : IEntityTypeConfiguration<StreetNameHelperV2>
     {
         public const string TableName = "StreetNameHelperV2";
 

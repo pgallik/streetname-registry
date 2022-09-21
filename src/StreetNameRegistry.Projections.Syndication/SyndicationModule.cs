@@ -15,7 +15,7 @@ namespace StreetNameRegistry.Projections.Syndication
     using Microsoft.Extensions.Logging;
     using Polly;
 
-    public class SyndicationModule : Module
+    public sealed class SyndicationModule : Module
     {
         public SyndicationModule(
             IConfiguration configuration,

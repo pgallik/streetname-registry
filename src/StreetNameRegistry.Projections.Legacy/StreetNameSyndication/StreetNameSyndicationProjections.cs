@@ -15,7 +15,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
 
     [ConnectedProjectionName("Feed endpoint straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen feed voorziet.")]
-    public class StreetNameSyndicationProjections : ConnectedProjection<LegacyContext>
+    public sealed class StreetNameSyndicationProjections : ConnectedProjection<LegacyContext>
     {
         public StreetNameSyndicationProjections()
         {

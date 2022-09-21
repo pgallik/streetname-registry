@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Infrastructure;
 
-    public class MunicipalitySyndicationItem
+    public sealed class MunicipalitySyndicationItem
     {
         public Guid MunicipalityId { get; set; }
         public string? NisCode { get; set; }
@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         public long Position { get; set; }
     }
 
-    public class MunicipalityItemConfiguration : IEntityTypeConfiguration<MunicipalitySyndicationItem>
+    public sealed class MunicipalityItemConfiguration : IEntityTypeConfiguration<MunicipalitySyndicationItem>
     {
         private const string TableName = "MunicipalitySyndication";
 

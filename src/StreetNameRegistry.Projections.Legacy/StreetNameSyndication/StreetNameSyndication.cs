@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
     using Municipality;
     using NodaTime;
 
-    public class StreetNameSyndicationItem
+    public sealed class StreetNameSyndicationItem
     {
         public long Position { get; set; }
 
@@ -103,7 +103,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
         }
     }
 
-    public class StreetNameSyndicationItemConfiguration : IEntityTypeConfiguration<StreetNameSyndicationItem>
+    public sealed class StreetNameSyndicationItemConfiguration : IEntityTypeConfiguration<StreetNameSyndicationItem>
     {
         private const string TableName = "StreetNameSyndication";
 

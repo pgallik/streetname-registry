@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using StreetNameRegistry.Projections.Wms;
     using StreetNameRegistry.Projections.Legacy.StreetNameSyndication;
 
-    public class ApiModule : Module
+    public sealed class ApiModule : Module
     {
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;

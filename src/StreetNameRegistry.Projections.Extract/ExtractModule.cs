@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Projections.Extract
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
-    public class ExtractModule : Module
+    public sealed class ExtractModule : Module
     {
         public ExtractModule(
             IConfiguration configuration,

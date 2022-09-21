@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Projections.Syndication
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
     using Infrastructure;
 
-    public class MigrationsLogger { }
+    public sealed class MigrationsLogger { }
 
     public static class MigrationsHelper
     {

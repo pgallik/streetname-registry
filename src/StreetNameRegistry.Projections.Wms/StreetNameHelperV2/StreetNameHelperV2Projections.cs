@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Projections.Wms.StreetNameHelperV2
 
     [ConnectedProjectionName("WMS adressen")]
     [ConnectedProjectionDescription("Projectie die de straatnaam data voor het WMS adressenregister voorziet.")]
-    public class StreetNameHelperV2Projections: ConnectedProjection<WmsContext>
+    public sealed class StreetNameHelperV2Projections: ConnectedProjection<WmsContext>
     {
         public StreetNameHelperV2Projections()
         {

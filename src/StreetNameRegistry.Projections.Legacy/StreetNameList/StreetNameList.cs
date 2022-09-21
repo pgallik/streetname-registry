@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
     using NodaTime;
     using StreetName;
 
-    public class StreetNameListItem
+    public sealed class StreetNameListItem
     {
         public static readonly string VersionTimestampBackingPropertyName = nameof(VersionTimestampAsDateTimeOffset);
 
@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
         }
     }
 
-    public class StreetNameListConfiguration : IEntityTypeConfiguration<StreetNameListItem>
+    public sealed class StreetNameListConfiguration : IEntityTypeConfiguration<StreetNameListItem>
     {
         internal const string TableName = "StreetNameList";
 

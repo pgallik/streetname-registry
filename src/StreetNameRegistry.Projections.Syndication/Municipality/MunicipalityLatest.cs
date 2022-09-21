@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
     using System;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
 
-    public class MunicipalityLatestItem
+    public sealed class MunicipalityLatestItem
     {
         public Guid MunicipalityId { get; set; }
         public string? NisCode { get; set; }
@@ -26,7 +26,7 @@ namespace StreetNameRegistry.Projections.Syndication.Municipality
         public long Position { get; set; }
     }
 
-    public class MunicipalityLatestItemConfiguration : IEntityTypeConfiguration<MunicipalityLatestItem>
+    public sealed class MunicipalityLatestItemConfiguration : IEntityTypeConfiguration<MunicipalityLatestItem>
     {
         private const string TableName = "MunicipalityLatestSyndication";
 

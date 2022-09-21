@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Projector.Infrastructure.Modules
     using Serilog;
     using Serilog.Debugging;
 
-    public class LoggingModule : Module
+    public sealed class LoggingModule : Module
     {
         public LoggingModule(
             IConfiguration configuration,

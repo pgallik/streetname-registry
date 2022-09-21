@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameName
 
     [ConnectedProjectionName("API endpoint straatnamen ifv BOSA DT")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor straatnamen ifv BOSA DT voorziet.")]
-    public class StreetNameNameProjections : ConnectedProjection<LegacyContext>
+    public sealed class StreetNameNameProjections : ConnectedProjection<LegacyContext>
     {
         public StreetNameNameProjections()
         {

@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameList
 
     [ConnectedProjectionName("API endpoint lijst straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor de straatnamen lijst voorziet.")]
-    public class StreetNameListProjections : ConnectedProjection<LegacyContext>
+    public sealed class StreetNameListProjections : ConnectedProjection<LegacyContext>
     {
         public StreetNameListProjections()
         {

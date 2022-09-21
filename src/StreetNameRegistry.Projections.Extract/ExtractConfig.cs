@@ -1,6 +1,6 @@
 namespace StreetNameRegistry.Projections.Extract
 {
-    public class ExtractConfig
+    public sealed class ExtractConfig
     {
         public string DataVlaanderenNamespace { get; set; }
     }

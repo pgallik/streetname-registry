@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Projections.Extract
 {
     using Be.Vlaanderen.Basisregisters.Shaperon;
 
-    public class StreetNameDbaseRecord : DbaseRecord
+    public sealed class StreetNameDbaseRecord : DbaseRecord
     {
         public static readonly StreetNameDbaseSchema Schema = new StreetNameDbaseSchema();
 

@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Projections.LastChangedList
 
     [ConnectedProjectionName("Cache markering straatnamen")]
     [ConnectedProjectionDescription("Projectie die markeert voor hoeveel straatnamen de gecachte data nog geüpdated moeten worden.")]
-    public class LastChangedProjections : LastChangedListConnectedProjection
+    public sealed class LastChangedProjections : LastChangedListConnectedProjection
     {
         private static readonly AcceptType[] SupportedAcceptTypes = { AcceptType.Json, AcceptType.Xml, AcceptType.JsonLd };
 

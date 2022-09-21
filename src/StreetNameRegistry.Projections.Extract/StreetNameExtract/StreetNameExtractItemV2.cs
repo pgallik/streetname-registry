@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class StreetNameExtractItemV2
+    public sealed class StreetNameExtractItemV2
     {
         public Guid MunicipalityId { get; set; }
         public int StreetNamePersistentLocalId { get; set; }
@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
     }
 
 
-    public class StreetNameExtractItemConfigurationV2 : IEntityTypeConfiguration<StreetNameExtractItemV2>
+    public sealed class StreetNameExtractItemConfigurationV2 : IEntityTypeConfiguration<StreetNameExtractItemV2>
     {
         private const string TableName = "StreetNameV2";
 

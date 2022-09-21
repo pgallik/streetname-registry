@@ -15,7 +15,7 @@ namespace StreetNameRegistry.Projections.Extract.StreetNameExtract
 
     [ConnectedProjectionName("Extract straatnamen")]
     [ConnectedProjectionDescription("Projectie die de straatnamen data voor het straatnamen extract voorziet.")]
-    public class StreetNameExtractProjections : ConnectedProjection<ExtractContext>
+    public sealed class StreetNameExtractProjections : ConnectedProjection<ExtractContext>
     {
         private const string InUse = "InGebruik";
         private const string Proposed = "Voorgesteld";

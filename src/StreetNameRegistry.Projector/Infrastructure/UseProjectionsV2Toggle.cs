@@ -1,13 +1,13 @@
 namespace StreetNameRegistry.Projector.Infrastructure
 {
     using FeatureToggle;
-    public class FeatureToggleOptions
+    public sealed class FeatureToggleOptions
     {
         public const string ConfigurationKey = "FeatureToggles";
         public bool UseProjectionsV2 { get; set; }
     }
 
-    public class UseProjectionsV2Toggle : IFeatureToggle
+    public sealed class UseProjectionsV2Toggle : IFeatureToggle
     {
         public bool FeatureEnabled { get; }
 

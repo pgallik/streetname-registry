@@ -1,6 +1,6 @@
 namespace StreetNameRegistry.Projections.LastChangedList
 {
-    public class LastChangedListContextMigrationFactory
+    public sealed class LastChangedListContextMigrationFactory
         : Be.Vlaanderen.Basisregisters.ProjectionHandling.LastChangedList.LastChangedListContextMigrationFactory
     {
         public LastChangedListContextMigrationFactory()

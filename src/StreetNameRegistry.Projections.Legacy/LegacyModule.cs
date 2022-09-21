@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Projections.Legacy
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
-    public class LegacyModule : Module
+    public sealed class LegacyModule : Module
     {
         public LegacyModule(
             IConfiguration configuration,

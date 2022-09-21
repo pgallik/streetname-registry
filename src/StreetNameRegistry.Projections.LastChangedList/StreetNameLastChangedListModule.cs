@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Projections.LastChangedList
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
-    public class StreetNameLastChangedListModule : LastChangedListModule
+    public sealed class StreetNameLastChangedListModule : LastChangedListModule
     {
         public StreetNameLastChangedListModule(
             string connectionString,

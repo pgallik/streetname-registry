@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Projections.Wfs
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
 
-    public class WfsModule : Module
+    public sealed class WfsModule : Module
     {
         public WfsModule(
             IConfiguration configuration,

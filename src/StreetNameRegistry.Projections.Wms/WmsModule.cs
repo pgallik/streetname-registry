@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Projections.Wms
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Sql.EntityFrameworkCore;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Runner.MigrationExtensions;
 
-    public class WmsModule : Module
+    public sealed class WmsModule : Module
     {
         public WmsModule(
             IConfiguration configuration,

@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Municipality;
 
-    public class StreetNameListMunicipality
+    public sealed class StreetNameListMunicipality
     {
         public Guid MunicipalityId { get; set; }
         public string NisCode { get; set; }
@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameListV2
         public Language? SecondaryLanguage { get; set; }
     }
 
-    public class StreetNameListMunicipalityConfiguration : IEntityTypeConfiguration<StreetNameListMunicipality>
+    public sealed class StreetNameListMunicipalityConfiguration : IEntityTypeConfiguration<StreetNameListMunicipality>
     {
         internal const string TableName = "StreetNameListMunicipality";
 
