@@ -1,3 +1,10 @@
+## [3.10.14](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.13...v3.10.14) (2022-09-21)
+
+
+### Bug Fixes
+
+* fix nuget folder ([0db4964](https://github.com/informatievlaanderen/streetname-registry/commit/0db4964fc4d5f5979246ad27c7c7311103ea16cd))
+
 ## [3.10.13](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.12...v3.10.13) (2022-09-21)
 
 
