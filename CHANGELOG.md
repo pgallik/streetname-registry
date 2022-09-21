@@ -1,3 +1,10 @@
+## [3.10.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.7...v3.10.8) (2022-09-21)
+
+
+### Bug Fixes
+
+* fix set version ([#670](https://github.com/informatievlaanderen/streetname-registry/issues/670)) ([f460e1e](https://github.com/informatievlaanderen/streetname-registry/commit/f460e1efc1f1cdc648425c65e63de1e5eb468bf0))
+
 ## [3.10.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.6...v3.10.7) (2022-09-21)
 
 
