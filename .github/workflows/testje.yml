@@ -128,7 +128,7 @@ jobs:
         SEMVER: ${{ env.RELEASE_VERSION }}
 
     #
-    # Upload artifacts
+    # Upload NuGet packages
     #
 
     - name: Debug folders
@@ -145,6 +145,8 @@ jobs:
       with:
         name: nuget-api-backoffice
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package Api.BackOffice.Abstractions
       if: env.RELEASE_VERSION != 'none'
@@ -152,6 +154,8 @@ jobs:
       with:
         name: nuget-api-backoffice-abstractions
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package Api.Legacy
       if: env.RELEASE_VERSION != 'none'
@@ -159,6 +163,8 @@ jobs:
       with:
         name: nuget-api-legacy
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package Api.Oslo
       if: env.RELEASE_VERSION != 'none'
@@ -166,6 +172,8 @@ jobs:
       with:
         name: nuget-api-oslo
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package Api.Extract
       if: env.RELEASE_VERSION != 'none'
@@ -173,6 +181,8 @@ jobs:
       with:
         name: nuget-api-extract
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package Api.CrabImport
       if: env.RELEASE_VERSION != 'none'
@@ -180,6 +190,8 @@ jobs:
       with:
         name: nuget-api-crab-import
         path: /home/runner/work/streetname-registry/streetname-registry/dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
     - name: Upload NuGet package Projector
       if: env.RELEASE_VERSION != 'none'
@@ -187,6 +199,12 @@ jobs:
       with:
         name: nuget-projector
         path: /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Projector/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
+    
+    #
+    # Upload build artifacts
+    #
     
     - name: Upload api-backoffice artifact
       if: env.RELEASE_VERSION != 'none'
