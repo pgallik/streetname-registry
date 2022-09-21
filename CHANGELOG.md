@@ -1,3 +1,10 @@
+## [3.10.9](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.8...v3.10.9) (2022-09-21)
+
+
+### Bug Fixes
+
+* final test before calling cd test ([10fe5b5](https://github.com/informatievlaanderen/streetname-registry/commit/10fe5b5a0723d3f887e7017ab5541d85cb534adb))
+
 ## [3.10.8](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.7...v3.10.8) (2022-09-21)
 
 
