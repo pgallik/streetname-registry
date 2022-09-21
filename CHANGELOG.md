@@ -1,3 +1,10 @@
+## [3.10.13](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.12...v3.10.13) (2022-09-21)
+
+
+### Bug Fixes
+
+* add debug folders ([b3fdbce](https://github.com/informatievlaanderen/streetname-registry/commit/b3fdbce61f563f9f047b1c4132246cab369a554f))
+
 ## [3.10.12](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.11...v3.10.12) (2022-09-21)
 
 
