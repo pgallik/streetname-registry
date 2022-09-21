@@ -1,3 +1,10 @@
+## [3.10.17](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.16...v3.10.17) (2022-09-21)
+
+
+### Bug Fixes
+
+* fix env vars for tagging ([f8821f0](https://github.com/informatievlaanderen/streetname-registry/commit/f8821f02f8180bbc6af9b6df210217cdc0192790))
+
 ## [3.10.16](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.15...v3.10.16) (2022-09-21)
 
 
