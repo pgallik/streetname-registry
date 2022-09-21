@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Tests.Assert
     using StreetName;
     using StreetName.Events;
 
-    public class StreetNameHomonymAdditionWasCorrectedAssertions :
+    public sealed class StreetNameHomonymAdditionWasCorrectedAssertions :
         HasStreetNameIdAssertions<StreetNameHomonymAdditionWasCorrected, StreetNameHomonymAdditionWasCorrectedAssertions>
     {
         public StreetNameHomonymAdditionWasCorrectedAssertions(StreetNameHomonymAdditionWasCorrected subject) : base(subject)
@@ -30,7 +30,7 @@ namespace StreetNameRegistry.Tests.Assert
         }
     }
 
-    public class StreetNameHomonymAdditionWasCorrectedToClearedAssertions :
+    public sealed class StreetNameHomonymAdditionWasCorrectedToClearedAssertions :
         HasStreetNameIdAssertions<StreetNameHomonymAdditionWasCorrectedToCleared, StreetNameHomonymAdditionWasCorrectedToClearedAssertions>
     {
         public StreetNameHomonymAdditionWasCorrectedToClearedAssertions(StreetNameHomonymAdditionWasCorrectedToCleared subject) : base(subject)

@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using Testing;
     using Xunit.Abstractions;
 
-    public class BackOfficeApiTest<TController> : StreetNameRegistryTest
+    public abstract class BackOfficeApiTest<TController> : StreetNameRegistryTest
         where TController: BackOfficeApiController
     {
         protected readonly TController Controller;
@@ -28,7 +28,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
         protected IOptions<ResponseOptions> ResponseOptions { get; }
         protected Mock<IMediator> MockMediator { get; }
 
-        public BackOfficeApiTest(ITestOutputHelper testOutputHelper, bool useSqs = false) : base(testOutputHelper)
+        protected BackOfficeApiTest(ITestOutputHelper testOutputHelper, bool useSqs = false) : base(testOutputHelper)
         {
             ResponseOptions = Options.Create(Fixture.Create<ResponseOptions>());
             ResponseOptions.Value.DetailUrl = DetailUrl;

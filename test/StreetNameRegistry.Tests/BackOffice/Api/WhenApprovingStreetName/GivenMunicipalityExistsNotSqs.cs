@@ -19,7 +19,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenApprovingStreetName
     using MunicipalityId = Municipality.MunicipalityId;
     using PersistentLocalId = Municipality.PersistentLocalId;
 
-    public class GivenMunicipalityExistsNotSqs : BackOfficeApiTest<StreetNameController>
+    public sealed class GivenMunicipalityExistsNotSqs : BackOfficeApiTest<StreetNameController>
     {
         private readonly TestBackOfficeContext _backOfficeContext;
 

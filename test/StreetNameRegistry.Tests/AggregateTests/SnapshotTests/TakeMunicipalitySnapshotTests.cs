@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
     using Xunit;
     using Xunit.Abstractions;
 
-    public class TakeMunicipalitySnapshotTests : StreetNameRegistryTest
+    public sealed class TakeMunicipalitySnapshotTests : StreetNameRegistryTest
     {
         public TakeMunicipalitySnapshotTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {

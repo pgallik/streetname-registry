@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
     using StreetNameRegistry.Api.BackOffice.Validators;
     using Xunit;
 
-    public class StreetNameFlemishRegionValidatorTests
+    public sealed class StreetNameFlemishRegionValidatorTests
     {
         private readonly TestConsumerContext _testConsumerContext;
         private string puriPattern = "http://uri/{0}";

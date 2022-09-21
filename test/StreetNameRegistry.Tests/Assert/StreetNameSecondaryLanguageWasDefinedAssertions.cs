@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Tests.Assert
     using StreetName;
     using StreetName.Events;
 
-    public class StreetNameSecondaryLanguageWasDefinedAssertions :
+    public sealed class StreetNameSecondaryLanguageWasDefinedAssertions :
         HasStreetNameIdAssertions<StreetNameSecondaryLanguageWasDefined, StreetNameSecondaryLanguageWasDefinedAssertions>
     {
         public StreetNameSecondaryLanguageWasDefinedAssertions(StreetNameSecondaryLanguageWasDefined subject) : base(subject)

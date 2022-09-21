@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Tests.BackOffice
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
 
-    public class FakeIdempotencyContextFactory : IDesignTimeDbContextFactory<IdempotencyContext>
+    public sealed class FakeIdempotencyContextFactory : IDesignTimeDbContextFactory<IdempotencyContext>
     {
         public IdempotencyContext CreateDbContext(params string[] args)
         {

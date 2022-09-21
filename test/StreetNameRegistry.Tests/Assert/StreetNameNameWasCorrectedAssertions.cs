@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Tests.Assert
     using StreetName;
     using StreetName.Events;
 
-    public class StreetNameNameWasCorrectedAssertions :
+    public sealed class StreetNameNameWasCorrectedAssertions :
         HasStreetNameIdAssertions<StreetNameNameWasCorrected, StreetNameNameWasCorrectedAssertions>
     {
         public StreetNameNameWasCorrectedAssertions(StreetNameNameWasCorrected subject) : base(subject)

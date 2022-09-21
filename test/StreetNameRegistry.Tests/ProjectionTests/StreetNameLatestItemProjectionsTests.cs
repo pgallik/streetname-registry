@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Xunit;
     using Xunit.Abstractions;
 
-    public class StreetNameLatestItemProjectionsTests : StreetNameRegistryProjectionTest<StreetNameDetailProjections>
+    public sealed class StreetNameLatestItemProjectionsTests : StreetNameRegistryProjectionTest<StreetNameDetailProjections>
     {
         public StreetNameLatestItemProjectionsTests(ITestOutputHelper output) : base(output)
         {

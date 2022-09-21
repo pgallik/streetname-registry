@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Tests.BackOffice
     using Microsoft.EntityFrameworkCore.Design;
     using StreetNameRegistry.Api.BackOffice.Abstractions;
 
-    public class TestBackOfficeContext : BackOfficeContext
+    public sealed class TestBackOfficeContext : BackOfficeContext
     {
         // This needs to be here to please EF
         public TestBackOfficeContext() { }
@@ -33,7 +33,7 @@ namespace StreetNameRegistry.Tests.BackOffice
         }
     }
 
-    public class FakeBackOfficeContextFactory : IDesignTimeDbContextFactory<TestBackOfficeContext>
+    public sealed class FakeBackOfficeContextFactory : IDesignTimeDbContextFactory<TestBackOfficeContext>
     {
         public TestBackOfficeContext CreateDbContext(params string[] args)
         {

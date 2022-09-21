@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToCu
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityWasAlreadyCurrent : StreetNameRegistryTest
+    public sealed class GivenMunicipalityWasAlreadyCurrent : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;

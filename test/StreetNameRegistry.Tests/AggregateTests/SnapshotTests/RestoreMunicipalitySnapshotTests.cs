@@ -15,7 +15,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
     using Xunit;
     using Xunit.Abstractions;
 
-    public class RestoreMunicipalitySnapshotTests : StreetNameRegistryTest
+    public sealed class RestoreMunicipalitySnapshotTests : StreetNameRegistryTest
     {
         private readonly Municipality _sut;
         private readonly MunicipalitySnapshot _municipalitySnapshot;

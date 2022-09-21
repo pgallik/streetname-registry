@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Tests.Assert
 {
     using StreetName.Events;
 
-    public class StreetNameWasProposedAssertions :
+    public sealed class StreetNameWasProposedAssertions :
         HasStreetNameIdAssertions<StreetNameWasProposed, StreetNameWasProposedAssertions>
     {
         public StreetNameWasProposedAssertions(StreetNameWasProposed subject) : base(subject)
@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Tests.Assert
         }
     }
 
-    public class StreetNameWasCorrectedToProposedAssertions :
+    public sealed class StreetNameWasCorrectedToProposedAssertions :
         HasStreetNameIdAssertions<StreetNameWasCorrectedToProposed, StreetNameWasCorrectedToProposedAssertions>
     {
         public StreetNameWasCorrectedToProposedAssertions(StreetNameWasCorrectedToProposed subject) : base(subject)

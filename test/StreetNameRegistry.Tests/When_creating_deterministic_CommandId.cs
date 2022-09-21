@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Tests
     using StreetName.Commands;
     using Xunit;
 
-    public class When_creating_deterministic_CommandId
+    public sealed class When_creating_deterministic_CommandId
     {
         [Fact]
         public void Given_ImportStreetNameFromCrabCommand_Then_CommandId_is_expected()

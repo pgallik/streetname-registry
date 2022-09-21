@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Municipality.Events;
     using Xunit;
 
-    public class StreetNameConsumerProjectionsTests : StreetNameConsumerProjectionTest<MunicipalityConsumerProjection>
+    public sealed class StreetNameConsumerProjectionsTests : StreetNameConsumerProjectionTest<MunicipalityConsumerProjection>
     {
         private readonly Fixture _fixture;
 

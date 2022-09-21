@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
     using StreetNameRegistry.Api.BackOffice.Validators;
     using Xunit;
 
-    public class StreetNameMaxLengthValidatorTests
+    public sealed class StreetNameMaxLengthValidatorTests
     {
         [Theory]
         [InlineData("long enough", true)]

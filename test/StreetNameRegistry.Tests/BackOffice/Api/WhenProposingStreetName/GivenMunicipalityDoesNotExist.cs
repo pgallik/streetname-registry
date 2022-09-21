@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityDoesNotExist : BackOfficeApiTest<StreetNameController>
+    public sealed class GivenMunicipalityDoesNotExist : BackOfficeApiTest<StreetNameController>
     {
         public GivenMunicipalityDoesNotExist(ITestOutputHelper testOutputHelper) : base(testOutputHelper, useSqs: true)
         {

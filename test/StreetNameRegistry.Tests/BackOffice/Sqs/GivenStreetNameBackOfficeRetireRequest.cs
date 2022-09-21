@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenStreetNameBackOfficeRetireRequest : StreetNameRegistryTest
+    public sealed class GivenStreetNameBackOfficeRetireRequest : StreetNameRegistryTest
     {
         private readonly TestBackOfficeContext _backOfficeContext;
 

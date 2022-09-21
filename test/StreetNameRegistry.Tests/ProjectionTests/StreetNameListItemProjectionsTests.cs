@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
     using StreetNameRegistry.StreetName;
 
-    public class StreetNameListItemProjectionsTests : ProjectionTest<LegacyContext, StreetNameListProjections>
+    public sealed class StreetNameListItemProjectionsTests : ProjectionTest<LegacyContext, StreetNameListProjections>
     {
         public StreetNameListItemProjectionsTests(ITestOutputHelper output) : base(output)
         {

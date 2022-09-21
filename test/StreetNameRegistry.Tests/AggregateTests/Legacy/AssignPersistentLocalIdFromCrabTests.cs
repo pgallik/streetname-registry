@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.Legacy
     using Xunit;
     using Xunit.Abstractions;
 
-    public class AssignPersistentLocalIdFromCrabTests : TestBase
+    public sealed class AssignPersistentLocalIdFromCrabTests : TestBase
     {
         public AssignPersistentLocalIdFromCrabTests(ITestOutputHelper output) : base(output)
         {

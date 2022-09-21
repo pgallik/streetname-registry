@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipality : StreetNameRegistryTest
+    public sealed class GivenMunicipality : StreetNameRegistryTest
     {
         private readonly MunicipalityStreamId _streamId;
 

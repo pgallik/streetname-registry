@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Validators
     using StreetNameRegistry.Api.BackOffice.Validators;
     using Xunit;
 
-    public class StreetNameProposeRequestValidatorTests
+    public sealed class StreetNameProposeRequestValidatorTests
     {
         private readonly TestConsumerContext _consumerContext;
         private readonly StreetNameProposeRequestValidator _validator;

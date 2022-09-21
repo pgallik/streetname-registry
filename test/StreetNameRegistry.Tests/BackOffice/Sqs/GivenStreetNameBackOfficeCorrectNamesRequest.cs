@@ -22,7 +22,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenStreetNameBackOfficeCorrectNamesRequest : StreetNameRegistryTest
+    public sealed class GivenStreetNameBackOfficeCorrectNamesRequest : StreetNameRegistryTest
     {
         private readonly TestBackOfficeContext _backOfficeContext;
 

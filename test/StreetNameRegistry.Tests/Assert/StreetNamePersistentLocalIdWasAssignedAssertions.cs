@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Tests.Assert
         }
     }
 
-    public class StreetNamePersistentLocalIdWasAssignedAssertions :
+    public sealed class StreetNamePersistentLocalIdWasAssignedAssertions :
         HasStreetNameIdAssertions<StreetNamePersistentLocalIdWasAssigned, StreetNamePersistentLocalIdWasAssignedAssertions>
     {
         public StreetNamePersistentLocalIdWasAssignedAssertions(StreetNamePersistentLocalIdWasAssigned subject) : base(subject)

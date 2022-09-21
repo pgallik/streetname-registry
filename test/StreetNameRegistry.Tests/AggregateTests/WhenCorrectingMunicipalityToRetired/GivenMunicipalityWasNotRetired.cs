@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingMunicipalityToRe
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityWasNotRetired : StreetNameRegistryTest
+    public sealed class GivenMunicipalityWasNotRetired : StreetNameRegistryTest
     {
         private readonly MunicipalityId _municipalityId;
         private readonly MunicipalityStreamId _streamId;

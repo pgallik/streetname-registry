@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.Legacy
     using Xunit;
     using Xunit.Abstractions;
 
-    public class ImportFromCrabTests : ImportFromCrabTest
+    public sealed class ImportFromCrabTests : ImportFromCrabTest
     {
         public ImportFromCrabTests(ITestOutputHelper output) : base(output)
         {

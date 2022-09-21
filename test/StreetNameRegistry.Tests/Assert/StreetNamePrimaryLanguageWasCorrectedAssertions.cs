@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Tests.Assert
     using StreetName;
     using StreetName.Events;
 
-    public class StreetNamePrimaryLanguageWasCorrectedAssertions :
+    public sealed class StreetNamePrimaryLanguageWasCorrectedAssertions :
         HasStreetNameIdAssertions<StreetNamePrimaryLanguageWasCorrected, StreetNamePrimaryLanguageWasCorrectedAssertions>
     {
         public StreetNamePrimaryLanguageWasCorrectedAssertions(StreetNamePrimaryLanguageWasCorrected subject) : base(subject)
@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Tests.Assert
         }
     }
 
-    public class StreetNamePrimaryLanguageWasCorrectedToClearedAssertions :
+    public sealed class StreetNamePrimaryLanguageWasCorrectedToClearedAssertions :
         HasStreetNameIdAssertions<StreetNamePrimaryLanguageWasCorrectedToCleared, StreetNamePrimaryLanguageWasCorrectedToClearedAssertions>
     {
         public StreetNamePrimaryLanguageWasCorrectedToClearedAssertions(StreetNamePrimaryLanguageWasCorrectedToCleared subject) : base(subject)

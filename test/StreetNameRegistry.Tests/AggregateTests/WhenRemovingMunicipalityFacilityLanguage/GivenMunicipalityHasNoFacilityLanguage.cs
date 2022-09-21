@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityFacili
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityHasNoFacilityLanguage : StreetNameRegistryTest
+    public sealed class GivenMunicipalityHasNoFacilityLanguage : StreetNameRegistryTest
     {
         private readonly MunicipalityStreamId _streamId;
 

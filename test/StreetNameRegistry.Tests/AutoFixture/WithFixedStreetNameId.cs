@@ -6,7 +6,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
     using global::AutoFixture.Kernel;
     using StreetName;
 
-    public class WithFixedStreetNameId : ICustomization
+    public sealed class WithFixedStreetNameId : ICustomization
     {
         public void Customize(IFixture fixture)
         {

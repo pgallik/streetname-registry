@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Projections.Legacy.StreetNameNameV2;
     using Xunit;
 
-    public class StreetNameNameProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameNameProjectionsV2>
+    public sealed class StreetNameNameProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameNameProjectionsV2>
     {
         private readonly Fixture? _fixture;
 

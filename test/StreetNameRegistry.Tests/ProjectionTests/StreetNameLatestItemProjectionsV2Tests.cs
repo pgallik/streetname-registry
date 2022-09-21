@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Projections.Legacy.StreetNameDetailV2;
     using Xunit;
 
-    public class StreetNameLatestItemProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameDetailProjectionsV2>
+    public sealed class StreetNameLatestItemProjectionsV2Tests : StreetNameLegacyProjectionTest<StreetNameDetailProjectionsV2>
     {
         private readonly Fixture? _fixture;
 

@@ -23,7 +23,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using Xunit;
     using Xunit.Abstractions;
 
-    public class SqsLambdaHandlerTests : BackOfficeLambdaTest
+    public sealed class SqsLambdaHandlerTests : BackOfficeLambdaTest
     {
         public SqsLambdaHandlerTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -199,7 +199,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
         }
     }
 
-    public class FakeLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
+    public sealed class FakeLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
     {
         public FakeLambdaHandler(
             IConfiguration configuration,

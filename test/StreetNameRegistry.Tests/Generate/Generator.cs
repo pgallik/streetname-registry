@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests.Generate
     }
 
     [Obsolete("Do not use this class, try with autofixture and/or look at projection V2 tests")]
-    public class Generator<T>:IGenerator<T>
+    public sealed class Generator<T>:IGenerator<T>
     {
         private readonly Func<Random, T> _generate;
 

@@ -27,7 +27,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda.WhenRetiringStreetName
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityExists : BackOfficeLambdaTest
+    public sealed class GivenMunicipalityExists : BackOfficeLambdaTest
     {
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;

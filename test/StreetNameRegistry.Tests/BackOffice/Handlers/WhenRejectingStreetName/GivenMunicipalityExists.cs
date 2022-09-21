@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenRejectingStreetName
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityExists : BackOfficeHandlerTest
+    public sealed class GivenMunicipalityExists : BackOfficeHandlerTest
     {
         private readonly BackOfficeContext _backOfficeContext;
         private readonly IdempotencyContext _idempotencyContext;

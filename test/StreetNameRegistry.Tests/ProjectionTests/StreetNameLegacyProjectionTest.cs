@@ -6,12 +6,12 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Microsoft.EntityFrameworkCore;
     using Projections.Legacy;
 
-    public class StreetNameLegacyProjectionTest<TProjection>
+    public abstract class StreetNameLegacyProjectionTest<TProjection>
         where TProjection : ConnectedProjection<LegacyContext>, new()
     {
         protected ConnectedProjectionTest<LegacyContext, TProjection> Sut { get; }
 
-        public StreetNameLegacyProjectionTest()
+        protected StreetNameLegacyProjectionTest()
         {
             Sut = new ConnectedProjectionTest<LegacyContext, TProjection>(CreateContext, () => new TProjection());
         }

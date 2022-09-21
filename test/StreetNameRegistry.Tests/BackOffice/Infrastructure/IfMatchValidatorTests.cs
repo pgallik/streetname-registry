@@ -19,7 +19,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Infrastructure
     using Xunit;
     using Xunit.Abstractions;
 
-    public class IfMatchValidatorTests : StreetNameRegistryTest
+    public sealed class IfMatchValidatorTests : StreetNameRegistryTest
     {
         private readonly TestBackOfficeContext _backOfficeContext;
 

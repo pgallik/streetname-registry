@@ -13,13 +13,14 @@ namespace StreetNameRegistry.Tests.Testing
     using Newtonsoft.Json;
     using Xunit.Abstractions;
 
-    public class StreetNameRegistryTest : AutofacBasedTest
+    public abstract class StreetNameRegistryTest : AutofacBasedTest
     {
         protected Fixture Fixture { get; }
         protected string ConfigDetailUrl => "http://base/{0}";
         
         protected JsonSerializerSettings EventSerializerSettings { get; } = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
-        public StreetNameRegistryTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+
+        protected StreetNameRegistryTest(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
             Fixture = new Fixture();
             Fixture.Register(() => (ISnapshotStrategy)NoSnapshotStrategy.Instance);

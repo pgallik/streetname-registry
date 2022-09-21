@@ -45,7 +45,7 @@ namespace StreetNameRegistry.Tests.Testing
         protected abstract TContext CreateContext(DbContextOptions<TContext> options);
     }
 
-    public class AtomEntryProjectionHandlerModuleScenario<TEvent, TContent, TContext>
+    public sealed class AtomEntryProjectionHandlerModuleScenario<TEvent, TContent, TContext>
         where TEvent : struct
         where TContext : DbContext
     {

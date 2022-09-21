@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Infrastructure;
     using Xunit;
 
-    public class LambdaHandlerRetryPolicyTests
+    public sealed class LambdaHandlerRetryPolicyTests
     {
         [Theory]
         [InlineData(926)]

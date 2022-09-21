@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Tests.BackOffice
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Design;
 
-    public class TestConsumerContext : ConsumerContext
+    public sealed class TestConsumerContext : ConsumerContext
     {
         // This needs to be here to please EF
         public TestConsumerContext() { }
@@ -44,7 +44,7 @@ namespace StreetNameRegistry.Tests.BackOffice
         }
     }
 
-    public class FakeConsumerContextFactory : IDesignTimeDbContextFactory<TestConsumerContext>
+    public sealed class FakeConsumerContextFactory : IDesignTimeDbContextFactory<TestConsumerContext>
     {
         public TestConsumerContext CreateDbContext(params string[] args)
         {

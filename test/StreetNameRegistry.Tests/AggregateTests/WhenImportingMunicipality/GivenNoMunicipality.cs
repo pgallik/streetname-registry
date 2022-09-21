@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenImportingMunicipality
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenNoMunicipality : StreetNameRegistryTest
+    public sealed class GivenNoMunicipality : StreetNameRegistryTest
     {
         public GivenNoMunicipality(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {

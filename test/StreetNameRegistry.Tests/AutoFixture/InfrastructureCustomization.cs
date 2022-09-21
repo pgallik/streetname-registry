@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
     using global::AutoFixture.Kernel;
     using NodaTime;
 
-    public class InfrastructureCustomization : ICustomization
+    public sealed class InfrastructureCustomization : ICustomization
     {
         public void Customize(IFixture fixture)
         {
@@ -17,7 +17,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             fixture.Customize(new SetProvenanceImplementationsCallSetProvenance());
         }
     }
-    public class SetProvenanceImplementationsCallSetProvenance : ICustomization
+    public sealed class SetProvenanceImplementationsCallSetProvenance : ICustomization
     {
         public void Customize(IFixture fixture)
         {
@@ -47,7 +47,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
         }
     }
 
-    public class NodaTimeCustomization : ICustomization
+    public sealed class NodaTimeCustomization : ICustomization
     {
         public void Customize(IFixture fixture)
         {
@@ -57,7 +57,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             fixture.Customizations.Add(new LocalDateTimeGenerator());
         }
 
-        public class InstantGenerator : ISpecimenBuilder
+        public sealed class InstantGenerator : ISpecimenBuilder
         {
             public object Create(object request, ISpecimenContext context)
             {
@@ -75,7 +75,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             }
         }
 
-        public class LocalDateGenerator : ISpecimenBuilder
+        public sealed class LocalDateGenerator : ISpecimenBuilder
         {
             public object Create(object request, ISpecimenContext context)
             {
@@ -93,7 +93,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             }
         }
 
-        public class LocalTimeGenerator : ISpecimenBuilder
+        public sealed class LocalTimeGenerator : ISpecimenBuilder
         {
             public object Create(object request, ISpecimenContext context)
             {
@@ -111,7 +111,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             }
         }
 
-        public class LocalDateTimeGenerator : ISpecimenBuilder
+        public sealed class LocalDateTimeGenerator : ISpecimenBuilder
         {
             public object Create(object request, ISpecimenContext context)
             {

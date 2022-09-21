@@ -3,20 +3,20 @@ namespace Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Xunit;
-    using Be.Vlaanderen.Basisregisters.EventHandling;
-    using FluentAssertions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
+    using Be.Vlaanderen.Basisregisters.EventHandling;
+    using FluentAssertions;
     using Newtonsoft.Json;
+    using Xunit;
 
     /// <summary>
     /// This class was generated using a nuget package called Aiv.Vbr.Testing.Infrastructure.Events.
     /// If you want to make significant changes to it, that would also make sense for other registries using these tests,
     /// consider updating the nuget package (repository: bitbucket.org:vlaamseoverheid/infrastructure-tests.git)
     /// </summary>
-    public class InfrastructureEventsTests
+    public sealed class InfrastructureEventsTests
     {
         private readonly IEnumerable<Type> _eventTypes;
 

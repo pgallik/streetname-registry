@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Tests.Assert
     using StreetName;
     using StreetName.Events;
 
-    public class StreetNameHomonymAdditionWasDefinedAssertions :
+    public sealed class StreetNameHomonymAdditionWasDefinedAssertions :
         HasStreetNameIdAssertions<StreetNameHomonymAdditionWasDefined, StreetNameHomonymAdditionWasDefinedAssertions>
     {
         public StreetNameHomonymAdditionWasDefinedAssertions(StreetNameHomonymAdditionWasDefined subject) : base(subject)

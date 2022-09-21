@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.Legacy
     using Xunit;
     using Xunit.Abstractions;
 
-    public class MarkStreetNameMigratedTests : StreetNameRegistryTest
+    public sealed class MarkStreetNameMigratedTests : StreetNameRegistryTest
     {
         private readonly StreetNameId _streetNameId;
 

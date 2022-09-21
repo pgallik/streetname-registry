@@ -20,7 +20,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityExists : BackOfficeApiTest<StreetNameController>
+    public sealed class GivenMunicipalityExists : BackOfficeApiTest<StreetNameController>
     {
         public GivenMunicipalityExists(ITestOutputHelper testOutputHelper) : base(testOutputHelper, useSqs: true)
         { }

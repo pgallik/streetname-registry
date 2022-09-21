@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenImportingMunicipality
     using Xunit;
     using Xunit.Abstractions;
 
-    public class GivenMunicipalityAlreadyExists: StreetNameRegistryTest
+    public sealed class GivenMunicipalityAlreadyExists: StreetNameRegistryTest
     {
         private readonly MunicipalityStreamId _streamId;
 

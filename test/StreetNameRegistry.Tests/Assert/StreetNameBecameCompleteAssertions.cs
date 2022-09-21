@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Tests.Assert
         }
     }
 
-    public class StreetNameBecameCompleteAssertions :
+    public sealed class StreetNameBecameCompleteAssertions :
         HasStreetNameIdAssertions<StreetNameBecameComplete, StreetNameBecameCompleteAssertions>
     {
         public StreetNameBecameCompleteAssertions(StreetNameBecameComplete subject) : base(subject)

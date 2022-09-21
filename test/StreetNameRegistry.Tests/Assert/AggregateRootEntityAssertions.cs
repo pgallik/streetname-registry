@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Tests.Assert
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using FluentAssertions;
 
-    public class AggregateRootEntityAssertions : Assertions<AggregateRootEntity, AggregateRootEntityAssertions>
+    public sealed class AggregateRootEntityAssertions : Assertions<AggregateRootEntity, AggregateRootEntityAssertions>
     {
         public AggregateRootEntityAssertions(AggregateRootEntity subject) : base(subject)
         {

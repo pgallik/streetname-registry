@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
     using global::AutoFixture.Dsl;
 
 
-    public class AutoFixtureScenario : Scenario, AutoFixtureScenario.IEventGeneratingScenarioInitialStateBuilder
+    public sealed class AutoFixtureScenario : Scenario, AutoFixtureScenario.IEventGeneratingScenarioInitialStateBuilder
     {
         private readonly IFixture _fixture;
 
@@ -98,7 +98,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             IEventGeneratingScenarioGivenStateBuilder Given(IEventCentricTestSpecificationBuilder givenScenario);
         }
 
-        public class AutoAutoFixtureTestBuilder : IEventGeneratingScenarioGivenStateBuilder
+        public sealed class AutoAutoFixtureTestBuilder : IEventGeneratingScenarioGivenStateBuilder
         {
             private readonly IFixture _fixture;
             private readonly IScenarioGivenStateBuilder _inner;

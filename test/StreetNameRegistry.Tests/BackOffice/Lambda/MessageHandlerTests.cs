@@ -14,7 +14,7 @@
     using Xunit;
     using Xunit.Abstractions;
 
-    public class MessageHandlerTests : StreetNameRegistryTest
+    public sealed class MessageHandlerTests : StreetNameRegistryTest
     {
         public MessageHandlerTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         { }
