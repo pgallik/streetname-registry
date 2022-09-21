@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
     using Requests;
     using Sqs.Requests;
 
-    public class MessageHandler : IMessageHandler
+    public sealed class MessageHandler : IMessageHandler
     {
         private readonly IContainer _container;
 

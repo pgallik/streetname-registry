@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameCorrectNamesLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameCorrectNamesRequest>
+    public sealed class SqsStreetNameCorrectNamesLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameCorrectNamesRequest>
     {
         public SqsStreetNameCorrectNamesLambdaHandler(
             IConfiguration configuration,

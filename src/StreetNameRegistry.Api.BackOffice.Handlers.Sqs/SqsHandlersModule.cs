@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
 
-    public class SqsHandlersModule : Module
+    public sealed class SqsHandlersModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

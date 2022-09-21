@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameProposeHandler : SqsHandler<SqsStreetNameProposeRequest>
+    public sealed class SqsStreetNameProposeHandler : SqsHandler<SqsStreetNameProposeRequest>
     {
         private const string Action = "ProposeStreetName";
         private readonly ConsumerContext _consumerContext;

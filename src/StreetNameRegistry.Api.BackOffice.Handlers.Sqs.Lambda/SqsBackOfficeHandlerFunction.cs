@@ -21,7 +21,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
 
-    public class SqsBackOfficeHandlerFunction : FunctionBase
+    public sealed class SqsBackOfficeHandlerFunction : FunctionBase
     {
         protected override IServiceProvider ConfigureServices(IServiceCollection services)
         {

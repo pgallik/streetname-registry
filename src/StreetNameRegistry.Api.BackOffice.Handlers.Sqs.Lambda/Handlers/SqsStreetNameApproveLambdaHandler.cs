@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameApproveLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
+    public sealed class SqsStreetNameApproveLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
     {
         public SqsStreetNameApproveLambdaHandler(
             IConfiguration configuration,
@@ -32,7 +32,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
         protected override async Task<ETagResponse> InnerHandle(SqsLambdaStreetNameApproveRequest request, CancellationToken cancellationToken)
         {
             var streetNamePersistentLocalId = new PersistentLocalId(request.Request.PersistentLocalId);
-            var cmd = request.ToCommand(streetNamePersistentLocalId);
+            var cmd = request.ToCommand();
 
             try
             {

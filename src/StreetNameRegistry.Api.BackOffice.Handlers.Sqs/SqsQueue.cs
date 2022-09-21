@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.MessageHandling.AwsSqs.Simple;
 
-    public class SqsQueue : ISqsQueue
+    public sealed class SqsQueue : ISqsQueue
     {
         private readonly SqsOptions _sqsOptions;
         private readonly string _sqsQueueName = $"{nameof(StreetNameRegistry)}.{nameof(Api)}.{nameof(BackOffice)}";

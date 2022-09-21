@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using Abstractions.Exceptions;
     using Abstractions.Response;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
@@ -14,7 +13,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
     using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameRetireLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
+    public sealed class SqsStreetNameRetireLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameRetireRequest>
     {
         public SqsStreetNameRetireLambdaHandler(
             IConfiguration configuration,

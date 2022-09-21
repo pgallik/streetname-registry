@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameApproveHandler : SqsHandler<SqsStreetNameApproveRequest>
+    public sealed class SqsStreetNameApproveHandler : SqsHandler<SqsStreetNameApproveRequest>
     {
         public const string Action = "ApproveStreetName";
 

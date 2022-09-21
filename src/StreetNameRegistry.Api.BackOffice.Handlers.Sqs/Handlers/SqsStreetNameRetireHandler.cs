@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Handlers
     using Requests;
     using TicketingService.Abstractions;
 
-    public class SqsStreetNameRetireHandler : SqsHandler<SqsStreetNameRetireRequest>
+    public sealed class SqsStreetNameRetireHandler : SqsHandler<SqsStreetNameRetireRequest>
     {
         public const string Action = "RetireStreetName";
 

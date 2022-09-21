@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests
     using Municipality;
     using Municipality.Commands;
 
-    public class SqsLambdaStreetNameApproveRequest :
+    public sealed class SqsLambdaStreetNameApproveRequest :
         SqsLambdaRequest,
         IHasBackOfficeRequest<StreetNameBackOfficeApproveRequest>,
         IHasStreetNamePersistentLocalId
@@ -18,9 +18,9 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests
         /// Map to ApproveStreetName command
         /// </summary>
         /// <returns>ApproveStreetName.</returns>
-        public ApproveStreetName ToCommand(PersistentLocalId streetNamePersistentLocalId)
+        public ApproveStreetName ToCommand()
         {
-            return new ApproveStreetName(MunicipalityId, streetNamePersistentLocalId, Provenance);
+            return new ApproveStreetName(MunicipalityId, new PersistentLocalId(StreetNamePersistentLocalId), Provenance);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests
     using Municipality;
     using Municipality.Commands;
 
-    public class SqsLambdaStreetNameProposeRequest :
+    public sealed class SqsLambdaStreetNameProposeRequest :
         SqsLambdaRequest,
         IHasBackOfficeRequest<StreetNameBackOfficeProposeRequest>
     {

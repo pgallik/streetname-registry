@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
 {
     using System.Security.Cryptography;
     using System.Text;
@@ -10,7 +10,7 @@
     using Microsoft.EntityFrameworkCore;
     using Abstractions.Exceptions;
 
-    public class IdempotentCommandHandler : IIdempotentCommandHandler
+    public sealed class IdempotentCommandHandler : IIdempotentCommandHandler
     {
         private readonly ICommandHandlerResolver _bus;
         private readonly IdempotencyContext _idempotencyContext;
