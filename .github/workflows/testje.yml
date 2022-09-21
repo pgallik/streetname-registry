@@ -362,68 +362,68 @@ jobs:
 #    with:
 #      version: env.RELEASE_VERSION
 
-#  publish_to_atlassian:
-#    if: needs.build.outputs.version != 'none'
-#    needs: build
-#    name: Publish to Atlassian
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Code
-#        uses: actions/checkout@v3
-#
-#      - name: Parse repository name
-#        run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
-#        shell: bash
-#
-#      - name: Cache Paket
-#        uses: actions/cache@v3
-#        env:
-#          cache-name: cache-paket
-#        with:
-#          path: packages
-#          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('paket.lock') }}
-#          restore-keys: |
-#            ${{ runner.os }}-build-${{ env.cache-name }}-
-#
-#      - name: Cache Python
-#        uses: actions/cache@v3
-#        env:
-#          cache-name: cache-pip
-#        with:
-#          path: ~/.cache/pip
-#          key: ${{ runner.os }}-build-${{ env.cache-name }}
-#
-#      - name: Set up Python
-#        uses: actions/setup-python@v3
-#        with:
-#          python-version: '3.x'
-#
-#      - name: Install Python dependencies
-#        shell: bash
-#        run: |
-#          python -m pip install --upgrade pip
-#          pip install requests markdown argparse
-#
-#      - name: Publish to Confluence
-#        if: needs.build.outputs.version != 'none'
-#        shell: bash
-#        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-confluence.sh
-#        env:
-#          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-#          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-#          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-#
-#      - name: Create Jira Release
-#        if: needs.build.outputs.version != 'none'
-#        shell: bash
-#        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
-#        env:
-#          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-#          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-#          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-#          JIRA_PREFIX: Streetname
-#          JIRA_PROJECT: GAWR
-#          JIRA_VERSION: ${{ needs.build.outputs.version }}
+  publish_to_atlassian:
+    if: needs.build.outputs.version != 'none'
+    needs: build
+    name: Publish to Atlassian
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Parse repository name
+        run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
+        shell: bash
+
+      - name: Cache Paket
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-paket
+        with:
+          path: packages
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('paket.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Cache Python
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-pip
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests markdown argparse
+
+      - name: Publish to Confluence
+        if: needs.build.outputs.version != 'none'
+        shell: bash
+        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-confluence.sh
+        env:
+          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
+          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
+          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
+
+      - name: Create Jira Release
+        if: env.RELEASE_VERSION != 'none'
+        shell: bash
+        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
+        env:
+          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
+          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
+          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
+          JIRA_PREFIX: StreetName
+          JIRA_PROJECT: GAWR
+          JIRA_VERSION: ${{ env.RELEASE_VERSION }}
 
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
@@ -466,7 +466,8 @@ jobs:
         shell: bash
         run: |
           echo $SEMVER
-          docker push $BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER
+          echo docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER"
+          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/api-backoffice:$SEMVER"
         env:
           BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
           SEMVER: ${{ needs.build.outputs.version }}
