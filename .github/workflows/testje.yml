@@ -547,11 +547,11 @@ jobs:
           docker image load -i ~/sr-api-oslo-image.tar
           docker image load -i ~/sr-api-crab-import-image.tar
           docker image load -i ~/sr-api-extract-image.tar
-          docker image load -i ~/sr-api-projector-image.tar
-          docker image load -i ~/sr-api-projections-syndication-image.tar
-          docker image load -i ~/sr-api-consumer-image.tar
-          docker image load -i ~/sr-api-producer-image.tar
-          docker image load -i ~/sr-api-migrator-streetname-image.tar
+          docker image load -i ~/sr-projector-image.tar
+          docker image load -i ~/sr-projections-syndication-image.tar
+          docker image load -i ~/sr-consumer-image.tar
+          docker image load -i ~/sr-producer-image.tar
+          docker image load -i ~/sr-migrator-streetname-image.tar
 
       - name: Push artifacts to ECR Staging
         if: needs.build.outputs.version != 'none'
