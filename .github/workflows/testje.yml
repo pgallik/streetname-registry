@@ -130,7 +130,56 @@ jobs:
     #
     # Upload artifacts
     #
-        
+
+    - name: Upload NuGet package Api.BackOffice
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-api-backoffice
+        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
+
+    - name: Upload NuGet package Api.BackOffice.Abstractions
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-api-backoffice-abstractions
+        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
+
+    - name: Upload NuGet package Api.Legacy
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-api-legacy
+        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
+
+    - name: Upload NuGet package Api.Oslo
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-api-oslo
+        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
+
+    - name: Upload NuGet package Api.Extract
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-api-extract
+        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
+
+    - name: Upload NuGet package Api.CrabImport
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-api-crab-import
+        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
+
+    - name: Upload NuGet package Projector
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-projector
+        path: dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
+    
     - name: Upload api-backoffice artifact
       if: env.RELEASE_VERSION != 'none'
       uses: actions/upload-artifact@v3
@@ -315,17 +364,125 @@ jobs:
     needs: build
     name: Publish to NuGet
     runs-on: ubuntu-latest
+    
     steps:
-    - name: Publish to NuGet
+    - name: Download NuGet package Api.BackOffice
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-api-backoffice
+        path: ~/
+
+    - name: Download NuGet package Api.BackOffice.Abstractions
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-api-backoffice-abstractions
+        path: ~/
+
+    - name: Download NuGet package Api.Legacy
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-api-legacy
+        path: ~/
+
+    - name: Download NuGet package Api.Oslo
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-api-oslo
+        path: ~/
+
+    - name: Download NuGet package Api.Extract
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-api-extract
+        path: ~/
+
+    - name: Download NuGet package Api.CrabImport
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-api-crab-import
+        path: ~/
+
+    - name: Download NuGet package Projector
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-projector
+        path: ~/
+
+    - name: Download api-backoffice
+      uses: actions/download-artifact@v3
+      with:
+        name: api-backoffice
+        path: ~/
+      
+    - name: Download api-backoffice
+        uses: actions/download-artifact@v3
+        with:
+          name: api-backoffice
+          path: ~/
+      
+      - name: Download api-backoffice
+        uses: actions/download-artifact@v3
+        with:
+          name: api-backoffice
+          path: ~/
+      
+      - name: Download api-backoffice
+        uses: actions/download-artifact@v3
+        with:
+          name: api-backoffice
+          path: ~/
+      
+      - name: Download api-backoffice
+        uses: actions/download-artifact@v3
+        with:
+          name: api-backoffice
+          path: ~/
+      
+      - name: Download api-backoffice
+        uses: actions/download-artifact@v3
+        with:
+          name: api-backoffice
+          path: ~/
+      
+      - name: Download api-backoffice
+        uses: actions/download-artifact@v3
+        with:
+          name: api-backoffice
+          path: ~/
+      
+    - name: Publish packages to GitHub
       shell: bash
       run: |
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
-        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg $NUGET_HOST
+      env:
+        SEMVER: ${{ needs.build.outputs.version }}
+        WORKSPACE: ${{ github.workspace }}
+        NUGET_HOST: https://nuget.pkg.github.com/informatievlaanderen/index.json
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+    - name: Publish packages to NuGet
+      shell: bash
+      run: |
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
       env:
         SEMVER: ${{ needs.build.outputs.version }}
         WORKSPACE: ${{ github.workspace }}
@@ -593,12 +750,12 @@ jobs:
           SEMVER: ${{ needs.build.outputs.version }}
           WORKSPACE: ${{ github.workspace }}
           
-#  deploy_to_test:
-#    if: needs.build.outputs.version != 'none'
-#    needs: [push_images_to_test, build]
-#    uses: ./.github/workflows/test.yml
-#    with:
-#      version: env.RELEASE_VERSION
+  deploy_to_test:
+    if: needs.build.outputs.version != 'none'
+    needs: [push_images_to_test, build]
+    uses: ./.github/workflows/test.yml
+    with:
+      version: env.RELEASE_VERSION
           
 #  deploy_to_staging:
 #    if: needs.build.outputs.version != 'none'
