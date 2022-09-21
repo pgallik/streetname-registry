@@ -9,7 +9,7 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using Consumer;
     using Microsoft.EntityFrameworkCore;
 
-    public class StreetNameExistingNisCodeValidator
+    public sealed class StreetNameExistingNisCodeValidator
     {
         public const string Code = "StraatnaamGemeenteNietGekendValidatie";
 

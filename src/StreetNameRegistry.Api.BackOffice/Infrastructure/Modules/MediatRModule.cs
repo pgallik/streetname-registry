@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using MediatR;
     using Module = Autofac.Module;
 
-    public class MediatRModule : Module
+    public sealed class MediatRModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

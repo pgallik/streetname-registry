@@ -16,7 +16,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
 
-    public class ApiModule : Module
+    public sealed class ApiModule : Module
     {
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;

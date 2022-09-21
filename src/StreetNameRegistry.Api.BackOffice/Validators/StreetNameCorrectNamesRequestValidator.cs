@@ -4,7 +4,7 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using Consumer;
     using FluentValidation;
 
-    public class StreetNameCorrectNamesRequestValidator : AbstractValidator<StreetNameCorrectNamesRequest>
+    public sealed class StreetNameCorrectNamesRequestValidator : AbstractValidator<StreetNameCorrectNamesRequest>
     {
         public StreetNameCorrectNamesRequestValidator(ConsumerContext consumerContext)
         {

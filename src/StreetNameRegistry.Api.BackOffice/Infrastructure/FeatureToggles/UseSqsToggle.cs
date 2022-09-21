@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.FeatureToggles
 {
     using FeatureToggle;
 
-    public class UseSqsToggle : IFeatureToggle
+    public sealed class UseSqsToggle : IFeatureToggle
     {
         public bool FeatureEnabled { get; }
 

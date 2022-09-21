@@ -8,7 +8,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using Microsoft.Extensions.Logging;
     using StreetNameRegistry.Infrastructure;
 
-    public class BackOfficeModule : Module
+    public sealed class BackOfficeModule : Module
     {
         public BackOfficeModule(
             IConfiguration configuration,

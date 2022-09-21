@@ -7,7 +7,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     using TicketingService.Proxy.HttpProxy;
     using Module = Autofac.Module;
 
-    public class TicketingModule : Module
+    public sealed class TicketingModule : Module
     {
         private const string TicketingServiceConfigKey = "TicketingService";
 

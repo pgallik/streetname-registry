@@ -4,15 +4,12 @@ namespace StreetNameRegistry.Api.BackOffice.Validators
     using System.Threading;
     using System.Threading.Tasks;
     using Abstractions.Convertors;
-    using Abstractions.Requests;
     using Be.Vlaanderen.Basisregisters.GrAr.Common.Oslo.Extensions;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using Consumer;
-    using FluentValidation;
-    using FluentValidation.Validators;
     using Microsoft.EntityFrameworkCore;
 
-    public class StreetNameFlemishRegionValidator
+    public sealed class StreetNameFlemishRegionValidator
     {
         public const string Code = "StraatnaamVlaamsGewestValidatie";
 
