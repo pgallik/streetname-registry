@@ -3,6 +3,11 @@ name: CD Production
 on:
 #  push:
 #    branches: [ main ]
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       version:

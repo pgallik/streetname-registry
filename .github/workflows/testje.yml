@@ -201,49 +201,39 @@ jobs:
         name: migrator-streetname
         path: ~/sr-migrator-streetname-image.tar
 
-#    - name: Package Lambda functions        
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: |
-#        echo Zip lambda functions
-#        echo pwd
-#        pwd
-#        #echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/
-#        #ls -al /home/runner/work/streetname-registry/streetname-registry/dist/
-#        #echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
-#        #ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
-#
-#        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        cd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        zip -r lambda.zip .
-#        #popd
+    - name: Package Lambda functions        
+      if: env.RELEASE_VERSION != 'none'
+      shell: bash
+      run: |
+        echo Zip lambda functions
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo zip -r lambda.zip .
+        zip -r lambda.zip .
+        popd
 
-#    - name: Push Lambda functions to Test
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: |
-#        echo Push Lambda functions to Test
-#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        popd
-#      env:
-#        SEMVER: ${{ env.RELEASE_VERSION }}
+    - name: Push Lambda functions to Test
+      if: env.RELEASE_VERSION != 'none'
+      shell: bash
+      run: |
+        echo Push Lambda functions to Test
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        popd
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
-#    - name: Push Lambda functions to Staging
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: |
-#        echo Push Lambda functions to Staging
-#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        popd
-#      env:
-#        SEMVER: ${{ env.RELEASE_VERSION }}
+    - name: Push Lambda functions to Staging
+      if: env.RELEASE_VERSION != 'none'
+      shell: bash
+      run: |
+        echo Push Lambda functions to Staging
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        popd
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
 #    - name: Push Lambda functions to Production
 #      if: env.RELEASE_VERSION != 'none'
@@ -256,28 +246,6 @@ jobs:
 #        #popd
 #     env:
 #       SEMVER: ${{ env.RELEASE_VERSION }}
-        
-#    - name: Publish to NuGet
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: |
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
-#      env:
-#        SEMVER: ${{ env.RELEASE_VERSION }}
-#        NUGET_HOST: ${{ secrets.NUGET_HOST }}
-#        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-#
-
-#  test: # deploy to TEST environment
-#    uses: ./.github/workflows/test.yml
-#    with:
-#      version: env.RELEASE_VERSION
 
   publish_to_atlassian:
     if: needs.build.outputs.version != 'none'
@@ -342,6 +310,28 @@ jobs:
           JIRA_PROJECT: GAWR
           JIRA_VERSION: ${{ env.RELEASE_VERSION }}
 
+  publish_to_nuget:
+    if: needs.build.outputs.version != 'none'
+    needs: build
+    name: Publish to NuGet
+    runs-on: ubuntu-latest
+    steps:
+    - name: Publish to NuGet
+      shell: bash
+      run: |
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js dist/nuget/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg
+      env:
+        SEMVER: ${{ needs.build.outputs.version }}
+        WORKSPACE: ${{ github.workspace }}
+        NUGET_HOST: ${{ secrets.NUGET_HOST }}
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
     needs: build
@@ -436,11 +426,11 @@ jobs:
           docker image load -i ~/sr-api-oslo-image.tar
           docker image load -i ~/sr-api-crab-import-image.tar
           docker image load -i ~/sr-api-extract-image.tar
-          docker image load -i ~/sr-api-projector-image.tar
-          docker image load -i ~/sr-api-projections-syndication-image.tar
-          docker image load -i ~/sr-api-consumer-image.tar
-          docker image load -i ~/sr-api-producer-image.tar
-          docker image load -i ~/sr-api-migrator-streetname-image.tar
+          docker image load -i ~/sr-projector-image.tar
+          docker image load -i ~/sr-projections-syndication-image.tar
+          docker image load -i ~/sr-consumer-image.tar
+          docker image load -i ~/sr-producer-image.tar
+          docker image load -i ~/sr-migrator-streetname-image.tar
 
       - name: Push artifacts to ECR Test
         if: needs.build.outputs.version != 'none'
@@ -603,3 +593,16 @@ jobs:
           SEMVER: ${{ needs.build.outputs.version }}
           WORKSPACE: ${{ github.workspace }}
           
+#  deploy_to_test:
+#    if: needs.build.outputs.version != 'none'
+#    needs: [push_images_to_test, build]
+#    uses: ./.github/workflows/test.yml
+#    with:
+#      version: env.RELEASE_VERSION
+          
+#  deploy_to_staging:
+#    if: needs.build.outputs.version != 'none'
+#    needs: [push_images_to_staging, build]
+#    uses: ./.github/workflows/staging.yml
+#    with:
+#      version: env.RELEASE_VERSION
