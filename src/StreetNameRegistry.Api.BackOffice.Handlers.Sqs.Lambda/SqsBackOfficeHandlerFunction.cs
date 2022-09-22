@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
             var tempProvider = services.BuildServiceProvider();
             var loggerFactory = tempProvider.GetRequiredService<ILoggerFactory>();
 
-            services.AddHttpProxyTicketing(configuration.GetSection("TicketingService")["BaseUrl"]);
+            services.AddHttpProxyTicketing(configuration.GetSection("TicketingService")["InternalBaseUrl"]);
 
             // RETRY POLICY
             var maxRetryCount = int.Parse(configuration.GetSection("RetryPolicy")["MaxRetryCount"]);
