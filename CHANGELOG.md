@@ -1,3 +1,11 @@
+## [3.10.22](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.21...v3.10.22) (2022-09-22)
+
+
+### Bug Fixes
+
+* bump messagehandling and use queueurl instead of name ([4146838](https://github.com/informatievlaanderen/streetname-registry/commit/414683855c1e99ca5fdb5c4ee927aa7c88fcd58c))
+* set missing persistent local id on sqs request ([3b03f58](https://github.com/informatievlaanderen/streetname-registry/commit/3b03f58ecb74c423a1d1e36d2ff401e7cea9939e))
+
 ## [3.10.21](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.20...v3.10.21) (2022-09-22)
 
 
