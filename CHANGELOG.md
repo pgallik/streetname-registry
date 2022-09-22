@@ -1,3 +1,10 @@
+## [3.10.20](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.19...v3.10.20) (2022-09-22)
+
+
+### Bug Fixes
+
+* install build pipeline before publishing nuget ([aad9502](https://github.com/informatievlaanderen/streetname-registry/commit/aad9502f22739f6dbd9b2df197078b897bbc7857))
+
 ## [3.10.19](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.18...v3.10.19) (2022-09-22)
 
 
