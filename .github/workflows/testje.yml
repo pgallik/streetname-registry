@@ -138,7 +138,6 @@ jobs:
         ls -al /home/runner/work/streetname-registry/streetname-registry/dist || true
 #        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/nuget || true
 #        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/nuget || true
-        echo Version is $SEMVER
       env:
         SEMVER: ${{ env.RELEASE_VERSION }}
       
