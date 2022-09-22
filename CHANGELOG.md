@@ -1,3 +1,12 @@
+## [3.10.21](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.20...v3.10.21) (2022-09-22)
+
+
+### Bug Fixes
+
+* correct xml serialization ([e14f568](https://github.com/informatievlaanderen/streetname-registry/commit/e14f568ad8851f28377b8140879548957965f60d))
+* fix nuget-projector ([df7e276](https://github.com/informatievlaanderen/streetname-registry/commit/df7e2766ba7a43bcec84dcbff8915a7756e7e107))
+* registration of httpproxy (ticketing) ([b3f0ae1](https://github.com/informatievlaanderen/streetname-registry/commit/b3f0ae1f3029bbd0a940b2fb4d50354e9e1b5df9))
+
 ## [3.10.20](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.19...v3.10.20) (2022-09-22)
 
 
