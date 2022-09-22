@@ -11,5 +11,5 @@
   "function-runtime": "dotnet6",
   "function-memory-size": 256,
   "function-timeout": 30,
-  "function-handler": "StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda::StreetnameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.SqsBackOfficeHandlerFunction::FunctionHandler"
+  "function-handler": "StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda::StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.SqsBackOfficeHandlerFunction::FunctionHandler"
 }
