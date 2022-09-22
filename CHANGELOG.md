@@ -1,3 +1,11 @@
+## [3.10.24](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.23...v3.10.24) (2022-09-22)
+
+
+### Bug Fixes
+
+* fix nuget ([ecbb6d7](https://github.com/informatievlaanderen/streetname-registry/commit/ecbb6d7f61585f61b984fa9c3b296b2506157734))
+* lambda settings ([207cf0e](https://github.com/informatievlaanderen/streetname-registry/commit/207cf0e6e591990d4caa674e7f35ba6f065862a9))
+
 ## [3.10.23](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.22...v3.10.23) (2022-09-22)
 
 
