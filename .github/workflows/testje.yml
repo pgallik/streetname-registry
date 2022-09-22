@@ -458,12 +458,12 @@ jobs:
         name: nuget-api-crab-import
         path: ~/
 
-    - name: Download NuGet package Projector
-      if: env.RELEASE_VERSION != 'none'
-      uses: actions/download-artifact@v3
-      with:
-        name: nuget-projector
-        path: ~/
+#    - name: Download NuGet package Projector
+#      if: env.RELEASE_VERSION != 'none'
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: nuget-projector
+#        path: ~/
 
     - name: Restore packages
       shell: bash
@@ -475,11 +475,11 @@ jobs:
       shell: bash
       run: |
         node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg $NUGET_HOST
+        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg $NUGET_HOST
 #        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg $NUGET_HOST
       env:
         SEMVER: ${{ needs.build.outputs.version }}
