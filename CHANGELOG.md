@@ -1,3 +1,11 @@
+## [3.10.23](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.22...v3.10.23) (2022-09-22)
+
+
+### Bug Fixes
+
+* lambda executable ([d162001](https://github.com/informatievlaanderen/streetname-registry/commit/d16200139aa003f92d109a1a6b1039b3ccb41d2c))
+* replace internal ticket url with public url ([debf772](https://github.com/informatievlaanderen/streetname-registry/commit/debf77257f28716ca22c0117565f9cdfdb8c95a8))
+
 ## [3.10.22](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.21...v3.10.22) (2022-09-22)
 
 
