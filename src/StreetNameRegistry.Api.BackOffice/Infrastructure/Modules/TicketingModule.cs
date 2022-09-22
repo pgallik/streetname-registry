@@ -11,28 +11,23 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
     {
         private const string TicketingServiceConfigKey = "TicketingService";
 
-        private readonly IConfiguration _configuration;
-        private readonly IServiceCollection _services;
+        private readonly string _baseUrl;
 
         public TicketingModule(
             IConfiguration configuration,
             IServiceCollection services)
         {
-            _configuration = configuration;
-            _services = services;
+            _baseUrl = configuration.GetSection(TicketingServiceConfigKey)["BaseUrl"];
+            services
+                .AddHttpProxyTicketing(_baseUrl);
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            var baseUrl = _configuration.GetSection(TicketingServiceConfigKey)["BaseUrl"];
             builder
-                .Register(c => new TicketingUrl(baseUrl))
+                .Register(c => new TicketingUrl(_baseUrl))
                 .As<ITicketingUrl>()
                 .SingleInstance();
-
-            _services
-                .AddHttpClient()
-                .AddHttpProxyTicketing(baseUrl);
         }
     }
 }
