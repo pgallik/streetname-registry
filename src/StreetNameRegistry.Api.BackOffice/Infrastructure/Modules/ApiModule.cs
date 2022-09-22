@@ -18,6 +18,8 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
 
     public sealed class ApiModule : Module
     {
+        internal const string SqsQueueUrlConfigKey = "SqsQueueUrl";
+
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;
         private readonly ILoggerFactory _loggerFactory;
@@ -63,7 +65,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
             builder.RegisterModule(new SequenceModule(_configuration, _services, _loggerFactory));
             builder.RegisterModule(new BackOfficeModule(_configuration, _services, _loggerFactory));
             builder.RegisterModule(new MediatRModule());
-            builder.RegisterModule(new SqsHandlersModule());
+            builder.RegisterModule(new SqsHandlersModule(_configuration[SqsQueueUrlConfigKey]));
             builder.RegisterModule(new TicketingModule(_configuration, _services));
 
             builder.RegisterModule(new CommandHandlingModule(_configuration));

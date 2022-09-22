@@ -1,5 +1,6 @@
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
 {
+    using System;
     using Amazon;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
@@ -7,13 +8,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
 
     public sealed class SqsHandlersModule : Module
     {
+        private readonly string _queueUrl;
+
+        public SqsHandlersModule(string queueUrl)
+        {
+            _queueUrl = queueUrl ?? throw new ArgumentNullException(nameof(queueUrl));
+        }
+
         protected override void Load(ContainerBuilder builder)
         {
             builder
                 .Register(c => new SqsOptions(RegionEndpoint.EUWest1, EventsJsonSerializerSettingsProvider.CreateSerializerSettings()))
                 .SingleInstance();
 
-            builder.RegisterType<SqsQueue>()
+            builder.Register(c => new SqsQueue(c.Resolve<SqsOptions>(), _queueUrl))
                 .As<ISqsQueue>()
                 .AsSelf()
                 .SingleInstance();

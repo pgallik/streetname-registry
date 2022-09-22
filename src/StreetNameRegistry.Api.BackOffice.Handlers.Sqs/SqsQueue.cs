@@ -7,16 +7,17 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs
     public sealed class SqsQueue : ISqsQueue
     {
         private readonly SqsOptions _sqsOptions;
-        private readonly string _sqsQueueName = $"{nameof(StreetNameRegistry)}.{nameof(Api)}.{nameof(BackOffice)}";
+        private readonly string _queueUrl;
 
-        public SqsQueue(SqsOptions sqsOptions)
+        public SqsQueue(SqsOptions sqsOptions, string queueUrl)
         {
             _sqsOptions = sqsOptions;
+            _queueUrl = queueUrl;
         }
         
         public async Task<bool> Copy<T>(T message, SqsQueueOptions sqsQueueOptions, CancellationToken cancellationToken) where T : class
         {
-            return await Sqs.CopyToQueue(_sqsOptions, _sqsQueueName, message, sqsQueueOptions, cancellationToken);
+            return await Sqs.CopyToQueue(_sqsOptions, _queueUrl, message, sqsQueueOptions, cancellationToken);
         }
     }
 }
