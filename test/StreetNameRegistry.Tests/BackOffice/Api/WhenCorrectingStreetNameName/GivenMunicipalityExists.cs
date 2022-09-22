@@ -37,11 +37,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
                 Straatnamen = new Dictionary<Taal, string> { { Taal.NL, "Bosstraat" } }
             };
 
+            var persistentLocalId = 123;
             var result = (AcceptedResult) await Controller.CorrectStreetNameNames(
                 MockValidIfMatchValidator(),
                 MockPassingRequestValidator<StreetNameCorrectNamesRequest>(),
                 ResponseOptions,
-                123,
+                persistentLocalId,
                 request,
                 ifMatchHeaderValue: expectedIfMatchHeader,
                 CancellationToken.None);
@@ -51,6 +52,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenCorrectingStreetNameName
                 x.Send(
                     It.Is<SqsStreetNameCorrectNamesRequest>(sqsRequest =>
                         sqsRequest.Request == request &&
+                        sqsRequest.PersistentLocalId == persistentLocalId &&
                         sqsRequest.ProvenanceData.Timestamp != Instant.MinValue && // Just to verify that ProvenanceData has been populated.
                         sqsRequest.IfMatchHeaderValue == expectedIfMatchHeader),
                     CancellationToken.None));

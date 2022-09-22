@@ -72,6 +72,7 @@ namespace StreetNameRegistry.Api.BackOffice
                         new SqsStreetNameCorrectNamesRequest
                         {
                             Request = request,
+                            PersistentLocalId = persistentLocalId,
                             Metadata = GetMetadata(),
                             ProvenanceData = new ProvenanceData(CreateFakeProvenance()),
                             IfMatchHeaderValue = ifMatchHeaderValue
