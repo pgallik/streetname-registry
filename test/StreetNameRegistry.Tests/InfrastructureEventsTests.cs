@@ -5,8 +5,8 @@ namespace Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using Be.Vlaanderen.Basisregisters.AggregateSource;
-    using Be.Vlaanderen.Basisregisters.EventHandling;
+    using AggregateSource;
+    using EventHandling;
     using FluentAssertions;
     using Newtonsoft.Json;
     using Xunit;
@@ -24,14 +24,14 @@ namespace Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events
         {
             // Attempt to auto-discover the domain assembly using a type called "DomainAssemblyMarker".
             // If this class is not present, these tests will fail.
-            var domainAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => GetAssemblyTypesSafe(a).Any(t => t?.Name == "DomainAssemblyMarker"));
+            var domainAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => GetAssemblyTypesSafe(a).Any(t => t.Name == "DomainAssemblyMarker"));
             if (domainAssembly == null)
             {
                 _eventTypes = Enumerable.Empty<Type>();
                 return;
             }
 
-            bool IsEventNamespace(Type t) => t.Namespace.EndsWith("Events");
+            bool IsEventNamespace(Type t) => t.Namespace?.EndsWith("Events") ?? false;
             bool IsNotCompilerGenerated(MemberInfo t) => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) == null;
 
             _eventTypes = domainAssembly
@@ -43,20 +43,24 @@ namespace Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events
         public void HasEventNameAttribute()
         {
             foreach (var type in _eventTypes)
+            {
                 type
                     .GetCustomAttributes(typeof(EventNameAttribute), true)
                     .Should()
                     .NotBeEmpty($"Forgot EventName attribute on {type.FullName}");
+            }
         }
 
         [Fact]
         public void HasEventDescriptionAttributes()
         {
             foreach (var type in _eventTypes)
+            {
                 type
                     .GetCustomAttributes(typeof(EventDescriptionAttribute), true)
                     .Should()
                     .NotBeEmpty($"Forgot EventDescription attribute on {type.FullName}");
+            }
         }
 
         [Fact]
@@ -105,15 +109,19 @@ namespace Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events
             }
         }
 
-        public static IEnumerable<Type> GetParentTypes(Type type)
+        public static IEnumerable<Type> GetParentTypes(Type? type)
         {
             // is there any base type?
-            if (type == null || type.BaseType == null)
+            if (type?.BaseType is null)
+            {
                 yield break;
+            }
 
             // return all implemented or inherited interfaces
             foreach (var i in type.GetInterfaces())
+            {
                 yield return i;
+            }
 
             // return all inherited types
             var currentBaseType = type.BaseType;
@@ -134,7 +142,7 @@ namespace Be.Vlaanderen.Basisregisters.Testing.Infrastructure.Events
             }
             catch (ReflectionTypeLoadException e)
             {
-                types = e.Types.Where(t => t != null).ToList();
+                types = e.Types.Where(t => t != null).ToList()!;
             }
 
             return types;
