@@ -1,3 +1,11 @@
+## [3.10.19](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.18...v3.10.19) (2022-09-22)
+
+
+### Bug Fixes
+
+* fix debug folders ([5b63af0](https://github.com/informatievlaanderen/streetname-registry/commit/5b63af0a49bb572aef67f0e51f593840855b2832))
+* fix indentation ([47151ac](https://github.com/informatievlaanderen/streetname-registry/commit/47151ac9f9a44c7da8d3109cdd4a8143221a3acb))
+
 ## [3.10.18](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.17...v3.10.18) (2022-09-22)
 
 
