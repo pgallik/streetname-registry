@@ -71,7 +71,7 @@ namespace StreetNameRegistry.Api.BackOffice
                             IfMatchHeaderValue = ifMatchHeaderValue
                         }, cancellationToken);
 
-                    return Accepted(result.Location);
+                    return Accepted(result);
                 }
 
                 request.Metadata = GetMetadata();

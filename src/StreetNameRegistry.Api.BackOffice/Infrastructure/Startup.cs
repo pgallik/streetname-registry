@@ -103,6 +103,7 @@ namespace StreetNameRegistry.Api.BackOffice.Infrastructure
                 }
                 .EnableJsonErrorActionFilterOption())
                 .Configure<ResponseOptions>(_configuration)
+                .Configure<TicketingOptions>(_configuration.GetSection(TicketingModule.TicketingServiceConfigKey))
                 .Configure<FeatureToggleOptions>(_configuration.GetSection(FeatureToggleOptions.ConfigurationKey))
                 .AddSingleton(c =>
                     new UseSqsToggle(c.GetRequiredService<IOptions<FeatureToggleOptions>>().Value.UseSqs));

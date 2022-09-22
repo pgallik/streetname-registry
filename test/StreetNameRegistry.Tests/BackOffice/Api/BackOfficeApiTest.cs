@@ -5,6 +5,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     using System.Security.Claims;
     using System.Threading;
     using System.Threading.Tasks;
+    using FluentAssertions;
     using FluentValidation;
     using FluentValidation.Results;
     using global::AutoFixture;
@@ -25,13 +26,21 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
     {
         protected readonly TController Controller;
         protected const string DetailUrl = "https://www.registry.com/streetname/voorgesteld/{0}";
+        protected const string PublicTicketUrl = "https://www.ticketing.com";
+        protected const string InternalTicketUrl = "https://www.internalticketing.com";
         protected IOptions<ResponseOptions> ResponseOptions { get; }
+        protected IOptions<TicketingOptions> TicketingOptions { get; }
         protected Mock<IMediator> MockMediator { get; }
 
         protected BackOfficeApiTest(ITestOutputHelper testOutputHelper, bool useSqs = false) : base(testOutputHelper)
         {
             ResponseOptions = Options.Create(Fixture.Create<ResponseOptions>());
             ResponseOptions.Value.DetailUrl = DetailUrl;
+
+            TicketingOptions = Options.Create(Fixture.Create<TicketingOptions>());
+            TicketingOptions.Value.PublicBaseUrl = PublicTicketUrl;
+            TicketingOptions.Value.InternalBaseUrl = InternalTicketUrl;
+
             MockMediator = new Mock<IMediator>();
             Controller = CreateApiBusControllerWithUser(useSqs);
         }
@@ -64,9 +73,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
         protected string GetStreetNamePuri(int persistentLocalId)
             => $"https://data.vlaanderen.be/id/gemeente/{persistentLocalId}";
 
+        protected Uri CreateTicketUri(Guid ticketId)
+        {
+            return new Uri($"{InternalTicketUrl}/tickets/{ticketId:D}");
+        }
+
         public TController CreateApiBusControllerWithUser(bool useSqs, string username = "John Doe")
         {
-            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, new UseSqsToggle(useSqs)) as TController;
+            var controller = Activator.CreateInstance(typeof(TController), MockMediator.Object, new UseSqsToggle(useSqs), TicketingOptions) as TController;
 
             var claims = new List<Claim>()
             {
@@ -84,6 +98,14 @@ namespace StreetNameRegistry.Tests.BackOffice.Api
             }
 
             throw new Exception("Could not find controller type");
+        }
+
+        protected void AssertLocation(string? location, Guid ticketId)
+        {
+            var expectedLocation = $"{PublicTicketUrl}/tickets/{ticketId:D}";
+
+            location.Should().NotBeNullOrWhiteSpace();
+            location.Should().Be(expectedLocation);
         }
     }
 }
