@@ -1,3 +1,11 @@
+## [3.10.18](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.17...v3.10.18) (2022-09-22)
+
+
+### Bug Fixes
+
+* correct queue name ([ccaabd0](https://github.com/informatievlaanderen/streetname-registry/commit/ccaabd07bbf35cc797ad5d0c8d2dec90efdf0004))
+* move cd test into testje ([b9ea49f](https://github.com/informatievlaanderen/streetname-registry/commit/b9ea49f65a5f9bb5930d26af67b11e57ba182022))
+
 ## [3.10.17](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.16...v3.10.17) (2022-09-21)
 
 
