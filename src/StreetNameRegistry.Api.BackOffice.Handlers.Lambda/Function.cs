@@ -8,16 +8,20 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
+    using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.DataDog.Tracing.Autofac;
     using Be.Vlaanderen.Basisregisters.EventHandling;
     using Be.Vlaanderen.Basisregisters.EventHandling.Autofac;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Autofac;
     using Consumer;
+    using Handlers;
     using Infrastructure;
     using MediatR;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+    using Requests;
     using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
@@ -38,28 +42,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
             var tempProvider = services.BuildServiceProvider();
             var loggerFactory = tempProvider.GetRequiredService<ILoggerFactory>();
 
-            services.AddHttpProxyTicketing(configuration.GetSection("TicketingService")["InternalBaseUrl"]);
-
-            // RETRY POLICY
-            var maxRetryCount = int.Parse(configuration.GetSection("RetryPolicy")["MaxRetryCount"]);
-            var startingDelaySeconds = int.Parse(configuration.GetSection("RetryPolicy")["StartingRetryDelaySeconds"]);
-
-            var lambdaHandlerRetryPolicy = new LambdaHandlerRetryPolicy(maxRetryCount, startingDelaySeconds);
-            builder.RegisterInstance(lambdaHandlerRetryPolicy).As<ICustomRetryPolicy>();
-
-            var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
-
-            builder
-                .RegisterModule(new DataDogModule(configuration))
-                .RegisterModule<EnvelopeModule>()
-                .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
-                .RegisterModule(new CommandHandlingModule(configuration))
-                .RegisterModule(new BackOfficeModule(configuration, services, loggerFactory))
-                .RegisterModule(new ConsumerModule(configuration, services, loggerFactory));
-
-            builder.RegisterEventstreamModule(configuration);
-            builder.RegisterSnapshotModule(configuration);
-
             builder
                 .RegisterType<Mediator>()
                 .As<IMediator>()
@@ -73,6 +55,50 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
             });
 
             builder.RegisterAssemblyTypes(typeof(MessageHandler).GetTypeInfo().Assembly).AsImplementedInterfaces();
+
+            builder.Register(c => configuration)
+                .AsSelf()
+                .As<IConfiguration>()
+                .SingleInstance();
+
+            services.AddHttpProxyTicketing(configuration.GetSection("TicketingService")["InternalBaseUrl"]);
+
+            // RETRY POLICY
+            var maxRetryCount = int.Parse(configuration.GetSection("RetryPolicy")["MaxRetryCount"]);
+            var startingDelaySeconds = int.Parse(configuration.GetSection("RetryPolicy")["StartingRetryDelaySeconds"]);
+
+            builder.Register(_ => new LambdaHandlerRetryPolicy(maxRetryCount, startingDelaySeconds))
+                .As<ICustomRetryPolicy>()
+                .AsSelf()
+                .SingleInstance();
+
+            var eventSerializerSettings = EventsJsonSerializerSettingsProvider.CreateSerializerSettings();
+
+            JsonConvert.DefaultSettings = () => eventSerializerSettings;
+
+            builder
+                .RegisterModule(new DataDogModule(configuration))
+                .RegisterModule<EnvelopeModule>()
+                .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
+                .RegisterModule(new CommandHandlingModule(configuration))
+                .RegisterModule(new SequenceModule(configuration, services, loggerFactory))
+                .RegisterModule(new BackOfficeModule(configuration, services, loggerFactory))
+                .RegisterModule(new ConsumerModule(configuration, services, loggerFactory));
+
+            builder.RegisterModule(new IdempotencyModule(
+                services,
+                configuration.GetSection(IdempotencyConfiguration.Section).Get<IdempotencyConfiguration>()
+                    .ConnectionString,
+                new IdempotencyMigrationsTableInfo(Schema.Import),
+                new IdempotencyTableInfo(Schema.Import),
+                loggerFactory));
+
+            builder.RegisterEventstreamModule(configuration);
+            builder.RegisterSnapshotModule(configuration);
+
+            builder.RegisterType<SqsStreetNameProposeLambdaHandler>()
+                .As<IRequestHandler<SqsLambdaStreetNameProposeRequest>>()
+                .AsSelf();
 
             builder.Populate(services);
 
