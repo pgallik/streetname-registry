@@ -4,6 +4,7 @@ using Amazon.Lambda.Core;
 namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
 {
     using System.Reflection;
+    using Abstractions;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Be.Vlaanderen.Basisregisters.Aws.Lambda;
@@ -53,6 +54,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
                 .RegisterModule<EnvelopeModule>()
                 .RegisterModule(new EventHandlingModule(typeof(DomainAssemblyMarker).Assembly, eventSerializerSettings))
                 .RegisterModule(new CommandHandlingModule(configuration))
+                .RegisterModule(new BackOfficeModule(configuration, services, loggerFactory))
                 .RegisterModule(new ConsumerModule(configuration, services, loggerFactory));
 
             builder.RegisterEventstreamModule(configuration);

@@ -1,12 +1,11 @@
-namespace StreetNameRegistry.Api.BackOffice.Infrastructure.Modules
+namespace StreetNameRegistry.Api.BackOffice.Abstractions
 {
-    using Abstractions;
     using Autofac;
+    using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using StreetNameRegistry.Infrastructure;
 
     public sealed class BackOfficeModule : Module
     {
