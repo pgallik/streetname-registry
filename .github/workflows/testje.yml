@@ -288,29 +288,29 @@ jobs:
         zip -r lambda.zip .
         popd
 
-#    - name: Push Lambda functions to Test
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: |
-#        echo Push Lambda functions to Test
-#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        popd
-#      env:
-#        SEMVER: ${{ env.RELEASE_VERSION }}
-#
-#    - name: Push Lambda functions to Staging
-#      if: env.RELEASE_VERSION != 'none'
-#      shell: bash
-#      run: |
-#        echo Push Lambda functions to Staging
-#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-#        echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
-#        popd
-#      env:
-#        SEMVER: ${{ env.RELEASE_VERSION }}
+    - name: Push Lambda functions to Test
+      if: env.RELEASE_VERSION != 'none'
+      shell: bash
+      run: |
+        echo Push Lambda functions to Test
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        popd
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
+
+    - name: Push Lambda functions to Staging
+      if: env.RELEASE_VERSION != 'none'
+      shell: bash
+      run: |
+        echo Push Lambda functions to Staging
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
+        popd
+      env:
+        SEMVER: ${{ env.RELEASE_VERSION }}
 
 #    - name: Push Lambda functions to Production
 #      if: env.RELEASE_VERSION != 'none'
@@ -375,17 +375,17 @@ jobs:
           CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
           CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
 
-      - name: Create Jira Release
-        if: env.RELEASE_VERSION != 'none'
-        shell: bash
-        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
-        env:
-          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
-          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
-          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
-          JIRA_PREFIX: StreetName
-          JIRA_PROJECT: GAWR
-          JIRA_VERSION: ${{ env.RELEASE_VERSION }}
+#      - name: Create Jira Release
+#        if: env.RELEASE_VERSION != 'none'
+#        shell: bash
+#        run: ./packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-jira.sh
+#        env:
+#          CONFLUENCE_TITLE: ${{ env.REPOSITORY_NAME }}
+#          CONFLUENCE_USERNAME: ${{ secrets.VBR_CONFLUENCE_USER }}
+#          CONFLUENCE_PASSWORD: ${{ secrets.VBR_CONFLUENCE_PASSWORD }}
+#          JIRA_PREFIX: StreetName
+#          JIRA_PROJECT: GAWR
+#          JIRA_VERSION: ${{ env.RELEASE_VERSION }}
 
   publish_to_nuget:
     if: needs.build.outputs.version != 'none'
@@ -397,6 +397,16 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    - name: Cache NPM
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-npm
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+
     - name: Cache Paket
       uses: actions/cache@v3
       env:
@@ -407,14 +417,53 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
 
+    - name: Cache Python
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-pip
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-build-${{ env.cache-name }}
+
     - name: Parse repository name
       run: echo REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
       shell: bash
+      #REPOSITORY_NAME = streetname-registry
       
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ secrets.VBR_DOTNET_VERSION }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+
+    - name: Node version
+      shell: bash
+      run: node --version
+
+    - name: .NET version
+      shell: bash
+      run: dotnet --info
+
+    - name: Python version
+      shell: bash
+      run: python --version
+
+    - name: Install NPM dependencies
+      shell: bash
+      run: npm ci
+
+    - name: Install Python dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests markdown argparse
 
     - name: Download NuGet package Api.BackOffice
       if: env.RELEASE_VERSION != 'none'
@@ -833,8 +882,6 @@ jobs:
 #        REGION: eu-west-1
 #        PROMOTEURL: ${{ secrets.VBR_AWS_PROMOTE_LAMBDA_BASEURL }}
 
-
- 
 #  deploy_to_staging:
 #    if: needs.build.outputs.version != 'none'
 #    needs: [deploy_to_test, push_images_to_staging, build]
