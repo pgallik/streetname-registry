@@ -1,7 +1,6 @@
 namespace StreetNameRegistry.Tests.BackOffice.Handlers
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading;
     using Autofac;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
@@ -12,7 +11,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
     using Municipality.Commands;
     using Newtonsoft.Json;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
     using Testing;
     using TicketingService.Abstractions;
     using Xunit.Abstractions;

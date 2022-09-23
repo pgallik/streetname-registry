@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests
 {
     using System;
     using System.Collections.Generic;

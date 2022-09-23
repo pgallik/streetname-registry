@@ -140,14 +140,14 @@ jobs:
         pwd
         #echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/
         #ls -al /home/runner/work/streetname-registry/streetname-registry/dist/
-        #echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
-        #ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
+        #echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda
+        #ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda
 
-        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
-        cd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        echo zip -r lambda.zip /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
+        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
+        echo ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
+        ls -al /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
+        cd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
         zip -r lambda.zip .
         #popd
 
@@ -156,7 +156,7 @@ jobs:
       shell: bash
       run: |
         echo Push Lambda functions to Test
-        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
         echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         popd
@@ -219,7 +219,7 @@ jobs:
       shell: bash
       run: |
         echo Push Lambda functions to Staging
-        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
         echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
         popd
@@ -282,7 +282,7 @@ jobs:
 #      shell: bash
 #      run: |
 #        #echo Push Lambda functions to Production
-#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
 #        #echo aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        #aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        #popd

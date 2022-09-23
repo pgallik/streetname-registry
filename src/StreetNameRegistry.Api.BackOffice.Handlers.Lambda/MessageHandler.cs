@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
 {
     using System.Threading;
     using System.Threading.Tasks;

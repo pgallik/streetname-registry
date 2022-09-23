@@ -1,7 +1,7 @@
 using Amazon.Lambda.Core;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
 {
     using System.Reflection;
     using Abstractions;
@@ -22,7 +22,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
 
-    public sealed class SqsBackOfficeHandlerFunction : FunctionBase
+    public sealed class Function : FunctionBase
     {
         protected override IServiceProvider ConfigureServices(IServiceCollection services)
         {

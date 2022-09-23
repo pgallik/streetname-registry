@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using Municipality.Commands;
     using Newtonsoft.Json;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
     using Testing;
     using TicketingService.Abstractions;
     using Xunit.Abstractions;

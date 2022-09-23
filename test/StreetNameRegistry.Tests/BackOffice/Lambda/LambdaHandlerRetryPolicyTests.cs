@@ -10,7 +10,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using Municipality;
     using Municipality.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Infrastructure;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Infrastructure;
     using Xunit;
 
     public sealed class LambdaHandlerRetryPolicyTests

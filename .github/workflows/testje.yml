@@ -283,7 +283,7 @@ jobs:
       shell: bash
       run: |
         echo Zip lambda functions
-        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
         echo zip -r lambda.zip .
         zip -r lambda.zip .
         popd
@@ -293,7 +293,7 @@ jobs:
 #      shell: bash
 #      run: |
 #        echo Push Lambda functions to Test
-#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
 #        echo aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        aws s3 cp lambda.zip s3://s3-vbr-test-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        popd
@@ -305,7 +305,7 @@ jobs:
 #      shell: bash
 #      run: |
 #        echo Push Lambda functions to Staging
-#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
 #        echo aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        aws s3 cp lambda.zip s3://s3-vbr-stg-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        popd
@@ -317,7 +317,7 @@ jobs:
 #      shell: bash
 #      run: |
 #        #echo Push Lambda functions to Production
-#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda/linux
+#        #pushd /home/runner/work/streetname-registry/streetname-registry/dist/StreetNameRegistry.Api.BackOffice.Handlers.Lambda/linux
 #        #echo aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        #aws s3 cp lambda.zip s3://s3-vbr-prd-basisregisters-lam-sr-sqsbackofficehandlerfunction/$SEMVER/lambda.zip
 #        #popd

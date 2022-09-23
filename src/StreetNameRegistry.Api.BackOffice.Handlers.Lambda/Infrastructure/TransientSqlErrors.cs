@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Infrastructure
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Infrastructure
 {
     public static class TransientSqlErrors
     {

@@ -15,9 +15,8 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
     using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Response;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
     using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
     using Xunit;

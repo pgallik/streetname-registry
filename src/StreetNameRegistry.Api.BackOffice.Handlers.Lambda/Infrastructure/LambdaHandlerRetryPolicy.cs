@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Infrastructure
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Infrastructure
 {
     using Microsoft.Data.SqlClient;
     using Polly;

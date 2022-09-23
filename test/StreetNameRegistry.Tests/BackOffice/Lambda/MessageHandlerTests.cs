@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Tests.BackOffice.Lambda
+namespace StreetNameRegistry.Tests.BackOffice.Lambda
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -7,8 +7,8 @@
     using global::AutoFixture;
     using MediatR;
     using Moq;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Requests;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda;
+    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Requests;
     using Testing;
     using Xunit;

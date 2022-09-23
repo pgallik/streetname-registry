@@ -1,14 +1,14 @@
-namespace StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.Handlers
+namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
 {
     using System.Security.Cryptography;
     using System.Text;
+    using Abstractions.Exceptions;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using Be.Vlaanderen.Basisregisters.CommandHandling;
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.Utilities.HexByteConvertor;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
-    using Abstractions.Exceptions;
 
     public sealed class IdempotentCommandHandler : IIdempotentCommandHandler
     {

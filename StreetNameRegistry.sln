@@ -73,7 +73,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.Back
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.BackOffice.Handlers.Sqs", "src\StreetNameRegistry.Api.BackOffice.Handlers.Sqs\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.csproj", "{DCAE2F6B-4DB2-4354-8D42-7BCF75D9B05B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda", "src\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda\StreetNameRegistry.Api.BackOffice.Handlers.Sqs.Lambda.csproj", "{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreetNameRegistry.Api.BackOffice.Handlers.Lambda", "src\StreetNameRegistry.Api.BackOffice.Handlers.Lambda\StreetNameRegistry.Api.BackOffice.Handlers.Lambda.csproj", "{04DFEEA8-A1B2-4CA2-83E9-E06F40C3452C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
