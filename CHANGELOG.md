@@ -1,3 +1,10 @@
+## [3.10.26](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.25...v3.10.26) (2022-09-23)
+
+
+### Bug Fixes
+
+* comment lambda deployment ([ce2b75d](https://github.com/informatievlaanderen/streetname-registry/commit/ce2b75d21d3547542095a0134820bf50e7a65709))
+
 ## [3.10.25](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.24...v3.10.25) (2022-09-23)
 
 
