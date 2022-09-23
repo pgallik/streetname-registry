@@ -1,3 +1,10 @@
+## [3.10.27](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.26...v3.10.27) (2022-09-23)
+
+
+### Bug Fixes
+
+* remove pushing nuget to github ([ed32b1e](https://github.com/informatievlaanderen/streetname-registry/commit/ed32b1e78cf1e83f39ca55491b402b875fd8f88f))
+
 ## [3.10.26](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.25...v3.10.26) (2022-09-23)
 
 
