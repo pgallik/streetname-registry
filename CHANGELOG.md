@@ -1,3 +1,14 @@
+## [3.10.29](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.28...v3.10.29) (2022-09-23)
+
+
+### Bug Fixes
+
+* auto-deploy to test ([df7dabe](https://github.com/informatievlaanderen/streetname-registry/commit/df7dabe9aa06230af37bb130bee055b6528ea507))
+* bump aws lambda to fix mapping problem ([a4a3563](https://github.com/informatievlaanderen/streetname-registry/commit/a4a356328471c5b9845ef61bbc34a226439d2d9f))
+* bump version ([898f6d8](https://github.com/informatievlaanderen/streetname-registry/commit/898f6d8888a371599d97f2ab5a65d3c676c98082))
+* bump version ([bdfc241](https://github.com/informatievlaanderen/streetname-registry/commit/bdfc241439e2b32d20a912b4a372fd7a382e79c4))
+* configure services in lambda ([1efd342](https://github.com/informatievlaanderen/streetname-registry/commit/1efd3424fb1adb0b4db2c67e5e4583526a5e0dbc))
+
 # [2.0.0](https://github.com/informatievlaanderen/streetname-registry/compare/v1.0.0...v2.0.0) (2022-09-23)
 
 
