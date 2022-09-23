@@ -519,22 +519,6 @@ jobs:
       run: |
         dotnet tool restore
         dotnet paket install
-      
-#    - name: Publish packages to GitHub
-#      shell: bash
-#      run: |
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg $NUGET_HOST
-#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg $NUGET_HOST
-#      env:
-#        SEMVER: ${{ needs.build.outputs.version }}
-#        WORKSPACE: ${{ github.workspace }}
-#        NUGET_HOST: https://nuget.pkg.github.com/informatievlaanderen/index.json
-#        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
     - name: Publish packages to NuGet
       shell: bash
@@ -551,6 +535,22 @@ jobs:
         WORKSPACE: ${{ github.workspace }}
         NUGET_HOST: ${{ secrets.NUGET_HOST }}
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      
+#    - name: Publish packages to GitHub
+#      shell: bash
+#      run: |
+#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.$SEMVER.nupkg $NUGET_HOST
+#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.BackOffice.Abstractions.$SEMVER.nupkg $NUGET_HOST
+#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Legacy.$SEMVER.nupkg $NUGET_HOST
+#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Oslo.$SEMVER.nupkg $NUGET_HOST
+#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.Extract.$SEMVER.nupkg $NUGET_HOST
+#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Api.CrabImport.$SEMVER.nupkg $NUGET_HOST
+#        node packages/Be.Vlaanderen.Basisregisters.Build.Pipeline/Content/ci-nuget.js ~/Be.Vlaanderen.Basisregisters.StreetNameRegistry.Projector.$SEMVER.nupkg $NUGET_HOST
+#      env:
+#        SEMVER: ${{ needs.build.outputs.version }}
+#        WORKSPACE: ${{ github.workspace }}
+#        NUGET_HOST: https://nuget.pkg.github.com/informatievlaanderen/index.json
+#        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
   
   push_images_to_test:
     if: needs.build.outputs.version != 'none'
@@ -819,37 +819,41 @@ jobs:
 #    with:
 #      version: env.RELEASE_VERSION
  
-#  deploy_to_test:
-#    if: github.repository_owner == 'Informatievlaanderen'
-#    needs: [push_images_to_test, build]
-#    name: Deploy to test
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections', 'streetname-registry-producer']
-#    
-#    steps:
-#    - name: Deploy services
-#      env:
-#        BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
-#        STATUS_URL: ${{ secrets.VBR_AWS_BUILD_STATUS_API }}/${{matrix.services}}
-#      uses: informatievlaanderen/awscurl-polling-action/polling-action@main
-#      with:
-#          environment: test
-#          version: ${{ github.event.inputs.version }}
-#          status-url: $STATUS_URL
-#          deploy-url: $BUILD_URL
-#          access-key: ${{ secrets.VBR_AWS_BUILD_USER_ACCESS_KEY_ID }}
-#          secret-key: ${{ secrets.VBR_AWS_BUILD_USER_SECRET_ACCESS_KEY }}
-#          region: eu-west-1
-#          interval: 2
-#
-#    - name: Deploy services output
-#      shell: bash
-#      run: |
-#        echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
-#        echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
-#        echo ${{ steps.awscurl-polling-action.outputs.final-message }}
+  deploy_to_test:
+    if: github.repository_owner == 'Informatievlaanderen'
+    needs: [push_images_to_test, build]
+    name: Deploy to test
+    runs-on: ubuntu-latest
+#    inputs:
+#      version:
+#        required: true
+#        type: string    
+    strategy:
+      matrix:
+        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections', 'streetname-registry-producer']
+    
+    steps:
+    - name: Deploy services
+      env:
+        BUILD_URL: ${{ secrets.VBR_AWS_BUILD_API }}/${{matrix.services}}
+        STATUS_URL: ${{ secrets.VBR_AWS_BUILD_STATUS_API }}/${{matrix.services}}
+      uses: informatievlaanderen/awscurl-polling-action/polling-action@main
+      with:
+          environment: test
+          version: ${{ github.event.inputs.version }}
+          status-url: $STATUS_URL
+          deploy-url: $BUILD_URL
+          access-key: ${{ secrets.VBR_AWS_BUILD_USER_ACCESS_KEY_ID }}
+          secret-key: ${{ secrets.VBR_AWS_BUILD_USER_SECRET_ACCESS_KEY }}
+          region: eu-west-1
+          interval: 2
+
+    - name: Deploy services output
+      shell: bash
+      run: |
+        echo build-uuid: ${{ steps.awscurl-polling-action.outputs.build-uuid }}
+        echo Status: ${{ steps.awscurl-polling-action.outputs.status }}
+        echo ${{ steps.awscurl-polling-action.outputs.final-message }}
 
 #  - name: Deploy lambda
 #    steps:
