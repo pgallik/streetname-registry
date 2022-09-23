@@ -1,3 +1,10 @@
+## [3.10.25](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.24...v3.10.25) (2022-09-23)
+
+
+### Bug Fixes
+
+* install npm packages ([954896d](https://github.com/informatievlaanderen/streetname-registry/commit/954896d81cd98696ccf2543c0739dcf3471b21a7))
+
 ## [3.10.24](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.23...v3.10.24) (2022-09-22)
 
 
