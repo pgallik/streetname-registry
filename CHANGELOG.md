@@ -1,3 +1,10 @@
+## [3.10.34](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.33...v3.10.34) (2022-09-25)
+
+
+### Bug Fixes
+
+* nupkg to github ([2226333](https://github.com/informatievlaanderen/streetname-registry/commit/2226333c278a16127f83c46ca5eb1e93c2811103))
+
 ## [3.10.33](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.32...v3.10.33) (2022-09-25)
 
 
