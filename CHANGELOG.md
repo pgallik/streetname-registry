@@ -1,3 +1,10 @@
+## [3.10.36](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.35...v3.10.36) (2022-09-25)
+
+
+### Bug Fixes
+
+* use github token for github nupkg publish ([bc0d31f](https://github.com/informatievlaanderen/streetname-registry/commit/bc0d31fd63f1eff948b18fbba078cd9d828067d3))
+
 ## [3.10.35](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.34...v3.10.35) (2022-09-25)
 
 
