@@ -1,3 +1,11 @@
+## [3.10.31](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.30...v3.10.31) (2022-09-25)
+
+
+### Bug Fixes
+
+* deploy to staging with protected environment ([e68361b](https://github.com/informatievlaanderen/streetname-registry/commit/e68361b9cef7befaea1f2d82861918322b28fa98))
+* fix packaging settings ([12ac44e](https://github.com/informatievlaanderen/streetname-registry/commit/12ac44e0910c20b250086d1ffe2cb904f91da8db))
+
 ## [3.10.30](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.29...v3.10.30) (2022-09-25)
 
 
