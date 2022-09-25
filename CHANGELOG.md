@@ -1,3 +1,10 @@
+## [3.10.32](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.31...v3.10.32) (2022-09-25)
+
+
+### Bug Fixes
+
+* use dotnet nuget push ([9d9dae0](https://github.com/informatievlaanderen/streetname-registry/commit/9d9dae07f02d1130d3f295838a3f4b8ca735925a))
+
 ## [3.10.31](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.30...v3.10.31) (2022-09-25)
 
 
