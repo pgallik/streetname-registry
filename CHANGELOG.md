@@ -1,3 +1,10 @@
+## [3.10.30](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.29...v3.10.30) (2022-09-25)
+
+
+### Bug Fixes
+
+* fix jira release & deploy to test ([48fd080](https://github.com/informatievlaanderen/streetname-registry/commit/48fd080f029419bade87b6bd1d2279a2448dfca8))
+
 ## [3.10.29](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.28...v3.10.29) (2022-09-23)
 
 
