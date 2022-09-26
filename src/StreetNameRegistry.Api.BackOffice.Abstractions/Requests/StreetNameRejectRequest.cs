@@ -6,7 +6,6 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using Newtonsoft.Json;
     using Response;
 
-    [DataContract(Name = "AfkeurenStraatnaam", Namespace = "")]
     public class StreetNameRejectRequest : StreetNameBackOfficeRejectRequest, IRequest<ETagResponse>
     {
         [JsonIgnore]
