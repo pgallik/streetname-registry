@@ -1,3 +1,10 @@
+## [3.10.37](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.36...v3.10.37) (2022-09-26)
+
+
+### Bug Fixes
+
+* bump ticketing packages ([9c42614](https://github.com/informatievlaanderen/streetname-registry/commit/9c42614bacfe26232df10af94c5b49dbb05c1ebb))
+
 ## [3.10.36](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.35...v3.10.36) (2022-09-25)
 
 
