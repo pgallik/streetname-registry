@@ -5,8 +5,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
     using MediatR;
     using Newtonsoft.Json;
     using Response;
-
-    [DataContract(Name = "OpheffenStraatnaam", Namespace = "")]
+    
     public class StreetNameRetireRequest : StreetNameBackOfficeRetireRequest, IRequest<ETagResponse>
     {
         [JsonIgnore]
