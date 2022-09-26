@@ -1,3 +1,10 @@
+## [3.10.43](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.42...v3.10.43) (2022-09-26)
+
+
+### Bug Fixes
+
+* remove datacontract ([c30947e](https://github.com/informatievlaanderen/streetname-registry/commit/c30947e8149aded6a52ed1360f518dabdcb15ec9))
+
 ## [3.10.42](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.41...v3.10.42) (2022-09-26)
 
 
