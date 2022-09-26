@@ -1,3 +1,10 @@
+## [3.10.42](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.41...v3.10.42) (2022-09-26)
+
+
+### Bug Fixes
+
+* streetNameRejectRequest serialization on sqs queue ([43cb46e](https://github.com/informatievlaanderen/streetname-registry/commit/43cb46eec276aad25ae2318293b8602d9fbbd882))
+
 ## [3.10.41](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.40...v3.10.41) (2022-09-26)
 
 
