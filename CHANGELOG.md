@@ -1,3 +1,10 @@
+## [3.10.44](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.43...v3.10.44) (2022-09-28)
+
+
+### Bug Fixes
+
+* AggregateIdIsNotFoundException should result in 404 ([931c317](https://github.com/informatievlaanderen/streetname-registry/commit/931c31735ddf9f7b183ab315c6c02ccaa4da0f5c))
+
 ## [3.10.43](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.42...v3.10.43) (2022-09-26)
 
 
