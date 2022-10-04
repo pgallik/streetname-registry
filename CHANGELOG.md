@@ -1,3 +1,11 @@
+## [3.10.45](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.44...v3.10.45) (2022-10-04)
+
+
+### Bug Fixes
+
+* fix lambda job ([1950433](https://github.com/informatievlaanderen/streetname-registry/commit/1950433caad6db7916c525a5e5345bee4ddfa0c0))
+* lambda to test ([b74aebb](https://github.com/informatievlaanderen/streetname-registry/commit/b74aebb40c4f71f776f844ee9b9d75c03a3f27aa))
+
 ## [3.10.44](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.43...v3.10.44) (2022-09-28)
 
 
