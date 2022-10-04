@@ -1,3 +1,10 @@
+## [3.10.46](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.45...v3.10.46) (2022-10-04)
+
+
+### Bug Fixes
+
+* sqs handler action correctstreetnamenames GAWR-3771 ([09d9891](https://github.com/informatievlaanderen/streetname-registry/commit/09d98916fbe5e93a3a54f12908e3f44b4f2b9a51))
+
 ## [3.10.45](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.44...v3.10.45) (2022-10-04)
 
 
