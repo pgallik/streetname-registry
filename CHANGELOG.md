@@ -1,3 +1,10 @@
+## [3.10.50](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.49...v3.10.50) (2022-10-05)
+
+
+### Bug Fixes
+
+* add production release to workflow ([f189d81](https://github.com/informatievlaanderen/streetname-registry/commit/f189d81a6799f01d7c18868f306a71347ac577c0))
+
 ## [3.10.49](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.48...v3.10.49) (2022-10-05)
 
 
