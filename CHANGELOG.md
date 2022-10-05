@@ -1,3 +1,10 @@
+## [3.10.49](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.48...v3.10.49) (2022-10-05)
+
+
+### Bug Fixes
+
+* Sonar issues ([c041116](https://github.com/informatievlaanderen/streetname-registry/commit/c041116336926db0828efa922136baa1d3fe387a))
+
 ## [3.10.48](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.47...v3.10.48) (2022-10-05)
 
 
