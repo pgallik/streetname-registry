@@ -1,3 +1,11 @@
+## [3.10.51](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.50...v3.10.51) (2022-10-05)
+
+
+### Bug Fixes
+
+* clean up unneeded execution ([d3567f5](https://github.com/informatievlaanderen/streetname-registry/commit/d3567f5798f469cee670df659dffca01393e7176))
+* comment production deploy (because S3 doesn't exist yet) ([db91ba1](https://github.com/informatievlaanderen/streetname-registry/commit/db91ba1d1e2827bce81fc7f5202ced9cf1b90bd9))
+
 ## [3.10.50](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.49...v3.10.50) (2022-10-05)
 
 
