@@ -1,3 +1,11 @@
+## [3.10.47](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.46...v3.10.47) (2022-10-05)
+
+
+### Bug Fixes
+
+* fix serializable ([f3e50b3](https://github.com/informatievlaanderen/streetname-registry/commit/f3e50b33efcbe0a720a8386ddf9e59eb87e5be7c))
+* fix test login ([df84c31](https://github.com/informatievlaanderen/streetname-registry/commit/df84c31c6fbf0942dd0dbfcec77c5fe1a87cd84b))
+
 ## [3.10.46](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.45...v3.10.46) (2022-10-04)
 
 
