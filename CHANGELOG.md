@@ -1,3 +1,10 @@
+## [3.10.48](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.47...v3.10.48) (2022-10-05)
+
+
+### Bug Fixes
+
+* make ExtractMetadataKeys static ([3f2eca9](https://github.com/informatievlaanderen/streetname-registry/commit/3f2eca94ca93960518e8fe4796f9dd07ac8f5d02))
+
 ## [3.10.47](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.46...v3.10.47) (2022-10-05)
 
 
