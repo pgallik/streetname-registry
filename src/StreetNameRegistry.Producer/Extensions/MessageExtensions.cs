@@ -134,12 +134,14 @@ namespace StreetNameRegistry.Producer.Extensions
 
         public static Contracts.StreetNameWasCorrectedFromApprovedToProposed ToContract(this StreetNameWasCorrectedFromApprovedToProposed message) =>
             new Contracts.StreetNameWasCorrectedFromApprovedToProposed(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
-
         public static Contracts.StreetNameWasRejected ToContract(this StreetNameWasRejected message) =>
             new Contracts.StreetNameWasRejected(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
 
         public static Contracts.StreetNameWasRetiredV2 ToContract(this StreetNameWasRetiredV2 message) =>
             new Contracts.StreetNameWasRetiredV2(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
+
+        public static Contracts.StreetNameWasCorrectedFromRetiredToCurrent ToContract(this StreetNameWasCorrectedFromRetiredToCurrent message) =>
+            new Contracts.StreetNameWasCorrectedFromRetiredToCurrent(message.MunicipalityId.ToString("D"), message.PersistentLocalId, message.Provenance.ToContract());
 
         public static Contracts.StreetNameNamesWereCorrected ToContract(this StreetNameNamesWereCorrected message) =>
             new Contracts.StreetNameNamesWereCorrected(

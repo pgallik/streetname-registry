@@ -100,6 +100,16 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameDetailV2
                 }, ct);
             });
 
+            When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
+            {
+                await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>
+                {
+                    UpdateStatus(streetNameDetailV2, StreetNameStatus.Current);
+                    UpdateHash(streetNameDetailV2, message);
+                    UpdateVersionTimestamp(streetNameDetailV2, message.Message.Provenance.Timestamp);
+                }, ct);
+            });
+
             When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
             {
                 await context.FindAndUpdateStreetNameDetailV2(message.Message.PersistentLocalId, streetNameDetailV2 =>

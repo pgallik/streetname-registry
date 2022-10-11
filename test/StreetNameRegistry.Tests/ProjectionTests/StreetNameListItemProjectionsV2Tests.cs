@@ -203,6 +203,44 @@ namespace StreetNameRegistry.Tests.ProjectionTests
         }
 
         [Fact]
+        public async Task WhenStreetNameWasCorrectedFromRetiredToCurrent_ThenStreetNameStatusWasChangedBackToCurrent()
+        {
+            _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
+            var streetNameWasProposedV2 = _fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = new StreetNameWasApproved(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId));
+            ((ISetProvenance)streetNameWasApproved).SetProvenance(_fixture.Create<Provenance>());
+
+            var streetNameWasRetiredV2 = new StreetNameWasRetiredV2(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId));
+            ((ISetProvenance)streetNameWasRetiredV2).SetProvenance(_fixture.Create<Provenance>());
+
+            var streetNameWasCorrectedFromRetiredToCurrent = new StreetNameWasCorrectedFromRetiredToCurrent(
+                _fixture.Create<MunicipalityId>(),
+                new PersistentLocalId(streetNameWasProposedV2.PersistentLocalId));
+            ((ISetProvenance)streetNameWasCorrectedFromRetiredToCurrent).SetProvenance(_fixture.Create<Provenance>());
+
+            await Sut
+                .Given(
+                    _fixture.Create<MunicipalityWasImported>(),
+                    streetNameWasProposedV2,
+                    streetNameWasRetiredV2,
+                    streetNameWasRetiredV2,
+                    streetNameWasCorrectedFromRetiredToCurrent)
+                .Then(async ct =>
+                {
+                    var expectedStreetName = (await ct.FindAsync<StreetNameListItemV2>(streetNameWasProposedV2.PersistentLocalId));
+                    expectedStreetName.Should().NotBeNull();
+                    expectedStreetName!.MunicipalityId.Should().Be(streetNameWasProposedV2.MunicipalityId);
+                    expectedStreetName.PersistentLocalId.Should().Be(streetNameWasProposedV2.PersistentLocalId);
+                    expectedStreetName.Status.Should().Be(StreetNameStatus.Current);
+                    expectedStreetName.VersionTimestamp.Should().Be(streetNameWasCorrectedFromRetiredToCurrent.Provenance.Timestamp);
+                });
+        }
+
+        [Fact]
         public async Task WhenStreetNameNamesWereCorrected_ThenStreetNameNamesWereCorrected()
         {
             _fixture.Register(() => new Names(_fixture.CreateMany<StreetNameName>(2).ToList()));
