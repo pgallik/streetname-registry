@@ -18,6 +18,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
             public const string StreetNameCannotBeCorrected = "StraatnaamGehistoreerdOfAfgekeurd";
             public const string StreetNameCannotBeRejected = "StraatnaamInGebruikOfGehistoreerd";
             public const string StreetNameCannotBeRetired = "StraatnaamVoorgesteldOfAfgekeurd";
+            public const string StreetNameRetirementCannotBeCorrect = "StraatnaamVoorgesteldOfAfgekeurd";
             public const string StreetNameNameLanguageIsNotSupported = "StraatnaamTaalNietInOfficieleOfFaciliteitenTaal";
             public const string StreetNameIsMissingALanguage = "StraatnaamOntbreektOfficieleOfFaciliteitenTaal";
             public const string StreetNameMunicipalityUnknown = "StraatnaamGemeenteNietGekendValidatie";
@@ -39,6 +40,7 @@ namespace StreetNameRegistry.Api.BackOffice.Abstractions
             public const string StreetNameApprovalCannotBeCorrect = "Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.";
             public const string StreetNameCannotBeCorrected = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld' of 'inGebruik'.";
             public const string StreetNameCannotBeRetired = "Deze actie is enkel toegestaan op straatnamen met status 'inGebruik'.";
+            public const string StreetNameRetirementCannotBeCorrect = "Deze actie is enkel toegestaan op straatnamen met status 'gehistoreerd'.";
             public const string StreetNameCannotBeRejected = "Deze actie is enkel toegestaan op straatnamen met status 'voorgesteld'.";
             public static string StreetNameAlreadyExists(string name) => $"Straatnaam '{name}' bestaat reeds in de gemeente.";
             public static string StreetNameIdInvalid(int persistentLocalId) => $"De waarde '{persistentLocalId}' is ongeldig.";

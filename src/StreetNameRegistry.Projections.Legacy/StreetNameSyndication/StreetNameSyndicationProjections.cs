@@ -326,14 +326,6 @@ namespace StreetNameRegistry.Projections.Legacy.StreetNameSyndication
                 }, ct);
             });
 
-            When<Envelope<StreetNameWasCorrectedFromRetiredToCurrent>>(async (context, message, ct) =>
-            {
-                await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>
-                {
-                    UpdateStatus(streetNameNameV2, StreetNameStatus.Current);
-                }, ct);
-            });
-
             When<Envelope<StreetNameNamesWereCorrected>>(async (context, message, ct) =>
             {
                 await context.CreateNewStreetNameSyndicationItem(message.Message.PersistentLocalId, message, streetNameNameV2 =>

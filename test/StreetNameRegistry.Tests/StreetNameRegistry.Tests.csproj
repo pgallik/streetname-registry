@@ -16,9 +16,5 @@
     <ProjectReference Include="..\..\src\StreetNameRegistry\StreetNameRegistry.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BackOffice\Sqs\" />
-  </ItemGroup>
-
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

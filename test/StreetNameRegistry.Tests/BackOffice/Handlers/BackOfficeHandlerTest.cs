@@ -113,6 +113,15 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
             DispatchArrangeCommand(correctStreetNameNameCommand);
         }
 
+        protected void RetireStreetName(MunicipalityId municipalityId, PersistentLocalId persistentLocalId)
+        {
+            var retireStreetName = new RetireStreetName(
+                municipalityId,
+                persistentLocalId,
+                Fixture.Create<Provenance>());
+            DispatchArrangeCommand(retireStreetName);
+        }
+
         protected void SetMunicipalityToCurrent(MunicipalityId municipalityId)
         {
             var setMunicipalityToCurrent = new SetMunicipalityToCurrent(
