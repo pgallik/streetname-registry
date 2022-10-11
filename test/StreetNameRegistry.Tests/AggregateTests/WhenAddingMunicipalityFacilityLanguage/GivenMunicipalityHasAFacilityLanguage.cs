@@ -7,6 +7,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenAddingMunicipalityFacility
     using Municipality;
     using Municipality.Commands;
     using Municipality.Events;
+    using Extensions;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

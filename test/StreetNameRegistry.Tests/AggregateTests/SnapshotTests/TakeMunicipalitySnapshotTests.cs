@@ -10,6 +10,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
     using Municipality.Commands;
     using Municipality.DataStructures;
     using Municipality.Events;
+    using Extensions;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;
@@ -490,6 +491,45 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
                     null,
                     streetNameNamesWereCorrected.GetHash(),
                     streetNameNamesWereCorrected.Provenance)
+            });
+        }
+
+        [Fact]
+        public void StreetNameWasCorrectedFromRetiredToCurrentIsSavedInSnapshot()
+        {
+            var aggregate = new MunicipalityFactory(IntervalStrategy.Default).Create();
+
+            var streetNameWasProposedV2 = Fixture.Create<StreetNameWasProposedV2>();
+            var streetNameWasApproved = Fixture.Create<StreetNameWasApproved>();
+            var streetNameWasRetiredV2 = Fixture.Create<StreetNameWasRetiredV2>();
+            var nameWasCorrectedFromRetiredToCurrent = Fixture.Create<StreetNameWasCorrectedFromRetiredToCurrent>();
+            ((ISetProvenance)nameWasCorrectedFromRetiredToCurrent).SetProvenance(Fixture.Create<Provenance>());
+
+            aggregate.Initialize(new List<object>
+            {
+                Fixture.Create<MunicipalityWasImported>(),
+                streetNameWasProposedV2,
+                streetNameWasApproved,
+                streetNameWasRetiredV2,
+                nameWasCorrectedFromRetiredToCurrent
+            });
+
+            var snapshot = aggregate.TakeSnapshot();
+
+            snapshot.Should().BeOfType<MunicipalitySnapshot>();
+            var municipalitySnapshot = (MunicipalitySnapshot)snapshot;
+
+            municipalitySnapshot.StreetNames.Should().BeEquivalentTo(new List<StreetNameData>
+            {
+                new StreetNameData(
+                    new PersistentLocalId(nameWasCorrectedFromRetiredToCurrent.PersistentLocalId),
+                    StreetNameStatus.Current,
+                    new Names(streetNameWasProposedV2.StreetNameNames),
+                    new HomonymAdditions(),
+                    false,
+                    null,
+                    nameWasCorrectedFromRetiredToCurrent.GetHash(),
+                    nameWasCorrectedFromRetiredToCurrent.Provenance)
             });
         }
     }

@@ -37,7 +37,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
         {
             var specification = givenScenario.Build();
 
-            return new AutoAutoFixtureTestBuilder(this.Given(specification.Givens).Given(SetProvenance(specification.Thens)), _fixture);
+            return new AutoAutoFixtureTestBuilder(Given(specification.Givens).Given(SetProvenance(specification.Thens)), _fixture);
         }
 
         private Fact[] SetProvenance(Fact[] facts)
@@ -146,7 +146,7 @@ namespace StreetNameRegistry.Tests.AutoFixture
             public IEventGeneratingScenarioGivenStateBuilder Given(IEventCentricTestSpecificationBuilder givenScenario)
             {
                 var specification = givenScenario.Build();
-                return new AutoAutoFixtureTestBuilder(this.Given(specification.Givens).Given(SetProvenance(specification.Thens)), _fixture);
+                return new AutoAutoFixtureTestBuilder(Given(specification.Givens).Given(SetProvenance(specification.Thens)), _fixture);
             }
 
             private Fact[] SetProvenance(Fact[] facts)

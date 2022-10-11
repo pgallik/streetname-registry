@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.AggregateTests.WhenRejectingStreetName
+namespace StreetNameRegistry.Tests.AggregateTests.Extensions
 {
     using Municipality;
     using Municipality.Commands;

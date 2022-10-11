@@ -13,9 +13,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.SnapshotTests
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
-    using Municipality.DataStructures;
     using Municipality.Events;
     using Newtonsoft.Json;
+    using Extensions;
     using Testing;
     using Xunit;
     using Xunit.Abstractions;

@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
+namespace StreetNameRegistry.Tests.AggregateTests.Extensions
 {
     using System.Collections.Generic;
     using global::AutoFixture;
@@ -14,7 +14,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenProposingStreetName
 
         public static ProposeStreetName WithRandomStreetName(this ProposeStreetName command, Fixture fixture)
         {
-            return new ProposeStreetName(command.MunicipalityId, new Names(new List<StreetNameName>{fixture.Create<StreetNameName>()}), command.PersistentLocalId, command.Provenance);
+            return new ProposeStreetName(command.MunicipalityId, new Names(new List<StreetNameName> { fixture.Create<StreetNameName>() }), command.PersistentLocalId, command.Provenance);
         }
 
         public static ProposeStreetName WithStreetNameNames(this ProposeStreetName command, Names names)

@@ -11,6 +11,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringStreetName
     using Municipality.Commands;
     using Municipality.Events;
     using Municipality.Exceptions;
+    using Extensions;
     using System.Collections.Generic;
     using Testing;
     using Xunit;

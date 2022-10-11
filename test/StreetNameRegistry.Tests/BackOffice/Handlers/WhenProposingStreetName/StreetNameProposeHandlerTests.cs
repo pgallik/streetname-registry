@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.BackOffice.Handlers
+namespace StreetNameRegistry.Tests.BackOffice.Handlers.WhenProposingStreetName
 {
     using System;
     using System.Collections.Generic;
@@ -10,13 +10,12 @@ namespace StreetNameRegistry.Tests.BackOffice.Handlers
     using Be.Vlaanderen.Basisregisters.CommandHandling.Idempotency;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
     using FluentAssertions;
-    using Infrastructure;
     using Moq;
-    using Municipality;
     using SqlStreamStore;
     using SqlStreamStore.Streams;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers;
+    using StreetNameRegistry.Municipality;
     using Xunit;
     using Xunit.Abstractions;
 

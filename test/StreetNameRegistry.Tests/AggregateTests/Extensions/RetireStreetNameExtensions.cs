@@ -1,7 +1,7 @@
-namespace StreetNameRegistry.Tests.AggregateTests.WhenRetiringStreetName
+namespace StreetNameRegistry.Tests.AggregateTests.Extensions
 {
-    using StreetNameRegistry.Municipality;
-    using StreetNameRegistry.Municipality.Commands;
+    using Municipality;
+    using Municipality.Commands;
 
     public static class RetireStreetNameExtensions
     {

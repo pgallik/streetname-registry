@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
+namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingRetirementStreetName
 {
     using System.Collections.Generic;
     using AutoFixture;
@@ -32,25 +32,44 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         }
 
         [Fact]
-        public void ThenStreetNameWasApproved()
+        public void ThenStreetNameRetirementWasCorrected()
         {
-            var command = Fixture.Create<ApproveStreetName>()
-                .WithMunicipalityId(_municipalityId);
+            var command = Fixture.Create<CorrectStreetNameRetirement>();
 
             // Act, assert
             Assert(new Scenario()
                 .Given(_streamId,
-                    Fixture.Create<MunicipalityWasImported>(),
                     Fixture.Create<MunicipalityBecameCurrent>(),
-                    Fixture.Create<StreetNameWasProposedV2>())
+                    Fixture.Create<StreetNameWasProposedV2>(),
+                    Fixture.Create<StreetNameWasApproved>(),
+                    Fixture.Create<StreetNameWasRetiredV2>())
                 .When(command)
-                .Then(new Fact(_streamId, new StreetNameWasApproved(_municipalityId, command.PersistentLocalId))));
+                .Then(new Fact(_streamId, new StreetNameWasCorrectedFromRetiredToCurrent(_municipalityId, command.PersistentLocalId))));
         }
 
         [Fact]
-        public void ThenStreetNameIsNotFoundExceptionWasThrown()
+        public void WithExistingStreetName_ThenStreetNameNameAlreadyExistsExceptionWasThrown()
         {
-            var command = Fixture.Create<ApproveStreetName>()
+            var streetNameName = Fixture.Create<StreetNameName>();
+            Fixture.Register(() => new Names { streetNameName });
+
+            var command = Fixture.Create<CorrectStreetNameRetirement>()
+                .WithMunicipalityId(_municipalityId);
+
+            Assert(new Scenario()
+                .Given(_streamId,
+                    Fixture.Create<MunicipalityBecameCurrent>(),
+                    Fixture.Create<StreetNameWasProposedV2>(),
+                    Fixture.Create<StreetNameWasRetiredV2>(),
+                    Fixture.Create<StreetNameWasProposedV2>().WithPersistentLocalId(new PersistentLocalId(1)))
+                .When(command)
+                .Throws(new StreetNameNameAlreadyExistsException(streetNameName.Name)));
+        }
+
+        [Fact]
+        public void ThenStreetNameNotFoundExceptionWasThrown()
+        {
+            var command = Fixture.Create<CorrectStreetNameRetirement>()
                 .WithMunicipalityId(_municipalityId);
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
@@ -65,12 +84,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         [Fact]
         public void ThenStreetNameIsRemovedExceptionWasThrown()
         {
-            var command = Fixture.Create<ApproveStreetName>()
+            var command = Fixture.Create<CorrectStreetNameRetirement>()
                 .WithMunicipalityId(_municipalityId);
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
             var municipalityBecameCurrent = Fixture.Create<MunicipalityBecameCurrent>();
-            var streetNameMigratedToMunicipality = Fixture.Build<StreetNameWasMigratedToMunicipality>()
+            var removedStreetNameMigratedToMunicipality = Fixture.Build<StreetNameWasMigratedToMunicipality>()
                 .FromFactory(() =>
                 {
                     var streetNameWasMigratedToMunicipality = new StreetNameWasMigratedToMunicipality(
@@ -84,7 +103,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                         Fixture.Create<Names>(),
                         new HomonymAdditions(),
                         true,
-                        true);
+                        isRemoved: true);
 
                     ((ISetProvenance)streetNameWasMigratedToMunicipality).SetProvenance(Fixture.Create<Provenance>());
                     return streetNameWasMigratedToMunicipality;
@@ -97,7 +116,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
                 .Given(_streamId,
                     municipalityWasImported,
                     municipalityBecameCurrent,
-                    streetNameMigratedToMunicipality)
+                    removedStreetNameMigratedToMunicipality)
                 .When(command)
                 .Throws(new StreetNameIsRemovedException(command.PersistentLocalId)));
         }
@@ -105,7 +124,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         [Fact]
         public void WithMunicipalityStatusRetired_ThenMunicipalityHasInvalidStatusExceptionWasThrown()
         {
-            var command = Fixture.Create<ApproveStreetName>()
+            var command = Fixture.Create<CorrectStreetNameRetirement>()
                 .WithMunicipalityId(_municipalityId);
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
@@ -142,11 +161,11 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         }
 
         [Theory]
+        [InlineData(StreetNameStatus.Proposed)]
         [InlineData(StreetNameStatus.Rejected)]
-        [InlineData(StreetNameStatus.Retired)]
         public void ThenStreetNameHasInvalidStatusExceptionWasThrown(StreetNameStatus status)
         {
-            var command = Fixture.Create<ApproveStreetName>()
+            var command = Fixture.Create<CorrectStreetNameRetirement>()
                 .WithMunicipalityId(_municipalityId);
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
@@ -183,9 +202,9 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         }
 
         [Fact]
-        public void WithStreetNameAlreadyCurrent_ThenNone()
+        public void WithCurrentStreetName_ThenNone()
         {
-            var command = Fixture.Create<ApproveStreetName>()
+            var command = Fixture.Create<CorrectStreetNameRetirement>()
                 .WithMunicipalityId(_municipalityId);
 
             var municipalityWasImported = Fixture.Create<MunicipalityWasImported>();
@@ -221,7 +240,7 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
         }
 
         [Fact]
-        public void ThenStreetNameStatusIsCurrent()
+        public void ThenStreetNameStatusIsRetired()
         {
             var persistentLocalId = Fixture.Create<PersistentLocalId>();
             var aggregate = new MunicipalityFactory(NoSnapshotStrategy.Instance).Create();
@@ -229,11 +248,13 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenApprovingStreetName
             {
                 Fixture.Create<MunicipalityWasImported>(),
                 Fixture.Create<MunicipalityBecameCurrent>(),
-                Fixture.Create<StreetNameWasProposedV2>()
+                Fixture.Create<StreetNameWasProposedV2>(),
+                Fixture.Create<StreetNameWasApproved>(),
+                Fixture.Create<StreetNameWasRetiredV2>()
             });
-
+    
             // Act
-            aggregate.ApproveStreetName(persistentLocalId);
+            aggregate.CorrectStreetNameRetirement(persistentLocalId);
 
             // Assert
             var result = aggregate.StreetNames.GetByPersistentLocalId(persistentLocalId);

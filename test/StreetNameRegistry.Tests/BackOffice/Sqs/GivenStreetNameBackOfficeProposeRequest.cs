@@ -8,7 +8,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Sqs
     using FluentAssertions;
     using global::AutoFixture;
     using Moq;
-    using StreetNameRegistry.Api.BackOffice.Abstractions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Abstractions.Requests;
     using StreetNameRegistry.Api.BackOffice.Handlers.Sqs;

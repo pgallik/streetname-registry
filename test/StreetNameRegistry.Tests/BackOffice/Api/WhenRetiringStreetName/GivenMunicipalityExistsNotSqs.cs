@@ -4,7 +4,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenRetiringStreetName
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Api.Exceptions;
     using FluentAssertions;
     using FluentValidation;

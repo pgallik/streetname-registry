@@ -11,7 +11,7 @@ namespace StreetNameRegistry.Tests.ProjectionTests
     using Xunit;
     using Xunit.Abstractions;
     using Be.Vlaanderen.Basisregisters.ProjectionHandling.Connector;
-    using StreetNameRegistry.StreetName;
+    using StreetName;
 
     public sealed class StreetNameListItemProjectionsTests : ProjectionTest<LegacyContext, StreetNameListProjections>
     {

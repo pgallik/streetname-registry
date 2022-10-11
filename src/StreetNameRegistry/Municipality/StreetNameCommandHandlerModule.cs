@@ -91,6 +91,16 @@ namespace StreetNameRegistry.Municipality
                     municipality.RetireStreetName(message.Command.PersistentLocalId);
                 });
 
+            For<CorrectStreetNameRetirement>()
+                .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
+                .AddEventHash<CorrectStreetNameRetirement, Municipality>(getUnitOfWork)
+                .AddProvenance(getUnitOfWork, provenanceFactory)
+                .Handle(async (message, ct) =>
+                {
+                    var municipality = await getMunicipalities().GetAsync(new MunicipalityStreamId(message.Command.MunicipalityId), ct);
+                    municipality.CorrectStreetNameRetirement(message.Command.PersistentLocalId);
+                });
+
             For<CorrectStreetNameNames>()
                 .AddSqlStreamStore(getStreamStore, getUnitOfWork, eventMapping, eventSerializer, getSnapshotStore)
                 .AddEventHash<CorrectStreetNameNames, Municipality>(getUnitOfWork)

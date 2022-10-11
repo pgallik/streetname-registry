@@ -5,7 +5,6 @@ namespace StreetNameRegistry.Tests.BackOffice.Api.WhenProposingStreetName
     using System.Threading;
     using System.Threading.Tasks;
     using Be.Vlaanderen.Basisregisters.GrAr.Legacy;
-    using FluentAssertions;
     using global::AutoFixture;
     using Microsoft.AspNetCore.Mvc;
     using Moq;

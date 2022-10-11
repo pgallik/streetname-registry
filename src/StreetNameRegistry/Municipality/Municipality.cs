@@ -102,18 +102,38 @@ namespace StreetNameRegistry.Municipality
 
         private void GuardStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
         {
+            GuardUniqueActiveStreetNameNames(streetNameNames, persistentLocalId);
+
             foreach (var streetNameName in streetNameNames)
             {
-                if (StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId))
-                {
-                    throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
-                }
-
                 if (!_officialLanguages.Contains(streetNameName.Language)
                     && !_facilityLanguages.Contains(streetNameName.Language))
                 {
                     throw new StreetNameNameLanguageIsNotSupportedException(
                         $"The language '{streetNameName.Language}' is not an official or facility language of municipality '{_municipalityId}'.");
+                }
+            }
+        }
+
+        public void CorrectStreetNameRetirement(PersistentLocalId persistentLocalId)
+        {
+            var streetName = StreetNames.GetNotRemovedByPersistentLocalId(persistentLocalId);
+
+            if (MunicipalityStatus != MunicipalityStatus.Current)
+            {
+                throw new MunicipalityHasInvalidStatusException();
+            }
+
+            streetName.CorrectRetirement(() => GuardUniqueActiveStreetNameNames(streetName.Names, persistentLocalId));
+        }
+
+        private void GuardUniqueActiveStreetNameNames(Names streetNameNames, PersistentLocalId persistentLocalId)
+        {
+            foreach (var streetNameName in streetNameNames)
+            {
+                if (StreetNames.HasActiveStreetNameName(streetNameName, persistentLocalId))
+                {
+                    throw new StreetNameNameAlreadyExistsException(streetNameName.Name);
                 }
             }
         }

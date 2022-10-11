@@ -1,6 +1,5 @@
-namespace StreetNameRegistry.Tests.AggregateTests
+namespace StreetNameRegistry.Tests.AggregateTests.Extensions
 {
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using Municipality;
     using Municipality.Commands;
     using Municipality.Events;
@@ -20,7 +19,7 @@ namespace StreetNameRegistry.Tests.AggregateTests
         public static MunicipalityOfficialLanguageWasAdded ToEvent(this AddOfficialLanguageToMunicipality command)
         {
             var eventAdded = new MunicipalityOfficialLanguageWasAdded(command.MunicipalityId, command.Language);
-            ((ISetProvenance)eventAdded).SetProvenance(command.Provenance);
+            eventAdded.SetProvenance(command.Provenance);
 
             return eventAdded;
         }
@@ -28,7 +27,7 @@ namespace StreetNameRegistry.Tests.AggregateTests
         public static MunicipalityOfficialLanguageWasRemoved ToEvent(this RemoveOfficialLanguageFromMunicipality command)
         {
             var eventAdded = new MunicipalityOfficialLanguageWasRemoved(command.MunicipalityId, command.Language);
-            ((ISetProvenance)eventAdded).SetProvenance(command.Provenance);
+            eventAdded.SetProvenance(command.Provenance);
 
             return eventAdded;
         }

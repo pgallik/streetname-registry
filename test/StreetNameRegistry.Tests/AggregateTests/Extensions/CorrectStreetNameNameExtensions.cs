@@ -1,4 +1,4 @@
-namespace StreetNameRegistry.Tests.AggregateTests.WhenCorrectingStreetNameName
+namespace StreetNameRegistry.Tests.AggregateTests.Extensions
 {
     using System.Linq;
     using Municipality;

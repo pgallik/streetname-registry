@@ -3,13 +3,12 @@ namespace StreetNameRegistry.Tests.AggregateTests.WhenRemovingMunicipalityOffici
     using AutoFixture;
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.AggregateSource.Testing;
-    using Be.Vlaanderen.Basisregisters.GrAr.Provenance;
     using global::AutoFixture;
     using Municipality;
     using Municipality.Commands;
     using Municipality.Events;
+    using Extensions;
     using Testing;
-    using WhenAddingMunicipalityOfficialLanguage;
     using Xunit;
     using Xunit.Abstractions;
 
