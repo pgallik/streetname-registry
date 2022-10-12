@@ -1,3 +1,18 @@
+# [3.12.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.11.0...v3.12.0) (2022-10-12)
+
+
+### Bug Fixes
+
+* correct address approval missing validator ([4333f11](https://github.com/informatievlaanderen/streetname-registry/commit/4333f11154b58294cbe9422d498620a57c4789b3))
+
+
+### Features
+
+* correct retirement ([86d32f1](https://github.com/informatievlaanderen/streetname-registry/commit/86d32f16389545d912c884f5e6b24a5c97ec1940))
+* correct streetname rejection ([23765f6](https://github.com/informatievlaanderen/streetname-registry/commit/23765f64ec6464dfd3ddbdccbef244344614e647))
+* StreetNameWasCorrectedFromRetiredToCurrent backoffice ([61dcba2](https://github.com/informatievlaanderen/streetname-registry/commit/61dcba2d43661b25b87e8b93a938ef980c66d511))
+* StreetNameWasCorrectedFromRetiredToCurrent projections ([015815f](https://github.com/informatievlaanderen/streetname-registry/commit/015815f000dca085e91aba6f9ff9c18b366511cb))
+
 # [3.11.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.10.51...v3.11.0) (2022-10-11)
 
 
