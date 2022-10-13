@@ -33,7 +33,8 @@
     <ProjectReference Include="..\StreetNameRegistry.Projections.Syndication\StreetNameRegistry.Projections.Syndication.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Api.BackOffice\StreetNameRegistry.Api.BackOffice.csproj" />
     <ProjectReference Include="..\StreetNameRegistry.Consumer\StreetNameRegistry.Consumer.csproj" />
-	<ProjectReference Include="..\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Producer\StreetNameRegistry.Producer.csproj" />
+    <ProjectReference Include="..\StreetNameRegistry.Producer.Snapshot.Oslo\StreetNameRegistry.Producer.Snapshot.Oslo.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\.paket\Paket.Restore.targets" />

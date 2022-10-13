@@ -1,4 +1,4 @@
-﻿namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
+namespace StreetNameRegistry.Api.BackOffice.Abstractions.Requests
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
