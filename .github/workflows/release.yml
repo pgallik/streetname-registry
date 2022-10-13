@@ -131,6 +131,7 @@ jobs:
         docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER -o ~/sr-projections-syndication-image.tar
         docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER -o ~/sr-consumer-image.tar
         docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER -o ~/sr-producer-image.tar
+        docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER -o ~/sr-producer-snapshot-oslo-image.tar
         docker image save $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER -o ~/sr-migrator-streetname-image.tar
       env:
         BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
@@ -269,6 +270,13 @@ jobs:
       with:
         name: producer
         path: ~/sr-producer-image.tar
+
+    - name: Upload snapshot oslo producer artifact
+      if: env.RELEASE_VERSION != 'none'
+      uses: actions/upload-artifact@v3
+      with:
+        name: producer-snapshot-oslo
+        path: ~/sr-producer-snapshot-oslo-image.tar
         
     - name: Upload migrator-streetname artifact
       if: env.RELEASE_VERSION != 'none'
@@ -669,6 +677,12 @@ jobs:
         with:
           name: producer
           path: ~/
+
+      - name: Download snapshot oslo producer
+        uses: actions/download-artifact@v3
+        with:
+          name: producer-snapshot-oslo
+          path: ~/
       
       - name: Download migrator-streetname
         uses: actions/download-artifact@v3
@@ -692,6 +706,7 @@ jobs:
           docker image load -i ~/sr-projections-syndication-image.tar
           docker image load -i ~/sr-consumer-image.tar
           docker image load -i ~/sr-producer-image.tar
+          docker image load -i ~/sr-producer-snapshot-oslo-image.tar
           docker image load -i ~/sr-migrator-streetname-image.tar
 
       - name: Push artifacts to ECR Test
@@ -708,6 +723,7 @@ jobs:
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/projections-syndication:$SEMVER"
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/consumer:$SEMVER"
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER"
+          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER"
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER"
         env:
           BUILD_DOCKER_REGISTRY: ${{ secrets.VBR_BUILD_DOCKER_REGISTRY_TST }}
@@ -789,6 +805,12 @@ jobs:
         with:
           name: producer
           path: ~/
+
+      - name: Download snapshot oslo producer
+        uses: actions/download-artifact@v3
+        with:
+          name: producer-snapshot-oslo
+          path: ~/
       
       - name: Download migrator-streetname
         uses: actions/download-artifact@v3
@@ -812,6 +834,7 @@ jobs:
           docker image load -i ~/sr-projections-syndication-image.tar
           docker image load -i ~/sr-consumer-image.tar
           docker image load -i ~/sr-producer-image.tar
+          docker image load -i ~/sr-producer-snapshot-oslo-image.tar
           docker image load -i ~/sr-migrator-streetname-image.tar
 
       - name: Push artifacts to ECR Staging
@@ -844,6 +867,9 @@ jobs:
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/producer:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer:$SEMVER"
+
+          docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/producer-snapshot-oslo:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER
+          docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/producer-snapshot-oslo:$SEMVER"
 
           docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/migrator-streetname:$SEMVER $BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER
           docker push "$BUILD_DOCKER_REGISTRY/streetname-registry/migrator-streetname:$SEMVER"
@@ -928,6 +954,12 @@ jobs:
 #        with:
 #          name: producer
 #          path: ~/
+#
+#      - name: Download snapshot oslo producer
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: producer-snapshot-oslo
+#          path: ~/
 #      
 #      - name: Download migrator-streetname
 #        uses: actions/download-artifact@v3
@@ -951,6 +983,7 @@ jobs:
 #          docker image load -i ~/sr-projections-syndication-image.tar
 #          docker image load -i ~/sr-consumer-image.tar
 #          docker image load -i ~/sr-producer-image.tar
+#          docker image load -i ~/sr-producer-snapshot-oslo-image.tar
 #          docker image load -i ~/sr-migrator-streetname-image.tar
 #
 #      - name: Push artifacts to ECR Production
@@ -984,6 +1017,9 @@ jobs:
 #          docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/producer:$SEMVER $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/producer:$SEMVER
 #          docker push $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/producer:$SEMVER
 #
+#          docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/producer-snapshot-oslo:$SEMVER $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/producer-snapshot-oslo:$SEMVER
+#          docker push $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/producer-snapshot-oslo:$SEMVER
+#
 #          docker tag $BUILD_DOCKER_REGISTRY_TST/streetname-registry/migrator-streetname:$SEMVER $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/migrator-streetname:$SEMVER
 #          docker push $BUILD_DOCKER_REGISTRY_PRD/streetname-registry/migrator-streetname:$SEMVER
 #        env:
@@ -1000,7 +1036,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections', 'streetname-registry-producer']
+        services: ['streetname-registry-api', 'streetname-registry-import-api', 'streetname-registry-projections', 'streetname-registry-producer', 'streetname-registry-producer-snapshot-oslo']
     
     steps:
     - name: Deploy services
@@ -1068,7 +1104,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        services: ['streetname-registry-api', 'streetname-registry-projections', 'streetname-registry-backoffice-api', 'streetname-registry-consumer', 'streetname-registry-producer', 'streetname-registry-migrator-streetname']
+        services: ['streetname-registry-api', 'streetname-registry-projections', 'streetname-registry-backoffice-api', 'streetname-registry-consumer', 'streetname-registry-producer', 'streetname-registry-migrator-streetname', 'streetname-registry-producer-snapshot-oslo']
 
     steps:
     - name: CD services

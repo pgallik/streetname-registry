@@ -54,6 +54,7 @@ Target.create "Publish_Solution" (fun _ ->
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
     "StreetNameRegistry.Producer"
+    "StreetNameRegistry.Producer.Snapshot.Oslo"
     "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Migrator.StreetName"
     "StreetNameRegistry.Projections.Legacy"
@@ -74,6 +75,7 @@ Target.create "Pack_Solution" (fun _ ->
     "StreetNameRegistry.Api.Extract"
     "StreetNameRegistry.Api.CrabImport"
     "StreetNameRegistry.Producer"
+    "StreetNameRegistry.Producer.Snapshot.Oslo"
     "StreetNameRegistry.Consumer"
     "StreetNameRegistry.Migrator.StreetName"
   ] |> List.iter pack)
@@ -101,6 +103,9 @@ Target.create "PushContainer_Consumer" (fun _ -> push "consumer")
 
 Target.create "Containerize_Producer" (fun _ -> containerize "StreetNameRegistry.Producer" "producer")
 Target.create "PushContainer_Producer" (fun _ -> push "producer")
+
+Target.create "Containerize_Producer_Snapshot_Oslo" (fun _ -> containerize "StreetNameRegistry.Producer.Snapshot.Oslo" "producer-snapshot-oslo")
+Target.create "PushContainer_Producer_Snapshot_Oslo" (fun _ -> push "producer-snapshot-oslo")
 
 Target.create "Containerize_Migrator_StreetName" (fun _ -> containerize "StreetNameRegistry.Migrator.StreetName" "migrator-streetname")
 Target.create "PushContainer_Migrator_StreetName" (fun _ -> push "migrator-streetname")
@@ -145,6 +150,7 @@ Target.create "Push" ignore
   ==> "Containerize_ApiCrabImport"
   ==> "Containerize_Consumer"
   ==> "Containerize_Producer"
+  ==> "Containerize_Producer_Snapshot_Oslo"
   ==> "Containerize_Migrator_StreetName"
   ==> "Containerize_ProjectionsSyndication"
   ==> "Containerize"
@@ -160,6 +166,7 @@ Target.create "Push" ignore
   ==> "PushContainer_ApiCrabImport"
   ==> "PushContainer_Consumer"
   ==> "PushContainer_Producer"
+  ==> "PushContainer_Producer_Snapshot_Oslo"
   ==> "PushContainer_Migrator_StreetName"
   ==> "PushContainer_ProjectionsSyndication"
   ==> "Push"
