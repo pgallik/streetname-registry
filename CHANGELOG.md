@@ -1,3 +1,10 @@
+## [3.12.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.2...v3.12.3) (2022-10-14)
+
+
+### Bug Fixes
+
+* duplicate streetname correct retirement ([ce8f545](https://github.com/informatievlaanderen/streetname-registry/commit/ce8f54531a5447a70b2c9ed5d119461c7170a129))
+
 ## [3.12.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.1...v3.12.2) (2022-10-14)
 
 
