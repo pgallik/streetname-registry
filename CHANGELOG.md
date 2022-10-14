@@ -1,3 +1,10 @@
+## [3.12.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.1...v3.12.2) (2022-10-14)
+
+
+### Bug Fixes
+
+* handle SqsStreetNameCorrectRetirementRequest in lambda ([af4f4fd](https://github.com/informatievlaanderen/streetname-registry/commit/af4f4fd0baedf8b2c765064ac0ef06b2ed62b50f))
+
 ## [3.12.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.0...v3.12.1) (2022-10-14)
 
 
