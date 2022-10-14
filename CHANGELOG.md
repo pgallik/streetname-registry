@@ -1,3 +1,10 @@
+## [3.12.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.0...v3.12.1) (2022-10-14)
+
+
+### Bug Fixes
+
+* change error propose invalid municipality status ([0a40144](https://github.com/informatievlaanderen/streetname-registry/commit/0a4014453ea7a4bfe7f361b64b9936e8349ff6b2))
+
 # [3.12.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.11.0...v3.12.0) (2022-10-12)
 
 
