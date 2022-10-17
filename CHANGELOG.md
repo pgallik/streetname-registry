@@ -1,3 +1,10 @@
+## [3.12.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.3...v3.12.4) (2022-10-17)
+
+
+### Bug Fixes
+
+* don't need approval for lambda ([552790b](https://github.com/informatievlaanderen/streetname-registry/commit/552790be36fa6f84acfd06babdbb369a7e5243fc))
+
 ## [3.12.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.2...v3.12.3) (2022-10-14)
 
 
