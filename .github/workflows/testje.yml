@@ -1,0 +1,19 @@
+name: Testje
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.repository_owner == 'Informatievlaanderen'
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: slack-send
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        # Slack channel ID where message will be posted. Needed if using bot token
+        channel-id: C0323QUJSLE
+        # Message to post into Slack. Needed if using bot token
+        slack-message: Testje was completed
