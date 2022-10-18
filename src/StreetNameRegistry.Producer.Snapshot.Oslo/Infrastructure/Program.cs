@@ -4,9 +4,9 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure
     using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
     using Microsoft.AspNetCore.Hosting;
 
-    public class Program
+    public sealed class Program
     {
-        protected Program()
+        private Program()
         { }
 
         public static void Main(string[] args)

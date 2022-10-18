@@ -1,20 +1,19 @@
-using System;
-using System.Threading.Tasks;
-
 namespace StreetNameRegistry.Tests
 {
+    using System;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
+    using System.Threading.Tasks;
     using FluentAssertions;
     using Moq;
     using NodaTime;
     using Producer.Snapshot.Oslo.Infrastructure;
     using Xunit;
 
-    public class SnapshotManagerTests
+    public sealed class SnapshotManagerTests
     {
-        [Fact(Skip = "Tool to test SnapshotManager, requires bastion tunnel to staging.")]
+        [Fact(Skip = "Tool to test SnapshotManager.")]
         public async Task T()
         {
             var httpClient = new HttpClient();

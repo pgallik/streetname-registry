@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure
         Task<OsloResult> GetSnapshot(string streetNamePersistentLocalId, CancellationToken cancellationToken);
     }
 
-    public class PublicApiHttpProxy : IPublicApiHttpProxy
+    public sealed class PublicApiHttpProxy : IPublicApiHttpProxy
     {
         private readonly HttpClient _httpClient;
 

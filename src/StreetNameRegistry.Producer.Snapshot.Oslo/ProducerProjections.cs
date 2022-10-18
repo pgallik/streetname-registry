@@ -12,7 +12,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo
 
     [ConnectedProjectionName("Kafka producer")]
     [ConnectedProjectionDescription("Projectie die berichten naar de kafka broker stuurt.")]
-    public class ProducerProjections : ConnectedProjection<ProducerContext>
+    public sealed class ProducerProjections : ConnectedProjection<ProducerContext>
     {
         private readonly KafkaProducerOptions _kafkaOptions;
         private readonly string _streetNameTopicKey = "StreetNameTopic";

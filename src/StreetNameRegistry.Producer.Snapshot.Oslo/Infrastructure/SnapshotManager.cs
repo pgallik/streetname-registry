@@ -13,7 +13,7 @@ namespace StreetNameRegistry.Producer.Snapshot.Oslo.Infrastructure
         Task<OsloResult?> FindMatchingSnapshot(string persistentLocalId, Instant eventVersion, bool throwStaleWhenGone, CancellationToken ct);
     }
 
-    public class SnapshotManager : ISnapshotManager
+    public sealed class SnapshotManager : ISnapshotManager
     {
         private readonly IPublicApiHttpProxy _publicApiHttpProxy;
         private readonly int _maxRetryWaitIntervalSeconds;
