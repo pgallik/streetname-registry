@@ -1,3 +1,12 @@
+## [3.12.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.4...v3.12.5) (2022-10-18)
+
+
+### Bug Fixes
+
+* override InnerMapDomainException ([c020923](https://github.com/informatievlaanderen/streetname-registry/commit/c020923d4a6341df27b2d8e01ddc61c3c2fcdf07))
+* remove lambda environments ([0f5f5bb](https://github.com/informatievlaanderen/streetname-registry/commit/0f5f5bb58b3507979d0a13b2fb0e10c637f4ec86))
+* use BasisRegisters.Sqs package ([ef28bad](https://github.com/informatievlaanderen/streetname-registry/commit/ef28bade80c6d0a6018fc2393cc2bd12c5b28dc3))
+
 ## [3.12.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.3...v3.12.4) (2022-10-17)
 
 
