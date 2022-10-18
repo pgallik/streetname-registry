@@ -1,3 +1,10 @@
+## [3.12.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.5...v3.12.6) (2022-10-18)
+
+
+### Bug Fixes
+
+* use retrypolicy from package ([5d5da47](https://github.com/informatievlaanderen/streetname-registry/commit/5d5da47c9322952e1cdacd3224ce425b0a60ebfd))
+
 ## [3.12.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.4...v3.12.5) (2022-10-18)
 
 
