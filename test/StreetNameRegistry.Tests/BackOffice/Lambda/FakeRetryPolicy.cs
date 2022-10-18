@@ -2,7 +2,7 @@ namespace StreetNameRegistry.Tests.BackOffice.Lambda
 {
     using System;
     using System.Threading.Tasks;
-    using StreetNameRegistry.Infrastructure;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
 
     internal class FakeRetryPolicy : ICustomRetryPolicy
     {

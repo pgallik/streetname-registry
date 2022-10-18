@@ -23,11 +23,8 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Sqs.Requests;
-    using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers;
-    using StreetNameRegistry.Infrastructure;
     using StreetNameRegistry.Infrastructure.Modules;
     using TicketingService.Proxy.HttpProxy;
-    using ICustomRetryPolicy = Infrastructure.ICustomRetryPolicy;
 
     public sealed class Function : FunctionBase
     {

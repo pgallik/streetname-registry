@@ -6,6 +6,7 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Be.Vlaanderen.Basisregisters.Api.ETag;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Requests;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using MediatR;
@@ -13,7 +14,6 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Municipality;
     using Municipality.Exceptions;
     using StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Requests;
-    using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
     public abstract class SqsLambdaHandler<TSqsLambdaRequest> : IRequestHandler<TSqsLambdaRequest>

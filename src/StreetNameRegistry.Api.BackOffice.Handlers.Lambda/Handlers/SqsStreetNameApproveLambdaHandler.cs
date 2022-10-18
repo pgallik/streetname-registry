@@ -6,12 +6,12 @@ namespace StreetNameRegistry.Api.BackOffice.Handlers.Lambda.Handlers
     using Be.Vlaanderen.Basisregisters.AggregateSource;
     using Be.Vlaanderen.Basisregisters.Sqs.Exceptions;
     using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Handlers;
+    using Be.Vlaanderen.Basisregisters.Sqs.Lambda.Infrastructure;
     using Be.Vlaanderen.Basisregisters.Sqs.Responses;
     using Microsoft.Extensions.Configuration;
     using Municipality;
     using Municipality.Exceptions;
     using Requests;
-    using StreetNameRegistry.Infrastructure;
     using TicketingService.Abstractions;
 
     public sealed class SqsStreetNameApproveLambdaHandler : SqsLambdaHandler<SqsLambdaStreetNameApproveRequest>
