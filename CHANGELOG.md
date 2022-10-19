@@ -1,3 +1,10 @@
+# [3.13.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.6...v3.13.0) (2022-10-19)
+
+
+### Features
+
+* add ldes ([a7ac60f](https://github.com/informatievlaanderen/streetname-registry/commit/a7ac60fde1ceb871b2799ee8b7fd3150e41b8db3))
+
 ## [3.12.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.5...v3.12.6) (2022-10-18)
 
 
