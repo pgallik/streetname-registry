@@ -28,6 +28,7 @@ namespace StreetNameRegistry.Producer
                 configuration["Kafka:SaslUserName"],
                 configuration["Kafka:SaslPassword"],
                 topic,
+                true,
                 EventsJsonSerializerSettingsProvider.CreateSerializerSettings());
 
             When<Be.Vlaanderen.Basisregisters.ProjectionHandling.SqlStreamStore.Envelope<StreetNameDomain.StreetNameBecameComplete>>(async (_, message, ct) =>
