@@ -140,7 +140,7 @@ namespace StreetNameRegistry.Municipality
             {
                 if (!_officialLanguages.Contains(language) && !_facilityLanguages.Contains(language))
                 {
-                    throw new StreetNameNameLanguageIsNotSupportedException("The language '{language}' is not an official or facility language of municipality '{_municipalityId}'.");
+                    throw new StreetNameNameLanguageIsNotSupportedException($"The language '{language}' is not an official or facility language of municipality '{_municipalityId}'.");
                 }
             }
         }
