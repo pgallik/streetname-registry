@@ -1,3 +1,12 @@
+## [3.13.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.0...v3.13.1) (2022-10-20)
+
+
+### Bug Fixes
+
+* interpolation of error ([a574aec](https://github.com/informatievlaanderen/streetname-registry/commit/a574aeca7d8e3e8f2b220e7bc38ebcf1d81817f9))
+* remove unused assignments ([0664e85](https://github.com/informatievlaanderen/streetname-registry/commit/0664e85a70c37b3c7d495ebc6a9f7d745a7bbe3e))
+* simplify loops ([edf5c1c](https://github.com/informatievlaanderen/streetname-registry/commit/edf5c1c6374a3781064f5ead7aa7831c48fd8cef))
+
 # [3.13.0](https://github.com/informatievlaanderen/streetname-registry/compare/v3.12.6...v3.13.0) (2022-10-19)
 
 
