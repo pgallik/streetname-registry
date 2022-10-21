@@ -5,10 +5,11 @@ namespace StreetNameRegistry.Tests
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Be.Vlaanderen.Basisregisters.GrAr.Oslo.SnapshotProducer;
     using FluentAssertions;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
     using NodaTime;
-    using Producer.Snapshot.Oslo.Infrastructure;
     using Xunit;
 
     public sealed class SnapshotManagerTests
@@ -18,8 +19,8 @@ namespace StreetNameRegistry.Tests
         {
             var httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri("https://api.basisregisters.staging-vlaanderen.be/v2/straatnamen");
-            var proxy = new PublicApiHttpProxy(httpClient);
-            var snapshotManager = new SnapshotManager(proxy, 1, 1);
+            var proxy = new OsloProxy(httpClient);
+            var snapshotManager = new SnapshotManager(new NullLoggerFactory(), proxy, SnapshotManagerOptions.Create("1", "1"));
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse("2022-03-23T14:24:04+01:00")),
@@ -37,7 +38,7 @@ namespace StreetNameRegistry.Tests
 
             var ct = new CancellationTokenSource(5000);
 
-            var mockProxy = new Mock<IPublicApiHttpProxy>();
+            var mockProxy = new Mock<IOsloProxy>();
             mockProxy.Setup(x => x.GetSnapshot(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => new OsloResult
                 {
@@ -47,14 +48,14 @@ namespace StreetNameRegistry.Tests
                     }
                 });
 
-            var snapshotManager = new SnapshotManager(mockProxy.Object, 1, 1);
-            var result =  snapshotManager.FindMatchingSnapshot(
+            var snapshotManager = new SnapshotManager(new NullLoggerFactory(), mockProxy.Object, SnapshotManagerOptions.Create("1", "1"));
+            var result = snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
                 throwStaleWhenGone: false,
                 CancellationToken.None);
 
-            Task.WaitAny(new Task[]{result}, ct.Token);
+            Task.WaitAny(new Task[] { result }, ct.Token);
 
             result.Result.Should().NotBeNull();
         }
@@ -67,7 +68,7 @@ namespace StreetNameRegistry.Tests
 
             var ct = new CancellationTokenSource(5000);
 
-            var mockProxy = new Mock<IPublicApiHttpProxy>();
+            var mockProxy = new Mock<IOsloProxy>();
             mockProxy.Setup(x => x.GetSnapshot(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => new OsloResult
                 {
@@ -77,7 +78,7 @@ namespace StreetNameRegistry.Tests
                     }
                 });
 
-            var snapshotManager = new SnapshotManager(mockProxy.Object, 1, 1);
+            var snapshotManager = new SnapshotManager(new NullLoggerFactory(), mockProxy.Object, SnapshotManagerOptions.Create("1", "1"));
             var result = snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
@@ -92,20 +93,19 @@ namespace StreetNameRegistry.Tests
         [Fact]
         public async Task WhenStaleSnapshot_ThenRetry()
         {
-            var maxRetryWaitIntervalSeconds = 2;
-            var retryBackoffFactor = 1;
+            var options = SnapshotManagerOptions.Create("2", "1");
 
             var eventVersion = $"2022-03-23T1{4}:24:04+01:00";
             var staleSnapshotVersion = $"2022-03-23T1{1}:24:04+01:00";
 
             var count = 0;
 
-            var mockProxy = new Mock<IPublicApiHttpProxy>();
+            var mockProxy = new Mock<IOsloProxy>();
 
             mockProxy.Setup(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(() =>
                 {
-                    if (count == maxRetryWaitIntervalSeconds)
+                    if (count == options.MaxRetryWaitIntervalSeconds)
                     {
                         // Return snapshot with correct version
                         return new OsloResult
@@ -129,7 +129,7 @@ namespace StreetNameRegistry.Tests
                     };
                 });
 
-            var snapshotManager = new SnapshotManager(mockProxy.Object, maxRetryWaitIntervalSeconds, retryBackoffFactor);
+            var snapshotManager = new SnapshotManager(new NullLoggerFactory(), mockProxy.Object, options);
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
@@ -137,14 +137,13 @@ namespace StreetNameRegistry.Tests
                 CancellationToken.None);
 
             result.Should().NotBeNull();
-            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.AtMost(maxRetryWaitIntervalSeconds + 1));
+            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.AtMost(options.MaxRetryWaitIntervalSeconds + 1));
         }
 
         [Fact]
         public async Task WhenGetSnapshotResponse410AndThrowStaleWhenGone_ThenRetry()
         {
-            var maxRetryWaitIntervalSeconds = 2;
-            var retryBackoffFactor = 1;
+            var options = SnapshotManagerOptions.Create("2", "1");
 
             var throwStaleWhenGone = true;
 
@@ -152,13 +151,13 @@ namespace StreetNameRegistry.Tests
 
             var count = 0;
 
-            var mockProxy = new Mock<IPublicApiHttpProxy>();
+            var mockProxy = new Mock<IOsloProxy>();
 
             mockProxy.Setup(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(() =>
                 {
                     // Circuit breaker
-                    if (count == maxRetryWaitIntervalSeconds)
+                    if (count == options.MaxRetryWaitIntervalSeconds)
                     {
                         return new OsloResult
                         {
@@ -174,7 +173,7 @@ namespace StreetNameRegistry.Tests
                     throw new HttpRequestException(string.Empty, null, HttpStatusCode.Gone);
                 });
 
-            var snapshotManager = new SnapshotManager(mockProxy.Object, maxRetryWaitIntervalSeconds, retryBackoffFactor);
+            var snapshotManager = new SnapshotManager(new NullLoggerFactory(), mockProxy.Object, options);
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
@@ -182,23 +181,22 @@ namespace StreetNameRegistry.Tests
                 CancellationToken.None);
 
             result.Should().NotBeNull();
-            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.AtMost(maxRetryWaitIntervalSeconds + 1));
+            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.AtMost(options.MaxRetryWaitIntervalSeconds + 1));
         }
 
         [Fact]
         public async Task WhenGetSnapshotResponse410_ThenReturnNull()
         {
-            var maxRetryWaitIntervalSeconds = 2;
-            var retryBackoffFactor = 1;
+            var options = SnapshotManagerOptions.Create("2", "1");
 
             var doNotThrowStaleWhenGone = false;
 
-            var mockProxy = new Mock<IPublicApiHttpProxy>();
+            var mockProxy = new Mock<IOsloProxy>();
 
             mockProxy.Setup(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None))
                 .Throws(new HttpRequestException(string.Empty, null, HttpStatusCode.Gone));
 
-            var snapshotManager = new SnapshotManager(mockProxy.Object, maxRetryWaitIntervalSeconds, retryBackoffFactor);
+            var snapshotManager = new SnapshotManager(new NullLoggerFactory(), mockProxy.Object, options);
             var result = await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse("2022-03-23T14:24:04+01:00")),
@@ -226,19 +224,18 @@ namespace StreetNameRegistry.Tests
         [InlineData(HttpStatusCode.GatewayTimeout)]
         public async Task WhenGetSnapshotResponseInList_ThenRetry(HttpStatusCode httpStatusCode)
         {
-            var maxRetryWaitIntervalSeconds = 1;
-            var retryBackoffFactor = 0;
+            var options = SnapshotManagerOptions.Create("1", "0");
 
             var eventVersion = "2022-03-23T14:24:04+01:00";
 
             var count = 0;
 
-            var mockProxy = new Mock<IPublicApiHttpProxy>();
+            var mockProxy = new Mock<IOsloProxy>();
 
             mockProxy.Setup(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(() =>
                 {
-                    if (count == maxRetryWaitIntervalSeconds)
+                    if (count == options.MaxRetryWaitIntervalSeconds)
                     {
                         // Circuit breaker
                         return new OsloResult
@@ -255,14 +252,14 @@ namespace StreetNameRegistry.Tests
                     throw new HttpRequestException(string.Empty, null, httpStatusCode);
                 });
 
-            var snapshotManager = new SnapshotManager(mockProxy.Object, maxRetryWaitIntervalSeconds, retryBackoffFactor);
+            var snapshotManager = new SnapshotManager(new NullLoggerFactory(), mockProxy.Object, options);
             await snapshotManager.FindMatchingSnapshot(
                 "50083",
                 Instant.FromDateTimeOffset(DateTimeOffset.Parse(eventVersion)),
                 throwStaleWhenGone: false,
                 CancellationToken.None);
 
-            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.Exactly(maxRetryWaitIntervalSeconds + 1));
+            mockProxy.Verify(x => x.GetSnapshot(It.IsAny<string>(), CancellationToken.None), () => Times.Exactly(options.MaxRetryWaitIntervalSeconds + 1));
         }
     }
 }
