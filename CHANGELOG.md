@@ -1,3 +1,10 @@
+## [3.13.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.2...v3.13.3) (2022-10-21)
+
+
+### Bug Fixes
+
+* fix slack notification & use secret for channel name ([0ef1236](https://github.com/informatievlaanderen/streetname-registry/commit/0ef12368cf47348a0a94eda18680d6488473236e))
+
 ## [3.13.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.1...v3.13.2) (2022-10-21)
 
 
