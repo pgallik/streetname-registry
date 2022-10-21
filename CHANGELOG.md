@@ -1,3 +1,14 @@
+## [3.13.2](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.1...v3.13.2) (2022-10-21)
+
+
+### Bug Fixes
+
+* add slack to release.yml ([f9281e6](https://github.com/informatievlaanderen/streetname-registry/commit/f9281e6d05b098647b753b5e23c02cf4dd9081e6))
+* change channel id ([f03da0c](https://github.com/informatievlaanderen/streetname-registry/commit/f03da0c4a671ae44288fca627bdca79ea980fafe))
+* fix channel id ([6026b9b](https://github.com/informatievlaanderen/streetname-registry/commit/6026b9b7a8017e0ad4645526cd38822e65689bc5))
+* include token ([4c1b6f4](https://github.com/informatievlaanderen/streetname-registry/commit/4c1b6f4c672671e7746bb1205646d39f241b0206))
+* use repository name ([71f37eb](https://github.com/informatievlaanderen/streetname-registry/commit/71f37ebdf8eac0f2879043123a65ad138b434fed))
+
 ## [3.13.1](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.0...v3.13.1) (2022-10-20)
 
 
