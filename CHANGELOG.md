@@ -1,3 +1,10 @@
+## [3.13.5](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.4...v3.13.5) (2022-10-23)
+
+
+### Bug Fixes
+
+* fix loop ([b67f320](https://github.com/informatievlaanderen/streetname-registry/commit/b67f32064ed8a9720ea878e41bc9f0dfa9cbe64a))
+
 ## [3.13.4](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.3...v3.13.4) (2022-10-22)
 
 ## [3.13.3](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.2...v3.13.3) (2022-10-21)
