@@ -1,3 +1,10 @@
+## [3.13.7](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.6...v3.13.7) (2022-10-23)
+
+
+### Bug Fixes
+
+* fix slack notification ([a140187](https://github.com/informatievlaanderen/streetname-registry/commit/a1401871e528ebc979aadc1cde7c36f6a9602da1))
+
 ## [3.13.6](https://github.com/informatievlaanderen/streetname-registry/compare/v3.13.5...v3.13.6) (2022-10-23)
 
 
