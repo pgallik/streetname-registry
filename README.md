@@ -1,4 +1,4 @@
-# StreetName Registry [![Build Status](https://github.com/Informatievlaanderen/streetname-registry/workflows/CI/badge.svg)](https://github.com/Informatievlaanderen/streetname-registry/actions)
+# StreetName Registry [![Build Status](https://github.com/Informatievlaanderen/streetname-registry/workflows/Build/badge.svg)](https://github.com/Informatievlaanderen/streetname-registry/actions)
 
 ## Goal
 
